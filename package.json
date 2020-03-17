@@ -4,7 +4,14 @@
   "description": "A boilerplate to chrome extension with webpack",
   "scripts": {
     "build": "node utils/build.js",
-    "start": "node utils/webserver.js"
+    "start": "node utils/webserver.js",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
   },
   "dependencies": {
     "react": "16.12.0",
@@ -12,9 +19,13 @@
   },
   "devDependencies": {
     "@babel/core": "7.7.4",
+    "@babel/preset-env": "^7.8.7",
     "@babel/preset-react": "7.7.4",
+    "babel-jest": "^25.1.0",
     "babel-loader": "8.0.6",
-    "react-hot-loader": "4.12.18",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "chai": "^4.2.0",
     "clean-webpack-plugin": "3.0.0",
     "copy-webpack-plugin": "5.0.5",
     "css-loader": "3.2.0",
@@ -22,10 +33,13 @@
     "fs-extra": "8.1.0",
     "html-loader": "0.5.5",
     "html-webpack-plugin": "3.2.0",
+    "jest": "^25.1.0",
+    "react-hot-loader": "4.12.18",
+    "sinon-chrome": "^3.0.1",
     "style-loader": "1.0.0",
     "webpack": "4.41.2",
+    "webpack-cli": "3.3.10",
     "webpack-dev-server": "3.9.0",
-    "write-file-webpack-plugin": "4.5.1",
-    "webpack-cli": "3.3.10"
+    "write-file-webpack-plugin": "4.5.1"
   }
 }
