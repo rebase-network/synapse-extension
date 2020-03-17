@@ -1,0 +1,16 @@
+{
+  "name": "Synapse extension",
+  "options_page": "options.html",
+  "background": {
+    "page": "background.html"
+  },
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_icon": "ckb-32.png"
+  },
+  "icons": {
+    "128": "ckb-128.png"
+  },
+  "manifest_version": 2,
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}
