@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Popup should render correctly 1`] = `
+<div
+  className="popupContainer"
+>
+  <default_1
+    title="Import Mnemonic"
+  />
+  <default_1 />
+  <Input />
+  <Input />
+  <button>
+    Import
+  </button>
+</div>
+`;
