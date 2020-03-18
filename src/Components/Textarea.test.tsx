@@ -6,6 +6,8 @@ describe('Textarea', () => {
   let wrapper
   beforeEach(() => wrapper = shallow(<Textarea />))
 
+  it('should render correctly', () => expect(wrapper).toMatchSnapshot());
+
   it('should render Textarea', () => {
     expect(wrapper.find('div').length).toEqual(1)
   });

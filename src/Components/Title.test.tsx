@@ -6,6 +6,8 @@ describe('Title', () => {
   let wrapper
   beforeEach(() => wrapper = shallow(<Title title={''} />))
 
+  it('should render correctly', () => expect(wrapper).toMatchSnapshot());
+
   it('should render Title', () => {
     expect(wrapper.find('div').length).toEqual(1)
   });
