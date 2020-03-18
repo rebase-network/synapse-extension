@@ -1,16 +1,19 @@
-# Chrome Extension (built with TypeScript + React)
+# Synapse Extension
 
-> This project is a boilerplate project to allow you to quickly build chrome extensions using TypeScript and React.
+A extension wallet and Keyper agency for Nervos CKB
 
 ## Building
 
-1.  Clone repo
-2.  `npm i`
-3.  `npm run dev` to compile once or `npm run watch` to run the dev task in watch mode
-4.  `npm run build` to build a production (minified) version
+1. `git clone git@github.com:rebase-network/synapse-extension.git`
+or
+`git clone https://github.com/rebase-network/synapse-extension.git`
+2. `yarn`
+3. `yarn dev` to compile once or `yarn watch` to run the dev task in watch mode
+4. `yarn build` to build a production (minified) version
+5. `yarn test` to run test
 
 ## Installation
 
-1.  Complete the steps to build the project above
-2.  Go to [_chrome://extensions_](chrome://extensions) in Google Chrome
-3.  With the developer mode checkbox ticked, click **Load unpacked extension...** and select the _dist_ folder from this repo
+1. Complete the steps to build the project above
+2. Go to [_chrome://extensions_](chrome://extensions) in Google Chrome
+3. With the developer mode checkbox ticked, click **Load unpacked extension...** and select the _dist_ folder from this repo
