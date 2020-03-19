@@ -4,6 +4,7 @@ import Popup from './Popup';
 import Input from '../Components/Input';
 import Title from '../Components/Title';
 import Textarea from '../Components/Textarea';
+import { Button } from '@material-ui/core';
 
 describe('Popup', () => {
   let wrapper;
@@ -28,24 +29,12 @@ describe('Popup', () => {
     expect(wrapper.containsMatchingElement(<Input />)).toEqual(true);
   });
 
-  it('should render the Input and button Components', () => {
-    expect(wrapper.containsAllMatchingElements([
-      <div className="popupContainer">
-        <Title title='Import Mnemonic' />
-        <Textarea onChange={wrapper.instance.onChange} />
-        <Input />
-        <Input />
-        <button>Import</button>
-      </div>
-    ])).toEqual(true);
-  });
-
   it('should render a <Button />', () => {
-    expect(wrapper.find('button').length).toEqual(1);
+    expect(wrapper.containsMatchingElement(<Button color="primary">Import</Button>)).toEqual(true);
   });
 
   it('should render button text', () => {
-    expect(wrapper.find('button').text()).toEqual('Import');
+    expect(wrapper.find(Button).text()).toEqual('Import');
   });
 
   it('simulates click events', () => {

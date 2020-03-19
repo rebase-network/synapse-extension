@@ -3,6 +3,7 @@ import * as React from 'react';
 import Input from '../Components/Input'
 import Title from '../Components/Title'
 import Textarea from '../Components/Textarea'
+import { Button } from '@material-ui/core';
 
 interface AppProps {}
 
@@ -29,7 +30,7 @@ export default class Popup extends React.Component<AppProps, AppState> {
                 <Textarea onChange={this.onChange} />
                 <Input />
                 <Input />
-                <button>Import</button>
+                <Button color="primary">Import</Button>
             </div>
         )
     }

@@ -12,8 +12,10 @@ exports[`Popup should render correctly 1`] = `
   />
   <Input />
   <Input />
-  <button>
+  <WithStyles(ForwardRef(Button))
+    color="primary"
+  >
     Import
-  </button>
+  </WithStyles(ForwardRef(Button))>
 </div>
 `;

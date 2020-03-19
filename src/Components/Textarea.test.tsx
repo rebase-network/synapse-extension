@@ -12,7 +12,7 @@ describe('Textarea', () => {
     expect(wrapper.find('textarea').length).toEqual(1)
   });
 
-  it('should ', () => {
+  it('should render value', () => {
 
   });
 
