@@ -1,6 +1,7 @@
 import * as React from "react";
 
 interface AppProps {
+  onChange: any;
 }
 
 interface AppState {}
@@ -13,7 +14,7 @@ export default class extends React.Component<AppProps, AppState> {
   render() {
     return (
       <div>
-        <textarea />
+        <textarea onChange={this.props.onChange} />
       </div>
     )
   }

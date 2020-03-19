@@ -12,13 +12,13 @@ describe('Popup', () => {
 
   it('should render correctly', () => expect(wrapper).toMatchSnapshot());
 
-  it('should render 1 Textarea', () => {
-    expect(wrapper.containsMatchingElement(<Textarea />)).toEqual(true);
-  });
-
   it('should render title', () => {
     expect(wrapper.containsMatchingElement(<Title title={'Import Mnemonic'} />)).toEqual(true)
   })
+
+  it('should render 1 Textarea', () => {
+    expect(wrapper.containsMatchingElement(<Textarea onChange={wrapper.instance.onChange} />)).toEqual(true);
+  });
 
   it('should render 2 Input', () => {
     expect(wrapper.find('Input').length).toEqual(2);
@@ -32,7 +32,7 @@ describe('Popup', () => {
     expect(wrapper.containsAllMatchingElements([
       <div className="popupContainer">
         <Title title='Import Mnemonic' />
-        <Textarea />
+        <Textarea onChange={wrapper.instance.onChange} />
         <Input />
         <Input />
         <button>Import</button>

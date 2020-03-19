@@ -18,11 +18,15 @@ export default class Popup extends React.Component<AppProps, AppState> {
         // chrome.runtime.sendMessage({ popupMounted: true });
     }
 
+    onChange() {
+        console.log('onchange here')
+    }
+
     render() {
         return (
             <div className="popupContainer">
                 <Title title='Import Mnemonic' />
-                <Textarea />
+                <Textarea onChange={this.onChange} />
                 <Input />
                 <Input />
                 <button>Import</button>
