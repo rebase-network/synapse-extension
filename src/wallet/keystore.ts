@@ -1,8 +1,11 @@
-import crypto from 'crypto'
+// import crypto from 'crypto'
+
+const crypto = require('crypto')
+
 import { Keccak } from 'sha3'
 import { v4 as uuid } from 'uuid'
 
-import { UnsupportedCipher, IncorrectPassword, InvalidKeystore } from 'exceptions'
+import { UnsupportedCipher, IncorrectPassword, InvalidKeystore } from '../exceptions'
 import { ExtendedPrivateKey } from './key'
 
 const CIPHER = 'aes-128-ctr'

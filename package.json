@@ -35,8 +35,14 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
+    "@nervosnetwork/ckb-sdk-core": "^0.29.1",
+    "@nervosnetwork/ckb-sdk-utils": "^0.29.1",
+    "bn.js": "^5.1.1",
+    "elliptic": "^6.5.2",
     "jest": "^25.1.0",
     "react": "^16.13.0",
-    "react-dom": "^16.13.0"
+    "react-dom": "^16.13.0",
+    "sha3": "^2.1.2",
+    "uuid": "^7.0.2"
   }
 }

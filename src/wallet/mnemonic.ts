@@ -1,4 +1,6 @@
-import crypto from 'crypto'
+// import crypto from 'crypto'
+const crypto = require('crypto')
+
 import wordList from './en-words'
 
 const RADIX = 2048

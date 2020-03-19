@@ -1,4 +1,6 @@
-import crypto from 'crypto'
+// import crypto from 'crypto'
+
+const crypto = require('crypto')
 
 import Address, { AddressType, AddressPrefix } from './address'
 import Keychain, { privateToPublic } from './keychain'

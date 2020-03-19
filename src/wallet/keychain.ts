@@ -1,4 +1,7 @@
-import crypto from 'crypto'
+// import crypto from 'crypto'
+
+const crypto = require('crypto')
+
 import { ec as EC } from 'elliptic'
 import BN from 'bn.js'
 
@@ -81,6 +84,7 @@ export default class Keychain {
       .createHmac('sha512', this.chainCode)
       .update(data)
       .digest()
+
     const il = i.slice(0, 32)
     const ir = i.slice(32)
 
@@ -90,6 +94,7 @@ export default class Keychain {
       child.publicKey = Keychain.publicKeyAdd(this.publicKey, il)
       child.calculateFingerprint()
     } else {
+
       const privateKey = Keychain.privateKeyAdd(this.privateKey, il)
       child = new Keychain(privateKey, ir)
       child.calculateFingerprint()
