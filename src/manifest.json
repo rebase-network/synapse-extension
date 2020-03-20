@@ -11,6 +11,9 @@
   "icons": {
     "128": "ckb-128.png"
   },
+  "permissionss": [
+    "background"
+  ],
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
