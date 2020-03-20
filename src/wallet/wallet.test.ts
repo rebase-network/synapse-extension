@@ -118,16 +118,20 @@ describe('wallet', () => {
     it("should save 1 file to chrome plugin", () => {
       // https://github.com/acvetkov/sinon-chrome/issues/82#issuecomment-467036622
 
-      const value = 1
+      const password = "hello~!23"
+      const keystore = Keystore.create(new ExtendedPrivateKey(fixture02.privateKey, fixture02.chainCode), password)
+
+      console.log("keystore =>", keystore)
+      // keystore.tojson
 
       chrome.storage.sync.set({
-        key: value
+        key: keystore
       }, () => {
-        console.log('Value is set to ' + value);
+        console.log('Value is set to ' + keystore);
       });
 
       chrome.storage.sync.get(['key'], (result) => {
-        expect(result.key).toEqual(value)
+        expect(result.key).toEqual(keystore)
       })
     })
 
