@@ -41,4 +41,13 @@ describe('Popup', () => {
     // wrapper.find('button').simulate('click');
     // expect(onButtonClick).to.have.property('callCount', 1);
   });
+
+  it('should get submitted values', () => {
+    // const values = wrapper.instance
+    const fakeEvent = { preventDefault: () => console.log('preventDefault') };
+    // expect(wrapper.find('.form-login').length).toBe(1);
+    wrapper.find('.form-mnemonic').simulate('submit', fakeEvent);
+    expect(wrapper.find('.success').length).toBe(1);
+  })
+
 });

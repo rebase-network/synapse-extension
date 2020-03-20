@@ -23,7 +23,6 @@
     "enzyme-to-json": "^3.4.4",
     "jest": "^25.1.0",
     "jest-config": "^25.1.0",
-    "jsdom": "^16.2.1",
     "node-sass": "^4.13.1",
     "sass-loader": "^8.0.2",
     "sinon-chrome": "^3.0.1",
@@ -38,6 +37,7 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
+    "@material-ui/core": "^4.9.7",
     "@nervosnetwork/ckb-sdk-core": "^0.29.1",
     "@nervosnetwork/ckb-sdk-utils": "^0.29.1",
     "bn.js": "^5.1.1",

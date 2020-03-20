@@ -3,7 +3,7 @@ import * as React from 'react';
 import Input from '../Components/Input'
 import Title from '../Components/Title'
 import Textarea from '../Components/Textarea'
-import { Button } from '@material-ui/core';
+import { Button, FormControl } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
@@ -24,18 +24,30 @@ interface AppProps { }
 interface AppState { }
 
 export default function(props: AppProps, state: AppState) {
+    const [success, setSuccess] = React.useState(false)
     function onChange() {
         console.log('onchange here')
     }
 
+    function onSubmit() {
+        setSuccess(true)
+        chrome.runtime.sendMessage('abc')
+    }
+
+    let successNode = null
+    if (success) successNode = <div className="success">Successfully</div>
+
     const classes = useStyles();
     return (
         <div className="popupContainer">
+            {successNode}
             <Title title='Import Mnemonic' />
-            <Textarea onChange={onChange} />
-            <Input />
-            <Input />
-            <Button className={classes.root} color="primary">Import</Button>
+            <form className="form-mnemonic" onSubmit={onSubmit}>
+                <Textarea onChange={onChange} />
+                <Input />
+                <Input />
+                <Button type="submit" className={classes.root} color="primary">Import</Button>
+            </form>
         </div>
     )
 }

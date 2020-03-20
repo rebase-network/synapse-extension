@@ -16,7 +16,6 @@ describe('Textarea', () => {
 
   });
 
-
   // it('should render title text', () => {
   //   wrapper.setProps({ title: 'Import Mnemonic'})
   //   expect(wrapper.text()).toEqual('Import Mnemonic')
