@@ -376,7 +376,7 @@
 
 "@material-ui/styles@^4.9.6":
   version "4.9.6"
-  resolved "https://registry.npm.taobao.org/@material-ui/styles/download/@material-ui/styles-4.9.6.tgz#924a30bf7c9b91af9c8f19c12c8573b8a4ecd085"
+  resolved "https://registry.npm.taobao.org/@material-ui/styles/download/@material-ui/styles-4.9.6.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40material-ui%2Fstyles%2Fdownload%2F%40material-ui%2Fstyles-4.9.6.tgz#924a30bf7c9b91af9c8f19c12c8573b8a4ecd085"
   integrity sha1-kkowv3ybka+cjxnBLIVzuKTs0IU=
   dependencies:
     "@babel/runtime" "^7.4.4"
