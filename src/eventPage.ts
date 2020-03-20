@@ -1,11 +1,49 @@
-// Listen to messages sent from other parts of the extension.
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    // onMessage must return "true" if response is async.
-    let isResponseAsync = false;
+/**
+ * Retrieves opened tabs list
+ * @param {Function} callback
+ */
+function getOpenedTabs(callback) {
+    var params = {
+        windowId: chrome.windows.WINDOW_ID_CURRENT
+    };
+    chrome.tabs.query(params, callback);
+}
 
-    if (request.popupMounted) {
-        console.log('eventPage notified that Popup.tsx has mounted.');
+/**
+ * Updates browserAction badge
+ * @param {Array} tabs
+ */
+function updateBadge(tabs) {
+    chrome.browserAction.setBadgeText({
+        text: String(tabs.length)
+    });
+}
+
+/**
+ * Listen messages from popup
+ */
+chrome.runtime.onMessage.addListener(function (data, sender, sendResponse) {
+    if (data === 'get-tabs') {
+        getOpenedTabs(sendResponse);
+        return true;
     }
-
-    return isResponseAsync;
 });
+
+/**
+ * listen to new tab creation and update badge counter
+ */
+chrome.tabs.onCreated.addListener(function () {
+    getOpenedTabs(updateBadge);
+});
+
+/**
+ * listen tab onRemoved and update badge counter
+ */
+chrome.tabs.onRemoved.addListener(function () {
+    getOpenedTabs(updateBadge);
+});
+
+/**
+ * update badge counter on startup
+ */
+getOpenedTabs(updateBadge);
