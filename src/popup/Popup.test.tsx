@@ -14,23 +14,21 @@ describe('Popup', () => {
   it('should render correctly', () => expect(wrapper).toMatchSnapshot());
 
   it('should render title', () => {
-    expect(wrapper.containsMatchingElement(<Title title={'Import Mnemonic'} />)).toEqual(true)
+    expect(wrapper.find(Title)).toHaveLength(1);
+    // expect(wrapper.containsMatchingElement(<Title title={'Import Mnemonic'} />)).toEqual(true)
   })
 
   it('should render 1 Textarea', () => {
-    expect(wrapper.containsMatchingElement(<Textarea onChange={wrapper.instance.onChange} />)).toEqual(true);
+    // expect(wrapper.containsMatchingElement(<Textarea onChange={wrapper.instance.onChange} />)).toEqual(true);
+    expect(wrapper.find(Textarea)).toHaveLength(1);
   });
 
   it('should render 2 Input', () => {
-    expect(wrapper.find('Input').length).toEqual(2);
-  });
-
-  it('should render the Input Component', () => {
-    expect(wrapper.containsMatchingElement(<Input />)).toEqual(true);
+    expect(wrapper.find(Input)).toHaveLength(2);
   });
 
   it('should render a <Button />', () => {
-    expect(wrapper.containsMatchingElement(<Button color="primary">Import</Button>)).toEqual(true);
+    expect(wrapper.find(Button)).toHaveLength(1);
   });
 
   it('should render button text', () => {
