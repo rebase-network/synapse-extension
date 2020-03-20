@@ -121,7 +121,7 @@ describe('wallet', () => {
       const password = "hello~!23"
       const keystore = Keystore.create(new ExtendedPrivateKey(fixture02.privateKey, fixture02.chainCode), password)
 
-      console.log("keystore =>", keystore)
+      // console.log("keystore =>", keystore)
       // keystore.tojson
 
       chrome.storage.sync.set({
