@@ -7,16 +7,28 @@ exports[`Popup should render correctly 1`] = `
   <default_1
     title="Import Mnemonic"
   />
-  <default_1
-    onChange={[Function]}
-  />
-  <Input />
-  <Input />
-  <WithStyles(ForwardRef(Button))
-    className="makeStyles-root-1"
-    color="primary"
+  <form
+    className="form-mnemonic"
+    onSubmit={[Function]}
   >
-    Import
-  </WithStyles(ForwardRef(Button))>
+    <WithStyles(ForwardRef(TextField))
+      id="outlined-multiline-flexible"
+      label="Multiline"
+      multiline={true}
+      onChange={[Function]}
+      rowsMax="4"
+      value="Controlled"
+      variant="outlined"
+    />
+    <Input />
+    <Input />
+    <WithStyles(ForwardRef(Button))
+      className="makeStyles-root-1"
+      color="primary"
+      type="submit"
+    >
+      Import
+    </WithStyles(ForwardRef(Button))>
+  </form>
 </div>
 `;

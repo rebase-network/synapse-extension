@@ -3,8 +3,7 @@ import { shallow } from 'enzyme';
 import Popup from './Popup';
 import Input from '../Components/Input';
 import Title from '../Components/Title';
-import Textarea from '../Components/Textarea';
-import { Button } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 
 describe('Popup', () => {
   let wrapper;
@@ -18,9 +17,9 @@ describe('Popup', () => {
     // expect(wrapper.containsMatchingElement(<Title title={'Import Mnemonic'} />)).toEqual(true)
   })
 
-  it('should render 1 Textarea', () => {
-    // expect(wrapper.containsMatchingElement(<Textarea onChange={wrapper.instance.onChange} />)).toEqual(true);
-    expect(wrapper.find(Textarea)).toHaveLength(1);
+  it('should render 1 TextField', () => {
+    // expect(wrapper.containsMatchingElement(<TextField onChange={wrapper.instance.onChange} />)).toEqual(true);
+    expect(wrapper.find(TextField)).toHaveLength(1);
   });
 
   it('should render 2 Input', () => {
@@ -48,6 +47,25 @@ describe('Popup', () => {
     // expect(wrapper.find('.form-login').length).toBe(1);
     wrapper.find('.form-mnemonic').simulate('submit', fakeEvent);
     expect(wrapper.find('.success').length).toBe(1);
+  })
+
+  it('should get value from mnemonic form field', () => {
+    // fire onChange event
+    wrapper.find(TextField).simulate('change', { target: { value: 'Sama' } });
+    // expect
+    expect(wrapper.find(TextField).props().value).toEqual('Sama');
+  })
+
+  it('should get value from password form field', () => {
+    // expect()
+  })
+
+  it('should get value from password confirm form field', () => {
+
+  })
+
+  it('should get same value from password and password confirm form field', () => {
+
   })
 
 });
