@@ -51,21 +51,6 @@ describe('Popup', () => {
     expect(formikWrapper.find(Button).text()).toEqual('Import');
   });
 
-  it('simulates click events', () => {
-    // const onButtonClick = sinon.spy();
-    // const wrapper = shallow(<Foo onButtonClick={onButtonClick} />);
-    // wrapper.find('button').simulate('click');
-    // expect(onButtonClick).to.have.property('callCount', 1);
-  });
-
-  // it('should get submitted values', () => {
-  //   // const values = wrapper.instance
-  //   const fakeEvent = { preventDefault: () => console.log('preventDefault') };
-  //   // expect(wrapper.find('.form-login').length).toBe(1);
-  //   wrapper.find('.form-mnemonic').simulate('submit', fakeEvent);
-  //   expect(wrapper.find('.success').length).toBe(1);
-  // })
-
   it('should get value from mnemonic form field', () => {
     formikWrapper.find(TextField).first().simulate('change', {
       // you must add this next line as (Formik calls e.persist() internally)
@@ -107,6 +92,25 @@ describe('Popup', () => {
 
     const newValue = formikWrapper.find(TextField).at(2).props().value;
     expect(newValue).toEqual('test confirm password');
+  })
+
+  test('submits the form', () => {
+    expect(formikWrapper.find('#submitting')).toHaveLength(0);
+
+    // simulate submit event. this is always sync! async calls to setState are swallowed.
+    // be careful of false positives
+    formikWrapper.find('Form').simulate('submit', {
+      preventDefault: () => {} // no op
+    });
+
+    // Because the simulated event is 100% sync, we can use it to test the synchronous changes
+    // here. Any async stuff you do inside handleSubmit will be swallowed. Thus our UI
+    // will see the following changes:
+    // - isSubmitting -> true (even if you set it to false asynchronously in your handleSubmit)
+    // - touched: all fields
+    expect(formikWrapper.find('#submitting')).toHaveLength(1);
+    expect(formikWrapper.find(Button).props().disabled).toBe(true)
+		expect(formikWrapper.find(Button).props().disabled).toBe(true)
   })
 
   it('should show success message after submit form', async () => {

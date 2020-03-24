@@ -80,6 +80,7 @@ export const innerForm = props => {
         helperText={(errors.confirmPassword && touched.confirmPassword) && errors.confirmPassword}
         margin="normal"
       />
+      {isSubmitting && <div id="submitting">Submitting</div>}
       <Button type="submit" disabled={isSubmitting}>
         Import
       </Button>
