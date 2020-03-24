@@ -4,6 +4,8 @@ import Keystore from './keystore'
 import Keychain from './keychain';
 import { entropyToMnemonic, mnemonicToSeedSync } from './mnemonic';
 
+import Address, { AddressType, AddressPrefix } from './address'
+
 import * as chrome from "sinon-chrome";
 // import * as browser from 'sinon-chrome/webextensions'
 
@@ -83,8 +85,6 @@ describe('wallet', () => {
 
 
   describe('load and check password', () => {
-    const password = 'hello~!23'
-    const keystore = Keystore.create(new ExtendedPrivateKey(fixture02.privateKey, fixture02.chainCode), password)
 
     it('checks wrong password', () => {
       expect(keystore.checkPassword(`oops${password}`)).toBe(false)
@@ -106,7 +106,9 @@ describe('wallet', () => {
       expect(extendedPrivateKey.chainCode).toEqual(fixture02.chainCode)
     })
 
+
   })
+
 
   describe("save keystore to chrome plugin", () => {
 
@@ -136,4 +138,32 @@ describe('wallet', () => {
     })
 
   })
+
+
+  describe("ckb address", () => {
+
+      it("from private key get ckb address", () => {
+          const seed = mnemonicToSeedSync(mnenonics)
+          const masterKeychain = Keychain.fromSeed(seed)
+
+          const extendedKey = new ExtendedPrivateKey(
+              masterKeychain.privateKey.toString('hex'),
+              masterKeychain.chainCode.toString('hex')
+          )
+
+          const accountKeychain = masterKeychain.derivePath(AccountExtendedPublicKey.ckbAccountPath);
+
+          const accountExtendedPublicKey = new AccountExtendedPublicKey(
+              accountKeychain.publicKey.toString('hex'),
+              accountKeychain.chainCode.toString('hex')
+          )
+
+          const address = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Mainnet);
+
+          expect(address.address).toEqual("ckb1qyqt9ed4emcxyfed77ed0dp7kcm3mxsn97lsvzve7j")
+
+      })
+
+  })
+
 });
