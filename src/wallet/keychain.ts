@@ -1,9 +1,6 @@
-// import crypto from 'crypto'
-
 const crypto = require('crypto')
-
-import { ec as EC } from 'elliptic'
-import BN from 'bn.js'
+const EC = require('elliptic').ec;
+const BN = require('bn.js')
 
 const ec = new EC('secp256k1')
 
