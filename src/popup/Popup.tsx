@@ -5,9 +5,16 @@ import Title from '../Components/Title'
 import Textarea from '../Components/Textarea'
 import { Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { Formik } from "formik";
+import * as Yup from "yup";
 
 const useStyles = makeStyles({
-  root: {
+  container: {
+    height: 600,
+    width: 357,
+    minHeight: 500,
+  },
+  button: {
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
     border: 0,
     borderRadius: 3,
@@ -16,6 +23,9 @@ const useStyles = makeStyles({
     height: 48,
     padding: '0 30px',
   },
+  textField: {
+
+  }
 });
 
 
@@ -32,9 +42,11 @@ export default function (props: AppProps, state: AppState) {
     console.log(event.target.value, '======')
   };
 
-  function onSubmit() {
+  function onSubmit(e) {
+    e.preventDefault()
     setSuccess(true)
     // chrome.runtime.sendMessage('abc')
+    console.log(e, '---=====')
   }
 
   let successNode = null
@@ -42,23 +54,87 @@ export default function (props: AppProps, state: AppState) {
 
   const classes = useStyles();
   return (
-    <div className="popupContainer">
+    <div className={classes.container}>
       {successNode}
       <Title title='Import Mnemonic' />
-      <form className="form-mnemonic" onSubmit={onSubmit}>
-        <TextField
-          id="outlined-multiline-flexible"
-          label="Multiline"
-          multiline
-          rowsMax="4"
-          value={value}
-          onChange={handleChange}
-          variant="outlined"
-        />
-        <Input />
-        <Input />
-        <Button type="submit" className={classes.root} color="primary">Import</Button>
-      </form>
+
+      <Formik
+        initialValues={{ mnemonic: "", password: "", confirmPassword: "" }}
+        onSubmit={async values => {
+          await new Promise(resolve => setTimeout(resolve, 500));
+          console.log(JSON.stringify(values, null, 2));
+        }}
+        validationSchema={Yup.object().shape({
+          mnemonic: Yup.string()
+            .required("Required"),
+          password: Yup.string()
+            .required("Required"),
+          confirmPassword: Yup.string()
+            .oneOf([Yup.ref('password'), null], "Passwords don't match!")
+            .required("Required")
+        })}
+      >
+        {props => {
+          const {
+            values,
+            touched,
+            errors,
+            dirty,
+            isSubmitting,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            handleReset
+          } = props;
+          return (
+            <form className="form-mnemonic" onSubmit={handleSubmit}>
+              <TextField
+                label="Mnemonic"
+                name="mnemonic"
+                multiline
+                className={classes.textField}
+                value={values.mnemonic}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                helperText={(errors.mnemonic && touched.mnemonic) && errors.mnemonic}
+                margin="normal"
+              />
+              <TextField
+                label="Password"
+                name="password"
+                className={classes.textField}
+                value={values.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                helperText={(errors.password && touched.password) && errors.password}
+                margin="normal"
+              />
+              <TextField
+                label="Confirm Password"
+                name="confirmPassword"
+                className={classes.textField}
+                value={values.confirmPassword}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                helperText={(errors.confirmPassword && touched.confirmPassword) && errors.confirmPassword}
+                margin="normal"
+              />
+              <Button
+                type="button"
+                className="outline"
+                onClick={handleReset}
+                disabled={!dirty || isSubmitting}
+              >
+                Reset
+              </Button>
+              <Button type="submit" disabled={isSubmitting}>
+                Submit
+              </Button>
+
+            </form>
+          );
+        }}
+      </Formik>
     </div>
   )
 }

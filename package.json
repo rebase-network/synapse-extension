@@ -17,6 +17,7 @@
     "@types/jest": "^25.1.4",
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",
+    "@types/yup": "^0.26.33",
     "css-loader": "^3.4.2",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
@@ -42,9 +43,11 @@
     "@nervosnetwork/ckb-sdk-utils": "^0.29.1",
     "bn.js": "^5.1.1",
     "elliptic": "^6.5.2",
+    "formik": "^2.1.4",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "sha3": "^2.1.2",
-    "uuid": "^7.0.2"
+    "uuid": "^7.0.2",
+    "yup": "^0.28.3"
   }
 }
