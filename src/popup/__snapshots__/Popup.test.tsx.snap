@@ -2,33 +2,154 @@
 
 exports[`Popup should render correctly 1`] = `
 <div
-  className="popupContainer"
+  className="makeStyles-container-1"
 >
   <default_1
     title="Import Mnemonic"
   />
-  <form
-    className="form-mnemonic"
+  <Formik
+    initialValues={
+      Object {
+        "confirmPassword": "",
+        "mnemonic": "",
+        "password": "",
+      }
+    }
     onSubmit={[Function]}
+    validationSchema={
+      ObjectSchema {
+        "_blacklist": RefSet {
+          "list": Set {},
+          "refs": Map {},
+        },
+        "_conditions": Array [],
+        "_defaultDefault": [Function],
+        "_deps": Array [],
+        "_excludedEdges": Array [],
+        "_exclusive": Object {},
+        "_mutate": undefined,
+        "_nodes": Array [
+          "confirmPassword",
+          "password",
+          "mnemonic",
+        ],
+        "_options": Object {
+          "abortEarly": true,
+          "recursive": true,
+        },
+        "_type": "object",
+        "_typeError": [Function],
+        "_whitelist": RefSet {
+          "list": Set {},
+          "refs": Map {},
+        },
+        "fields": Object {
+          "confirmPassword": StringSchema {
+            "_blacklist": RefSet {
+              "list": Set {},
+              "refs": Map {},
+            },
+            "_conditions": Array [],
+            "_deps": Array [],
+            "_exclusive": Object {
+              "required": true,
+            },
+            "_mutate": undefined,
+            "_options": Object {
+              "abortEarly": true,
+              "recursive": true,
+            },
+            "_type": "string",
+            "_typeError": [Function],
+            "_whitelist": RefSet {
+              "list": Set {
+                null,
+              },
+              "refs": Map {
+                "password" => Reference {
+                  "getter": [Function],
+                  "isContext": false,
+                  "isSibling": true,
+                  "isValue": false,
+                  "key": "password",
+                  "map": undefined,
+                  "path": "password",
+                },
+              },
+            },
+            "_whitelistError": [Function],
+            "tests": Array [
+              [Function],
+            ],
+            "transforms": Array [
+              [Function],
+            ],
+          },
+          "mnemonic": StringSchema {
+            "_blacklist": RefSet {
+              "list": Set {},
+              "refs": Map {},
+            },
+            "_conditions": Array [],
+            "_deps": Array [],
+            "_exclusive": Object {
+              "required": true,
+            },
+            "_mutate": undefined,
+            "_options": Object {
+              "abortEarly": true,
+              "recursive": true,
+            },
+            "_type": "string",
+            "_typeError": [Function],
+            "_whitelist": RefSet {
+              "list": Set {},
+              "refs": Map {},
+            },
+            "tests": Array [
+              [Function],
+            ],
+            "transforms": Array [
+              [Function],
+            ],
+          },
+          "password": StringSchema {
+            "_blacklist": RefSet {
+              "list": Set {},
+              "refs": Map {},
+            },
+            "_conditions": Array [],
+            "_deps": Array [],
+            "_exclusive": Object {
+              "required": true,
+            },
+            "_mutate": undefined,
+            "_options": Object {
+              "abortEarly": true,
+              "recursive": true,
+            },
+            "_type": "string",
+            "_typeError": [Function],
+            "_whitelist": RefSet {
+              "list": Set {},
+              "refs": Map {},
+            },
+            "tests": Array [
+              [Function],
+            ],
+            "transforms": Array [
+              [Function],
+            ],
+          },
+        },
+        "tests": Array [],
+        "transforms": Array [
+          [Function],
+        ],
+      }
+    }
   >
-    <WithStyles(ForwardRef(TextField))
-      id="outlined-multiline-flexible"
-      label="Multiline"
-      multiline={true}
-      onChange={[Function]}
-      rowsMax="4"
-      value="Controlled"
-      variant="outlined"
-    />
-    <Input />
-    <Input />
-    <WithStyles(ForwardRef(Button))
-      className="makeStyles-root-1"
-      color="primary"
-      type="submit"
-    >
-      Import
-    </WithStyles(ForwardRef(Button))>
-  </form>
+    <Component />
+  </Formik>
 </div>
 `;
