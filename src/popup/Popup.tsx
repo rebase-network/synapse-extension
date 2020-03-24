@@ -14,6 +14,8 @@ const useStyles = makeStyles({
     height: 600,
     width: 357,
     minHeight: 500,
+    margin: 30,
+    boxSizing: 'border-box'
   },
   button: {
 
@@ -47,18 +49,21 @@ export const innerForm = props => {
         label="Mnemonic"
         name="mnemonic"
         multiline
+        rows="4"
         fullWidth
         className={classes.textField}
         value={values.mnemonic}
         onChange={handleChange}
         onBlur={handleBlur}
+        error={!!errors.mnemonic}
         helperText={(errors.mnemonic && touched.mnemonic) && errors.mnemonic}
         margin="normal"
-        data-test="mnemonic"
+        variant="outlined"
       />
       <TextField
         label="Password"
         name="password"
+        type="password"
         fullWidth
         className={classes.textField}
         value={values.password}
@@ -66,17 +71,21 @@ export const innerForm = props => {
         onBlur={handleBlur}
         helperText={(errors.password && touched.password) && errors.password}
         margin="normal"
+        variant="outlined"
       />
       <TextField
         label="Confirm Password"
         name="confirmPassword"
+        type="password"
         fullWidth
         className={classes.textField}
         value={values.confirmPassword}
         onChange={handleChange}
         onBlur={handleBlur}
+        error={!!errors.confirmPassword}
         helperText={(errors.confirmPassword && touched.confirmPassword) && errors.confirmPassword}
         margin="normal"
+        variant="outlined"
       />
       {isSubmitting && <div id="submitting">Submitting</div>}
       <Button type="submit" disabled={isSubmitting} color="primary" className={classes.button}>
@@ -112,6 +121,7 @@ export default function (props: AppProps, state: AppState) {
           mnemonic: Yup.string()
             .required("Required"),
           password: Yup.string()
+            .min(6)
             .required("Required"),
           confirmPassword: Yup.string()
             .oneOf([Yup.ref('password'), null], "Passwords don't match!")

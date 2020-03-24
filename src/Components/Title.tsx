@@ -13,9 +13,9 @@ export default class extends React.Component<AppProps, AppState> {
 
   render() {
     return (
-      <div>
+      <h3>
         {this.props.title}
-      </div>
+      </h3>
     )
   }
 }
