@@ -7,6 +7,7 @@ import { Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
+import { MESSAGE_TYPE } from '../utils/constants'
 
 const useStyles = makeStyles({
   container: {
@@ -15,13 +16,7 @@ const useStyles = makeStyles({
     minHeight: 500,
   },
   button: {
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-    border: 0,
-    borderRadius: 3,
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-    color: 'white',
-    height: 48,
-    padding: '0 30px',
+
   },
   textField: {
 
@@ -52,6 +47,7 @@ export const innerForm = props => {
         label="Mnemonic"
         name="mnemonic"
         multiline
+        fullWidth
         className={classes.textField}
         value={values.mnemonic}
         onChange={handleChange}
@@ -63,6 +59,7 @@ export const innerForm = props => {
       <TextField
         label="Password"
         name="password"
+        fullWidth
         className={classes.textField}
         value={values.password}
         onChange={handleChange}
@@ -73,6 +70,7 @@ export const innerForm = props => {
       <TextField
         label="Confirm Password"
         name="confirmPassword"
+        fullWidth
         className={classes.textField}
         value={values.confirmPassword}
         onChange={handleChange}
@@ -81,28 +79,21 @@ export const innerForm = props => {
         margin="normal"
       />
       {isSubmitting && <div id="submitting">Submitting</div>}
-      <Button type="submit" disabled={isSubmitting}>
+      <Button type="submit" disabled={isSubmitting} color="primary" className={classes.button}>
         Import
       </Button>
-
     </Form>
   );
 }
 
 export default function (props: AppProps, state: AppState) {
   const [success, setSuccess] = React.useState(false)
-  const [value, setValue] = React.useState('Controlled');
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-    console.log(event.target.value, '======')
-  };
-
-  function onSubmit(e) {
-    e.preventDefault()
+  const onSubmit = async(values) => {
+    await new Promise(resolve => setTimeout(resolve, 500));
+    chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_MNEMONIC })
+    console.log(values)
     setSuccess(true)
-    // chrome.runtime.sendMessage('abc')
-    console.log(e, '---=====')
   }
 
   let successNode = null
@@ -111,16 +102,12 @@ export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
   return (
     <div className={classes.container}>
-      {successNode}
       <Title title='Import Mnemonic' />
+      {successNode}
 
       <Formik
         initialValues={{ mnemonic: "", password: "", confirmPassword: "" }}
-        onSubmit={async values => {
-          await new Promise(resolve => setTimeout(resolve, 500));
-          console.log(JSON.stringify(values, null, 2));
-          setSuccess(true)
-        }}
+        onSubmit={onSubmit}
         validationSchema={Yup.object().shape({
           mnemonic: Yup.string()
             .required("Required"),

@@ -123,14 +123,6 @@ describe('Popup', () => {
     });
   });
 
-  it('should get value from password form field', () => {
-    // expect()
-  })
-
-  it('should get value from password confirm form field', () => {
-
-  })
-
   it('should get same value from password and password confirm form field', () => {
 
   })

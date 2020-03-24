@@ -1,0 +1,3 @@
+export const MESSAGE_TYPE = {
+  IMPORT_MNEMONIC: 'IMPORT_MNEMONIC',
+}
