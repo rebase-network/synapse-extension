@@ -76,6 +76,9 @@ describe('Popup', () => {
         value: 'test mnemonic',
       },
     });
+    const newValue = formikWrapper.find(TextField).first().props().value;
+    expect(newValue).toEqual('test mnemonic');
+  });
 
   it('should get value from password form field', () => {
     formikWrapper.find(TextField).first().simulate('change', {
@@ -87,9 +90,12 @@ describe('Popup', () => {
         value: 'test password',
       },
     });
+    const newValue = formikWrapper.find(TextField).at(1).props().value;
+    expect(newValue).toEqual('test password');
+  });
 
-    it('should get value from confirm password form field', () => {
-      formikWrapper.find(TextField).first().simulate('change', {
+  it('should get value from confirm password form field', () => {
+    formikWrapper.find(TextField).first().simulate('change', {
       // you must add this next line as (Formik calls e.persist() internally)
       persist: () => {},
       // simulate changing e.target.name and e.target.value
@@ -99,9 +105,8 @@ describe('Popup', () => {
       },
     });
 
-    const newValue = formikWrapper.find(TextField).first().props().value;
-    console.log(formikWrapper.find(TextField).first().props())
-    expect(newValue).toEqual('test mnemonic');
+    const newValue = formikWrapper.find(TextField).at(2).props().value;
+    expect(newValue).toEqual('test confirm password');
   })
 
   it('should show success message after submit form', async () => {
