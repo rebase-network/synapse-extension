@@ -7,6 +7,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { MESSAGE_TYPE } from '../utils/constants'
 import Route from './Route'
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   container: {
@@ -96,12 +97,15 @@ export const innerForm = props => {
 
 export default function (props: AppProps, state: AppState) {
   const [success, setSuccess] = React.useState(false)
+  const history = useHistory();
 
   const onSubmit = async(values) => {
     await new Promise(resolve => setTimeout(resolve, 500));
     chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_MNEMONIC })
     console.log(values)
     setSuccess(true)
+    // go to address page
+    history.push('/address')
   }
 
   let successNode = null
@@ -111,7 +115,6 @@ export default function (props: AppProps, state: AppState) {
   return (
     <div className={classes.container}>
       <Title title='Import Mnemonic' />
-      <Route />
       {successNode}
 
       <Formik

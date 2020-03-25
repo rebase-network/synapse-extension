@@ -6,6 +6,7 @@ import {
   Link
 } from "react-router-dom";
 import Address from '../pages/Main'
+import Popup from './Popup'
 
 export default function App() {
   return (
@@ -14,7 +15,7 @@ export default function App() {
         <nav>
           <ul>
             <li>
-              <Link to="/">Home</Link>
+              <Link to="/">Popup</Link>
             </li>
             <li>
               <Link to="/address">Address</Link>
@@ -29,18 +30,10 @@ export default function App() {
             <Address />
           </Route>
           <Route path="/">
-            <Home />
+            <Popup />
           </Route>
         </Switch>
       </div>
     </Router>
   );
-}
-
-function Home() {
-  return <h2>Home</h2>;
-}
-
-function Users() {
-  return <h2>Users</h2>;
 }

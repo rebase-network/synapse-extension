@@ -9,7 +9,7 @@ describe('Title', () => {
   it('should render correctly', () => expect(wrapper).toMatchSnapshot());
 
   it('should render Title', () => {
-    expect(wrapper.find('div').length).toEqual(1)
+    expect(wrapper.find('h3').length).toEqual(1)
   });
 
   it('should render title text', () => {
