@@ -42,6 +42,7 @@
     "@nervosnetwork/ckb-sdk-core": "^0.29.1",
     "@nervosnetwork/ckb-sdk-utils": "^0.29.1",
     "bn.js": "^5.1.1",
+    "copy-webpack-plugin": "^5.1.1",
     "elliptic": "^6.5.2",
     "formik": "^2.1.4",
     "react": "^16.13.0",

@@ -1,17 +1,23 @@
 const path = require("path");
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
     popup: path.join(__dirname, "src/popup/index.tsx"),
-    eventPage: path.join(__dirname, "src/eventPage.ts")
+    eventPage: path.join(__dirname, "src/eventPage.ts"),
   },
   output: {
     path: path.join(__dirname, "dist/js"),
-    filename: "[name].js"
+    filename: "[name].js",
   },
+  plugins: [
+    new CopyPlugin([{
+      from: "./src/manifest.json",
+      to: path.join(__dirname, "dist"),
+    }]),
+  ],
   module: {
-    rules: [
-      {
+    rules: [{
         exclude: /node_modules/,
         test: /\.tsx?$/,
         use: "ts-loader"
@@ -19,8 +25,7 @@ module.exports = {
       {
         exclude: /node_modules/,
         test: /\.scss$/,
-        use: [
-          {
+        use: [{
             loader: "style-loader" // Creates style nodes from JS strings
           },
           {
