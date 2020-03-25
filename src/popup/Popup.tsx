@@ -1,13 +1,12 @@
 import * as React from 'react';
 // import './Popup.scss';
-import Input from '../Components/Input'
 import Title from '../Components/Title'
-import Textarea from '../Components/Textarea'
 import { Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { MESSAGE_TYPE } from '../utils/constants'
+import Route from './Route'
 
 const useStyles = makeStyles({
   container: {
@@ -112,6 +111,7 @@ export default function (props: AppProps, state: AppState) {
   return (
     <div className={classes.container}>
       <Title title='Import Mnemonic' />
+      <Route />
       {successNode}
 
       <Formik
