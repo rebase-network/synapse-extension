@@ -87,7 +87,7 @@ export const innerForm = props => {
         variant="outlined"
       />
       {isSubmitting && <div id="submitting">Submitting</div>}
-      <Button type="submit" disabled={isSubmitting} color="primary" className={classes.button}>
+      <Button type="submit" id="submit-button" disabled={isSubmitting} color="primary" className={classes.button}>
         Import
       </Button>
     </Form>

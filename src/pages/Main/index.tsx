@@ -27,7 +27,7 @@ export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
   return (
     <div className={classes.container}>
-      <Title title='Address' />
+      <Title title='Address' testId="address-title" />
       <div className="address">address info</div>
     </div>
   )
