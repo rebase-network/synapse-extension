@@ -25,5 +25,16 @@ describe('React testing library', () => {
     expect(container).toContainElement(title)
     expect(title).toHaveTextContent('Address')
   })
+
+  it('should render address', async() => {
+    const {
+      getByTestId,
+      container
+    } = tree
+
+    const address = getByTestId('address-info')
+    expect(container).toContainElement(address)
+    expect(address).toHaveTextContent('ck')
+  })
 });
 
