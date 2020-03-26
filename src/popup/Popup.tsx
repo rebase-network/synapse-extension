@@ -43,7 +43,7 @@ export const innerForm = props => {
     handleReset
   } = props;
   return (
-    <Form className="form-mnemonic" onSubmit={handleSubmit}>
+    <Form className="form-mnemonic" id="form-mnemonic" onSubmit={handleSubmit}>
       <TextField
         label="Mnemonic"
         name="mnemonic"
@@ -69,6 +69,7 @@ export const innerForm = props => {
         value={values.password}
         onChange={handleChange}
         onBlur={handleBlur}
+        error={!!errors.password}
         helperText={(errors.password && touched.password) && errors.password}
         margin="normal"
         variant="outlined"
@@ -76,7 +77,7 @@ export const innerForm = props => {
       />
       <TextField
         label="Confirm Password"
-        name="confirm-password"
+        name="confirmPassword"
         type="password"
         fullWidth
         className={classes.textField}
@@ -136,7 +137,7 @@ export default function (props: AppProps, state: AppState) {
             .min(6)
             .required("Required"),
           confirmPassword: Yup.string()
-            .oneOf([Yup.ref('password'), null], "Passwords don't match!")
+            .oneOf([Yup.ref('password')], "Passwords don't match!")
             .required("Required")
         })}
       >
