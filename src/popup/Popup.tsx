@@ -58,6 +58,7 @@ export const innerForm = props => {
         helperText={(errors.mnemonic && touched.mnemonic) && errors.mnemonic}
         margin="normal"
         variant="outlined"
+        data-testid="field-mnemonic"
       />
       <TextField
         label="Password"
@@ -71,10 +72,11 @@ export const innerForm = props => {
         helperText={(errors.password && touched.password) && errors.password}
         margin="normal"
         variant="outlined"
+        data-testid="field-password"
       />
       <TextField
         label="Confirm Password"
-        name="confirmPassword"
+        name="confirm-password"
         type="password"
         fullWidth
         className={classes.textField}
@@ -85,9 +87,17 @@ export const innerForm = props => {
         helperText={(errors.confirmPassword && touched.confirmPassword) && errors.confirmPassword}
         margin="normal"
         variant="outlined"
+        data-testid="field-confirm-password"
       />
       {isSubmitting && <div id="submitting">Submitting</div>}
-      <Button type="submit" id="submit-button" disabled={isSubmitting} color="primary" className={classes.button}>
+      <Button
+        type="submit"
+        id="submit-button"
+        disabled={isSubmitting}
+        color="primary"
+        className={classes.button}
+        data-testid="submit-button"
+      >
         Import
       </Button>
     </Form>
