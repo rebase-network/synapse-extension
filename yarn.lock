@@ -666,6 +666,11 @@
     jest-diff "^25.1.0"
     pretty-format "^25.1.0"
 
+"@types/node@^12.12.31":
+  version "12.12.31"
+  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.12.31.tgz?cache=0&sync_timestamp=1585117974807&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-12.12.31.tgz#d6b4f9645fee17f11319b508fb1001797425da51"
+  integrity sha1-1rT5ZF/uF/ETGbUI+xABeXQl2lE=
+
 "@types/prop-types@*":
   version "15.7.3"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.3.tgz#2ab0d5da2e5815f94b0b9d4b95d1e5f243ab2ca7"
