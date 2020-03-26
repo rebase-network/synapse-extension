@@ -113,7 +113,7 @@ export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
   return (
     <div className={classes.container}>
-      <Title title='Import Mnemonic' />
+      <Title title='Import Mnemonic' testId="mnemonic-form-title" />
       {successNode}
 
       <Formik
