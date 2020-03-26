@@ -14,7 +14,4 @@ module.exports = {
     "json",
     "node"
   ],
-  // Setup Enzyme
-  "snapshotSerializers": ["enzyme-to-json/serializer"],
-  "setupFilesAfterEnv": ["<rootDir>/src/config/setupEnzyme.ts"],
 }

@@ -1,24 +1,40 @@
 import * as React from 'react';
-import { shallow } from 'enzyme';
-import Address from './index';
-import Title from '../../Components/Title';
-import { Button, TextField } from '@material-ui/core';
+import { MemoryRouter } from 'react-router-dom'
+import App from './index';
+import { render, fireEvent, waitFor, cleanup } from '@testing-library/react'
+import '@testing-library/jest-dom/extend-expect'
 
-describe('Popup', () => {
-  let wrapper;
-
+describe('React testing library', () => {
+  let tree
   beforeEach(() => {
-    wrapper = shallow(<Address />)
+    tree = render(
+      <MemoryRouter initialEntries = {['/address']}>
+        <App />
+     </MemoryRouter>
+    );
   });
+  afterEach(cleanup)
 
-  it('should render correctly', () => expect(wrapper).toMatchSnapshot());
+  it('should render title', async() => {
+    const {
+      getByTestId,
+      container
+    } = tree
 
-  it('should render title', () => {
-    expect(wrapper.find(Title)).toHaveLength(1);
-    // expect(wrapper.containsMatchingElement(<Title title={'Import Mnemonic'} />)).toEqual(true)
+    const title = getByTestId('address-title')
+    expect(container).toContainElement(title)
+    expect(title).toHaveTextContent('Address')
   })
 
-  it('should render address', () => {
-    expect(wrapper.find('.address')).toHaveLength(1)
+  it('should render address', async() => {
+    const {
+      getByTestId,
+      container
+    } = tree
+
+    const address = getByTestId('address-info')
+    expect(container).toContainElement(address)
+    expect(address).toHaveTextContent('ck')
   })
-})
+});
+

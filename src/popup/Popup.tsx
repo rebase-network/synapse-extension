@@ -6,7 +6,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { MESSAGE_TYPE } from '../utils/constants'
-import Route from './Route'
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
@@ -44,7 +43,7 @@ export const innerForm = props => {
     handleReset
   } = props;
   return (
-    <Form className="form-mnemonic" onSubmit={handleSubmit}>
+    <Form className="form-mnemonic" id="form-mnemonic" onSubmit={handleSubmit}>
       <TextField
         label="Mnemonic"
         name="mnemonic"
@@ -59,6 +58,7 @@ export const innerForm = props => {
         helperText={(errors.mnemonic && touched.mnemonic) && errors.mnemonic}
         margin="normal"
         variant="outlined"
+        data-testid="field-mnemonic"
       />
       <TextField
         label="Password"
@@ -69,9 +69,11 @@ export const innerForm = props => {
         value={values.password}
         onChange={handleChange}
         onBlur={handleBlur}
+        error={!!errors.password}
         helperText={(errors.password && touched.password) && errors.password}
         margin="normal"
         variant="outlined"
+        data-testid="field-password"
       />
       <TextField
         label="Confirm Password"
@@ -86,9 +88,17 @@ export const innerForm = props => {
         helperText={(errors.confirmPassword && touched.confirmPassword) && errors.confirmPassword}
         margin="normal"
         variant="outlined"
+        data-testid="field-confirm-password"
       />
       {isSubmitting && <div id="submitting">Submitting</div>}
-      <Button type="submit" disabled={isSubmitting} color="primary" className={classes.button}>
+      <Button
+        type="submit"
+        id="submit-button"
+        disabled={isSubmitting}
+        color="primary"
+        className={classes.button}
+        data-testid="submit-button"
+      >
         Import
       </Button>
     </Form>
@@ -114,7 +124,7 @@ export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
   return (
     <div className={classes.container}>
-      <Title title='Import Mnemonic' />
+      <Title title='Import Mnemonic' testId="mnemonic-form-title" />
       {successNode}
 
       <Formik
@@ -127,7 +137,7 @@ export default function (props: AppProps, state: AppState) {
             .min(6)
             .required("Required"),
           confirmPassword: Yup.string()
-            .oneOf([Yup.ref('password'), null], "Passwords don't match!")
+            .oneOf([Yup.ref('password')], "Passwords don't match!")
             .required("Required")
         })}
       >
