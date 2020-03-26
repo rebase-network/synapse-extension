@@ -1,21 +1,24 @@
-import * as React from 'react'
-import { shallow } from 'enzyme'
+import * as React from 'react';
 import Title from './Title'
+import { render, fireEvent, waitFor, cleanup } from '@testing-library/react'
+import '@testing-library/jest-dom/extend-expect'
 
-describe('Title', () => {
-  let wrapper
-  beforeEach(() => wrapper = shallow(<Title title={''} testId="test-title" />))
-
-  it('should render correctly', () => expect(wrapper).toMatchSnapshot());
-
-  it('should render Title', () => {
-    expect(wrapper.find('h3').length).toEqual(1)
+describe('React testing library', () => {
+  let tree
+  beforeEach(() => {
+    tree = render(<Title title='test title' testId="test-title" />);
   });
+  afterEach(cleanup)
 
-  it('should render title text', () => {
-    wrapper.setProps({ title: 'Import Mnemonic'})
-    expect(wrapper.text()).toEqual('Import Mnemonic')
-  });
+  it('should render title', async() => {
+    const {
+      getByTestId,
+      container
+    } = tree
 
+    const title = getByTestId('test-title')
+    expect(container).toContainElement(title)
+    expect(title).toHaveTextContent('test title')
+  })
+});
 
-})
