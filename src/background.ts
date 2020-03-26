@@ -1,11 +1,9 @@
 import { MESSAGE_TYPE } from './utils/constants'
 import {mnemonicToSeedSync } from './wallet/mnemonic';
-import { generateMnemonic, AccountExtendedPublicKey, ExtendedPrivateKey } from "./wallet/key";
-// import * as Keystore from './wallet/keystore';
+import { ExtendedPrivateKey } from "./wallet/key";
+import Keystore from './wallet/keystore';
 import Keychain from './wallet/keychain';
-import { AddressType, AddressPrefix } from './wallet/address';
 
-const Keystore = require("./wallet/keystore");
 /**
  * Listen messages from popup
  */
@@ -40,27 +38,16 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     const seed = mnemonicToSeedSync(mnemonic)
     const masterKeychain = Keychain.fromSeed(seed)
 
-    const accountKeychain = masterKeychain.derivePath(AccountExtendedPublicKey.ckbAccountPath);
-
-    const accountExtendedPublicKey = new AccountExtendedPublicKey(
-        accountKeychain.publicKey.toString('hex'),
-        accountKeychain.chainCode.toString('hex')
-    )
-
-    // 判断 AddressPrefix
-    const address = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Mainnet);
-    console.log(address.address);
-
     const extendedKey = new ExtendedPrivateKey(
       masterKeychain.privateKey.toString('hex'),
       masterKeychain.chainCode.toString('hex')
   )
-    const keystore = Keystore.create(extendedKey, password)
+    const keystore = Keystore.create(extendedKey, password);
 
     chrome.storage.sync.set({
-      key: keystore
+      key: keystore.crypto
     }, () => {
-      console.log('Value is set to ' + keystore);
+      console.log('Value is set to ' + JSON.stringify(keystore));
     });
 
   }
