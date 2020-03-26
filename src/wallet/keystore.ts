@@ -1,12 +1,12 @@
-// import crypto from 'crypto'
-
-const crypto = require('crypto')
+import * as crypto from 'crypto'
 
 import { Keccak } from 'sha3'
 import { v4 as uuid } from 'uuid'
 
 import { UnsupportedCipher, IncorrectPassword, InvalidKeystore } from '../exceptions'
 import { ExtendedPrivateKey } from './key'
+console.log(process, crypto)
+
 
 const CIPHER = 'aes-128-ctr'
 const CKB_CLI_ORIGIN = 'ckb-cli'

@@ -1,11 +1,10 @@
 import { MESSAGE_TYPE } from './utils/constants'
 import {mnemonicToSeedSync } from './wallet/mnemonic';
 import { generateMnemonic, AccountExtendedPublicKey, ExtendedPrivateKey } from "./wallet/key";
-// import * as Keystore from './wallet/keystore';
+import Keystore from './wallet/keystore';
 import Keychain from './wallet/keychain';
 import { AddressType, AddressPrefix } from './wallet/address';
 
-const Keystore = require("./wallet/keystore");
 /**
  * Listen messages from popup
  */
