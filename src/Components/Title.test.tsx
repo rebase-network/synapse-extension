@@ -4,7 +4,7 @@ import Title from './Title'
 
 describe('Title', () => {
   let wrapper
-  beforeEach(() => wrapper = shallow(<Title title={''} />))
+  beforeEach(() => wrapper = shallow(<Title title={''} testId="test-title" />))
 
   it('should render correctly', () => expect(wrapper).toMatchSnapshot());
 

@@ -2,6 +2,6 @@
 
 exports[`Title should render correctly 1`] = `
 <h3
-  data-testid="title"
+  data-testid="test-title"
 />
 `;
