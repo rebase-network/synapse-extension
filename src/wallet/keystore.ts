@@ -1,6 +1,5 @@
-// import crypto from 'crypto'
-
-const crypto = require('crypto')
+import * as crypto from 'crypto'
+const scryptsy = require('scrypt.js')
 
 import { Keccak } from 'sha3'
 import { v4 as uuid } from 'uuid'
@@ -95,7 +94,16 @@ export default class Keystore {
       r: 8,
       p: 1,
     }
-    const derivedKey = crypto.scryptSync(password, salt, kdfparams.dklen, Keystore.scryptOptions(kdfparams))
+
+    // https://github.com/ethereumjs/ethereumjs-wallet/blob/master/src/index.ts#L316
+    const derivedKey = scryptsy(
+      Buffer.from(password),
+      salt,
+      kdfparams.n,
+      kdfparams.r,
+      kdfparams.p,
+      kdfparams.dklen,
+    )
 
     const cipher = crypto.createCipheriv(CIPHER, derivedKey.slice(0, 16), iv)
     if (!cipher) {

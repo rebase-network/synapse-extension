@@ -1,7 +1,7 @@
 {
-  "name": "chrome-extension-react-typescript-boilerplate",
-  "version": "1.0.0",
-  "description": "A boilerplate project to quickly build a Chrome extension using TypeScript and React (built using webpack).",
+  "name": "synapse-extension",
+  "version": "0.1.0",
+  "description": "Synapse extension is a wallet for Nervos CKB",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "dev": "webpack --config webpack.dev.js",
@@ -9,8 +9,8 @@
     "lint": "tslint 'src/**/*.{ts, tsx}'",
     "test": "jest --watch"
   },
-  "author": "Joe Martella",
-  "license": "MIT",
+  "author": "Rebase Team",
+  "license": "BSD-3-Clause",
   "devDependencies": {
     "@types/chrome": "0.0.60",
     "@types/enzyme": "^3.10.5",
@@ -47,6 +47,7 @@
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-router-dom": "^5.1.2",
+    "scrypt.js": "^0.3.0",
     "sha3": "^2.1.2",
     "uuid": "^7.0.2",
     "yup": "^0.28.3"
