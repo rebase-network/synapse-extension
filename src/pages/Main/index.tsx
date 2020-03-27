@@ -45,11 +45,20 @@ export default function (props: AppProps, state: AppState) {
   // if (loading === true) {
   //   return <p>Loading ...</p>
   // }
+
+  const getBalance = ()=>{
+    return 100;
+  }
+
+  const balance = getBalance()
+
   return (
     <div className={classes.container}>
       <Title title='Address' testId="address-title" />
       {loadingNode}
       <div className="address" data-testid="address-info">{address}</div>
+
+      <div className="balance" data-testid="balance">{balance}<span className="">CKB</span></div>
     </div>
   )
 }

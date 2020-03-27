@@ -41,5 +41,15 @@ describe('React testing library', () => {
     expect(container).toContainElement(address)
     expect(address).toHaveTextContent(/ck|loading|null|undefined|/)
   })
+
+  it("should render balance", ()=>{
+    const {
+      getByTestId,
+      container
+    } = tree
+
+    const balance = getByTestId('balance')
+    expect(container).toContainElement(balance)
+  })
 });
 

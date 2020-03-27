@@ -42,6 +42,7 @@ export const innerForm = props => {
     handleSubmit,
     handleReset
   } = props;
+
   return (
     <Form className="form-mnemonic" id="form-mnemonic" onSubmit={handleSubmit}>
       <TextField
