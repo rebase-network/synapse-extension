@@ -33,7 +33,7 @@ export default function (props: AppProps, state: AppState) {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       if (message.messageType === MESSAGE_TYPE.ADDRESS_INFO && message.address) {
         console.log('got address from bg: ', message.address)
-        setAddress(message.address.address);
+        setAddress(message.address);
         setLoading(false);
       }
     })

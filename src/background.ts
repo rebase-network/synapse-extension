@@ -57,10 +57,24 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     const wallet = { keystore: keystore.crypto, address: currAddress.address, path: currAddress.path, pubKey: currAddress.publicKey }
 
     chrome.storage.sync.set({
-      "wallet": wallet
+      wallet,
+      key: keystore.crypto
     }, () => {
       console.log('keystore json value: ' + JSON.stringify(keystore));
+      // chrome.runtime.sendMessage({
+      //   address: wallet.address,
+      //   messageType: MESSAGE_TYPE.ADDRESS_INFO
+      // })
     });
+  }
 
+  if (request.messageType === MESSAGE_TYPE.REQUEST_ADDRESS_INFO) {
+    chrome.storage.sync.get(['wallet'], function({ wallet }) {
+      console.log('Value currently is ' + wallet);
+      wallet && chrome.runtime.sendMessage({
+        address: wallet.address,
+        messageType: MESSAGE_TYPE.ADDRESS_INFO
+      })
+    });
   }
 });

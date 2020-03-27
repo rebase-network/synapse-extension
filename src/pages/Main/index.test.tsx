@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router-dom'
 import App from './index';
 import { render, fireEvent, waitFor, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
+import * as chrome from "sinon-chrome";
 
 describe('React testing library', () => {
   let tree
@@ -14,6 +15,10 @@ describe('React testing library', () => {
     );
   });
   afterEach(cleanup)
+
+  beforeAll(() => {
+    window.chrome = chrome
+  })
 
   it('should render title', async() => {
     const {
@@ -34,7 +39,7 @@ describe('React testing library', () => {
 
     const address = getByTestId('address-info')
     expect(container).toContainElement(address)
-    expect(address).toHaveTextContent('ck')
+    expect(address).toHaveTextContent(/ck|loading|null|undefined|/)
   })
 });
 
