@@ -51,5 +51,19 @@ describe('React testing library', () => {
     const balance = getByTestId('balance')
     expect(container).toContainElement(balance)
   })
+
+  it("should render receive / send btn", ()=>{
+    const{
+      getByTestId,
+      container,
+    }= tree
+
+    const receiveBtn = getByTestId('receive')
+    const sendBtn = getByTestId('send')
+    expect(container).toContainElement(receiveBtn)
+    expect(container).toContainElement(sendBtn)
+
+  });
+
 });
 

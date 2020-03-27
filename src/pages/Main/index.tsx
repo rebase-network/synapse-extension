@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Button, TextField } from '@material-ui/core';
 import Title from '../../Components/Title'
 import { makeStyles } from '@material-ui/core/styles';
 import { MESSAGE_TYPE } from '../../utils/constants'
@@ -59,6 +60,30 @@ export default function (props: AppProps, state: AppState) {
       <div className="address" data-testid="address-info">{address}</div>
 
       <div className="balance" data-testid="balance">{balance}<span className="">CKB</span></div>
+
+      <div className="">
+        <Button
+          type="button"
+          id="receive-button"
+          color="primary"
+          variant="contained"
+          className={classes.button}
+          data-testid="receive"
+        >
+          Receive
+        </Button>
+
+        <Button
+          id="send-button"
+          color="primary"
+          variant="contained"
+          className={classes.button}
+          data-testid="send"
+        >
+          Send
+        </Button>
+
+      </div>
     </div>
   )
 }
