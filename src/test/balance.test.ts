@@ -1,4 +1,5 @@
 import Address, { AddressType, publicKeyToAddress, AddressPrefix } from '../wallet/address'
+import loadCells from '../wallet/loadCells';
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default
 const nodeUrl = 'http://localhost:8114'
@@ -33,8 +34,23 @@ describe('generate lockHash', () => {
 
     const tipBlockNumber = await ckb.rpc.getTipBlockNumber();
     console.log(tipBlockNumber)
-    const cells = await ckb.rpc.getCellsByLockHash(lockHash, '0x687f', tipBlockNumber)
-    console.log(JSON.stringify(cells));
+    // const cells = await ckb.rpc.getCellsByLockHash(lockHash, '0x687f', tipBlockNumber)
+    // console.log(JSON.stringify(cells));
+    // let capacityAll = BigInt(0);
+    // for (let cell of cells) {
+    //   // console.log(JSON.stringify(cell));
+    //   // console.log(BigInt(cell.capacity));
+    //   capacityAll = capacityAll + BigInt(cell.capacity);
+    // }
+    // console.log(BigInt(capacityAll));
+    // expect(BigInt(capacityAll)).toBe(BigInt(500000000000));
+    const cells = await loadCells({
+      lockHash: lockHash,
+      start: '0x1',
+      end: tipBlockNumber,
+      STEP: '0x64',
+      rpc: ckb.rpc,
+    });
     let capacityAll = BigInt(0);
     for (let cell of cells) {
       // console.log(JSON.stringify(cell));
@@ -42,7 +58,9 @@ describe('generate lockHash', () => {
       capacityAll = capacityAll + BigInt(cell.capacity);
     }
     console.log(BigInt(capacityAll));
-    expect(BigInt(capacityAll)).toBe(BigInt(500000000000));
+
+    // console.log(`0x${currentFrom.toString(16)}`);
+    // console.log(`0x${currentTo.toString(16)}`);
 
   })
 })
