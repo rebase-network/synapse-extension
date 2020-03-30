@@ -1,5 +1,6 @@
 import Address, { AddressType, publicKeyToAddress, AddressPrefix } from '../wallet/address'
 import loadCells from '../wallet/balance/loadCells';
+import {getBalanceByPublicKey} from '../balance';
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default
 const nodeUrl = 'http://localhost:8114'
@@ -19,51 +20,59 @@ describe('generate lockHash', () => {
   //   },
   // }
 
-  it('get balance by address',async () => {
-
-    const publicKey = ckb.utils.privateKeyToPublicKey(privateKey);
-    const address = publicKeyToAddress(publicKey, AddressPrefix.Testnet);
-    console.log("address =>", address); //ckt1qyqwmdw88u4y4kxlydr8e8e5gm6c2x67x0dqqxpt4l
-
-    const publicKeyHash = `0x${ckb.utils.blake160(publicKey, 'hex')}`
-
-    await ckb.loadSecp256k1Dep();
-    // console.log(ckb.config.secp256k1Dep);
-    const lockHash = ckb.generateLockHash(publicKeyHash, ckb.config.secp256k1Dep)
-    expect(lockHash).toBe('0x518873a48f98d19cd1529db846a6d4d89ce92577660e72080b74e3dccd45dfb0')
-
-    const tipBlockNumber = await ckb.rpc.getTipBlockNumber();
-    console.log(tipBlockNumber)
-    // const cells = await ckb.rpc.getCellsByLockHash(lockHash, '0x687f', tipBlockNumber)
-    // console.log(JSON.stringify(cells));
-    // let capacityAll = BigInt(0);
-    // for (let cell of cells) {
-    //   // console.log(JSON.stringify(cell));
-    //   // console.log(BigInt(cell.capacity));
-    //   capacityAll = capacityAll + BigInt(cell.capacity);
-    // }
-    // console.log(BigInt(capacityAll));
-    // expect(BigInt(capacityAll)).toBe(BigInt(500000000000));
-    const cells = await loadCells({
-      lockHash: lockHash,
-      start: '0x1',
-      end: tipBlockNumber,
-      STEP: '0x64',
-      rpc: ckb.rpc,
-    });
-    let capacityAll = BigInt(0);
-    for (let cell of cells) {
-      // console.log(JSON.stringify(cell));
-      // console.log(BigInt(cell.capacity));
-      capacityAll = capacityAll + BigInt(cell.capacity);
-    }
-    console.log(BigInt(capacityAll));
-
-    // console.log(`0x${currentFrom.toString(16)}`);
-    // console.log(`0x${currentTo.toString(16)}`);
-
+  it('get balance by publicKey',async () => {
+    const publicKey = "0x037a3192467ef7046070b49eaa2f4706fee19a69bcdd7f6d3b8ab4f7407365089e";
+    const capacityAll = await getBalanceByPublicKey(publicKey);
+    console.log(capacityAll);
+    expect(BigInt(capacityAll)).toBe(BigInt(1000000000000));
   })
+
+  // it('get balance by address',async () => {
+  //   const publicKey = ckb.utils.privateKeyToPublicKey(privateKey);
+  //   console.log("publicKey =>", publicKey); //0x037a3192467ef7046070b49eaa2f4706fee19a69bcdd7f6d3b8ab4f7407365089e
+  //   const address = publicKeyToAddress(publicKey, AddressPrefix.Testnet);
+  //   console.log("address =>", address); //ckt1qyqwmdw88u4y4kxlydr8e8e5gm6c2x67x0dqqxpt4l
+
+  //   const publicKeyHash = `0x${ckb.utils.blake160(publicKey, 'hex')}`
+
+  //   await ckb.loadSecp256k1Dep();
+  //   // console.log(ckb.config.secp256k1Dep);
+  //   const lockHash = ckb.generateLockHash(publicKeyHash, ckb.config.secp256k1Dep)
+  //   expect(lockHash).toBe('0x518873a48f98d19cd1529db846a6d4d89ce92577660e72080b74e3dccd45dfb0')
+
+  //   const tipBlockNumber = await ckb.rpc.getTipBlockNumber();
+  //   console.log(tipBlockNumber)
+  //   // const cells = await ckb.rpc.getCellsByLockHash(lockHash, '0x687f', tipBlockNumber)
+  //   // console.log(JSON.stringify(cells));
+  //   // let capacityAll = BigInt(0);
+  //   // for (let cell of cells) {
+  //   //   // console.log(JSON.stringify(cell));
+  //   //   // console.log(BigInt(cell.capacity));
+  //   //   capacityAll = capacityAll + BigInt(cell.capacity);
+  //   // }
+  //   // console.log(BigInt(capacityAll));
+  //   // expect(BigInt(capacityAll)).toBe(BigInt(500000000000));
+  //   const cells = await loadCells({
+  //     lockHash: lockHash,
+  //     start: '0x1',
+  //     end: tipBlockNumber,
+  //     STEP: '0x64',
+  //     rpc: ckb.rpc,
+  //   });
+  //   let capacityAll = BigInt(0);
+  //   for (let cell of cells) {
+  //     // console.log(JSON.stringify(cell));
+  //     // console.log(BigInt(cell.capacity));
+  //     capacityAll = capacityAll + BigInt(cell.capacity);
+  //   }
+  //   console.log(BigInt(capacityAll));
+
+  //   // console.log(`0x${currentFrom.toString(16)}`);
+  //   // console.log(`0x${currentTo.toString(16)}`);
+
+  // })
 })
+
 
 // console.log src/test/balance.test.ts:35
 // 0x688a

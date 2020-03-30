@@ -5,6 +5,7 @@ import Keychain from './wallet/keychain';
 
 import { AccountExtendedPublicKey, ExtendedPrivateKey } from "./wallet/key";
 import { AddressType, AddressPrefix } from './wallet/address';
+import {getBalanceByPublicKey} from './balance';
 
 /**
  * Listen messages from popup
@@ -74,6 +75,18 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       wallet && chrome.runtime.sendMessage({
         address: wallet.address,
         messageType: MESSAGE_TYPE.ADDRESS_INFO
+      })
+    });
+  }
+
+  //get balance by address
+  if (request.messageType === MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS) {
+    chrome.storage.sync.get(['wallet'], async function({ wallet }) {
+      const publicKey = '0x' + wallet.pubKey;//
+      const capacityAll = await getBalanceByPublicKey(publicKey);
+      wallet && chrome.runtime.sendMessage({
+        balance: JSON.parse(capacityAll.toString()),
+        messageType: MESSAGE_TYPE.BALANCE_BY_ADDRESS
       })
     });
   }

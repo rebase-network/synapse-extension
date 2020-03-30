@@ -29,6 +29,7 @@ export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(true);
   const [address, setAddress] = React.useState();
+  const [balance, setBalance] = React.useState();
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
@@ -36,10 +37,17 @@ export default function (props: AppProps, state: AppState) {
         console.log('got address from bg: ', message.address)
         setAddress(message.address);
         setLoading(false);
-      }
+
+        // get balance by address
+      } else if (message.messageType === MESSAGE_TYPE.BALANCE_BY_ADDRESS) {
+        console.log('get balance by address: ', message.balance)
+        setBalance(message.balance);
+        setLoading(false);
+      } 
     })
     console.log('send request message');
     chrome.runtime.sendMessage({ messageType: MESSAGE_TYPE.REQUEST_ADDRESS_INFO })
+    chrome.runtime.sendMessage({ messageType: MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS})
     setLoading(true);
   }, [])
   const loadingNode = loading ? <div>loading</div> : <div></div>
@@ -47,11 +55,11 @@ export default function (props: AppProps, state: AppState) {
   //   return <p>Loading ...</p>
   // }
 
-  const getBalance = ()=>{
-    return 100;
-  }
+  // const getBalance = ()=>{
+  //   return 100;
+  // }
 
-  const balance = getBalance()
+  // const balance = getBalance()
 
   return (
     <div className={classes.container}>
