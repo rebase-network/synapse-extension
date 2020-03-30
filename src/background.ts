@@ -82,6 +82,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   //get balance by address
   if (request.messageType === MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS) {
     chrome.storage.sync.get(['wallet'], async function({ wallet }) {
+      console.log('wallet ===> ' + JSON.stringify(wallet));
       const publicKey = '0x' + wallet.pubKey;//
       const capacityAll = await getBalanceByPublicKey(publicKey);
       wallet && chrome.runtime.sendMessage({
