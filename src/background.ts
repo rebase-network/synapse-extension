@@ -49,8 +49,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       accountKeychain.chainCode.toString('hex'),
     )
 
-    // 判断 AddressPrefix
-    const currAddress = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Mainnet);
+    // 判断 AddressPrefix Mainnet=>Testnet
+    const currAddress = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Testnet);
     console.log('currAddress: ' + JSON.stringify(currAddress));
 
     // TODO
