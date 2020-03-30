@@ -14,7 +14,24 @@ module.exports = {
     new CopyPlugin([{
       from: "./src/manifest.json",
       to: path.join(__dirname, "dist"),
-    }]),
+    },
+    {
+      from: "./src/popup.html",
+      to: path.join(__dirname, "dist"),
+    },
+    {
+      from: "./src/background.html",
+      to: path.join(__dirname, "dist"),
+    },
+    {
+      from: "./src/images/ckb-32.png",
+      to: path.join(__dirname, "dist"),
+    },
+    {
+      from: "./src/images/ckb-128.png",
+      to: path.join(__dirname, "dist"),
+    },
+  ]),
   ],
   module: {
     rules: [{
