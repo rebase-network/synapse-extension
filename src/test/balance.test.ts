@@ -1,5 +1,5 @@
 import Address, { AddressType, publicKeyToAddress, AddressPrefix } from '../wallet/address'
-import loadCells from '../wallet/loadCells';
+import loadCells from '../wallet/balance/loadCells';
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default
 const nodeUrl = 'http://localhost:8114'
