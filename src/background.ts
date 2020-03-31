@@ -50,36 +50,48 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     )
 
     // 判断 AddressPrefix Mainnet=>Testnet
-    const currAddress = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Testnet);
-    console.log('currAddress: ' + JSON.stringify(currAddress));
+    const addrTestnet = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Testnet);
+    const addrMainnet = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Mainnet);
+    console.log('addrTestnet: ' + JSON.stringify(addrTestnet));
 
-    // TODO
-    // 用户多地址如何保存
-    const wallet = { keystore: keystore.crypto, address: currAddress.address, path: currAddress.path, pubKey: currAddress.publicKey }
+    const wallet = {
+      keystore: keystore.crypto,
+      testnet: {
+        address: addrTestnet.address,
+        path: addrTestnet.path,
+        pubKey: addrTestnet.publicKey
+      },
+      mainnet: {
+        address: addrMainnet.address,
+        path: addrMainnet.path,
+        pubKey: addrMainnet.publicKey
+      },
+    }
 
     chrome.storage.sync.set({
       wallet,
-      key: keystore.crypto
     }, () => {
-      console.log('keystore json value: ' + JSON.stringify(keystore));
-      // chrome.runtime.sendMessage({
-      //   address: wallet.address,
-      //   messageType: MESSAGE_TYPE.ADDRESS_INFO
-      // })
+      console.log('wallet is set to storage: ' + JSON.stringify(wallet));
     });
   }
 
   if (request.messageType === MESSAGE_TYPE.REQUEST_ADDRESS_INFO) {
     chrome.storage.sync.get(['wallet'], function({ wallet }) {
-      console.log('Value currently is ' + wallet);
-      wallet && chrome.runtime.sendMessage({
-        address: wallet.address,
+      console.log('Wallet is ' + JSON.stringify(wallet));
+      const message = {
+        address: {
+          testnet: wallet.testnet.address,
+          mainnet: wallet.mainnet.address,
+        },
         messageType: MESSAGE_TYPE.ADDRESS_INFO
-      })
+      }
+      console.log('message: ', message);
+
+      wallet && chrome.runtime.sendMessage(message)
     });
   }
 
-  //get balance by address
+  // get balance by address
   if (request.messageType === MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS) {
     chrome.storage.sync.get(['wallet'], async function({ wallet }) {
       console.log('wallet ===> ' + JSON.stringify(wallet));
