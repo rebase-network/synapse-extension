@@ -30,7 +30,7 @@ export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(true);
   const [address, setAddress] = React.useState({});
-  const [balance, setBalance] = React.useState();
+  const [balance, setBalance] = React.useState('0');
   const { network } = React.useContext(AppContext)
 
   React.useEffect(() => {
@@ -38,9 +38,7 @@ export default function (props: AppProps, state: AppState) {
       if (message.messageType === MESSAGE_TYPE.ADDRESS_INFO && message.address) {
         console.log('got address from bg: ', message.address)
         setAddress(message.address);
-        setLoading(false);
-
-        // get balance by address
+      // get balance by address
       } else if (message.messageType === MESSAGE_TYPE.BALANCE_BY_ADDRESS) {
         console.log('get balance by address: ', message.balance)
         setBalance(message.balance);
@@ -52,25 +50,15 @@ export default function (props: AppProps, state: AppState) {
     chrome.runtime.sendMessage({ messageType: MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS})
     setLoading(true);
   }, [])
-  const loadingNode = loading ? <div>loading</div> : <div></div>
-  // if (loading === true) {
-  //   return <p>Loading ...</p>
-  // }
-
-  // const getBalance = ()=>{
-  //   return 100;
-  // }
-
-  // const balance = getBalance()
+  const balanceNode = loading ? <div>loading</div> : <div className="balance" data-testid="balance">{balance}<span className="">CKB</span></div>
 
   return (
     <div className={classes.container}>
       <Title title='Address' testId="address-title" />
-      {network}
-      {loadingNode}
       <div className="address" data-testid="address-info">{address[network]}</div>
+      {balanceNode}
 
-      <div className="balance" data-testid="balance">{balance}<span className="">CKB</span></div>
+
 
       <div className="">
         <Button

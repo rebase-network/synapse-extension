@@ -28,7 +28,7 @@ export default function App() {
           <nav>
             <ul>
               <li>
-                <Link to="/">Home</Link>
+                <Link to="/address">Address</Link>
               </li>
               <li>
                 <Link to="/import-mnemonic">Import Mnemonic</Link>
@@ -38,7 +38,7 @@ export default function App() {
           {/* A <Switch> looks through its children <Route>s and
               renders the first one that matches the current URL. */}
           <Switch>
-            <Route path="/">
+            <Route path="/address">
               <Address />
             </Route>
             <Route path="/import-mnemonic">
