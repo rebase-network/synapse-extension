@@ -2,7 +2,7 @@ import Address, { AddressType, publicKeyToAddress, AddressPrefix } from './walle
 import loadCells from './wallet/balance/loadCells';
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default
-const nodeUrl = 'http://localhost:8114'
+const nodeUrl = 'http://106.13.40.34:8114'
 const ckb = new CKB(nodeUrl)
 
 export const getBalanceByPublicKey = async (publicKey) => {

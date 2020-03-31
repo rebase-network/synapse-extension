@@ -16,7 +16,8 @@
   },
   "permissions": [
     "background",
-    "storage"
+    "storage",
+    "http://106.13.40.34:8114/"
   ],
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
