@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
 // });
 
 
-interface AppProps { }
+interface AppProps { handleNetworkChange: Function }
 
 interface AppState { }
 
@@ -46,7 +46,7 @@ export default function (props: AppProps, state: AppState) {
           <Typography variant="h6" className={classes.title}>
             Synapse
           </Typography>
-          <NetworkSelector />
+          <NetworkSelector handleNetworkChange={props.handleNetworkChange} />
           {/* <Button color="inherit">Login</Button> */}
         </Toolbar>
       </AppBar>

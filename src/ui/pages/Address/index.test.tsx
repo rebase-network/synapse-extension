@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { MemoryRouter } from 'react-router-dom'
-import App from './index';
+import App from '../../App';
 import { render, fireEvent, waitFor, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import * as chrome from "sinon-chrome";

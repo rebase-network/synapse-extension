@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Title from './Title'
+import Title from './index'
 import { render, fireEvent, waitFor, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 

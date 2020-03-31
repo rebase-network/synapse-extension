@@ -2,7 +2,8 @@ import * as React from 'react';
 import { Button, TextField } from '@material-ui/core';
 import Title from '../../Components/Title'
 import { makeStyles } from '@material-ui/core/styles';
-import { MESSAGE_TYPE } from '../../utils/constants'
+import { MESSAGE_TYPE } from '../../../utils/constants'
+import { AppContext } from '../../App'
 
 const useStyles = makeStyles({
   container: {
@@ -28,8 +29,9 @@ interface AppState { }
 export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(true);
-  const [address, setAddress] = React.useState();
+  const [address, setAddress] = React.useState({});
   const [balance, setBalance] = React.useState();
+  const { network } = React.useContext(AppContext)
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
@@ -43,7 +45,7 @@ export default function (props: AppProps, state: AppState) {
         console.log('get balance by address: ', message.balance)
         setBalance(message.balance);
         setLoading(false);
-      } 
+      }
     })
     console.log('send request message');
     chrome.runtime.sendMessage({ messageType: MESSAGE_TYPE.REQUEST_ADDRESS_INFO })
@@ -64,8 +66,9 @@ export default function (props: AppProps, state: AppState) {
   return (
     <div className={classes.container}>
       <Title title='Address' testId="address-title" />
+      {network}
       {loadingNode}
-      <div className="address" data-testid="address-info">{address}</div>
+      <div className="address" data-testid="address-info">{address[network]}</div>
 
       <div className="balance" data-testid="balance">{balance}<span className="">CKB</span></div>
 

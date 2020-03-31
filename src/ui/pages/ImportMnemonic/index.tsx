@@ -1,11 +1,11 @@
 import * as React from 'react';
 // import './Popup.scss';
-import Title from '../Components/Title'
+import Title from '../../Components/Title'
 import { Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { MESSAGE_TYPE } from '../utils/constants'
+import { MESSAGE_TYPE } from '../../../utils/constants'
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({

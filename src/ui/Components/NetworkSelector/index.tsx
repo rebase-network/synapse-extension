@@ -21,12 +21,17 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function SimpleSelect() {
-  const classes = useStyles();
-  const [age, setAge] = React.useState('Aggron');
+interface AppProps { handleNetworkChange: Function }
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setAge(event.target.value as string);
+interface AppState { }
+
+export default function (props: AppProps, state: AppState) {
+  const classes = useStyles();
+  const [network, setNetwork] = React.useState('testnet');
+
+  const handleChange = (event: React.ChangeEvent<{ value: string }>) => {
+    setNetwork(event.target.value);
+    props.handleNetworkChange(event.target.value)
   };
 
   return (
@@ -36,12 +41,12 @@ export default function SimpleSelect() {
         <Select
           labelId="network-select-label"
           id="network-select"
-          value={age}
+          value={network}
           onChange={handleChange}
           className={classes.select}
         >
-          <MenuItem value={'Aggron'}>Aggron Testnet</MenuItem>
-          <MenuItem value={'Mainnet'}>Mainnet</MenuItem>
+          <MenuItem value={'testnet'}>Aggron Testnet</MenuItem>
+          <MenuItem value={'mainnet'}>Mainnet</MenuItem>
         </Select>
       </FormControl>
     </div>

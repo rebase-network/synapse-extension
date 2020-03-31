@@ -6,16 +6,16 @@ import '@testing-library/jest-dom/extend-expect'
 describe('React testing library', () => {
   let tree, container, getByTestId
   beforeEach(() => {
-    tree = render(<AppBar />);
+    tree = render(<AppBar handleNetworkChange={null} />);
     container = tree.container
     getByTestId = tree.getByTestId
   });
   afterEach(cleanup)
 
   it('should render title', async() => {
-    const elem = container.querySelector('select')
+    const elem = container.querySelector('h6')
     expect(container).toContainElement(elem)
-    expect(elem).toHaveTextContent('Aggron')
+    expect(elem).toHaveTextContent('Synapse')
   })
 });
 
