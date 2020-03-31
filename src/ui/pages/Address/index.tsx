@@ -47,7 +47,10 @@ export default function (props: AppProps, state: AppState) {
     })
     console.log('send request message');
     chrome.runtime.sendMessage({ messageType: MESSAGE_TYPE.REQUEST_ADDRESS_INFO })
-    chrome.runtime.sendMessage({ messageType: MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS})
+    chrome.runtime.sendMessage({
+      messageType: MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS,
+      network
+    })
     setLoading(true);
   }, [])
   const balanceNode = loading ? <div>loading</div> : <div className="balance" data-testid="balance">{balance}<span className="">CKB</span></div>
