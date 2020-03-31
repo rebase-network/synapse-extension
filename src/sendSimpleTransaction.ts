@@ -4,6 +4,14 @@ const CKB = require('@nervosnetwork/ckb-sdk-core').default
 const nodeUrl = 'http://106.13.40.34:8114/'
 const ckb = new CKB(nodeUrl)
 
+export const getPrivateKeyByMasterKeychainAndPath = (masterKeychain,path) => {
+    
+  return masterKeychain
+            .derivePath(path)
+            .deriveChild(0,false)
+            .privateKey.toString('hex');
+}
+
 export const sendSimpleTransaction = async (privateKey,fromAddress,toAddress,sendCapacity,sendFee) => {
 
   // load the dependencies of secp256k1 algorithm which is used to verify the signature in transaction's witnesses.
