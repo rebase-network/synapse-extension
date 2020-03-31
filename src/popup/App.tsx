@@ -17,20 +17,20 @@ export default function App() {
         <nav>
           <ul>
             <li>
-              <Link to="/">Popup</Link>
+              <Link to="/">Home</Link>
             </li>
             <li>
-              <Link to="/address">Address</Link>
+              <Link to="/import-mnemonic">Import Mnemonic</Link>
             </li>
           </ul>
         </nav>
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
-          <Route path="/address">
+          <Route path="/">
             <Address />
           </Route>
-          <Route path="/">
+          <Route path="/import-mnemonic">
             <Popup />
           </Route>
         </Switch>
