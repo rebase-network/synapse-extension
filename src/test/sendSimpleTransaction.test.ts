@@ -4,8 +4,8 @@ const nodeUrl = 'http://106.13.40.34:8114/'
 const ckb = new CKB(nodeUrl)
                       
 
-const privateKey = '0xa543efda56a157ef858e6bb16cc590fc052ac81fdd6c265864bf96a1d85a0c9a';
-const toAddress  = "ckt1qyqt9ed4emcxyfed77ed0dp7kcm3mxsn97ls38jxjw";
+const privateKey = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
+const toAddress  = "ckt1qyqw975zuu9svtyxgjuq44lv7mspte0n2tmqa703cd";
 
 const sendCapacity = BigInt(100000000000);
 const sendFee = BigInt(1000000);
@@ -23,6 +23,10 @@ describe('transaction test', () => {
      */
     //0304d793194278a005407cd53e6fbd290d8e2a8e90154b4123dc5e0e06a8a19ecb
     console.log(`Public key: ${publicKey}`)
+    // console.log src/test/sendSimpleTransaction.test.ts:25
+    // Public key: 0x03ec80924627d484afd9da7e701dbc7acbf612f573eb1098a1e0c813dbbdcc543c
+    // console.log src/test/sendSimpleTransaction.test.ts:42
+    // fromAddress => ckt1qyqwcnwg78e58tnsd4wqyq74yuxvls3076rqcmangd
   
     const publicKeyHash = `0x${ckb.utils.blake160(publicKey, 'hex')}`
     /**
@@ -33,14 +37,10 @@ describe('transaction test', () => {
     const addresses = {
       testnetAddress: ckb.utils.pubkeyToAddress(publicKey, {
         prefix: 'ckt'
-      }),
-      testnetAddress2: ckb.utils.privateKeyToAddress(privateKey, {
-        prefix: 'ckt'
       })
     }
     //ckt1qyqrpkej44pkt0anq8g0qv8wzlyusjx082xs2c2ux4
     console.log("fromAddress =>", addresses.testnetAddress);
-    console.log("fromAddress2 =>", addresses.testnetAddress2);
 
     /**
      * to see the addresses
