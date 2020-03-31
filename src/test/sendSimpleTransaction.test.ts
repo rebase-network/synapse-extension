@@ -8,8 +8,7 @@ const ckb = new CKB(nodeUrl)
 // publicKey =>  0304d793194278a005407cd53e6fbd290d8e2a8e90154b4123dc5e0e06a8a19ecb
 // Address=> ckt1qyqt9ed4emcxyfed77ed0dp7kcm3mxsn97ls38jxjw
 const privateKey = '0x448ff179b923f0602a00f68f23cb8425d30198446a1b5aa2a016deea2762b1f8';
-const toAddress  = "ckt1qyqt9ed4emcxyfed77ed0dp7kcm3mxsn97ls38jxjw";
-
+const toAddress  = "ckt1qyqdh85u4euqkjjhzcl8zdj24nx6msh0sptquvf32p";
 
 const sendCapacity = BigInt(100000000000);
 const sendFee = BigInt(1000000);
