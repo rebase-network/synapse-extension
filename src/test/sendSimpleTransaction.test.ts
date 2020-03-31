@@ -1,16 +1,37 @@
+import { publicKeyToAddress } from "../wallet/address";
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default
 const nodeUrl = 'http://106.13.40.34:8114/'
 const ckb = new CKB(nodeUrl)
                       
+// privateKey =>  448ff179b923f0602a00f68f23cb8425d30198446a1b5aa2a016deea2762b1f8
+// publicKey =>  0304d793194278a005407cd53e6fbd290d8e2a8e90154b4123dc5e0e06a8a19ecb
+// Address=> ckt1qyqt9ed4emcxyfed77ed0dp7kcm3mxsn97ls38jxjw
+const privateKey = '0x448ff179b923f0602a00f68f23cb8425d30198446a1b5aa2a016deea2762b1f8';
+const toAddress  = "ckt1qyqt9ed4emcxyfed77ed0dp7kcm3mxsn97ls38jxjw";
 
-const privateKey = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
-const toAddress  = "ckt1qyqw975zuu9svtyxgjuq44lv7mspte0n2tmqa703cd";
 
 const sendCapacity = BigInt(100000000000);
 const sendFee = BigInt(1000000);
 
 describe('transaction test', () => {
+
+  it('get address from privateKey', async () => {
+
+    const secp256k1Dep = await ckb.loadSecp256k1Dep() // load the dependencies of secp256k1 algorithm which is used to verify the signature in transaction's witnesses.
+
+    const publicKey = ckb.utils.privateKeyToPublicKey(privateKey)
+    /**
+     * to see the public key
+     */
+    console.log(`Public key: ${publicKey}`)
+    //0304d793194278a005407cd53e6fbd290d8e2a8e90154b4123dc5e0e06a8a19ecb
+
+    const address = publicKeyToAddress(publicKey);
+    console.log("adddress =>", address);
+
+  });
+
   it('send simple transaction', async () => {
 
     jest.setTimeout(100000)
@@ -120,3 +141,13 @@ describe('transaction test', () => {
   });
 
 });
+
+    //add by river
+    // console.log(masterKeychain
+    //             .derivePath(`m/44'/309'/0'/0`)
+    //             .deriveChild(0,false)
+    //             .privateKey.toString('hex'))
+    // console.log(masterKeychain
+    //             .derivePath(`m/44'/309'/0'/0`)
+    //             .deriveChild(0,false)
+    //             .publicKey.toString('hex')) 
