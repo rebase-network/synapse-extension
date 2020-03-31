@@ -154,14 +154,25 @@ export default class Keystore {
     return Keystore.mac(derivedKey, ciphertext) === this.crypto.mac
   }
 
-  derivedKey = (password: string) => {
+  // derivedKey = (password: string) => {
+  //   const { kdfparams } = this.crypto
+  //   return crypto.scryptSync(
+  //     password,
+  //     Buffer.from(kdfparams.salt, 'hex'),
+  //     kdfparams.dklen,
+  //     Keystore.scryptOptions(kdfparams)
+  //   )
+  // }
+    derivedKey = (password: string) => {
     const { kdfparams } = this.crypto
-    return crypto.scryptSync(
-      password,
+    return scryptsy(
+      Buffer.from(password),
       Buffer.from(kdfparams.salt, 'hex'),
+      kdfparams.n,
+      kdfparams.r,
+      kdfparams.p,
       kdfparams.dklen,
-      Keystore.scryptOptions(kdfparams)
-    )
+    ) 
   }
 
   static mac = (derivedKey: Buffer, ciphertext: Buffer) => {
