@@ -7,11 +7,13 @@ import {
 } from "react-router-dom";
 import Address from '../pages/Main'
 import Popup from './Popup'
+import AppBar from '../Components/AppBar/index'
 
 export default function App() {
   return (
     <Router>
       <div>
+        <AppBar />
         <nav>
           <ul>
             <li>
@@ -22,7 +24,6 @@ export default function App() {
             </li>
           </ul>
         </nav>
-
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
