@@ -24,11 +24,11 @@ module.exports = {
       to: path.join(__dirname, "dist"),
     },
     {
-      from: "./src/images/ckb-32.png",
+      from: "./src/images/logo-32.png",
       to: path.join(__dirname, "dist"),
     },
     {
-      from: "./src/images/ckb-128.png",
+      from: "./src/images/logo-128.png",
       to: path.join(__dirname, "dist"),
     },
   ]),
