@@ -9,10 +9,10 @@
   },
   "browser_action": {
     "default_popup": "popup.html",
-    "default_icon": "ckb-32.png"
+    "default_icon": "logo-32.png"
   },
   "icons": {
-    "128": "ckb-128.png"
+    "128": "logo-128.png"
   },
   "permissions": [
     "background",
