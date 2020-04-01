@@ -1,10 +1,10 @@
 
-import { generateMnemonic, AccountExtendedPublicKey, ExtendedPrivateKey } from "./key";
-import Keystore from './keystore'
-import Keychain from './keychain';
-import { entropyToMnemonic, mnemonicToSeedSync } from './mnemonic';
+import { generateMnemonic, AccountExtendedPublicKey, ExtendedPrivateKey } from "../wallet/key";
+import Keystore from '../wallet/keystore'
+import Keychain from '../wallet/keychain';
+import { entropyToMnemonic, mnemonicToSeedSync } from '../wallet/mnemonic';
 
-import Address, { AddressType, AddressPrefix } from './address'
+import Address, { AddressType, AddressPrefix } from '../wallet/address'
 
 import * as chrome from "sinon-chrome";
 // import * as browser from 'sinon-chrome/webextensions'
