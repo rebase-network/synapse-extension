@@ -5,3 +5,8 @@ export const MESSAGE_TYPE = {
   REQUEST_BALANCE_BY_ADDRESS: 'REQUEST_BALANCE_BY_ADDRESS',
   BALANCE_BY_ADDRESS: 'BALANCE_BY_ADDRESS',
 }
+
+export const Ckb = {
+  MainNetCodeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+  TestNetCodeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+}
