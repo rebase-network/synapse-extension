@@ -10,7 +10,7 @@ import {sendSimpleTransaction} from './sendSimpleTransaction';
 /**
  * Listen messages from popup
  */
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   if (request.messageType === MESSAGE_TYPE.IMPORT_MNEMONIC) {
     // call import mnemonic method
@@ -69,9 +69,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       },
     }
 
-    chrome.storage.sync.set({
-      wallet,
-    }, () => {
+    chrome.storage.sync.set({ wallet,}, () => {
       console.log('wallet is set to storage: ' + JSON.stringify(wallet));
     });
   }
@@ -97,7 +95,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   // get balance by address
   if (request.messageType === MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS) {
     chrome.storage.sync.get(['wallet'], async function({ wallet }) {
+
       console.log('wallet ===> ' + JSON.stringify(wallet));
+
       let balance = 0
       if (wallet) {
         const publicKey = '0x' + wallet[request.network].pubKey;
@@ -120,11 +120,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       const toAddress = request.address.trim();
       const amount = request.amount.trim();
       const fee = request.fee.trim();
-      // const password = request.password.trim();TODO
-      const password = '123456';
+      const password = request.password.trim();
 
       //keystore ===>masterKeychain
       console.log("wallet SendTx =>",wallet);
+
       const keystore = Keystore.fromJson(JSON.stringify(wallet.keystore)); //参数是String
 
       const masterPrivateKey = keystore.extendedPrivateKey(password)
@@ -134,22 +134,20 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         Buffer.from(masterPrivateKey.privateKey, 'hex'),
         Buffer.from(masterPrivateKey.chainCode, 'hex')
       )
+
       const privateKey = '0x' + masterKeychain.derivePath(`m/44'/309'/0'/0`)
                           .deriveChild(0,false)
                           .privateKey.toString('hex')
-      console.log("privateKey =>", privateKey);
 
-      const publicKey = '0x' + wallet['testnet'].pubKey;
       const fromAddress = wallet['testnet'].address;
 
-      console.log(privateKey + "," + fromAddress + "," + toAddress + "," + amount + "," + fee);
-      //privateKey,fromAddress,toAddress,sendCapacity,sendFee
       const sendTxHash = await sendSimpleTransaction(
                                   privateKey,
                                   fromAddress,
                                   toAddress,
                                   BigInt(amount),
                                   BigInt(fee));
+
       console.log("sendTxHash=>", sendTxHash);
 
       // chrome.runtime.sendMessage({
@@ -159,6 +157,5 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     });
 
   }
-
 
 });

@@ -13,14 +13,15 @@ export const getBalanceByPublicKey = async (publicKey) => {
     const lockHash = ckb.generateLockHash(publicKeyHash, ckb.config.secp256k1Dep)
 
     const tipBlockNumber = await ckb.rpc.getTipBlockNumber();
- 
+
     const cells = await loadCells({
       lockHash: lockHash,
-      start: '0x1',
+      start: BigInt(30000),
       end: tipBlockNumber,
       STEP: '0x64',
       rpc: ckb.rpc,
     });
+
     let capacityAll = BigInt(0);
     for (let cell of cells) {
       capacityAll = capacityAll + BigInt(cell.capacity);

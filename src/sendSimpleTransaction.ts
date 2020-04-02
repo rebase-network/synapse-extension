@@ -2,10 +2,11 @@ import Address, { AddressType, publicKeyToAddress , AddressPrefix} from "./walle
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default
 const nodeUrl = 'http://106.13.40.34:8114/'
+
 const ckb = new CKB(nodeUrl)
 
 export const getPrivateKeyByMasterKeychainAndPath = (masterKeychain,path) => {
-    
+
   return masterKeychain
             .derivePath(path)
             .deriveChild(0,false)
@@ -15,7 +16,7 @@ export const getPrivateKeyByMasterKeychainAndPath = (masterKeychain,path) => {
 export const sendSimpleTransaction = async (privateKey,fromAddress,toAddress,sendCapacity,sendFee) => {
 
   // load the dependencies of secp256k1 algorithm which is used to verify the signature in transaction's witnesses.
-  const secp256k1Dep = await ckb.loadSecp256k1Dep() 
+  const secp256k1Dep = await ckb.loadSecp256k1Dep()
 
   const publicKey = ckb.utils.privateKeyToPublicKey(privateKey)
   /**
@@ -42,21 +43,17 @@ export const sendSimpleTransaction = async (privateKey,fromAddress,toAddress,sen
   // console.log(lockHash)
 
   // method to fetch all unspent cells by lock hash
-  const unspentCells = await ckb.loadCells({
-    lockHash
+  const unspentCells = await ckb.loadCells({ //
+    lockHash,
+    start: BigInt(30000),
+    // STEP: '0x64',
+    // rpc: ckb.rpc,
   })
 
-  /**
-   * to see the unspent cells
-   */
-  // console.log("unspentCells => ",unspentCells)
-
-  /**
-   * send transaction
-   */
   // const toAddress = ckb.utils.privateKeyToAddress(privateKey, {
   //   prefix: 'ckt'
   // })
+
   const rawTransaction = ckb.generateRawTransaction({
     fromAddress: fromAddress,
     toAddress: toAddress,
@@ -78,7 +75,7 @@ export const sendSimpleTransaction = async (privateKey,fromAddress,toAddress,sen
   /**
    * to see the signed transaction
    */
-  // console.log("signedTx =>", JSON.stringify(signedTx, null, 2))
+  console.log("signedTx =>", JSON.stringify(signedTx, null, 2))
 
   const realTxHash = await ckb.rpc.sendTransaction(signedTx)
   /**
@@ -96,4 +93,4 @@ export const sendSimpleTransaction = async (privateKey,fromAddress,toAddress,sen
     // console.log(masterKeychain
     //             .derivePath(`m/44'/309'/0'/0`)
     //             .deriveChild(0,false)
-    //             .publicKey.toString('hex')) 
+    //             .publicKey.toString('hex'))
