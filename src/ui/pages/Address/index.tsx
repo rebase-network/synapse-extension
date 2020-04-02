@@ -15,6 +15,7 @@ const useStyles = makeStyles({
     margin: 30,
     boxSizing: 'border-box'
   },
+  button: {}
 });
 
 
@@ -55,7 +56,6 @@ export default function (props: AppProps, state: AppState) {
   }, [])
   const balanceNode = loading ? <div data-testid="balance">loading</div> : <div className="balance" data-testid="balance">{balance}<span className="">CKB</span></div>
 
-  const history = useHistory();
   const onSendtx = () => {
     history.push('/send-tx')
   }
