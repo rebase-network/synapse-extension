@@ -8,6 +8,7 @@ import {
 import Address from './pages/Address'
 import ImportMnemonic from './pages/ImportMnemonic'
 import AppBar from './Components/AppBar/'
+import Transaction from "./pages/Transaction";
 
 export const AppContext = React.createContext({network: 'testnet'});
 
@@ -43,6 +44,9 @@ export default function App() {
             </Route>
             <Route path="/import-mnemonic">
               <ImportMnemonic />
+            </Route>
+            <Route path="/send-tx">
+              <Transaction />
             </Route>
           </Switch>
         </div>

@@ -1,9 +1,11 @@
 import * as React from 'react';
+import {shannonToCKBFormatter} from '../../../utils/formatters'
 import { Button, TextField } from '@material-ui/core';
 import Title from '../../Components/Title'
 import { makeStyles } from '@material-ui/core/styles';
 import { MESSAGE_TYPE } from '../../../utils/constants'
 import { AppContext } from '../../App'
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   container: {
@@ -55,13 +57,16 @@ export default function (props: AppProps, state: AppState) {
   }, [])
   const balanceNode = loading ? <div>loading</div> : <div className="balance" data-testid="balance">{balance}<span className="">CKB</span></div>
 
+  const history = useHistory();
+  const onSendtx = () => {
+    history.push('/send-tx')
+  }
+
   return (
     <div className={classes.container}>
       <Title title='Address' testId="address-title" />
       <div className="address" data-testid="address-info">{address[network]}</div>
       {balanceNode}
-
-
 
       <div className="">
         <Button
@@ -75,9 +80,13 @@ export default function (props: AppProps, state: AppState) {
           Receive
         </Button>
 
+        <br/>
+        <br/>
+
         <Button
           id="send-button"
           color="primary"
+          onClick={onSendtx}
           variant="contained"
           className={classes.button}
           data-testid="send"
