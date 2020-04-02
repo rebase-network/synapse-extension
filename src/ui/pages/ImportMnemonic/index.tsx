@@ -10,11 +10,7 @@ import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   container: {
-    height: 600,
-    width: 357,
-    minHeight: 500,
     margin: 30,
-    boxSizing: 'border-box'
   },
   button: {
 
