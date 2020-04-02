@@ -44,6 +44,9 @@ export default function App() {
             <Route path="/import-mnemonic">
               <ImportMnemonic />
             </Route>
+            <Route path="/">
+              <Address />
+            </Route>
           </Switch>
         </div>
       </AppContext.Provider>
