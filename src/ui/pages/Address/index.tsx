@@ -21,7 +21,7 @@ const useStyles = makeStyles({
     textAlign: 'right'
   },
   dialogContent: {
-    padding: 24,
+    padding: '0 24px 24px',
     textAlign: 'center',
     minWidth: 200
   },
@@ -32,6 +32,10 @@ const useStyles = makeStyles({
     width: 200,
     padding: 24,
     textAlign: 'center'
+  },
+  tip: {
+    marginBottom: 24,
+    color: 'green'
   }
 });
 
@@ -45,6 +49,7 @@ export default function(props: AppProps, state: AppState) {
   const [address, setAddress] = React.useState({});
   const [balance, setBalance] = React.useState('0');
   const [open, setOpen] = React.useState(false);
+  const [tooltip, setTooltip] = React.useState('');
   const { network } = React.useContext(AppContext);
 
   React.useEffect(() => {
@@ -74,6 +79,15 @@ export default function(props: AppProps, state: AppState) {
     setLoading(true);
   }, []);
 
+  React.useEffect(() => {
+    (async function copyAddress() {
+      if (open && address[network]) {
+        await navigator.clipboard.writeText(address[network]);
+      }
+    })();
+    setTooltip('Address has been copied to clipboard');
+  }, [open, address]);
+
   const balanceNode = loading ? (
     <div>loading</div>
   ) : (
@@ -89,6 +103,7 @@ export default function(props: AppProps, state: AppState) {
 
   const handleClose = () => {
     setOpen(false);
+    setTooltip('');
   };
 
   return (
@@ -129,6 +144,7 @@ export default function(props: AppProps, state: AppState) {
         </div>
 
         <div className={classes.dialogContent}>
+          <div className={classes.tip}>{tooltip}</div>
           {address[network] ? (
             <QrCode value={address[network]} size={200} />
           ) : (
