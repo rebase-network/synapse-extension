@@ -120,18 +120,32 @@ export default function (props: AppProps, state: AppState) {
   const [success, setSuccess] = React.useState(false)
   const history = useHistory();
 
+  React.useEffect(() => {
+    chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+      if (message.messageType === MESSAGE_TYPE.SEND_TX_BY_AMOUNT) {
+        // setAddress(message.address);
+        console.log("message", JSON.stringify(message));
+        // message {"fromAddress":"ckt1qyqt9ed4emcxyfed77ed0dp7kcm3mxsn97ls38jxjw","toAddress":"ckt1qyqt9ed4emcxyfed77ed0dp7kcm3mxsn97ls38jxjw","amount":"1000","fee":"1000","messageType":"SEND_TX_BY_AMOUNT"}
+         
+
+      }
+    })
+    // setLoading(true);
+  }, [])
+
   const onSubmit = async(values) => {
     // await new Promise(resolve => setTimeout(resolve, 500));
-    // chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_MNEMONIC })
-    // console.log(values)
-    // setSuccess(true)
-    // // go to address page
-    // history.push('/address')
+    console.log(values)
+    //消息发送到Background.ts
+    //network - TODO
+    chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.SEND_TX })
+    setSuccess(true)
   }
 
   let successNode = null
   if (success) successNode = <div className="success">Successfully</div>
 
+  
   const classes = useStyles();
   return (
     <div className={classes.container}>

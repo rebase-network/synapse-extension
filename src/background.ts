@@ -6,7 +6,7 @@ import Keychain from './wallet/keychain';
 import { AccountExtendedPublicKey, ExtendedPrivateKey } from "./wallet/key";
 import { AddressType, AddressPrefix } from './wallet/address';
 import {getBalanceByPublicKey} from './balance';
-
+import {sendSimpleTransaction} from './sendSimpleTransaction';
 /**
  * Listen messages from popup
  */
@@ -41,7 +41,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     )
 
     const keystore = Keystore.create(extendedKey, password);
-
+    console.log("keystore=>",keystore);
+    console.log("keystore.crypto=>",keystore.crypto);
     const accountKeychain = masterKeychain.derivePath(AccountExtendedPublicKey.ckbAccountPath);
 
     const accountExtendedPublicKey = new AccountExtendedPublicKey(
@@ -55,7 +56,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     console.log('addrTestnet: ' + JSON.stringify(addrTestnet));
 
     const wallet = {
-      keystore: keystore.crypto,
+      keystore: keystore,
       testnet: {
         address: addrTestnet.address,
         path: addrTestnet.path,
@@ -94,7 +95,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   // get balance by address
   if (request.messageType === MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS) {
     chrome.storage.sync.get(['wallet'], async function({ wallet }) {
-      console.log('wallet ===> ' + JSON.stringify(wallet));
+      // console.log('wallet ===> ' + JSON.stringify(wallet));
       const publicKey = '0x' + wallet[request.network].pubKey;
       const capacityAll = await getBalanceByPublicKey(publicKey);
       wallet && chrome.runtime.sendMessage({
@@ -103,4 +104,55 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       })
     });
   }
+
+  //发送交易
+  if (request.messageType === MESSAGE_TYPE.SEND_TX) {
+
+    chrome.storage.sync.get(['wallet'], async function( {wallet} ) {
+
+      //1- 从chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.SEND_TX })获取values的值
+      const toAddress = request.address.trim();
+      const amount = request.amount.trim();
+      const fee = request.fee.trim();
+      // const password = request.password.trim();TODO
+      const password = '123456';
+
+      //keystore ===>masterKeychain 
+      console.log("wallet SendTx =>",wallet);
+      const keystore = Keystore.fromJson(JSON.stringify(wallet.keystore)); //参数是String
+
+      const masterPrivateKey = keystore.extendedPrivateKey(password)
+      console.log("masterPrivateKey =>", masterPrivateKey);
+
+      const masterKeychain = new Keychain(
+        Buffer.from(masterPrivateKey.privateKey, 'hex'),
+        Buffer.from(masterPrivateKey.chainCode, 'hex')
+      )
+      const privateKey = '0x' + masterKeychain.derivePath(`m/44'/309'/0'/0`)
+                          .deriveChild(0,false)
+                          .privateKey.toString('hex')
+      console.log("privateKey =>", privateKey);
+
+      const publicKey = '0x' + wallet['testnet'].pubKey;
+      const fromAddress = wallet['testnet'].address;
+
+      console.log(privateKey + "," + fromAddress + "," + toAddress + "," + amount + "," + fee);
+      //privateKey,fromAddress,toAddress,sendCapacity,sendFee 
+      const sendTxHash = await sendSimpleTransaction(
+                                  privateKey,
+                                  fromAddress,
+                                  toAddress,
+                                  BigInt(amount),
+                                  BigInt(fee));
+      console.log("sendTxHash=>", sendTxHash);    
+
+      // chrome.runtime.sendMessage({
+      //   sendTxAmount: sendTxAmount,
+      //   messageType: MESSAGE_TYPE.SEND_TX_BY_AMOUNT
+      // })
+    });
+
+  }
+
+
 });

@@ -49,7 +49,7 @@ export default function App() {
               <Transaction />
             </Route>
             <Route path="/">
-              <Address />
+              <ImportMnemonic />
             </Route>
           </Switch>
         </div>
