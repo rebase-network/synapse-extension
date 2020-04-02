@@ -1,11 +1,11 @@
 import * as React from 'react';
-import {shannonToCKBFormatter} from '../../../utils/formatters'
-import { Button, TextField } from '@material-ui/core';
+import { shannonToCKBFormatter } from '../../../utils/formatters'
+import { Button } from '@material-ui/core';
+import { useHistory } from "react-router-dom";
 import Title from '../../Components/Title'
 import { makeStyles } from '@material-ui/core/styles';
 import { MESSAGE_TYPE } from '../../../utils/constants'
 import { AppContext } from '../../App'
-import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   container: {
@@ -15,12 +15,7 @@ const useStyles = makeStyles({
     margin: 30,
     boxSizing: 'border-box'
   },
-  button: {
-
-  },
-  textField: {
-
-  }
+  button: {}
 });
 
 
@@ -34,11 +29,18 @@ export default function (props: AppProps, state: AppState) {
   const [address, setAddress] = React.useState({});
   const [balance, setBalance] = React.useState('0');
   const { network } = React.useContext(AppContext)
+  const history = useHistory();
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-      if (message.messageType === MESSAGE_TYPE.ADDRESS_INFO && message.address) {
-        setAddress(message.address);
+      if (message.messageType === MESSAGE_TYPE.ADDRESS_INFO) {
+        console.log('message: ', message);
+
+        if (message.address) {
+          setAddress(message.address);
+        } else {
+          history.push('./import-mnemonic')
+        }
       // get balance by address
       } else if (message.messageType === MESSAGE_TYPE.BALANCE_BY_ADDRESS) {
         setBalance(message.balance);
@@ -54,7 +56,6 @@ export default function (props: AppProps, state: AppState) {
   }, [])
   const balanceNode = loading ? <div data-testid="balance">loading</div> : <div className="balance" data-testid="balance">{balance}<span className="">CKB</span></div>
 
-  const history = useHistory();
   const onSendtx = () => {
     history.push('/send-tx')
   }

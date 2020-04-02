@@ -79,27 +79,41 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.messageType === MESSAGE_TYPE.REQUEST_ADDRESS_INFO) {
     chrome.storage.sync.get(['wallet'], function({ wallet }) {
       console.log('Wallet is ' + JSON.stringify(wallet));
-      const message = {
-        address: {
+      const message: any = {
+        messageType: MESSAGE_TYPE.ADDRESS_INFO
+      }
+      if (wallet) {
+        message.address = {
           testnet: wallet.testnet.address,
           mainnet: wallet.mainnet.address,
-        },
-        messageType: MESSAGE_TYPE.ADDRESS_INFO
+        }
       }
       console.log('message: ', message);
 
-      wallet && chrome.runtime.sendMessage(message)
+      chrome.runtime.sendMessage(message)
     });
   }
 
   // get balance by address
   if (request.messageType === MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS) {
     chrome.storage.sync.get(['wallet'], async function({ wallet }) {
+<<<<<<< HEAD
       // console.log('wallet ===> ' + JSON.stringify(wallet));
       const publicKey = '0x' + wallet[request.network].pubKey;
       const capacityAll = await getBalanceByPublicKey(publicKey);
       wallet && chrome.runtime.sendMessage({
         balance: JSON.parse(capacityAll.toString()),
+=======
+      console.log('wallet ===> ' + JSON.stringify(wallet));
+      let balance = 0
+      if (wallet) {
+        const publicKey = '0x' + wallet[request.network].pubKey;
+        const capacityAll = await getBalanceByPublicKey(publicKey);
+        balance = JSON.parse(capacityAll.toString())
+      }
+      chrome.runtime.sendMessage({
+        balance,
+>>>>>>> 8797a74a3be70625736c1bf549dc1828a0280ba8
         messageType: MESSAGE_TYPE.BALANCE_BY_ADDRESS
       })
     });
