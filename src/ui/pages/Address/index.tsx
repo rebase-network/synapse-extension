@@ -1,9 +1,12 @@
 import * as React from 'react';
-import { Button, TextField } from '@material-ui/core';
+import { Button, Dialog, IconButton } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import Title from '../../Components/Title';
 import { makeStyles } from '@material-ui/core/styles';
 import { MESSAGE_TYPE } from '../../../utils/constants';
 import { AppContext } from '../../App';
+
+const QrCode = require('qrcode.react');
 
 const useStyles = makeStyles({
   container: {
@@ -14,7 +17,22 @@ const useStyles = makeStyles({
     boxSizing: 'border-box'
   },
   button: {},
-  textField: {}
+  dialogTitle: {
+    textAlign: 'right'
+  },
+  dialogContent: {
+    padding: 24,
+    textAlign: 'center',
+    minWidth: 200
+  },
+  address: {
+    marginTop: 16
+  },
+  loading: {
+    width: 200,
+    padding: 24,
+    textAlign: 'center'
+  }
 });
 
 interface AppProps {}
@@ -26,6 +44,7 @@ export default function(props: AppProps, state: AppState) {
   const [loading, setLoading] = React.useState(true);
   const [address, setAddress] = React.useState({});
   const [balance, setBalance] = React.useState('0');
+  const [open, setOpen] = React.useState(false);
   const { network } = React.useContext(AppContext);
 
   React.useEffect(() => {
@@ -38,16 +57,13 @@ export default function(props: AppProps, state: AppState) {
         message.messageType === MESSAGE_TYPE.ADDRESS_INFO &&
         message.address
       ) {
-        console.log('got address from bg: ', message.address);
         setAddress(message.address);
         // get balance by address
       } else if (message.messageType === MESSAGE_TYPE.BALANCE_BY_ADDRESS) {
-        console.log('get balance by address: ', message.balance);
         setBalance(message.balance);
         setLoading(false);
       }
     });
-    console.log('send request message');
     chrome.runtime.sendMessage({
       messageType: MESSAGE_TYPE.REQUEST_ADDRESS_INFO
     });
@@ -67,6 +83,14 @@ export default function(props: AppProps, state: AppState) {
     </div>
   );
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <div className={classes.container}>
       <Title title="Address" testId="address-title" />
@@ -74,7 +98,6 @@ export default function(props: AppProps, state: AppState) {
         {address[network]}
       </div>
       {balanceNode}
-
       <div className="">
         <Button
           type="button"
@@ -83,6 +106,7 @@ export default function(props: AppProps, state: AppState) {
           variant="contained"
           className={classes.button}
           data-testid="receive"
+          onClick={handleClickOpen}
         >
           Receive
         </Button>
@@ -97,6 +121,22 @@ export default function(props: AppProps, state: AppState) {
           Send
         </Button>
       </div>
+      <Dialog open={open}>
+        <div className={classes.dialogTitle}>
+          <IconButton onClick={handleClose}>
+            <CloseIcon />
+          </IconButton>
+        </div>
+
+        <div className={classes.dialogContent}>
+          {address[network] ? (
+            <QrCode value={address[network]} size={200} />
+          ) : (
+            <div>loading</div>
+          )}
+          <div className={classes.address}>{address[network]}</div>
+        </div>
+      </Dialog>
     </div>
   );
 }
