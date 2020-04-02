@@ -9,7 +9,7 @@ describe('React testing library', () => {
   let tree
   beforeEach(() => {
     tree = render(
-      <MemoryRouter initialEntries = {['/address']}>
+      <MemoryRouter initialEntries = {['/']}>
         <App />
      </MemoryRouter>
     );

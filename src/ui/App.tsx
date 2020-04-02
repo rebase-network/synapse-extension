@@ -7,8 +7,8 @@ import {
 } from "react-router-dom";
 import Address from './pages/Address'
 import ImportMnemonic from './pages/ImportMnemonic'
+import Transaction from "./pages/Transaction"
 import AppBar from './Components/AppBar/'
-import Transaction from "./pages/Transaction";
 
 export const AppContext = React.createContext({network: 'testnet'});
 
@@ -47,6 +47,9 @@ export default function App() {
             </Route>
             <Route path="/send-tx">
               <Transaction />
+            </Route>
+            <Route path="/">
+              <Address />
             </Route>
           </Switch>
         </div>
