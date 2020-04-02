@@ -50,7 +50,7 @@ export default function (props: AppProps, state: AppState) {
     })
     setLoading(true);
   }, [])
-  const balanceNode = loading ? <div>loading</div> : <div className="balance" data-testid="balance">{balance}<span className="">CKB</span></div>
+  const balanceNode = loading ? <div data-testid="balance">loading</div> : <div className="balance" data-testid="balance">{balance}<span className="">CKB</span></div>
 
   return (
     <div className={classes.container}>

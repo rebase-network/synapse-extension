@@ -3,18 +3,23 @@ import { MemoryRouter } from 'react-router-dom'
 import App from '../../App';
 import { render, fireEvent, waitFor, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
+import * as chrome from "sinon-chrome";
 
-describe('React testing library', () => {
+describe('import mnemonic', () => {
   let tree, container, getByTestId
   beforeEach(() => {
     tree = render(
-      <MemoryRouter initialEntries = {['/']}>
+      <MemoryRouter initialEntries = {['/import-mnemonic']}>
         <App />
      </MemoryRouter>
     );
     container = tree.container
     getByTestId = tree.getByTestId
   });
+
+  beforeAll(() => {
+    window.chrome = chrome
+  })
 
   afterEach(cleanup)
 
