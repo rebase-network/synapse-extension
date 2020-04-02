@@ -1,11 +1,12 @@
 import * as React from 'react';
+import { shannonToCKBFormatter } from '../../../utils/formatters';
 import { Button, Dialog, IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import Title from '../../Components/Title';
 import { makeStyles } from '@material-ui/core/styles';
 import { MESSAGE_TYPE } from '../../../utils/constants';
 import { AppContext } from '../../App';
-
+import { useHistory } from 'react-router-dom';
 const QrCode = require('qrcode.react');
 
 const useStyles = makeStyles({
@@ -69,15 +70,22 @@ export default function(props: AppProps, state: AppState) {
         setLoading(false);
       }
     });
+
     chrome.runtime.sendMessage({
       messageType: MESSAGE_TYPE.REQUEST_ADDRESS_INFO
     });
+
     chrome.runtime.sendMessage({
       messageType: MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS,
       network
     });
     setLoading(true);
   }, []);
+
+  const history = useHistory();
+  const onSendtx = () => {
+    history.push('/send-tx');
+  };
 
   React.useEffect(() => {
     (async function copyAddress() {
@@ -126,9 +134,13 @@ export default function(props: AppProps, state: AppState) {
           Receive
         </Button>
 
+        <br />
+        <br />
+
         <Button
           id="send-button"
           color="primary"
+          onClick={onSendtx}
           variant="contained"
           className={classes.button}
           data-testid="send"
