@@ -36,16 +36,13 @@ export default function (props: AppProps, state: AppState) {
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       if (message.messageType === MESSAGE_TYPE.ADDRESS_INFO && message.address) {
-        console.log('got address from bg: ', message.address)
         setAddress(message.address);
       // get balance by address
       } else if (message.messageType === MESSAGE_TYPE.BALANCE_BY_ADDRESS) {
-        console.log('get balance by address: ', message.balance)
         setBalance(message.balance);
         setLoading(false);
       }
     })
-    console.log('send request message');
     chrome.runtime.sendMessage({ messageType: MESSAGE_TYPE.REQUEST_ADDRESS_INFO })
     chrome.runtime.sendMessage({
       messageType: MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS,
