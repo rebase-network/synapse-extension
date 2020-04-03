@@ -41,8 +41,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     )
 
     const keystore = Keystore.create(extendedKey, password);
-    console.log("keystore=>",keystore);
-    console.log("keystore.crypto=>",keystore.crypto);
+    console.log("keystore=>",JSON.stringify(keystore));
     const accountKeychain = masterKeychain.derivePath(AccountExtendedPublicKey.ckbAccountPath);
 
     const accountExtendedPublicKey = new AccountExtendedPublicKey(
