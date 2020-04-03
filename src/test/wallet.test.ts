@@ -1,3 +1,5 @@
+const CkbUtils = require("@nervosnetwork/ckb-sdk-utils");
+
 import { generateMnemonic, AccountExtendedPublicKey, ExtendedPrivateKey } from "../wallet/key";
 import Keystore from '../wallet/keystore';
 import Keychain from '../wallet/keychain';
@@ -29,9 +31,7 @@ describe('wallet', () => {
 
   it("should mnemonic length is 12", () => {
     const words = generateMnemonic();
-
     expect(words.split(" ").length).toEqual(12);
-
   })
 
   it("should check seed", () => {
@@ -50,6 +50,40 @@ describe('wallet', () => {
     expect(master.index).toEqual(0)
     expect(master.depth).toEqual(0)
     expect(master.parentFingerprint).toEqual(0)
+  })
+
+  it("decrypt keystore json file", () => {
+    const passwd = "111111"
+
+    const seed = mnemonicToSeedSync(mnenonics)
+    const masterKeychain = Keychain.fromSeed(seed)
+
+    const extendedPrivateKey = new ExtendedPrivateKey(
+      masterKeychain.privateKey.toString('hex'),
+      masterKeychain.chainCode.toString('hex')
+    )
+
+    const keystore = Keystore.create(extendedPrivateKey, passwd)
+    const jsonObj = keystore.toJson()
+
+    const newkeystore = Keystore.fromJson(JSON.stringify(jsonObj))
+
+    const masterPrivateKey = newkeystore.extendedPrivateKey(passwd)
+
+    const newMasterKeychain = new Keychain(
+      Buffer.from(masterPrivateKey.privateKey, 'hex'),
+      Buffer.from(masterPrivateKey.chainCode, 'hex')
+    )
+
+    const hdPrivateKey = '0x' + newMasterKeychain.derivePath(`m/44'/309'/0'/0`)
+      .deriveChild(0, false)
+      .privateKey.toString('hex')
+
+    const hdtestnetAddr = CkbUtils.privateKeyToAddress(hdPrivateKey, {
+      prefix: 'ckt',
+    })
+
+    expect(hdtestnetAddr).toBe("ckt1qyqt9ed4emcxyfed77ed0dp7kcm3mxsn97ls38jxjw")
   })
 
 });
@@ -78,7 +112,6 @@ describe('load and check password', () => {
     expect(extendedPrivateKey.privateKey).toEqual(fixture2.privateKey)
     expect(extendedPrivateKey.chainCode).toEqual(fixture2.chainCode)
   })
-
 
 })
 

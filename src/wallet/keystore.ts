@@ -172,7 +172,7 @@ export default class Keystore {
       kdfparams.r,
       kdfparams.p,
       kdfparams.dklen,
-    ) 
+    )
   }
 
   static mac = (derivedKey: Buffer, ciphertext: Buffer) => {
@@ -187,4 +187,13 @@ export default class Keystore {
       maxmem: 128 * (kdfparams.n + kdfparams.p + 2) * kdfparams.r,
     }
   }
+
+  public toJson = () => {
+    let obj = {}
+    obj['id'] = this.id
+    obj['version'] = this.version
+    obj['crypto'] = this.crypto
+    return obj
+  }
+
 }
