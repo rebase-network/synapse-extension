@@ -19,12 +19,13 @@ const useStyles = makeStyles({
     textAlign: 'right'
   },
   dialogContent: {
-    padding: '0 24px 24px',
+    padding: '0 16px 24px',
     textAlign: 'center',
     minWidth: 200
   },
   address: {
-    marginTop: 16
+    marginTop: 16,
+    fontSize: 8
   },
   loading: {
     width: 200,
