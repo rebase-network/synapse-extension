@@ -51,7 +51,7 @@ export default function App() {
               <Transaction />
             </Route>
             <Route path="/">
-              <ImportMnemonic />
+              <Address />
             </Route>
           </Switch>
         </div>
