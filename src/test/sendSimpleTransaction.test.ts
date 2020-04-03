@@ -10,29 +10,14 @@ const ckb = new CKB(nodeUrl)
 const privateKey = '0x448ff179b923f0602a00f68f23cb8425d30198446a1b5aa2a016deea2762b1f8';
 const toAddress  = "ckt1qyqdh85u4euqkjjhzcl8zdj24nx6msh0sptquvf32p";
 
-const sendCapacity = BigInt(100000000000);
-const sendFee = BigInt(1000000);
+const sendCapacity = BigInt(11100000000);
+const sendFee = BigInt(1100000000);
 
 describe('transaction test', () => {
 
-  it('get address from privateKey', async () => {
-
-    const secp256k1Dep = await ckb.loadSecp256k1Dep() // load the dependencies of secp256k1 algorithm which is used to verify the signature in transaction's witnesses.
-
-    const publicKey = ckb.utils.privateKeyToPublicKey(privateKey)
-    /**
-     * to see the public key
-     */
-    console.log(`Public key: ${publicKey}`)
-    //0304d793194278a005407cd53e6fbd290d8e2a8e90154b4123dc5e0e06a8a19ecb
-
-    const address = publicKeyToAddress(publicKey);
-    console.log("adddress =>", address);
-
-  });
-
   it('send simple transaction', async () => {
 
+    console.log("0x6151c90c6735e505c64cda8ac37efcac55a5823c0037a38ad9ca90f4cce56b83".length)
     jest.setTimeout(100000)
 
     const secp256k1Dep = await ckb.loadSecp256k1Dep() // load the dependencies of secp256k1 algorithm which is used to verify the signature in transaction's witnesses.
@@ -42,7 +27,7 @@ describe('transaction test', () => {
      * to see the public key
      */
     //0304d793194278a005407cd53e6fbd290d8e2a8e90154b4123dc5e0e06a8a19ecb
-    console.log(`Public key: ${publicKey}`)
+    // console.log(`Public key: ${publicKey}`)
     // console.log src/test/sendSimpleTransaction.test.ts:25
     // Public key: 0x03ec80924627d484afd9da7e701dbc7acbf612f573eb1098a1e0c813dbbdcc543c
     // console.log src/test/sendSimpleTransaction.test.ts:42
@@ -60,7 +45,7 @@ describe('transaction test', () => {
       })
     }
     //ckt1qyqrpkej44pkt0anq8g0qv8wzlyusjx082xs2c2ux4
-    console.log("fromAddress =>", addresses.testnetAddress);
+    // console.log("fromAddress =>", addresses.testnetAddress);
 
     /**
      * to see the addresses
@@ -99,7 +84,7 @@ describe('transaction test', () => {
     /**
      * to see the unspent cells
      */
-    console.log("unspentCells => ",unspentCells)
+    // console.log("unspentCells => ",unspentCells)
   
     /**
      * send transaction
@@ -137,10 +122,9 @@ describe('transaction test', () => {
      */
     console.log(`The real transaction hash is: ${realTxHash}`)
 
+    expect(realTxHash).toHaveLength(66);
   });
-
 });
-
     //add by river
     // console.log(masterKeychain
     //             .derivePath(`m/44'/309'/0'/0`)
