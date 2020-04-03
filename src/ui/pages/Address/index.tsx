@@ -1,21 +1,18 @@
 import * as React from 'react';
-import { shannonToCKBFormatter } from '../../../utils/formatters';
 import { Button, Dialog, IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import Title from '../../Components/Title';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+import { shannonToCKBFormatter } from '../../../utils/formatters';
+import Title from '../../Components/Title';
 import { MESSAGE_TYPE } from '../../../utils/constants';
 import { AppContext } from '../../App';
-import { useHistory } from 'react-router-dom';
+
 const QrCode = require('qrcode.react');
 
 const useStyles = makeStyles({
   container: {
-    height: 600,
-    width: 357,
-    minHeight: 500,
     margin: 30,
-    boxSizing: 'border-box'
   },
   button: {},
   dialogTitle: {
@@ -52,7 +49,8 @@ export default function(props: AppProps, state: AppState) {
   const [open, setOpen] = React.useState(false);
   const [tooltip, setTooltip] = React.useState('');
   const { network } = React.useContext(AppContext);
-
+  const history = useHistory();
+        
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function(
       message,
@@ -63,7 +61,11 @@ export default function(props: AppProps, state: AppState) {
         message.messageType === MESSAGE_TYPE.ADDRESS_INFO &&
         message.address
       ) {
-        setAddress(message.address);
+        if (message.address) {
+          setAddress(message.address);
+        } else {
+          history.push('./import-mnemonic')
+        }
         // get balance by address
       } else if (message.messageType === MESSAGE_TYPE.BALANCE_BY_ADDRESS) {
         setBalance(message.balance);
@@ -82,7 +84,6 @@ export default function(props: AppProps, state: AppState) {
     setLoading(true);
   }, []);
 
-  const history = useHistory();
   const onSendtx = () => {
     history.push('/send-tx');
   };

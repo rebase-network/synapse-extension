@@ -41,8 +41,8 @@
   "dependencies": {
     "@material-ui/core": "^4.9.7",
     "@material-ui/icons": "^4.9.1",
-    "@nervosnetwork/ckb-sdk-core": "^0.29.1",
-    "@nervosnetwork/ckb-sdk-utils": "^0.29.1",
+    "@nervosnetwork/ckb-sdk-core": "^0.30.0",
+    "@nervosnetwork/ckb-sdk-utils": "^0.30.0",
     "elliptic": "^6.5.2",
     "formik": "^2.1.4",
     "qrcode.react": "^1.0.0",

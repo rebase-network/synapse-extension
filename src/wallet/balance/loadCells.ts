@@ -7,7 +7,7 @@ const getMinBigInt = (x: JSBI, y: JSBI) => {
   return JSBI.greaterThan(x, y) ? y : x
 }
 
-const loadCells = async ({
+const loadCells = async ({ // 跟ckb.loadCells 不一定一样
   lockHash,
   start = '0x0',
   end,

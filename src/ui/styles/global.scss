@@ -1,0 +1,33 @@
+@charset "utf-8";
+
+$font-family-base: "Nunito Sans", sans-serif;
+$body-color: black;
+
+@import "palette";
+
+@import "var";
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  width: $popup-size-width;
+  height: $popup-size-height;
+  margin: 0;
+  background-color: white;
+
+  overflow: auto;
+}
+
+body {
+  width: $popup-size-width;
+  height: $popup-size-height;
+  margin: 0;
+  background-color: $background-color;
+}
+
+#popup {
+  width: $popup-size-width;
+  height: $popup-size-height;
+}

@@ -9,11 +9,7 @@ import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   container: {
-    height: 600,
-    width: 357,
-    minHeight: 500,
     margin: 30,
-    boxSizing: 'border-box'
   },
   button: {
 
@@ -23,7 +19,6 @@ const useStyles = makeStyles({
   }
 });
 
-
 interface AppProps { }
 
 interface AppState { }
@@ -32,6 +27,7 @@ export const innerForm = props => {
   const classes = useStyles();
   const {
     values,
+    placeholder,
     touched,
     errors,
     dirty,
@@ -64,6 +60,7 @@ export const innerForm = props => {
         label="Amount"
         name="amount"
         type="text"
+        placeholder="必须大于6100000000"
         fullWidth
         className={classes.textField}
         value={values.amount}
@@ -85,6 +82,21 @@ export const innerForm = props => {
         onChange={handleChange}
         onBlur={handleBlur}
         error={!!errors.fee}
+        // helperText={(errors.confirmPassword && touched.confirmPassword) && errors.confirmPassword}
+        margin="normal"
+        variant="outlined"
+        data-testid="field-amount"
+      />
+      <TextField
+        label="Password"
+        name="password"
+        type="password"
+        fullWidth
+        className={classes.textField}
+        value={values.password}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={!!errors.password}
         // helperText={(errors.confirmPassword && touched.confirmPassword) && errors.confirmPassword}
         margin="normal"
         variant="outlined"
@@ -120,13 +132,25 @@ export default function (props: AppProps, state: AppState) {
   const [success, setSuccess] = React.useState(false)
   const history = useHistory();
 
+  React.useEffect(() => {
+    chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+      if (message.messageType === MESSAGE_TYPE.SEND_TX_BY_AMOUNT) {
+        // setAddress(message.address);
+        console.log("message", JSON.stringify(message));
+        // message {"fromAddress":"ckt1qyqt9ed4emcxyfed77ed0dp7kcm3mxsn97ls38jxjw","toAddress":"ckt1qyqt9ed4emcxyfed77ed0dp7kcm3mxsn97ls38jxjw","amount":"1000","fee":"1000","messageType":"SEND_TX_BY_AMOUNT"}
+
+      }
+    })
+    // setLoading(true);
+  }, [])
+
   const onSubmit = async(values) => {
     // await new Promise(resolve => setTimeout(resolve, 500));
-    // chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_MNEMONIC })
-    // console.log(values)
-    // setSuccess(true)
-    // // go to address page
-    // history.push('/address')
+    console.log(values)
+    //消息发送到Background.ts
+    //network - TODO
+    chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.SEND_TX })
+    setSuccess(true)
   }
 
   let successNode = null
@@ -139,7 +163,7 @@ export default function (props: AppProps, state: AppState) {
       {successNode}
 
       <Formik
-        initialValues={{ address: "", amount: "", fee: "" }}
+        initialValues={{ address: "", amount: "", fee: "", password: ""}}
 
         onSubmit={onSubmit}
         validationSchema={Yup.object().shape({
@@ -148,7 +172,9 @@ export default function (props: AppProps, state: AppState) {
           amount: Yup.string()
             .required("Required"),
           fee: Yup.string()
-            .required("Required")
+            .required("Required"),
+          password: Yup.string()
+          .required("Required"),
         })}
       >
         {innerForm}

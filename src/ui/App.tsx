@@ -10,6 +10,8 @@ import ImportMnemonic from './pages/ImportMnemonic'
 import Transaction from "./pages/Transaction"
 import AppBar from './Components/AppBar/'
 
+import "./styles/global.scss";
+
 export const AppContext = React.createContext({network: 'testnet'});
 
 export default function App() {
