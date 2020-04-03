@@ -12,7 +12,7 @@ const QrCode = require('qrcode.react');
 
 const useStyles = makeStyles({
   container: {
-    margin: 30,
+    margin: 30
   },
   button: {},
   dialogTitle: {
@@ -50,21 +50,18 @@ export default function(props: AppProps, state: AppState) {
   const [tooltip, setTooltip] = React.useState('');
   const { network } = React.useContext(AppContext);
   const history = useHistory();
-        
+
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function(
       message,
       sender,
       sendResponse
     ) {
-      if (
-        message.messageType === MESSAGE_TYPE.ADDRESS_INFO &&
-        message.address
-      ) {
+      if (message.messageType === MESSAGE_TYPE.ADDRESS_INFO) {
         if (message.address) {
           setAddress(message.address);
         } else {
-          history.push('./import-mnemonic')
+          history.push('./import-mnemonic');
         }
         // get balance by address
       } else if (message.messageType === MESSAGE_TYPE.BALANCE_BY_ADDRESS) {
