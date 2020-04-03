@@ -89,9 +89,9 @@ export default function(props: AppProps, state: AppState) {
     (async function copyAddress() {
       if (open && address[network]) {
         await navigator.clipboard.writeText(address[network]);
+        setTooltip('Address has been copied to clipboard');
       }
     })();
-    setTooltip('Address has been copied to clipboard');
   }, [open, address]);
 
   const balanceNode = loading ? (
