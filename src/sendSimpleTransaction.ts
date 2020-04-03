@@ -1,9 +1,9 @@
 import Address, { AddressType, publicKeyToAddress , AddressPrefix} from "./wallet/address";
+import {Ckb} from "./utils/constants";
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default
-const nodeUrl = 'http://106.13.40.34:8114/'
 
-const ckb = new CKB(nodeUrl)
+const ckb = new CKB(Ckb.rpcUrl)
 
 export const getPrivateKeyByMasterKeychainAndPath = (masterKeychain,path) => {
 
