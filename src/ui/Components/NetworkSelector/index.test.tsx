@@ -13,7 +13,7 @@ describe('React testing library', () => {
   afterEach(cleanup)
 
   it('should render title', async() => {
-    const elem = container.querySelector('select')
+    const elem = container.querySelector('#network-select')
     expect(container).toContainElement(elem)
     expect(elem).toHaveTextContent('Aggron')
   })
