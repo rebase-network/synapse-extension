@@ -134,7 +134,6 @@ export default function (props: AppProps, state: AppState) {
     if(vaildate){
       setSuccess(true)
       // go to address page
-      history.push('/address')
     }
   }
 
@@ -147,7 +146,7 @@ export default function (props: AppProps, state: AppState) {
       message,sender,sendResponse) {
 
       if (message === MESSAGE_TYPE.IS_NOT_VALIDATE_MNEMONIC) {
-        
+
         console.log("index.tsx => message",message);
         setValidate(false);//false验证未通过
         return;
@@ -155,6 +154,7 @@ export default function (props: AppProps, state: AppState) {
       }  else if (message === MESSAGE_TYPE.VALIDATE_PASS) {
         setValidate(true);
         console.log("index.tsx validate pass");
+        history.push('/address')
       }
 
     });
@@ -165,14 +165,14 @@ export default function (props: AppProps, state: AppState) {
   if (success) successNode = <div className="success">Successfully</div>
 
   const classes = useStyles();
-  
+
   return (
     <div className={classes.container}>
       <Title title='Import Mnemonic' testId="mnemonic-form-title" />
       {successNode}
       <Popper id={'simple-popper'} open={!vaildate} >
           <div >Invalid mnemonic</div>
-      </Popper>  
+      </Popper>
       <Formik
         initialValues={{ mnemonic: "", password: "", confirmPassword: "" }}
         onSubmit={onSubmit}
