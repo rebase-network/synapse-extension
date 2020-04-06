@@ -163,16 +163,13 @@ export default function (props: AppProps, state: AppState) {
 
   let successNode = null
   if (success) successNode = <div className="success">Successfully</div>
-
+  if (!vaildate) successNode = <div className="success">Invalid mnemonic</div>
   const classes = useStyles();
 
   return (
     <div className={classes.container}>
       <Title title='Import Mnemonic' testId="mnemonic-form-title" />
       {successNode}
-      <Popper id={'simple-popper'} open={!vaildate} >
-          <div >Invalid mnemonic</div>
-      </Popper>
       <Formik
         initialValues={{ mnemonic: "", password: "", confirmPassword: "" }}
         onSubmit={onSubmit}
