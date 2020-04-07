@@ -55,7 +55,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log('addrTestnet: ' + JSON.stringify(addrTestnet));
 
     const wallet = {
-      keystore: keystore,
+      keystore: keystore.toJson(),
       testnet: {
         address: addrTestnet.address,
         path: addrTestnet.path,
@@ -97,12 +97,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
       console.log('wallet ===> ' + JSON.stringify(wallet));
 
-      let balance = 0
+      let balance = ""
       if (wallet) {
         const publicKey = '0x' + wallet[request.network].pubKey;
         const capacityAll = await getBalanceByPublicKey(publicKey);
-        balance = JSON.parse(capacityAll.toString())
+        balance = capacityAll.toString()
       }
+
       chrome.runtime.sendMessage({
         balance,
         messageType: MESSAGE_TYPE.BALANCE_BY_ADDRESS
@@ -122,7 +123,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       const password = request.password.trim();
 
       //keystore ===>masterKeychain
-      console.log("wallet SendTx =>",wallet);
+      console.log("wallet SendTx =>", wallet);
 
       const keystore = Keystore.fromJson(JSON.stringify(wallet.keystore)); //参数是String
 
@@ -131,12 +132,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
       const masterKeychain = new Keychain(
         Buffer.from(masterPrivateKey.privateKey, 'hex'),
-        Buffer.from(masterPrivateKey.chainCode, 'hex')
+        Buffer.from(masterPrivateKey.chainCode, 'hex'),
       )
 
-      const privateKey = '0x' + masterKeychain.derivePath(`m/44'/309'/0'/0`)
-                          .deriveChild(0,false)
-                          .privateKey.toString('hex')
+      const privateKey = '0x' + masterKeychain.derivePath(wallet['testnet'].path)
+        .privateKey.toString('hex')
 
       const fromAddress = wallet['testnet'].address;
 
