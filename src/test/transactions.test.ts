@@ -1,96 +1,379 @@
 // import Address, { AddressType, publicKeyToAddress, AddressPrefix } from '../wallet/address'
 // import loadCells from '../wallet/balance/loadCells';
 // import {getBalanceByPublicKey} from '../balance';
+import * as utils from '@nervosnetwork/ckb-sdk-utils'
+import {getStatusByTxHash,getOutputAddressByTxHash, getInputAddressByTxHash, getInputCapacityByTxHash, getFeeByTxHash,getAmountByTxHash} from '../Transaction'
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default
 const nodeUrl = 'http://106.13.40.34:8114/'
 const ckb = new CKB(nodeUrl)
 
+const transaction_hash = "0xb95121d9e0947cdabfd63025c00a285657fd40e6bc69215c63f723a5247c8ead";
+const previousOutputHash = "0x596272422eea6328082a319ca7d9f4502f7ce5f6d34ea8bbb977f8c1bbca83b2";
+const expectTransaction = {
+  "transaction":{
+      "cellDeps":[
+          {
+              "outPoint":{
+                  "txHash":"0x6495cede8d500e4309218ae50bbcadb8f722f24cc7572dd2274f5876cb603e4e",
+                  "index":"0x0"
+              },
+              "depType":"depGroup"
+          }
+      ],
+      "inputs":[
+          {
+              "previousOutput":{
+                  "txHash":"0x596272422eea6328082a319ca7d9f4502f7ce5f6d34ea8bbb977f8c1bbca83b2",
+                  "index":"0x1"
+              },
+              "since":"0x0"
+          }
+      ],
+      "outputs":[
+          {
+              "lock":{
+                  "codeHash":"0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+                  "hashType":"type",
+                  "args":"0xcd09786388eb48e0d1b616d7964945f1a86e9a44"
+              },
+              "type":null,
+              "capacity":"0x746a528800"
+          },
+          {
+              "lock":{
+                  "codeHash":"0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+                  "hashType":"type",
+                  "args":"0x3f1573b44218d4c12a91919a58a863be415a2bc3"
+              },
+              "type":null,
+              "capacity":"0xb897513e30028b7"
+          }
+      ],
+      "outputsData":[
+          "0x",
+          "0x"
+      ],
+      "headerDeps":[
+
+      ],
+      "hash":"0xb95121d9e0947cdabfd63025c00a285657fd40e6bc69215c63f723a5247c8ead",
+      "version":"0x0",
+      "witnesses":[
+          "0x55000000100000005500000055000000410000003afb8365b489a78d88e5b3cddc856784e251deea0a6e041201b9a73d22e1c0c353141a821b3c119b52272e1b570b0f3be2b461c0477e95aca6d405929ab88ef601"
+      ]
+  },
+  "txStatus":{
+      "blockHash":"0x6335afbe6394a38a61f6f8b9a93067b06e25aa2dd5e8f02c9f3431b9209b971f",
+      "status":"committed"
+  }
+};
+const previousOutputTX = {
+    "transaction":{
+        "cellDeps":[
+            {
+                "outPoint":{
+                    "txHash":"0x6495cede8d500e4309218ae50bbcadb8f722f24cc7572dd2274f5876cb603e4e",
+                    "index":"0x0"
+                },
+                "depType":"depGroup"
+            }
+        ],
+        "inputs":[
+            {
+                "previousOutput":{
+                    "txHash":"0xaf63a8d26cb30f7645181bdcb3e8e370616e810f57817aa03da70240c07199f8",
+                    "index":"0x1"
+                },
+                "since":"0x0"
+            }
+        ],
+        "outputs":[
+            {
+                "lock":{
+                    "codeHash":"0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+                    "hashType":"type",
+                    "args":"0x6760d44c3d9ed372d109309ed180535c7625994b"
+                },
+                "type":null,
+                "capacity":"0x746a528800"
+            },
+            {
+                "lock":{
+                    "codeHash":"0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+                    "hashType":"type",
+                    "args":"0x3f1573b44218d4c12a91919a58a863be415a2bc3"
+                },
+                "type":null,
+                "capacity":"0xb8975884d52b2eb"
+            }
+        ],
+        "outputsData":[
+            "0x",
+            "0x"
+        ],
+        "headerDeps":[
+
+        ],
+        "hash":"0x596272422eea6328082a319ca7d9f4502f7ce5f6d34ea8bbb977f8c1bbca83b2",
+        "version":"0x0",
+        "witnesses":[
+            "0x5500000010000000550000005500000041000000fd079be56223be0661a6d5bbe34ad2f3820975000391b301b9ab994a5e0d767910e40cadbb2fd66ae1daf8d196a10afd77856daf643a6b0012b889c7fc71080301"
+        ]
+    },
+    "txStatus":{
+        "blockHash":"0xf939f366beb749cdb95c7b6c719c800f49d0be25ab4a29043884fc5e763e20ad",
+        "status":"committed"
+    }
+}
+
+const expectBlockHash = "0x6335afbe6394a38a61f6f8b9a93067b06e25aa2dd5e8f02c9f3431b9209b971f";
+const expectStatus = "committed";
+const expectlockHash = "0x9cb0bfa5cc9d53775c677c6e4f35e90bd8a65923fb691f1895455cb48f0241f1";
+
+
 describe('transaction test', () => {
 
-  it('get transaction by lockhash',async () => {
-    // console.log("ckb => ",JSON.stringify(ckb));
+  it('1- get transaction by Hash of a transaction',async () => {
 
-    const publicKey = "0x0304d793194278a005407cd53e6fbd290d8e2a8e90154b4123dc5e0e06a8a19ecb";
-    const publicKeyHash = `0x${ckb.utils.blake160(publicKey, 'hex')}`
-
-    await ckb.loadSecp256k1Dep();
-    // console.log(ckb.config.secp256k1Dep);
-    const lockHash = ckb.generateLockHash(publicKeyHash, ckb.config.secp256k1Dep)
-
-    // const transactions = await ckb.rpc.getTransaction("0xc2d441a2fe62a114138076765d2439e9131304212618294f1d762eb6950317d6");
-    // const transactions = await ckb.rpc.getTransactionsByLockHash(lockHash,'0xa','0xe',false);
-    // console.log("transactions => ",transactions);
-    // expect(BigInt(capacityAll)).toBe(BigInt(1000000000000));
+    const result = await ckb.rpc.getTransaction(transaction_hash);
+    expect(result).toEqual(expectTransaction); 
   })
 
+  it('11- get transaction by Hash of a transaction',async () => {
+
+    const result = await ckb.rpc.getTransaction(previousOutputHash);
+    // console.log(JSON.stringify(result));
+    expect(result).toEqual(previousOutputTX); 
+  })
+
+  it('2- get BlockHash by Hash of a transaction',async () => {
+
+    const result = await ckb.rpc.getTransaction(transaction_hash);
+    expect(result.txStatus.blockHash).toEqual(expectBlockHash);
+  })
+
+//   tx => {
+//     inputs: [Function (anonymous)],
+//     outputs: [Function (anonymous)],
+//     txStatus: [Function (anonymous)],
+//     getStatusByTxHash: [Function (anonymous)],
+//     getAmountByTxHash: [Function (anonymous)],
+//     getFeeByTxHash: [Function (anonymous)],
+//     getInputByTxHash: [Function (anonymous)],
+//     getOutputByTxHash: [Function (anonymous)],
+//     getBlockNumberByTxHash: [Function (anonymous)]
+//   }
+  it('3- get status by Hash of a transaction',async () => {
+
+    // const result = await ckb.rpc.getTransaction(transaction_hash);
+    const status = await getStatusByTxHash(transaction_hash)
+    expect(status).toEqual(expectStatus);
+  }) 
+
+  it('4- get transaction_hash by Hash of a transaction',async () => {
+
+    const result = await ckb.rpc.getTransaction(transaction_hash);
+    expect(result.transaction.hash).toEqual(transaction_hash);
+  }) 
+
+
+//   it('5- generate lock hash',async () => {
+
+//     const publicKeyHash = "0xcd09786388eb48e0d1b616d7964945f1a86e9a44";
+//     const hashType = "type";
+//     const codeHash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8";
+
+//     const lockHash = utils.scriptToHash({
+//         hashType: hashType,
+//         codeHash: codeHash,
+//         args: publicKeyHash,
+//       })
+//     // console.log("lockHash => ", lockHash);
+//     expect(lockHash).toEqual(expectlockHash);
+//   })  
+
+  it('6- get ouputs address by publicKeyHash',async () => {
+    // cellStatus.cell.output.lock.args = publicKeyHash
+    // const to0 = utils.bech32Address("0xcd09786388eb48e0d1b616d7964945f1a86e9a44");
+    // expect(to0).toEqual("ckt1qyqv6ztcvwywkj8q6xmpd4ukf9zlr2rwnfzq4s7eek");
+
+    // const to1 = utils.bech32Address("0x3f1573b44218d4c12a91919a58a863be415a2bc3");
+    // expect(to1).toEqual("ckt1qyqr79tnk3pp34xp92gerxjc4p3mus2690psf0dd70");
+    const to0 = "ckt1qyqv6ztcvwywkj8q6xmpd4ukf9zlr2rwnfzq4s7eek";
+    const to1 = "ckt1qyqr79tnk3pp34xp92gerxjc4p3mus2690psf0dd70";
+    const toAddress = await getOutputAddressByTxHash(transaction_hash);
+    expect(to0).toEqual(toAddress.split(",")[0]);
+    expect(to1).toEqual(toAddress.split(",")[1]);
+    // expect(toAddress).toEqual(to0 + "," + to1);
+
+  })  
+
+  it('7- get inputs address by publicKeyHash',async () => {
+    // cellStatus.cell.output.lock.args = publicKeyHash
+    // const from0 = utils.bech32Address("0x3f1573b44218d4c12a91919a58a863be415a2bc3");
+    // expect(from0).toEqual("ckt1qyqr79tnk3pp34xp92gerxjc4p3mus2690psf0dd70");
+    const fromAddress = await getInputAddressByTxHash(transaction_hash);
+    const from0 = "ckt1qyqr79tnk3pp34xp92gerxjc4p3mus2690psf0dd70";
+    expect(from0).toEqual(fromAddress.split(",")[0]);
+
+   })  
+
+    //   it('8- get input Capacity by transaction_hash',async () => {
+        // const expectCapacity = BigInt(500000000000);
+        // const result = await ckb.rpc.getTransaction(transaction_hash);
+        // const outputs = result.transaction.outputs;
+        // const outputs = tx.outputs(transaction_hash);
+        // const tradeCapacity = outputs[0].capacity;
+        // expect(BigInt(tradeCapacity)).toEqual(expectCapacity);
+        // let bar: bigint = 100n; 
+//ERROR
+        // const expectCapacity_8:bigint = BigInt(831324834499834603);
+        // const inputsCapacity_8 = await getInputCapacityByTxHash(transaction_hash);
+        // console.log(BigInt(inputsCapacity_8)); //831324834499834603n
+        // expect(inputsCapacity_8).toEqual(expectCapacity_8);
+
+//    }) 
+
+//    it('8- get trade Capacity by transaction_hash',async () => {
+//         const expectCapacity = BigInt(500000000000);
+//         // const result = await ckb.rpc.getTransaction(transaction_hash);
+//         // const outputs = result.transaction.outputs;
+//         const outputs = tx.outputs(transaction_hash);
+//         const tradeCapacity = outputs[0].capacity;
+//         expect(BigInt(tradeCapacity)).toEqual(expectCapacity);
+//    }) 
+
+//    const inputsCapacity = async (txHash,index) => {
+//         const result = await ckb.rpc.getTransaction(txHash);
+//         const outputs = result.transaction.outputs; 
+//         let number = new Number(index);
+//         // console.log("inputsCapacity =>", number.valueOf());
+//         return BigInt(outputs[number.valueOf()].capacity); 
+//    }
+
+    it('90- get Amount fee by publicKeyHash',async () => {
+        const expectFee = BigInt(500000000000);
+        const amount = await getAmountByTxHash(transaction_hash,"ckt1qyqr79tnk3pp34xp92gerxjc4p3mus2690psf0dd70");
+        // console.log(amount);//500000000000n
+        expect(expectFee).toEqual(amount);
+    }) 
+
+   it('91- get trade fee by publicKeyHash',async () => {
+    //001
+        // const expectFee:Number = new Number(564);
+        // const result = await ckb.rpc.getTransaction(transaction_hash);
+        // const inputs = result.transaction.inputs;
+        // let txHash = "";
+        // let index = BigInt(0);
+        // let inputsCap = BigInt(0);
+        // for (var i = 0; i < inputs.length; i ++) {
+        //     let outputsCap = BigInt(0);
+        //     txHash = inputs[i].previousOutput.txHash;
+        //     index = inputs[i].previousOutput.index;
+        //     // console.log("txHash index =>",txHash, index);
+        //     outputsCap = await inputsCapacity(txHash,index);
+        //     inputsCap = inputsCap + outputsCap;
+        // }
+        // // console.log("inputsCap =>", inputsCap);
+
+        // let outputsCap = BigInt(0);
+        // const outputs = result.transaction.outputs;
+        // for (var i = 0; i < outputs.length; i ++) {
+        //     console.log(BigInt(outputs[i].capacity));  
+        //     outputsCap = BigInt(outputsCap) + BigInt(outputs[i].capacity);
+        // }
+        // // console.log("outputsCap =>", outputsCap);  
+
+        // let fee = new Number(inputsCap - outputsCap);
+        // console.log("fee =>",fee.valueOf());
+        // expect(expectFee).toEqual(fee);
+    //002
+        const expectFee:Number = new Number(564);
+        const fee = await getFeeByTxHash(transaction_hash);
+        let feeNumber = new Number(fee);
+        expect(expectFee).toEqual(feeNumber);
+    }) 
+
+//    const blockHeader = {"compactTarget":"0x1d39bbb1","parentHash":"0x85a05ac12a2ad25d54bb651d90c2da40d237f8cd8fcba3a3172321c13a3cc9b2","transactionsRoot":"0xceff4f4ed6e34bf306dc26bcbf69919bc72e743c9dad6f52f9544a30296f7455","proposalsHash":"0x0000000000000000000000000000000000000000000000000000000000000000","unclesHash":"0x3532a26e91f64bd8cd9367754c320c3d19d809b1dad778839d324f9dfff94d86","dao":"0x601d55eab4cbea2e7ae4421486942300b15a4ab6852f0f000087ce469ed80307","epoch":"0x27c0249000051","hash":"0x6335afbe6394a38a61f6f8b9a93067b06e25aa2dd5e8f02c9f3431b9209b971f","nonce":"0x71436636729d3b91b0747f3b049ee330","number":"0xeb18","timestamp":"0x1714e40506f","version":"0x0"}
+// //    const blockNumber = "0x18eb"; //60,184
+//    const blockNumber = "60184"
+//    it('10- get block ',async () => {
+//         const result = await ckb.rpc.getTransaction(transaction_hash);
+//         // const Blockhash = result.txStatus.blockHash;
+//         const depositBlockHeader = await ckb.rpc.getBlock(result.txStatus.blockHash).then(b => b.header);
+//         console.log(JSON.stringify(depositBlockHeader));
+//         expect(depositBlockHeader).toEqual(blockHeader);
+//         console.log(BigInt(depositBlockHeader.number));
+//         // const encodedBlockNumber = utils.toHexInLittleEndian(depositBlockHeader.number, 8)
+//         // console.log(encodedBlockNumber);
+//         // expect(BigInt(encodedBlockNumber)).toEqual(BigInt(blockNumber));
+//         // const tradeCapacity = outputs[0].capacity;
+//         expect(BigInt(depositBlockHeader.number)).toEqual(BigInt(blockNumber));
+//     }) 
 })
 
 
-// // console.log src/test/balance.test.ts:35
-// // 0x688a
 
-// // console.log src/test/balance.test.ts:37
-// // [
-// //   {
-// //     blockHash: '0xada9ff6e1b1839d8756ec2270af92e2beb36bd859fb051c1f67daa86d2603f81',
-// //     lock: {
-// //       codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-// //       hashType: 'type',
-// //       args: '0xedb5c73f2a4ad8df23467c9f3446f5851b5e33da'
-// //     },
-// //     outPoint: {
-// //       txHash: '0xfdf2de9201544017c66f68e841cce9831930fd5251bdb6fdcffb641c30ed6123',
-// //       index: '0x0'
-// //     },
-// //     outputDataLen: '0x0',
-// //     capacity: '0x746a528800',
-// //     cellbase: false,
-// //     type: null
-// //   }
-// // ]
+// await ckb.loadSecp256k1Dep();
+// const lockHash = ckb.generateLockHash(publicKeyHash, ckb.config.secp256k1Dep)
 
 
-// // public generateLockHash = (
-// //   publicKeyHash: PublicKeyHash,
-// //   deps: Omit<DepCellInfo, 'outPoint'> | undefined = this.config.secp256k1Dep,
-// // ) => {
-// //   if (!deps) {
-// //     throw new ArgumentRequired('deps')
-// //   }
+// {
+//   "transaction":{
+//       "cellDeps":[
+//           {
+//               "outPoint":{
+//                   "txHash":"0x6495cede8d500e4309218ae50bbcadb8f722f24cc7572dd2274f5876cb603e4e",
+//                   "index":"0x0"
+//               },
+//               "depType":"depGroup"
+//           }
+//       ],
+//       "inputs":[
+//           {
+//               "previousOutput":{
+//                   "txHash":"0x596272422eea6328082a319ca7d9f4502f7ce5f6d34ea8bbb977f8c1bbca83b2",
+//                   "index":"0x1"
+//               },
+//               "since":"0x0"
+//           }
+//       ],
+//       "outputs":[
+//           {
+//               "lock":{
+//                   "codeHash":"0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+//                   "hashType":"type",
+//                   "args":"0xcd09786388eb48e0d1b616d7964945f1a86e9a44"
+//               },
+//               "type":null,
+//               "capacity":"0x746a528800"
+//           },
+//           {
+//               "lock":{
+//                   "codeHash":"0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+//                   "hashType":"type",
+//                   "args":"0x3f1573b44218d4c12a91919a58a863be415a2bc3"
+//               },
+//               "type":null,
+//               "capacity":"0xb897513e30028b7"
+//           }
+//       ],
+//       "outputsData":[
+//           "0x",
+//           "0x"
+//       ],
+//       "headerDeps":[
 
-// //   return this.utils.scriptToHash({
-// //     hashType: deps.hashType,
-// //     codeHash: deps.codeHash,
-// //     args: publicKeyHash,
-// //   })
-// // }
-
-// // public loadSecp256k1Dep = () => {
-// //   const genesisBlock = await this.rpc.getBlockByNumber('0x0')
-
-// //   /* eslint-disable prettier/prettier, no-undef */
-// //   const secp256k1DepTxHash = genesisBlock?.transactions[1].hash
-// //   const typeScript = genesisBlock?.transactions[0]?.outputs[1]?.type
-// //   /* eslint-enable prettier/prettier, no-undef */
-
-// //   if (!secp256k1DepTxHash) {
-// //     throw new Error('Cannot load the transaction which has the secp256k1 dep cell')
-// //   }
-
-// //   if (!typeScript) {
-// //     throw new Error('Secp256k1 type script not found')
-// //   }
-
-// //   const secp256k1TypeHash = this.utils.scriptToHash(typeScript)
-
-// //   this.config.secp256k1Dep = {
-// //     hashType: 'type',
-// //     codeHash: secp256k1TypeHash,
-// //     outPoint: {
-// //       txHash: secp256k1DepTxHash,
-// //       index: '0x0',
-// //     },
-// //   }
-// //   return this.config.secp256k1Dep
-// // }
+//       ],
+//       "hash":"0xb95121d9e0947cdabfd63025c00a285657fd40e6bc69215c63f723a5247c8ead",
+//       "version":"0x0",
+//       "witnesses":[
+//           "0x55000000100000005500000055000000410000003afb8365b489a78d88e5b3cddc856784e251deea0a6e041201b9a73d22e1c0c353141a821b3c119b52272e1b570b0f3be2b461c0477e95aca6d405929ab88ef601"
+//       ]
+//   },
+//   "txStatus":{
+//       "blockHash":"0x6335afbe6394a38a61f6f8b9a93067b06e25aa2dd5e8f02c9f3431b9209b971f",
+//       "status":"committed"
+//   }
+// }
