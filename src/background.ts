@@ -1,5 +1,5 @@
 import { MESSAGE_TYPE } from './utils/constants'
-import { mnemonicToSeedSync } from './wallet/mnemonic';
+import { mnemonicToSeedSync, validateMnemonic } from './wallet/mnemonic';
 import Keystore from './wallet/keystore';
 import Keychain from './wallet/keychain';
 
@@ -23,10 +23,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       // return err
     }
 
-    const words = mnemonic.split(" ");
-    if (words.length != 12) { // 12 15 18 24
-      // TODO
-      // err
+    //助剂词有效性的验证
+    const isValidateMnemonic = validateMnemonic(mnemonic);
+    console.log(isValidateMnemonic)
+    if(!isValidateMnemonic){
+      console.log('isValidateMnemonic: ', "Not a ValidateMnemonic");
+      chrome.runtime.sendMessage(MESSAGE_TYPE.IS_NOT_VALIDATE_MNEMONIC);
+      return;
     }
 
     // TODO
@@ -71,6 +74,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     chrome.storage.sync.set({ wallet,}, () => {
       console.log('wallet is set to storage: ' + JSON.stringify(wallet));
     });
+
+    chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS)
   }
 
   if (request.messageType === MESSAGE_TYPE.REQUEST_ADDRESS_INFO) {

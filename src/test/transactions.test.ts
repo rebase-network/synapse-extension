@@ -19,8 +19,8 @@ describe('transaction test', () => {
     const lockHash = ckb.generateLockHash(publicKeyHash, ckb.config.secp256k1Dep)
 
     // const transactions = await ckb.rpc.getTransaction("0xc2d441a2fe62a114138076765d2439e9131304212618294f1d762eb6950317d6");
-    const transactions = await ckb.rpc.getTransactionsByLockHash(lockHash,'0xa','0xe',false);
-    console.log("transactions => ",transactions);
+    // const transactions = await ckb.rpc.getTransactionsByLockHash(lockHash,'0xa','0xe',false);
+    // console.log("transactions => ",transactions);
     // expect(BigInt(capacityAll)).toBe(BigInt(1000000000000));
   })
 
