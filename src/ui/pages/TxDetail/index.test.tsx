@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 import App from '../../App';
 import {
   render,
@@ -10,21 +9,32 @@ import {
 } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import * as chrome from 'sinon-chrome';
+import TxDetail from '.';
 
-describe('React testing tx-detail', () => {
-  let tree;
+jest.mock('react-router-dom', () => {
+  // Require the original module to not be mocked...
+  const originalModule = jest.requireActual('react-router-dom');
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    // add your noops here
+    useParams: jest.fn(),
+    useHistory: jest.fn(),
+  };
+});
+
+describe('txDetail page', () => {
+  let tree, container, getByTestId
   beforeEach(() => {
-    tree = render(
-      <MemoryRouter initialEntries={['/tx-detail']}>
-        <App />
-      </MemoryRouter>
-    );
-  });
-  afterEach(cleanup);
+    tree = render(<TxDetail />);
+    container = tree.container
+    getByTestId = tree.getByTestId
+  })
 
   beforeAll(() => {
-    window.chrome = chrome;
-  });
+    window.chrome = chrome
+  })
 
   it('should render title', async () => {
     const { getByTestId, container } = tree;
@@ -33,6 +43,30 @@ describe('React testing tx-detail', () => {
     expect(container).toContainElement(txDetailTitle);
     expect(txDetailTitle).toHaveTextContent('Transaction Detail');
   });
+
+  it('should render amount', async () => {
+    const amount = screen.queryByTestId('amount');
+    expect(container).toContainElement(amount);
+    expect(amount).toHaveTextContent("0")
+  });
+
+  it('should render inputs', async () => {
+    const inputs = screen.queryByTestId('inputs');
+    expect(container).toContainElement(inputs);
+    expect(inputs).toHaveTextContent("inputs ckt1qyqv6ztcvwywkj8q6xmpd4ukf9zlr2rwnfzq4s7eek")
+  });
+
+  it('should render outputs', async () => {
+    const outputs = screen.queryByTestId('outputs');
+    expect(container).toContainElement(outputs);
+    expect(outputs).toHaveTextContent("ckt1qyqr79tnk3pp34xp92gerxjc4p3mus2690psf0dd70")
+  });  
+
+  it('should render TxHash', async () => {
+    const txHash = screen.queryByTestId('txHash');
+    expect(container).toContainElement(txHash);
+    expect(txHash).toHaveTextContent("TxHash 0xb95121d9e0947cdabfd63025c00a285657fd40e6bc69215c63f723a5247c8ead")
+  });  
 
 
 
