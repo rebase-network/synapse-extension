@@ -37,9 +37,9 @@ export default function App() {
               <li>
                 <Link to="/import-mnemonic">Import Mnemonic</Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to="/tx-detail">Tx Detail</Link>
-              </li>
+              </li> */}
             </ul>
           </nav>
           {/* A <Switch> looks through its children <Route>s and
@@ -54,9 +54,9 @@ export default function App() {
             <Route path="/send-tx">
               <Transaction />
             </Route>
-            {/* <Route path="/tx-detail">
+            <Route path="/tx-detail">
               <TxDetail />
-            </Route> */}
+            </Route>
 
             {/* 通配放到最后 */}
             <Route path="/">

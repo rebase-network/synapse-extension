@@ -3,7 +3,7 @@ import {Ckb} from "./utils/constants";
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default
 
-const ckb = new CKB(Ckb.rpcUrl)
+const ckb = new CKB(Ckb.remoteRpcUrl)
 
 export const getPrivateKeyByMasterKeychainAndPath = (masterKeychain,path) => {
 

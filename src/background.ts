@@ -164,10 +164,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         fromAddress: fromAddress,
         toAddress: toAddress,
         amount: amount.toString(),
-        fee: fee.toAddress(),
-        messageType: MESSAGE_TYPE.REQUEST_TX_DETAIL 
+        fee: fee.toString(),
+        messageType: MESSAGE_TYPE.TO_TX_DETAIL 
       })
-
     });
   }
 
