@@ -43,7 +43,7 @@ export default function (props: AppProps, state: AppState) {
         setFee(message.fee);
         setInputs(message.inputs);
         setOutputs(message.outputs);
-        setTxHash(message.txhash);
+        setTxHash(message.txHash);
       }
     })
   }, [])

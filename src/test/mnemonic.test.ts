@@ -13,6 +13,7 @@ export const generateMnemonic = () => {
 
 describe('mnemonic test', () => {
     it('generate mnemonic', () => {
+        
         const mnemonic = generateMnemonic();
         console.log(mnemonic);
     })

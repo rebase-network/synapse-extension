@@ -165,6 +165,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         toAddress: toAddress,
         amount: amount.toString(),
         fee: fee.toString(),
+        txHash:sendTxHash,
         messageType: MESSAGE_TYPE.TO_TX_DETAIL 
       })
     });
@@ -173,33 +174,39 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 //tx-detail
 if (request.messageType === MESSAGE_TYPE.REQUEST_TX_DETAIL) {
   // chrome.storage.sync.get(['wallet'], async function( {wallet} ) {  
-      console.log("background request_tx_detail - 001");
-      // const txhash = request.txhash.trim();
+      console.log("background request_tx_detail - 001 =>" , request);
+      console.log("background request_tx_detail - 001 =>" , request.message);
+      const txHash = request.message.txHash;
+      const amount = request.message.amount;
+      const fee = request.message.fee;
+      const inputs = request.message.fromAddress;
+      const outputs = request.message.toAddress;
       // 测试用数据
-      const txhash = "0xb95121d9e0947cdabfd63025c00a285657fd40e6bc69215c63f723a5247c8ead";
-      const address = "ckt1qyqr79tnk3pp34xp92gerxjc4p3mus2690psf0dd70";
+      // const txhash = "0xb95121d9e0947cdabfd63025c00a285657fd40e6bc69215c63f723a5247c8ead";
+      // const address = "ckt1qyqr79tnk3pp34xp92gerxjc4p3mus2690psf0dd70";
       //001-status
-      const status = await getStatusByTxHash(txhash);
+      const status = await getStatusByTxHash(txHash);
       //002-amount
-      const amount = await getAmountByTxHash(txhash,address);
+    
+      // const amount = await getAmountByTxHash(txhash,address);
       // const tradeAmount = new Number(amount);
       // console.log(tradeAmount);
       //003-fee
-      const fee = await getFeeByTxHash(txhash);
+      // const fee = await getFeeByTxHash(txhash);
       // const tradeFee = new Number(fee);
-      console.log(fee.toString());
+      // console.log(fee.toString());
       //004-inputs
-      const inputs = await getInputAddressByTxHash(txhash);
+      // const inputs = await getInputAddressByTxHash(txhash);
       //005-outputs 
-      const outputs = await getOutputAddressByTxHash(txhash);
+      // const outputs = await getOutputAddressByTxHash(txhash);
       
       chrome.runtime.sendMessage({
         status,
-        tradeAmount: amount.toString(),
-        fee: fee.toString(),
+        tradeAmount: amount,
+        fee,
         inputs,
         outputs,
-        txhash,
+        txHash,
         messageType: MESSAGE_TYPE.TX_DETAIL
       })
   // });    
