@@ -1,30 +1,32 @@
 import * as React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import App from '../../App';
-import {
-  render,
-  fireEvent,
-  waitFor,
-  cleanup,
-  screen
-} from '@testing-library/react';
+import App from './index';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import * as chrome from 'sinon-chrome';
 
-describe('React testing library', () => {
-  let tree;
-  beforeEach(() => {
-    tree = render(
-      <MemoryRouter initialEntries={['/']}>
-        <App />
-      </MemoryRouter>
-    );
-  });
-  afterEach(cleanup);
+jest.mock('react-router-dom', () => {
+  // Require the original module to not be mocked...
+  const originalModule = jest.requireActual('react-router-dom');
 
+  return {
+    __esModule: true,
+    ...originalModule,
+    // add your noops here
+    useParams: jest.fn(),
+    useHistory: jest.fn(),
+  };
+});
+
+describe('Address page', () => {
+  let tree, container, getByTestId
+  beforeEach(() => {
+    tree = render(<App />);
+    container = tree.container
+    getByTestId = tree.getByTestId
+  })
   beforeAll(() => {
-    window.chrome = chrome;
-  });
+    window.chrome = chrome
+  })
 
   it('should render title', async () => {
     const { getByTestId, container } = tree;

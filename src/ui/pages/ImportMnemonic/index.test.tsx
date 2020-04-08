@@ -1,27 +1,32 @@
 import * as React from 'react';
-import { MemoryRouter } from 'react-router-dom'
-import App from '../../App';
+import App from './index';
 import { render, fireEvent, waitFor, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import * as chrome from "sinon-chrome";
 
-describe('import mnemonic', () => {
+jest.mock('react-router-dom', () => {
+  // Require the original module to not be mocked...
+  const originalModule = jest.requireActual('react-router-dom');
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    // add your noops here
+    useParams: jest.fn(),
+    useHistory: jest.fn(),
+  };
+});
+
+describe('import mnemonic page', () => {
   let tree, container, getByTestId
   beforeEach(() => {
-    tree = render(
-      <MemoryRouter initialEntries = {['/import-mnemonic']}>
-        <App />
-     </MemoryRouter>
-    );
+    tree = render(<App />);
     container = tree.container
     getByTestId = tree.getByTestId
-  });
-
+  })
   beforeAll(() => {
     window.chrome = chrome
   })
-
-  afterEach(cleanup)
 
   it('should render form fields: Mnemonic', async() => {
     const mnemonic = container.querySelector('[name="mnemonic"]')
