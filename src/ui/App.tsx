@@ -54,9 +54,9 @@ export default function App() {
             <Route path="/send-tx">
               <Transaction />
             </Route>
-            <Route path="/tx-detail">
+            {/* <Route path="/tx-detail">
               <TxDetail />
-            </Route>
+            </Route> */}
 
             {/* 通配放到最后 */}
             <Route path="/">
