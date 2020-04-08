@@ -35,7 +35,7 @@ export const innerForm = props => {
   return (
     <Form className="gen-mnemonic" id="gen-mnemonic" onSubmit={handleSubmit}>
       <TextField
-        label="Password"
+        label="Password (min 6 chars)"
         name="password"
         type="password"
         fullWidth
@@ -89,11 +89,10 @@ export function GenerateMnemonic(props: AppProps, state: AppState) {
 
   const onSubmit = async(values) => {
     await new Promise(resolve => setTimeout(resolve, 500));
-    chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_MNEMONIC })
-    console.log(values)
+    chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.GEN_MNEMONIC })
+
     if(vaildate){
       setSuccess(true)
-      // go to address page
     }
   }
 
@@ -101,11 +100,12 @@ export function GenerateMnemonic(props: AppProps, state: AppState) {
     chrome.runtime.onMessage.addListener(
       (message,sender,sendResponse) => {
       });
+
   }, []);
 
   let successNode = null
   if (success) successNode = <div className="success">Successfully</div>
-  if (!vaildate) successNode = <div className="success">Invalid mnemonic</div>
+  if (!vaildate) successNode = <div className="success">Invalid xxxx</div>
   const classes = useStyles();
 
   return (
