@@ -53,11 +53,11 @@ export default function(props: AppProps, state: AppState) {
   const history = useHistory();
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener(function(
+    chrome.runtime.onMessage.addListener((
       message,
       sender,
       sendResponse
-    ) {
+    ) =>{
       if (message.messageType === MESSAGE_TYPE.ADDRESS_INFO) {
         if (message.address) {
           setAddress(message.address);

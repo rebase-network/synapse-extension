@@ -21,7 +21,7 @@ const useStyles = makeStyles({
   home: {
   },
   button: {
-
+    "margin-bottom": "20px",
   },
 });
 
@@ -36,6 +36,10 @@ export default function (props: AppProps, state: AppState) {
 
   React.useEffect(() => { }, []);
 
+  const onImport = () => {
+    history.push('/import-mnemonic');
+  };
+
   const classes = useStyles();
 
   return (
@@ -47,6 +51,7 @@ export default function (props: AppProps, state: AppState) {
           variant="contained"
           id="import-button"
           color="primary"
+          onClick={onImport}
           className={classes.button}
           data-testid="import-button"
         >
