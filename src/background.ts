@@ -119,7 +119,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   }
 
   //发送交易
-  if (request.messageType === MESSAGE_TYPE.SEND_TX) {
+  if (request.messageType === MESSAGE_TYPE.RESQUEST_SEND_TX) {
 
     chrome.storage.sync.get(['wallet'], async function( {wallet} ) {
 
