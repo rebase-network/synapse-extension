@@ -7,10 +7,12 @@ import { AccountExtendedPublicKey, ExtendedPrivateKey } from "./wallet/key";
 import { AddressType, AddressPrefix } from './wallet/address';
 import {getBalanceByPublicKey} from './balance';
 import {sendSimpleTransaction} from './sendSimpleTransaction';
+import {getAmountByTxHash, getStatusByTxHash,getFeeByTxHash, getInputAddressByTxHash, getOutputAddressByTxHash, getOutputAddressByTxHashAndIndex} from './transaction';
+
 /**
  * Listen messages from popup
  */
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
   if (request.messageType === MESSAGE_TYPE.IMPORT_MNEMONIC) {
     // call import mnemonic method
@@ -159,7 +161,43 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       //   messageType: MESSAGE_TYPE.SEND_TX_BY_AMOUNT
       // })
     });
-
   }
+
+//tx-detail
+if (request.messageType === MESSAGE_TYPE.REQUEST_TX_DETAIL) {
+  // chrome.storage.sync.get(['wallet'], async function( {wallet} ) {  
+      console.log("background request_tx_detail - 001");
+      // const txhash = request.txhash.trim();
+      // 测试用数据
+      const txhash = "0xb95121d9e0947cdabfd63025c00a285657fd40e6bc69215c63f723a5247c8ead";
+      const address = "ckt1qyqr79tnk3pp34xp92gerxjc4p3mus2690psf0dd70";
+      //001-status
+      const status = await getStatusByTxHash(txhash);
+      //002-amount
+      const amount = await getAmountByTxHash(txhash,address);
+      // const tradeAmount = new Number(amount);
+      // console.log(tradeAmount);
+      //003-fee
+      const fee = await getFeeByTxHash(txhash);
+      // const tradeFee = new Number(fee);
+      console.log(fee.toString());
+      //004-inputs
+      const inputs = await getInputAddressByTxHash(txhash);
+      //005-outputs 
+      const outputs = await getOutputAddressByTxHash(txhash);
+      
+      chrome.runtime.sendMessage({
+        status,
+        tradeAmount: amount.toString(),
+        fee: fee.toString(),
+        inputs,
+        outputs,
+        txhash,
+        messageType: MESSAGE_TYPE.TX_DETAIL
+      })
+  // });    
+  }
+
+
 
 });
