@@ -17,7 +17,7 @@ interface AppProps { }
 
 interface AppState { }
 
-export const innerForm = props => {
+export const genForm = props => {
   const classes = useStyles();
 
   const {
@@ -89,10 +89,11 @@ export function GenerateMnemonic(props: AppProps, state: AppState) {
 
   const onSubmit = async(values) => {
     await new Promise(resolve => setTimeout(resolve, 500));
-    chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.GEN_MNEMONIC })
 
     if(vaildate){
+      chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.GEN_MNEMONIC })
       setSuccess(true)
+      history.push("show-mnemonic")
     }
   }
 
@@ -124,7 +125,7 @@ export function GenerateMnemonic(props: AppProps, state: AppState) {
             .required("Required")
         })}
       >
-        {innerForm}
+        {genForm}
       </Formik>
     </div>
   )

@@ -86,14 +86,11 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const password1 = request.password.trim()
     const confirmPassword1 = request.confirmPassword.trim()
 
-    console.log("password1", password1)
-    console.log("confirmPassword1", confirmPassword1)
-
     if (password1 === confirmPassword1) {
       const mnemonic1 = generateMnemonic()
 
       chrome.runtime.sendMessage({
-        mnemonic1,
+        mnemonic: mnemonic1,
         messageType: MESSAGE_TYPE.RECE_MNEMONIC
       })
     }

@@ -9,6 +9,7 @@ import Address from './pages/Address'
 
 import {ImportMnemonic, } from './pages/ImportMnemonic/index'
 import {GenerateMnemonic, } from './pages/ImportMnemonic/generate'
+import {ShowMnemonic, } from './pages/ImportMnemonic/show'
 import Transaction from "./pages/Transaction"
 import TxDetail from "./pages/TxDetail"
 import Home from "./pages/Home"
@@ -57,6 +58,9 @@ export default function App() {
             </Route>
             <Route path="/generate-mnemonic">
               <GenerateMnemonic/>
+            </Route>
+            <Route path="/show-mnemonic">
+              <ShowMnemonic/>
             </Route>
             <Route path="/send-tx">
               <Transaction />
