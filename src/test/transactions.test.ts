@@ -219,7 +219,7 @@ describe('transaction test', () => {
 
    })  
 
-    //   it('8- get input Capacity by transaction_hash',async () => {
+      it('8- get input Capacity by transaction_hash',async () => {
         // const expectCapacity = BigInt(500000000000);
         // const result = await ckb.rpc.getTransaction(transaction_hash);
         // const outputs = result.transaction.outputs;
@@ -228,12 +228,12 @@ describe('transaction test', () => {
         // expect(BigInt(tradeCapacity)).toEqual(expectCapacity);
         // let bar: bigint = 100n; 
 //ERROR
-        // const expectCapacity_8:bigint = BigInt(831324834499834603);
-        // const inputsCapacity_8 = await getInputCapacityByTxHash(transaction_hash);
+        const expectCapacity_8 = "831324834499834603";
+        const inputsCapacity_8 = await getInputCapacityByTxHash(transaction_hash);
         // console.log(BigInt(inputsCapacity_8)); //831324834499834603n
-        // expect(inputsCapacity_8).toEqual(expectCapacity_8);
+        expect(expectCapacity_8).toEqual(inputsCapacity_8.toString());
 
-//    }) 
+   }) 
 
 //    it('8- get trade Capacity by transaction_hash',async () => {
 //         const expectCapacity = BigInt(500000000000);

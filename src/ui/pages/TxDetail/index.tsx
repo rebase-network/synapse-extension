@@ -28,43 +28,72 @@ export default function (props: AppProps, state: AppState) {
 
   const classes = useStyles();
   
-  const [amount, setAmount] = React.useState('0');
-  const [fee, setFee] = React.useState('0');
+  const [status, setStatus] = React.useState("");
+  const [amount, setAmount] = React.useState(0);
+  const [fee, setFee] = React.useState(0);
+  const [inputs, setInputs] = React.useState("");
+  const [outputs, setOutputs] = React.useState("");
+  const [txHash, setTxHash] = React.useState("");
+
+  React.useEffect(() => {
+    chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+      if (message.messageType === MESSAGE_TYPE.TX_DETAIL) {
+        setAmount(message.tradeAmount);
+        setStatus(message.status);
+        setFee(message.fee);
+        setInputs(message.inputs);
+        setOutputs(message.outputs);
+        setTxHash(message.txhash);
+      }
+    })
+  }, [])
 
   return (
     <div className={classes.container}>
       <Title title="Transaction Detail" testId="tx-detail-title" />
+      <div className="status" data-testid="status">
+          <span className="">status  </span>
+          {status}
+      </div>
+      <br/>
+      <br/>
       <div className="amount" data-testid="amount">
           <span className="">Amount  </span>
           {amount}
           <span className="">  CKB</span>
       </div>
-
+      <br/>
+      
       <div className="fee" data-testid="fee">
           <span className="">Fee  </span>
           {fee}
           <span className="">  CKB</span>
       </div>
+      <br/>
 
       <div className="inputs" data-testid="inputs">
           <span className="">inputs  </span>
-          {"ckt1qyqv6ztcvwywkj8q6xmpd4ukf9zlr2rwnfzq4s7eek"}
+          {inputs}
       </div>
+      <br/>
       
       <div className="outputs" data-testid="outputs">
           <span className="">outputs  </span>
-          {"ckt1qyqr79tnk3pp34xp92gerxjc4p3mus2690psf0dd70"}
+          {outputs}
       </div>
+      <br/>
 
       <div className="" data-testid="">
           <span className=""> ------------ </span>
       </div>
+      <br/>
 
       <div className="txHash" data-testid="txHash">
           <span className=""> TxHash </span>
-          {"0xb95121d9e0947cdabfd63025c00a285657fd40e6bc69215c63f723a5247c8ead"}
+          {txHash}
       </div>
-
+      <br/>
+      
     </div>
   )
 }
