@@ -8,6 +8,7 @@ import {
 import Address from './pages/Address'
 import ImportMnemonic from './pages/ImportMnemonic'
 import Transaction from "./pages/Transaction"
+import TxDetail from "./pages/TxDetail"
 import AppBar from './Components/AppBar/'
 
 import "./styles/global.scss";
@@ -36,6 +37,9 @@ export default function App() {
               <li>
                 <Link to="/import-mnemonic">Import Mnemonic</Link>
               </li>
+              <li>
+                <Link to="/tx-detail">Tx Detail</Link>
+              </li>
             </ul>
           </nav>
           {/* A <Switch> looks through its children <Route>s and
@@ -50,6 +54,11 @@ export default function App() {
             <Route path="/send-tx">
               <Transaction />
             </Route>
+            <Route path="/tx-detail">
+              <TxDetail />
+            </Route>
+
+            {/* 通配放到最后 */}
             <Route path="/">
               <Address />
             </Route>
