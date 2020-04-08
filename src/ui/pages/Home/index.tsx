@@ -27,7 +27,6 @@ const useStyles = makeStyles({
 
 
 interface AppProps { }
-
 interface AppState { }
 
 export default function (props: AppProps, state: AppState) {
@@ -38,7 +37,11 @@ export default function (props: AppProps, state: AppState) {
 
   const onImport = () => {
     history.push('/import-mnemonic');
-  };
+  }
+
+  const onGenerate =() =>{
+    history.push('/generate-mnemonic');
+  }
 
   const classes = useStyles();
 
@@ -63,6 +66,7 @@ export default function (props: AppProps, state: AppState) {
           variant="contained"
           id="generate-button"
           color="primary"
+          onClick={onGenerate}
           className={classes.button}
           data-testid="generate-button"
         >

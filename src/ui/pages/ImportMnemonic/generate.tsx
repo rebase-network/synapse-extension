@@ -1,37 +1,17 @@
 import * as React from 'react';
-// import './Popup.scss';
-import Title from '../../Components/Title'
+import Title from '../../Components/Title';
 import { Button, TextField } from '@material-ui/core';
-// import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { MESSAGE_TYPE } from '../../../utils/constants'
+import { MESSAGE_TYPE } from '../../../utils/constants';
 import { useHistory } from "react-router-dom";
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import Popper from '@material-ui/core/Popper';
-
-const useStylesPopper = makeStyles((theme: Theme) =>
-  createStyles({
-    paper: {
-      border: '1px solid',
-      padding: theme.spacing(1),
-      backgroundColor: theme.palette.background.paper,
-    },
-  }),
-);
+import { makeStyles, } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   container: {
     margin: 30,
   },
-  button: {
-
-  },
-  textField: {
-
-  }
 });
-
 
 interface AppProps { }
 
@@ -39,7 +19,6 @@ interface AppState { }
 
 export const innerForm = props => {
   const classes = useStyles();
-
 
   const {
     values,
@@ -54,32 +33,12 @@ export const innerForm = props => {
   } = props;
 
   return (
-    <Form className="form-mnemonic" id="form-mnemonic" onSubmit={handleSubmit}>
-      <TextField
-        label="Mnemonic"
-        name="mnemonic"
-        multiline
-        rows="4"
-        fullWidth
-        className={classes.textField}
-        value={values.mnemonic}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        error={!!errors.mnemonic}
-        helperText={(errors.mnemonic && touched.mnemonic) && errors.mnemonic}
-        margin="normal"
-        variant="outlined"
-        data-testid="field-mnemonic"
-      />
-      {/* <Popper id={'simple-popper'} open={true} >
-        <div className={classesPopper.paper}>Invalid mnemonic</div>
-      </Popper> */}
+    <Form className="gen-mnemonic" id="gen-mnemonic" onSubmit={handleSubmit}>
       <TextField
         label="Password"
         name="password"
         type="password"
         fullWidth
-        className={classes.textField}
         value={values.password}
         onChange={handleChange}
         onBlur={handleBlur}
@@ -87,14 +46,14 @@ export const innerForm = props => {
         helperText={(errors.password && touched.password) && errors.password}
         margin="normal"
         variant="outlined"
-        data-testid="field-password"
+        data-testid=""
       />
+
       <TextField
         label="Confirm Password"
         name="confirmPassword"
         type="password"
         fullWidth
-        className={classes.textField}
         value={values.confirmPassword}
         onChange={handleChange}
         onBlur={handleBlur}
@@ -102,26 +61,27 @@ export const innerForm = props => {
         helperText={(errors.confirmPassword && touched.confirmPassword) && errors.confirmPassword}
         margin="normal"
         variant="outlined"
-        data-testid="field-confirm-password"
+        data-testid=""
       />
+
       {isSubmitting && <div id="submitting">Submitting</div>}
+
       <Button
         type="submit"
+        variant="contained"
         id="submit-button"
         disabled={isSubmitting}
         color="primary"
-        className={classes.button}
-        data-testid="submit-button"
+        data-testid=""
       >
-        Import
+        Create
       </Button>
-
 
     </Form>
   );
 }
 
-export function ImportMnemonic(props: AppProps, state: AppState) {
+export function GenerateMnemonic(props: AppProps, state: AppState) {
 
   const [success, setSuccess] = React.useState(false)
   const [vaildate, setValidate] = React.useState(true)
@@ -138,24 +98,10 @@ export function ImportMnemonic(props: AppProps, state: AppState) {
   }
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener(function(
-      message,sender,sendResponse) {
-
-      if (message === MESSAGE_TYPE.IS_NOT_VALIDATE_MNEMONIC) {
-
-        console.log("index.tsx => message",message);
-        setValidate(false);//false验证未通过
-        return;
-
-      }  else if (message === MESSAGE_TYPE.VALIDATE_PASS) {
-        setValidate(true);
-        console.log("index.tsx validate pass");
-        history.push('/address')
-      }
-
-    });
+    chrome.runtime.onMessage.addListener(
+      (message,sender,sendResponse) => {
+      });
   }, []);
-
 
   let successNode = null
   if (success) successNode = <div className="success">Successfully</div>
@@ -164,14 +110,12 @@ export function ImportMnemonic(props: AppProps, state: AppState) {
 
   return (
     <div className={classes.container}>
-      <Title title='Import Mnemonic' testId="mnemonic-form-title" />
+      <Title title='Generate Mnemonic' testId="" />
       {successNode}
       <Formik
         initialValues={{ mnemonic: "", password: "", confirmPassword: "" }}
         onSubmit={onSubmit}
         validationSchema={Yup.object().shape({
-          mnemonic: Yup.string()
-            .required("Required"),
           password: Yup.string()
             .min(6)
             .required("Required"),

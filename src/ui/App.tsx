@@ -6,7 +6,9 @@ import {
   Link
 } from "react-router-dom";
 import Address from './pages/Address'
-import ImportMnemonic from './pages/ImportMnemonic'
+
+import {ImportMnemonic, } from './pages/ImportMnemonic/index'
+import {GenerateMnemonic, } from './pages/ImportMnemonic/generate'
 import Transaction from "./pages/Transaction"
 import TxDetail from "./pages/TxDetail"
 import Home from "./pages/Home"
@@ -52,6 +54,9 @@ export default function App() {
             </Route>
             <Route path="/import-mnemonic">
               <ImportMnemonic />
+            </Route>
+            <Route path="/generate-mnemonic">
+              <GenerateMnemonic/>
             </Route>
             <Route path="/send-tx">
               <Transaction />
