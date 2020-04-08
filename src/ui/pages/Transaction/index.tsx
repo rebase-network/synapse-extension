@@ -134,11 +134,19 @@ export default function (props: AppProps, state: AppState) {
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-      if (message.messageType === MESSAGE_TYPE.SEND_TX_BY_AMOUNT) {
+      //跳转到交易详细信息的页面
+      if (message.messageType === MESSAGE_TYPE.SEND_TX_OVER) {
         // setAddress(message.address);
-        console.log("message", JSON.stringify(message));
+        // console.log("message", JSON.stringify(message));
         // message {"fromAddress":"ckt1qyqt9ed4emcxyfed77ed0dp7kcm3mxsn97ls38jxjw","toAddress":"ckt1qyqt9ed4emcxyfed77ed0dp7kcm3mxsn97ls38jxjw","amount":"1000","fee":"1000","messageType":"SEND_TX_BY_AMOUNT"}
-
+        
+        //001-传递交易信息
+        chrome.runtime.sendMessage({
+          message,
+          messageType: MESSAGE_TYPE.REQUEST_TX_DETAIL 
+        })
+        //002-跳转到页面
+        history.push('/tx-detail')
       }
     })
     // setLoading(true);
@@ -149,7 +157,7 @@ export default function (props: AppProps, state: AppState) {
     console.log(values)
     //消息发送到Background.ts
     //network - TODO
-    chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.SEND_TX })
+    chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.RESQUEST_SEND_TX })
     setSuccess(true)
   }
 

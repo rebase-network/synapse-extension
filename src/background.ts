@@ -160,6 +160,14 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       //   sendTxAmount: sendTxAmount,
       //   messageType: MESSAGE_TYPE.SEND_TX_BY_AMOUNT
       // })
+      chrome.runtime.sendMessage({
+        fromAddress: fromAddress,
+        toAddress: toAddress,
+        amount: amount.toString(),
+        fee: fee.toAddress(),
+        messageType: MESSAGE_TYPE.SEND_TX_OVER 
+      })
+
     });
   }
 
