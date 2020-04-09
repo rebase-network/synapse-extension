@@ -27,7 +27,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       // return err
     }
 
-    //助剂词有效性的验证
+    //助记词有效性的验证
     const isValidateMnemonic = validateMnemonic(mnemonic);
     console.log(isValidateMnemonic)
     if(!isValidateMnemonic){
@@ -83,18 +83,71 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   }
 
   if (request.messageType === MESSAGE_TYPE.GEN_MNEMONIC) {
-    const password1 = request.password.trim()
-    const confirmPassword1 = request.confirmPassword.trim()
+    const newmnemonic = generateMnemonic()
 
-    if (password1 === confirmPassword1) {
-      const mnemonic1 = generateMnemonic()
+    chrome.runtime.sendMessage({
+      mnemonic: newmnemonic,
+      messageType: MESSAGE_TYPE.RECE_MNEMONIC
+    })
+  }
 
-      chrome.runtime.sendMessage({
-        mnemonic: mnemonic1,
-        messageType: MESSAGE_TYPE.RECE_MNEMONIC
-      })
+  if (request.messageType === MESSAGE_TYPE.SAVE_MNEMONIC) {
+    const mnemonic = request.mnemonic.trim();
+    const password = request.password.trim();
+    const confirmPassword = request.confirmPassword.trim();
+
+    if (password != confirmPassword) {
+      // TODO
+      // return err
     }
 
+    //助记词有效性的验证
+    const isValidateMnemonic = validateMnemonic(mnemonic);
+
+    if (!isValidateMnemonic) {
+      console.log('isValidateMnemonic: ', "Not a ValidateMnemonic");
+      chrome.runtime.sendMessage(MESSAGE_TYPE.IS_NOT_VALIDATE_MNEMONIC);
+      return;
+    }
+
+    const seed = mnemonicToSeedSync(mnemonic)
+    const masterKeychain = Keychain.fromSeed(seed)
+
+    const extendedKey = new ExtendedPrivateKey(
+      masterKeychain.privateKey.toString('hex'),
+      masterKeychain.chainCode.toString('hex')
+    )
+
+    const keystore = Keystore.create(extendedKey, password);
+    const accountKeychain = masterKeychain.derivePath(AccountExtendedPublicKey.ckbAccountPath);
+
+    const accountExtendedPublicKey = new AccountExtendedPublicKey(
+      accountKeychain.publicKey.toString('hex'),
+      accountKeychain.chainCode.toString('hex'),
+    )
+
+    const addrTestnet = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Testnet);
+    const addrMainnet = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Mainnet);
+
+    const wallet = {
+      keystore: keystore.toJson(),
+      testnet: {
+        address: addrTestnet.address,
+        path: addrTestnet.path,
+        pubKey: addrTestnet.publicKey
+      },
+      mainnet: {
+        address: addrMainnet.address,
+        path: addrMainnet.path,
+        pubKey: addrMainnet.publicKey
+      },
+    }
+
+    chrome.storage.sync.set({ wallet,}, () => {
+      console.log('wallet is set to storage: ' + JSON.stringify(wallet));
+    });
+
+    chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS)
   }
 
   if (request.messageType === MESSAGE_TYPE.REQUEST_ADDRESS_INFO) {

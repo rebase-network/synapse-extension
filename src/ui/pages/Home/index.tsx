@@ -3,6 +3,7 @@ import Title from '../../Components/Title'
 import { Button, } from '@material-ui/core';
 import { useHistory } from "react-router-dom";
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { MESSAGE_TYPE } from '../../../utils/constants';
 
 const useStylesPopper = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,10 +37,11 @@ export default function (props: AppProps, state: AppState) {
   React.useEffect(() => { }, []);
 
   const onImport = () => {
-    history.push('/import-mnemonic');
+    history.push('/import-mnemonic')
   }
 
   const onGenerate =() =>{
+    chrome.runtime.sendMessage({messageType: MESSAGE_TYPE.GEN_MNEMONIC })
     history.push('/generate-mnemonic');
   }
 

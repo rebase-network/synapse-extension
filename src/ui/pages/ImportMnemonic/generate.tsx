@@ -7,17 +7,22 @@ import { MESSAGE_TYPE } from '../../../utils/constants';
 import { useHistory } from "react-router-dom";
 import { makeStyles, } from '@material-ui/core/styles';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(1),
+  },
   container: {
     margin: 30,
   },
-});
+}));
 
 interface AppProps { }
 
 interface AppState { }
 
 export const genForm = props => {
+
   const classes = useStyles();
 
   const {
@@ -29,11 +34,28 @@ export const genForm = props => {
     handleChange,
     handleBlur,
     handleSubmit,
+    enableReinitialize,
     handleReset
   } = props;
 
   return (
     <Form className="gen-mnemonic" id="gen-mnemonic" onSubmit={handleSubmit}>
+      <TextField
+        label="Mnemonic"
+        name="mnemonic"
+        multiline
+        rows="4"
+        fullWidth
+        value={values.mnemonic}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={!!errors.mnemonic}
+        helperText={(errors.mnemonic && touched.mnemonic) && errors.mnemonic}
+        margin="normal"
+        variant="outlined"
+        data-testid=""
+      />
+
       <TextField
         label="Password (min 6 chars)"
         name="password"
@@ -85,21 +107,32 @@ export function GenerateMnemonic(props: AppProps, state: AppState) {
 
   const [success, setSuccess] = React.useState(false)
   const [vaildate, setValidate] = React.useState(true)
+  const [mnemonic, setMnemonic] = React.useState("")
+
   const history = useHistory();
 
   const onSubmit = async(values) => {
     await new Promise(resolve => setTimeout(resolve, 500));
 
     if(vaildate){
-      chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.GEN_MNEMONIC })
       setSuccess(true)
-      history.push("show-mnemonic")
+      chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.SAVE_MNEMONIC })
+      history.push('/address')
     }
   }
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(
-      (message,sender,sendResponse) => {
+      (msg, sender, sendResp) =>{
+        if (msg.messageType === MESSAGE_TYPE.RECE_MNEMONIC) {
+
+          if (msg.mnemonic) {
+            console.log(msg.mnemonic);
+            setMnemonic(msg.mnemonic)
+          } else {
+            // history.push('/')
+          }
+        }
       });
 
   }, []);
@@ -114,19 +147,23 @@ export function GenerateMnemonic(props: AppProps, state: AppState) {
       <Title title='Generate Mnemonic' testId="" />
       {successNode}
       <Formik
-        initialValues={{ mnemonic: "", password: "", confirmPassword: "" }}
+        enableReinitialize={true}
+        initialValues={{ mnemonic: mnemonic, password: "", confirmPassword: "" }}
         onSubmit={onSubmit}
         validationSchema={Yup.object().shape({
-          password: Yup.string()
+          mnemonic: Yup.string().trim()
+          .required("Required"),
+          password: Yup.string().trim()
             .min(6)
             .required("Required"),
-          confirmPassword: Yup.string()
+          confirmPassword: Yup.string().trim()
             .oneOf([Yup.ref('password')], "Passwords don't match!")
             .required("Required")
         })}
       >
         {genForm}
       </Formik>
+
     </div>
   )
 }
