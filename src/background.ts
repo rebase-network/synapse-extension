@@ -10,7 +10,7 @@ import { AddressType, AddressPrefix } from './wallet/address';
 import {getBalanceByPublicKey} from './balance';
 import {sendSimpleTransaction} from './sendSimpleTransaction';
 import {getAmountByTxHash, getStatusByTxHash,getFeeByTxHash, getInputAddressByTxHash, getOutputAddressByTxHash, getOutputAddressByTxHashAndIndex} from './transaction';
-
+import {getPrivateKeyByKeyStoreAndPassword} from './wallet/exportPrivateKey'
 /**
  * Listen messages from popup
  */
@@ -290,14 +290,41 @@ if (request.messageType === MESSAGE_TYPE.REQUEST_TX_DETAIL) {
       const keystore = Keystore.fromJson(JSON.stringify(wallet.keystore)); //参数是String
       //check the password by keystore
       const checkPassword = keystore.checkPassword(password);
-      
+
       //send the check result to the page
-      chrome.runtime.sendMessage({
-        isValidatePassword:checkPassword,
-        messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT
-      })      
+      if(!checkPassword){
+        chrome.runtime.sendMessage({
+          isValidatePassword:checkPassword,
+          messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT
+        })
+      } 
+
+      console.log("keystore=>",JSON.stringify(wallet.keystore));
+
+      // valiate -> get Keystore and privateKey
+      const privateKey = getPrivateKeyByKeyStoreAndPassword(JSON.stringify(wallet.keystore),password);
+
+        chrome.runtime.sendMessage({
+          isValidatePassword:checkPassword,
+          keystore: keystore,
+          privateKey: privateKey,
+          messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT
+        })
+
     });
   }
 
+  //export-private-key-second check
+  if(request.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND){
+
+      const privateKey = request.message.privateKey;
+      const keystore = request.message.keystore;
+      
+      chrome.runtime.sendMessage({
+        privateKey,
+        keystore: JSON.stringify(keystore),
+        messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND_RESULT
+      })
+  }
 
 });

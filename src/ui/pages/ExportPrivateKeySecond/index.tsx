@@ -32,9 +32,15 @@ export default function (props: AppProps, state: AppState) {
   const [keystore, setKeystore] = React.useState("");
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-      // if (message.messageType === MESSAGE_TYPE.TX_DETAIL) {
-      // }
+    chrome.runtime.onMessage.addListener(function ( request, sender, sendResponse) {
+      
+      console.log("EXPORT_PRIVATE_KEY_SECOND_RESULT =>",request);
+      if (request.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND_RESULT) {
+          const privateKey = request.privateKey;
+          const keystore = request.keystore;
+          setPrivateKey(privateKey);
+          setKeystore(keystore);
+      }
     })
   }, [])
 

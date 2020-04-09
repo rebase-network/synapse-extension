@@ -102,7 +102,12 @@ export default function (props: AppProps, state: AppState) {
       // console.log("export private key =>",message);
       if (message.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT) {
         if(message.isValidatePassword){
+
           history.push('/export-private-key-second'); //测试成功的地址
+          chrome.runtime.sendMessage({ 
+            message, 
+            messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND 
+        })
         } else {
           setValidate(false);
         }
