@@ -24,38 +24,6 @@ export const WITHDRAW_EPOCHS = 180
 export const IMMATURE_EPOCHS = 4
 export const MILLISECONDS_IN_YEAR = 365 * 24 * 3600 * 1000
 
-export const NERVOS_DAO_RFC_URL =
-  'https://www.github.com/nervosnetwork/rfcs/blob/master/rfcs/0023-dao-deposit-withdraw/0023-dao-deposit-withdraw.md'
-
-export enum ConnectionStatus {
-  Online = 'online',
-  Offline = 'offline',
-}
-
-export enum Routes {
-  Launch = '/',
-  Overview = '/overview',
-  WalletWizard = '/wizard',
-  Wallet = '/wallet',
-  Send = '/send',
-  Receive = '/receive',
-  History = '/history',
-  Transaction = '/transaction',
-  Addresses = '/addresses',
-  Settings = '/settings',
-  SettingsGeneral = '/settings/general',
-  SettingsWallets = '/settings/wallets',
-  SettingsNetworks = '/settings/networks',
-  CreateWallet = '/wallets/new',
-  ImportWallet = '/wallets/import',
-  ImportKeystore = '/keystore/import',
-  NetworkEditor = '/network',
-  WalletEditor = '/editwallet',
-  Prompt = '/prompt',
-  NervosDAO = '/nervos-dao',
-  SpecialAssets = '/special-assets',
-}
-
 export enum CapacityUnit {
   CKB = 'ckb',
   CKKB = 'ckkb',
@@ -68,21 +36,6 @@ export enum Price {
   HundredBlocks = '3000',
   FiveHundredsBlocks = '0',
 }
-
-export const PlaceHolders = {
-  send: {
-    Calculating: '······',
-    Amount: 'eg: 100',
-  },
-}
-
-export enum MnemonicAction {
-  Create = 'create',
-  Verify = 'verify',
-  Import = 'import',
-}
-
-export const FULL_SCREENS = [`${Routes.Transaction}/`, `/wizard/`, `/keystore/`]
 
 export enum ErrorCode {
   // Errors from RPC
