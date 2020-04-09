@@ -9,6 +9,8 @@ import Address from './pages/Address'
 import ImportMnemonic from './pages/ImportMnemonic'
 import Transaction from "./pages/Transaction"
 import TxDetail from "./pages/TxDetail"
+import Home from "./pages/Home"
+
 import AppBar from './Components/AppBar/'
 
 import "./styles/global.scss";
@@ -60,7 +62,7 @@ export default function App() {
 
             {/* 通配放到最后 */}
             <Route path="/">
-              <Address />
+              <Home />
             </Route>
           </Switch>
         </div>
