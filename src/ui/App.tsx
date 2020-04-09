@@ -12,6 +12,7 @@ import {GenerateMnemonic, } from './pages/ImportMnemonic/generate'
 import Transaction from "./pages/Transaction"
 import TxDetail from "./pages/TxDetail"
 import Home from "./pages/Home"
+import ExportPrivateKey from './pages/ExportPrivateKey'
 
 import AppBar from './Components/AppBar/'
 
@@ -41,9 +42,9 @@ export default function App() {
               <li>
                 <Link to="/import-mnemonic">Import Mnemonic</Link>
               </li>
-              {/* <li>
-                <Link to="/tx-detail">Tx Detail</Link>
-              </li> */}
+              <li>
+                <Link to="/export-private-key">Export Private Key</Link>
+              </li>
             </ul>
           </nav>
           {/* A <Switch> looks through its children <Route>s and
@@ -64,7 +65,9 @@ export default function App() {
             <Route path="/tx-detail">
               <TxDetail />
             </Route>
-
+            <Route path="/export-private-key">
+              <ExportPrivateKey />
+            </Route>
             {/* 通配放到最后 */}
             <Route path="/">
               <Home />

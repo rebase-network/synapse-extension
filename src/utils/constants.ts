@@ -17,6 +17,10 @@ export const MESSAGE_TYPE = {
   //tx-detail
   REQUEST_TX_DETAIL: 'REQUEST_TX_DETAIL',
   TX_DETAIL: 'TX_DETAIL',
+
+  //export-private-key
+  EXPORT_PRIVATE_KEY_CHECK: 'EXPORT_PRIVATE_KEY_CHECK'
+
 }
 
 export const Ckb = {
