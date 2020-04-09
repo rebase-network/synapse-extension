@@ -13,6 +13,7 @@ import Transaction from "./pages/Transaction"
 import TxDetail from "./pages/TxDetail"
 import Home from "./pages/Home"
 import ExportPrivateKey from './pages/ExportPrivateKey'
+import ExportPrivateKeySecond from './pages/ExportPrivateKeySecond'
 
 import AppBar from './Components/AppBar/'
 
@@ -67,6 +68,9 @@ export default function App() {
             </Route>
             <Route path="/export-private-key">
               <ExportPrivateKey />
+            </Route>
+            <Route path="/export-private-key-second">
+              <ExportPrivateKeySecond />
             </Route>
             {/* 通配放到最后 */}
             <Route path="/">

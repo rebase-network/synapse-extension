@@ -282,6 +282,22 @@ if (request.messageType === MESSAGE_TYPE.REQUEST_TX_DETAIL) {
   // });    
   }
 
+  //export-private-key check
+  if(request.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK){
+    chrome.storage.sync.get(['wallet'], function({ wallet }) {
+
+      const password = request.password;
+      const keystore = Keystore.fromJson(JSON.stringify(wallet.keystore)); //参数是String
+      //check the password by keystore
+      const checkPassword = keystore.checkPassword(password);
+      
+      //send the check result to the page
+      chrome.runtime.sendMessage({
+        isValidatePassword:checkPassword,
+        messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT
+      })      
+    });
+  }
 
 
 });

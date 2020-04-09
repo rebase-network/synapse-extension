@@ -95,19 +95,17 @@ export default function (props: AppProps, state: AppState) {
     await new Promise(resolve => setTimeout(resolve, 500));
     //background.ts check the password
     chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK })
-    console.log("export-private-key =>",values)
   }
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener(function(
-      message,sender,sendResponse) {
-
-      if (message === MESSAGE_TYPE.IS_NOT_VALIDATE_MNEMONIC) {
-
-        console.log("index.tsx => message",message);
-        setValidate(false);//false验证未通过
-        return;
-
+    chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
+      // console.log("export private key =>",message);
+      if (message.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT) {
+        if(message.isValidatePassword){
+          history.push('/export-private-key-second'); //测试成功的地址
+        } else {
+          setValidate(false);
+        }
       }
     });
   }, []);
