@@ -6,6 +6,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { MESSAGE_TYPE } from '../../../utils/constants'
 import { useHistory } from "react-router-dom";
+import { AppContext } from '../../App';
 
 const useStyles = makeStyles({
   container: {
@@ -131,6 +132,8 @@ export const innerForm = props => {
 export default function (props: AppProps, state: AppState) {
   const [success, setSuccess] = React.useState(false)
   const history = useHistory();
+  const { network } = React.useContext(AppContext);
+  const [valAddress, setValAddress] = React.useState(true);
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
@@ -151,23 +154,50 @@ export default function (props: AppProps, state: AppState) {
   }, [])
 
   const onSubmit = async(values) => {
+
     // await new Promise(resolve => setTimeout(resolve, 500));
-    console.log(values)
-    //消息发送到Background.ts
-    //network - TODO
+    console.log("onSubmit=>",values);
+    console.log("network =>", network);
+
+    //check the address
+    const toAddress = values.address;
+    validateAddress(toAddress,network);
+
+    // 消息发送到Background.ts
+    // network - TODO
     chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.RESQUEST_SEND_TX })
     setSuccess(true)
+
+  }
+
+  //check the current network and address
+  const validateAddress = (address,network) => {
+    if (address.length !== 46) {
+        setValAddress(false);
+        return;
+    }
+    if (network == "testnet" &&  !address.startsWith('ckt')){
+        setValAddress(false);
+        return;
+    }
+    if (network == "maintest" &&  !address.startsWith('ckb')){
+        setValAddress(false);
+        return;
+    }
   }
 
   let successNode = null
   if (success) successNode = <div className="success">Successfully</div>
+  let validateNode = null
+  if (!valAddress) validateNode = <div className="success">Invalid Address</div>
+
 
   const classes = useStyles();
   return (
     <div className={classes.container}>
       <Title title='Send CKB' testId="sendtx-form-title" />
       {successNode}
-
+      {validateNode}
       <Formik
         initialValues={{ address: "", amount: "", fee: "", password: ""}}
 
