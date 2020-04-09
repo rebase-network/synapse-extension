@@ -103,7 +103,7 @@ export const genForm = props => {
   );
 }
 
-export function GenerateMnemonic(props: AppProps, state: AppState) {
+export default function GenerateMnemonic(props: AppProps, state: AppState) {
 
   const [success, setSuccess] = React.useState(false)
   const [vaildate, setValidate] = React.useState(true)

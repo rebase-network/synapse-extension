@@ -121,7 +121,7 @@ export const innerForm = props => {
   );
 }
 
-export function ImportMnemonic(props: AppProps, state: AppState) {
+export default function ImportMnemonic(props: AppProps, state: AppState) {
 
   const [success, setSuccess] = React.useState(false)
   const [vaildate, setValidate] = React.useState(true)
