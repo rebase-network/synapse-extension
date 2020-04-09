@@ -7,8 +7,8 @@ import {
 } from "react-router-dom";
 import Address from './pages/Address'
 
-import {ImportMnemonic, } from './pages/ImportMnemonic/index'
-import {GenerateMnemonic, } from './pages/ImportMnemonic/generate'
+import ImportMnemonic from './pages/ImportMnemonic/index'
+import GenerateMnemonic from './pages/ImportMnemonic/generate'
 import Transaction from "./pages/Transaction"
 import TxDetail from "./pages/TxDetail"
 import Home from "./pages/Home"
