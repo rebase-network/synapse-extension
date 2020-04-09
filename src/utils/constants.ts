@@ -25,3 +25,9 @@ export const Ckb = {
   rpcUrl: "http://127.0.0.1:8114",
   remoteRpcUrl: "http://106.13.40.34:8114/",
 }
+
+export const KEYSTORE_TYPE = {
+    MNEMONIC_TO_KEYSTORE: "1",
+    KEYSTORE_TO_KEYSTORE: "2",
+    PRIVATEKEY_TO_KEYSTORE: "3"
+}
