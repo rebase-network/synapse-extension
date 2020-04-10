@@ -1,4 +1,4 @@
-import { MESSAGE_TYPE } from './utils/constants'
+import { MESSAGE_TYPE, KEYSTORE_TYPE } from './utils/constants'
 import { mnemonicToSeedSync, validateMnemonic } from './wallet/mnemonic';
 
 import {generateMnemonic} from './wallet/key';
@@ -7,13 +7,17 @@ import Keychain from './wallet/keychain';
 
 import { AccountExtendedPublicKey, ExtendedPrivateKey } from "./wallet/key";
 import { AddressType, AddressPrefix } from './wallet/address';
-import {getBalanceByPublicKey} from './balance';
+import {getBalanceByPublicKey, getBalanceByLockHash} from './balance';
 import {sendSimpleTransaction} from './sendSimpleTransaction';
 import {getAmountByTxHash, getStatusByTxHash,getFeeByTxHash, getInputAddressByTxHash, getOutputAddressByTxHash, getOutputAddressByTxHashAndIndex} from './transaction';
 import {getPrivateKeyByKeyStoreAndPassword} from './wallet/exportPrivateKey'
 /**
  * Listen messages from popup
  */
+
+let wallets = []
+let currWallet = {}
+
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
   if (request.messageType === MESSAGE_TYPE.IMPORT_MNEMONIC) {
@@ -48,7 +52,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     )
 
     const keystore = Keystore.create(extendedKey, password);
-    console.log("keystore=>",JSON.stringify(keystore));
     const accountKeychain = masterKeychain.derivePath(AccountExtendedPublicKey.ckbAccountPath);
 
     const accountExtendedPublicKey = new AccountExtendedPublicKey(
@@ -59,24 +62,29 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     // 判断 AddressPrefix Mainnet=>Testnet
     const addrTestnet = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Testnet);
     const addrMainnet = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Mainnet);
-    console.log('addrTestnet: ' + JSON.stringify(addrTestnet));
 
     const wallet = {
-      keystore: keystore.toJson(),
-      testnet: {
-        address: addrTestnet.address,
-        path: addrTestnet.path,
-        pubKey: addrTestnet.publicKey
-      },
-      mainnet: {
-        address: addrMainnet.address,
-        path: addrMainnet.path,
-        pubKey: addrMainnet.publicKey
-      },
-    }
+      "path": addrMainnet.publicKey,
+      "blake160": addrMainnet.getBlake160(),
+      "mainnetAddr": addrMainnet.address,
+      "testnetAddr": addrTestnet.address,
+      "lockHash": addrMainnet.getLockHash(),
+      "rootKeystore": keystore.toJson(),
+      "keystore":"",
+      "keystoreType": KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
+  }
 
-    chrome.storage.sync.set({ wallet,}, () => {
-      console.log('wallet is set to storage: ' + JSON.stringify(wallet));
+    wallets.push(wallet)
+
+    currWallet = wallet
+    currWallet['index'] = wallets.length-1
+
+    chrome.storage.sync.set({ wallets,}, () => {
+      console.log('wallets is set to storage: ' + JSON.stringify(wallets));
+    });
+
+    chrome.storage.sync.set({ currWallet,}, () => {
+      console.log('currWallet is set to storage: ' + JSON.stringify(currWallet));
     });
 
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS)
@@ -151,15 +159,16 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   }
 
   if (request.messageType === MESSAGE_TYPE.REQUEST_ADDRESS_INFO) {
-    chrome.storage.sync.get(['wallet'], function({ wallet }) {
+    chrome.storage.sync.get(['currWallet'], function(wallet) {
       console.log('Wallet is ' + JSON.stringify(wallet));
+
       const message: any = {
         messageType: MESSAGE_TYPE.ADDRESS_INFO
       }
       if (wallet) {
         message.address = {
-          testnet: wallet.testnet.address,
-          mainnet: wallet.mainnet.address,
+          testnet: wallet.currWallet.testnetAddr,
+          mainnet: wallet.currWallet.mainnetAddr,
         }
       }
       console.log('message: ', message);
@@ -170,14 +179,11 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
   // get balance by address
   if (request.messageType === MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS) {
-    chrome.storage.sync.get(['wallet'], async function({ wallet }) {
-
-      console.log('wallet ===> ' + JSON.stringify(wallet));
+    chrome.storage.sync.get(['currWallet'], async function(wallet) {
 
       let balance = ""
       if (wallet) {
-        const publicKey = '0x' + wallet[request.network].pubKey;
-        const capacityAll = await getBalanceByPublicKey(publicKey);
+        const capacityAll = await getBalanceByLockHash(wallet["currWallet"]["lockHash"]);
         balance = capacityAll.toString()
       }
 
@@ -191,7 +197,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   //发送交易
   if (request.messageType === MESSAGE_TYPE.RESQUEST_SEND_TX) {
 
-    chrome.storage.sync.get(['wallet'], async function( {wallet} ) {
+    chrome.storage.sync.get(['currWallet'], async function( {wallet} ) {
 
       //1- 从chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.SEND_TX })获取values的值
       const toAddress = request.address.trim();
@@ -236,14 +242,14 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         amount: amount.toString(),
         fee: fee.toString(),
         txHash:sendTxHash,
-        messageType: MESSAGE_TYPE.TO_TX_DETAIL 
+        messageType: MESSAGE_TYPE.TO_TX_DETAIL
       })
     });
   }
 
 //tx-detail
 if (request.messageType === MESSAGE_TYPE.REQUEST_TX_DETAIL) {
-  // chrome.storage.sync.get(['wallet'], async function( {wallet} ) {  
+  // chrome.storage.sync.get(['wallet'], async function( {wallet} ) {
       console.log("background request_tx_detail - 001 =>" , request);
       console.log("background request_tx_detail - 001 =>" , request.message);
       const txHash = request.message.txHash;
@@ -257,7 +263,7 @@ if (request.messageType === MESSAGE_TYPE.REQUEST_TX_DETAIL) {
       //001-status
       const status = await getStatusByTxHash(txHash);
       //002-amount
-    
+
       // const amount = await getAmountByTxHash(txhash,address);
       // const tradeAmount = new Number(amount);
       // console.log(tradeAmount);
@@ -267,9 +273,9 @@ if (request.messageType === MESSAGE_TYPE.REQUEST_TX_DETAIL) {
       // console.log(fee.toString());
       //004-inputs
       // const inputs = await getInputAddressByTxHash(txhash);
-      //005-outputs 
+      //005-outputs
       // const outputs = await getOutputAddressByTxHash(txhash);
-      
+
       chrome.runtime.sendMessage({
         status,
         tradeAmount: amount,
@@ -279,12 +285,12 @@ if (request.messageType === MESSAGE_TYPE.REQUEST_TX_DETAIL) {
         txHash,
         messageType: MESSAGE_TYPE.TX_DETAIL
       })
-  // });    
+  // });
   }
 
   //export-private-key check
   if(request.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK){
-    chrome.storage.sync.get(['wallet'], function({ wallet }) {
+    chrome.storage.sync.get(['currWallet'], function({ wallet }) {
 
       const password = request.password;
       const keystore = Keystore.fromJson(JSON.stringify(wallet.keystore)); //参数是String
@@ -297,7 +303,7 @@ if (request.messageType === MESSAGE_TYPE.REQUEST_TX_DETAIL) {
           isValidatePassword:checkPassword,
           messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT
         })
-      } 
+      }
 
       console.log("keystore=>",JSON.stringify(wallet.keystore));
 
@@ -319,7 +325,7 @@ if (request.messageType === MESSAGE_TYPE.REQUEST_TX_DETAIL) {
 
       const privateKey = request.message.privateKey;
       const keystore = request.message.keystore;
-      
+
       chrome.runtime.sendMessage({
         privateKey,
         keystore: JSON.stringify(keystore),

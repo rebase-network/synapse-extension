@@ -28,7 +28,7 @@ export default class Address {
   constructor(address: string, path: string = Address.pathForReceiving(0), blake160: string = "") {
     this.address = address
     this.path = path
-    this.blake160= blake160
+    this.blake160 = blake160
   }
 
   public static fromPublicKey = (publicKey: string, path: string, prefix: AddressPrefix = AddressPrefix.Testnet) => {
@@ -56,11 +56,23 @@ export default class Address {
   }
 
   public getBlake160 = () => {
-    const val = "0x"+ ckbUtils.blake160("0x" + this.publicKey, "hex")
-    return val
+    return "0x" + ckbUtils.blake160("0x" + this.publicKey, "hex")
   }
 
   public publicKeyHash = () => {
     return this.getBlake160()
   }
+
+  public getLockHash = () => {
+    const publicKeyHash = this.getBlake160()
+
+    const lockHash = ckbUtils.scriptToHash({
+      hashType: "type",
+      codeHash: Ckb.MainNetCodeHash,
+      args: publicKeyHash,
+    })
+
+    return lockHash
+  }
+
 }
