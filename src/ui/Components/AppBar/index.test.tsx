@@ -12,10 +12,15 @@ describe('React testing library', () => {
   });
   afterEach(cleanup)
 
-  it('should render title', async() => {
+  it('should render title', () => {
     const elem = container.querySelector('h6')
     expect(container).toContainElement(elem)
     expect(elem).toHaveTextContent('Synapse')
+  })
+
+  it('should render setting icon on left side', () => {
+    const elem = getByTestId('setting-icon')
+    expect(elem).not.toBeNull()
   })
 });
 

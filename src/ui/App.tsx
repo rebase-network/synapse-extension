@@ -14,6 +14,7 @@ import TxDetail from "./pages/TxDetail"
 import Home from "./pages/Home"
 import ExportPrivateKey from './pages/ExportPrivateKey'
 import ExportPrivateKeySecond from './pages/ExportPrivateKeySecond'
+import Setting from './pages/Setting'
 
 import AppBar from './Components/AppBar/'
 
@@ -39,6 +40,9 @@ export default function App() {
             <ul>
               <li>
                 <Link to="/address">Address</Link>
+              </li>
+              <li>
+                <Link to="/setting">setting</Link>
               </li>
               <li>
                 <Link to="/import-mnemonic">Import Mnemonic</Link>
@@ -71,6 +75,9 @@ export default function App() {
             </Route>
             <Route path="/export-private-key-second">
               <ExportPrivateKeySecond />
+            </Route>
+            <Route path="/setting">
+              <Setting />
             </Route>
             {/* 通配放到最后 */}
             <Route path="/">
