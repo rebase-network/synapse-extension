@@ -165,7 +165,7 @@ export default function (props: AppProps, state: AppState) {
 
     // 消息发送到Background.ts
     // network - TODO
-    chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.RESQUEST_SEND_TX })
+    chrome.runtime.sendMessage({ ...values, network, messageType: MESSAGE_TYPE.RESQUEST_SEND_TX })
     setSuccess(true)
 
   }
@@ -180,7 +180,7 @@ export default function (props: AppProps, state: AppState) {
         setValAddress(false);
         return;
     }
-    if (network == "maintest" &&  !address.startsWith('ckb')){
+    if (network == "mainnet" &&  !address.startsWith('ckb')){
         setValAddress(false);
         return;
     }

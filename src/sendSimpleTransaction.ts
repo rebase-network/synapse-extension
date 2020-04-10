@@ -37,6 +37,7 @@ export const sendSimpleTransaction = async (privateKey,fromAddress,toAddress,sen
    * 3. calculate the hash of lock script via ckb.utils.scriptToHash method
    */
   const lockHash = ckb.generateLockHash(publicKeyHash, secp256k1Dep)
+  console.log("translaction lockhash =>",lockHash)
   /**
    * to see the lock hash
    */
@@ -49,6 +50,8 @@ export const sendSimpleTransaction = async (privateKey,fromAddress,toAddress,sen
     // STEP: '0x64',
     // rpc: ckb.rpc,
   })
+
+  console.log("unspentCells =>",unspentCells);
 
   // const toAddress = ckb.utils.privateKeyToAddress(privateKey, {
   //   prefix: 'ckt'

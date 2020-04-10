@@ -11,6 +11,7 @@ import {getBalanceByPublicKey, getBalanceByLockHash} from './balance';
 import {sendSimpleTransaction} from './sendSimpleTransaction';
 import {getAmountByTxHash, getStatusByTxHash,getFeeByTxHash, getInputAddressByTxHash, getOutputAddressByTxHash, getOutputAddressByTxHashAndIndex} from './transaction';
 import {getPrivateKeyByKeyStoreAndPassword} from './wallet/exportPrivateKey'
+
 /**
  * Listen messages from popup
  */
@@ -20,6 +21,7 @@ let currWallet = {}
 
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
+  //IMPORT_MNEMONIC
   if (request.messageType === MESSAGE_TYPE.IMPORT_MNEMONIC) {
     // call import mnemonic method
     const mnemonic = request.mnemonic.trim();
@@ -64,7 +66,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const addrMainnet = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Mainnet);
 
     const wallet = {
-      "path": addrMainnet.publicKey,
+      "path": addrMainnet.path,
       "blake160": addrMainnet.getBlake160(),
       "mainnetAddr": addrMainnet.address,
       "testnetAddr": addrTestnet.address,
@@ -90,6 +92,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS)
   }
 
+  //GEN_MNEMONIC
   if (request.messageType === MESSAGE_TYPE.GEN_MNEMONIC) {
     const newmnemonic = generateMnemonic()
 
@@ -99,6 +102,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     })
   }
 
+  //SAVE_MNEMONIC
   if (request.messageType === MESSAGE_TYPE.SAVE_MNEMONIC) {
     const mnemonic = request.mnemonic.trim();
     const password = request.password.trim();
@@ -158,6 +162,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS)
   }
 
+  //REQUEST_ADDRESS_INFO
   if (request.messageType === MESSAGE_TYPE.REQUEST_ADDRESS_INFO) {
     chrome.storage.sync.get(['currWallet'], function(wallet) {
       console.log('Wallet is ' + JSON.stringify(wallet));
@@ -183,6 +188,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
       let balance = ""
       if (wallet) {
+        console.log("address - lockhash =>",wallet["currWallet"]["lockHash"]);
+        //0x906b0e6ff58afe7d4b56c795399b56600cc890d1eef60ffbbaa9d2c95727bdf1
         const capacityAll = await getBalanceByLockHash(wallet["currWallet"]["lockHash"]);
         balance = capacityAll.toString()
       }
@@ -197,31 +204,45 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   //发送交易
   if (request.messageType === MESSAGE_TYPE.RESQUEST_SEND_TX) {
 
-    chrome.storage.sync.get(['currWallet'], async function( {wallet} ) {
+    chrome.storage.sync.get(['currWallet'], async function( wallet ) {
 
       //1- 从chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.SEND_TX })获取values的值
       const toAddress = request.address.trim();
       const amount = request.amount.trim();
       const fee = request.fee.trim();
       const password = request.password.trim();
+      const network = request.network.trim();
 
       //keystore ===>masterKeychain
       console.log("wallet SendTx =>", wallet);
 
-      const keystore = Keystore.fromJson(JSON.stringify(wallet.keystore)); //参数是String
+      let privateKey = "";
+      if(wallet.currWallet.keystoreType === KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
+         || wallet.currWallet.keystoreType === KEYSTORE_TYPE.KEYSTORE_TO_KEYSTORE){
+          
+          const keystore =  Keystore.fromJson(JSON.stringify(wallet.currWallet.rootKeystore)); //参数是String
+          const masterPrivateKey = keystore.extendedPrivateKey(password)
+          
+          console.log("masterPrivateKey =>", masterPrivateKey);
+    
+          const masterKeychain = new Keychain(
+            Buffer.from(masterPrivateKey.privateKey, 'hex'),
+            Buffer.from(masterPrivateKey.chainCode, 'hex'),
+          )
+          privateKey = '0x' + masterKeychain.derivePath(wallet.currWallet.path).privateKey.toString('hex')
+          console.log();
 
-      const masterPrivateKey = keystore.extendedPrivateKey(password)
-      console.log("masterPrivateKey =>", masterPrivateKey);
+      //PrivateKey导入的情况还未解决      
+      } else if(wallet.currWallet.keystoreType == KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE){
+          console.log("Export privateKey");
+      }
 
-      const masterKeychain = new Keychain(
-        Buffer.from(masterPrivateKey.privateKey, 'hex'),
-        Buffer.from(masterPrivateKey.chainCode, 'hex'),
-      )
-
-      const privateKey = '0x' + masterKeychain.derivePath(wallet['testnet'].path)
-        .privateKey.toString('hex')
-
-      const fromAddress = wallet['testnet'].address;
+      let fromAddress = "";
+      if(network === "testnet") {
+          fromAddress = wallet.currWallet.testnetAddr;
+      } else if (network === "mainnet") {
+          fromAddress = wallet.currWallet.mainnetAddr;
+      }
 
       const sendTxHash = await sendSimpleTransaction(
                                   privateKey,
@@ -231,11 +252,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                                   BigInt(fee));
 
       console.log("sendTxHash=>", sendTxHash);
-
-      // chrome.runtime.sendMessage({
-      //   sendTxAmount: sendTxAmount,
-      //   messageType: MESSAGE_TYPE.SEND_TX_BY_AMOUNT
-      // })
+  
       chrome.runtime.sendMessage({
         fromAddress: fromAddress,
         toAddress: toAddress,
@@ -250,8 +267,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 //tx-detail
 if (request.messageType === MESSAGE_TYPE.REQUEST_TX_DETAIL) {
   // chrome.storage.sync.get(['wallet'], async function( {wallet} ) {
-      console.log("background request_tx_detail - 001 =>" , request);
-      console.log("background request_tx_detail - 001 =>" , request.message);
+
       const txHash = request.message.txHash;
       const amount = request.message.amount;
       const fee = request.message.fee;
