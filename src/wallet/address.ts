@@ -1,6 +1,7 @@
 import { AddressPrefix, AddressType as Type, pubkeyToAddress } from '@nervosnetwork/ckb-sdk-utils'
-
+import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils'
 import { AccountExtendedPublicKey } from './key'
+import { Ckb } from '../utils/constants'
 
 export { AddressPrefix }
 
@@ -22,10 +23,12 @@ export default class Address {
   publicKey?: string
   address: string
   path: string // BIP44 path
+  blake160: string
 
-  constructor(address: string, path: string = Address.pathForReceiving(0)) {
+  constructor(address: string, path: string = Address.pathForReceiving(0), blake160: string = "") {
     this.address = address
     this.path = path
+    this.blake160= blake160
   }
 
   public static fromPublicKey = (publicKey: string, path: string, prefix: AddressPrefix = AddressPrefix.Testnet) => {
@@ -45,5 +48,19 @@ export default class Address {
 
   public static pathForChange = (index: number) => {
     return Address.pathFor(AddressType.Change, index)
+  }
+
+  public static toBlake160 = (publicKey: string) => {
+    const val = ckbUtils.blake160(publicKey)
+    return val
+  }
+
+  public getBlake160 = () => {
+    const val = "0x"+ ckbUtils.blake160("0x" + this.publicKey, "hex")
+    return val
+  }
+
+  public publicKeyHash = () => {
+    return this.getBlake160()
   }
 }
