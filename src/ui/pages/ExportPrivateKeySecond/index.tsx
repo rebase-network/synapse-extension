@@ -53,7 +53,7 @@ export default function (props: AppProps, state: AppState) {
       </div>
       <br/>
       <br/>
-      <div className="amount" data-testid="amount">
+      <div className="json-keystore" data-testid="json-keystore">
           <span className="">JSON/Keystore  </span>
           {keystore}
       </div>
