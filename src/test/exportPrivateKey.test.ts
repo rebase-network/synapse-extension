@@ -14,6 +14,11 @@ describe('export privateKey or Keystore', () => {
         chainCode: '873dff81c02f525623fd1fe5167eac3a55a049de3d314bb42ee227ffed37d508',
     }
 
+    const fixture02 = {
+        privateKey: '72cfb75b2e1936e660be797bd2ddfeeeacb682d8e0bd2ff6c2c62eab255f09da',
+        chainCode: '873dff81c02f525623fd1fe5167eac3a55a049de3d314bb42ee227ffed3eeeee',
+    }
+
     it('01- export keystore by passwrod', () => {
         const keystore = Keystore.fromJson(keystoreString)      
         expect(keystore.checkPassword(password)).toBe(true)
@@ -42,5 +47,14 @@ describe('export privateKey or Keystore', () => {
         expect(extendedPrivateKey.privateKey).toEqual(fixture.privateKey)
     })
  
+    it('04- create keystore by private and password', () => {
+        const password = '12345678'
+        const keystore = Keystore.create(new ExtendedPrivateKey(fixture02.privateKey, fixture02.chainCode), password)
+        // console.log("keystore =>", keystore);
+
+        //get password by Keystore
+        const extendedPrivateKey = keystore.extendedPrivateKey(password)
+        expect(extendedPrivateKey.privateKey).toEqual(fixture02.privateKey)
+    })
 
 })

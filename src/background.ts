@@ -430,6 +430,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           })
         }
         
+        //TODO Path Used to
         // valiate -> get Keystore and privateKey
         const privateKey = getPrivateKeyByKeyStoreAndPassword(JSON.stringify(currWallet), password);
 
