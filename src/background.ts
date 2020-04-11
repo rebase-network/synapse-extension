@@ -293,7 +293,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
         //PrivateKey导入的情况还未解决      
       } else if (wallet.currWallet.keystoreType == KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE) {
-        console.log("Export privateKey");
+          console.log("import privateKey");
       }
 
       let fromAddress = "";
@@ -365,33 +365,41 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
   //export-private-key check
   if (request.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK) {
-    chrome.storage.sync.get(['currWallet'], function ({ wallet }) {
+    chrome.storage.sync.get(['currWallet'], function ( wallet ) {
 
       const password = request.password;
-      const keystore = Keystore.fromJson(JSON.stringify(wallet.keystore)); //参数是String
-      //check the password by keystore
-      const checkPassword = keystore.checkPassword(password);
+      if (wallet.currWallet.keystoreType === KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
+          || wallet.currWallet.keystoreType === KEYSTORE_TYPE.KEYSTORE_TO_KEYSTORE) {
 
-      //send the check result to the page
-      if (!checkPassword) {
+        const currWallet = wallet.currWallet.rootKeystore;
+
+        const keystore = Keystore.fromJson(JSON.stringify(currWallet)); //参数是String
+        //check the password by keystore
+        const checkPassword = keystore.checkPassword(password);
+
+        //send the check result to the page
+        if (!checkPassword) {
+          chrome.runtime.sendMessage({
+            isValidatePassword: checkPassword,
+            messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT
+          })
+        }
+        
+        // valiate -> get Keystore and privateKey
+        const privateKey = getPrivateKeyByKeyStoreAndPassword(JSON.stringify(currWallet), password);
+
         chrome.runtime.sendMessage({
           isValidatePassword: checkPassword,
+          keystore: keystore,
+          privateKey: privateKey,
           messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT
         })
+
+      }else if (wallet.currWallet.keystoreType == KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE) {
+          
+        console.log("import privateKey ============ export !!!!");
+
       }
-
-      console.log("keystore=>", JSON.stringify(wallet.keystore));
-
-      // valiate -> get Keystore and privateKey
-      const privateKey = getPrivateKeyByKeyStoreAndPassword(JSON.stringify(wallet.keystore), password);
-
-      chrome.runtime.sendMessage({
-        isValidatePassword: checkPassword,
-        keystore: keystore,
-        privateKey: privateKey,
-        messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT
-      })
-
     });
   }
 
