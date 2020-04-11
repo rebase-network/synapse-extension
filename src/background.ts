@@ -140,15 +140,15 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     // currWallet = wallet
     // currWallet['index'] = wallets.length - 1
 
-    // chrome.storage.sync.set({ wallets, }, () => {
-    //   console.log('wallets is set to storage: ' + JSON.stringify(wallets));
-    // });
+    chrome.storage.sync.set({ wallets, }, () => {
+      console.log('wallets is set to storage: ' + JSON.stringify(wallets));
+    });
 
-    // chrome.storage.sync.set({ currWallet, }, () => {
-    //   console.log('currWallet is set to storage: ' + JSON.stringify(currWallet));
-    // });
+    chrome.storage.sync.set({ currWallet, }, () => {
+      console.log('currWallet is set to storage: ' + JSON.stringify(currWallet));
+    });
 
-    // chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS)
+    chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS)
   }
 
   //GEN_MNEMONIC
