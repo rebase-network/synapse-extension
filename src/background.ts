@@ -66,9 +66,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const addrTestnet = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Testnet);
     const addrMainnet = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Mainnet);
 
-        
+
     const privateKey = masterKeychain.derivePath(addrMainnet.path).privateKey.toString('hex');
-    console.log("privateKey ===>",privateKey);
+    console.log("privateKey ===>", privateKey);
     const chainCode = masterKeychain.derivePath(addrMainnet.path).chainCode.toString('hex');
     const keystore = Keystore.create(new ExtendedPrivateKey(privateKey, chainCode), password);
 
@@ -115,8 +115,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           break;
         }
       }
-      
-      console.log("isExist ===>",isExist);
+
+      console.log("isExist ===>", isExist);
 
       if (isExist === false) {
         const wallet = {
@@ -207,7 +207,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const addrMainnet = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Mainnet);
 
     const privateKey = masterKeychain.derivePath(addrMainnet.path).privateKey.toString('hex');
-    console.log("privateKey ===>",privateKey);
+    console.log("privateKey ===>", privateKey);
     const chainCode = masterKeychain.derivePath(addrMainnet.path).chainCode.toString('hex');
     const keystore = Keystore.create(new ExtendedPrivateKey(privateKey, chainCode), password);
 
@@ -243,8 +243,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           break;
         }
       }
-      
-      console.log("isExist ===>",isExist);
+
+      console.log("isExist ===>", isExist);
 
       if (isExist === false) {
         const wallet = {
@@ -272,7 +272,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     chrome.storage.sync.set({ wallets, }, () => {
       console.log('wallets is set to storage: ' + JSON.stringify(wallets));
     });
-    
+
     chrome.storage.sync.set({ currWallet, }, () => {
       console.log('currWallet is set to storage: ' + JSON.stringify(currWallet));
     });
@@ -346,12 +346,12 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           Buffer.from(masterPrivateKey.chainCode, 'hex'),
         )
         privateKey = '0x' + masterKeychain.derivePath(wallet.currWallet.path).privateKey.toString('hex')
-        
-        console.log("privateKey ===>",privateKey);
+
+        console.log("privateKey ===>", privateKey);
 
         //PrivateKey导入的情况还未解决      
       } else if (wallet.currWallet.keystoreType == KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE) {
-          console.log("import privateKey");
+        console.log("import privateKey");
       }
 
       let fromAddress = "";
@@ -423,11 +423,11 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
   //export-private-key check
   if (request.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK) {
-    chrome.storage.sync.get(['currWallet'], function ( wallet ) {
+    chrome.storage.sync.get(['currWallet'], function (wallet) {
 
       const password = request.password;
       if (wallet.currWallet.keystoreType === KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
-          || wallet.currWallet.keystoreType === KEYSTORE_TYPE.KEYSTORE_TO_KEYSTORE) {
+        || wallet.currWallet.keystoreType === KEYSTORE_TYPE.KEYSTORE_TO_KEYSTORE) {
 
         const currWallet = wallet.currWallet.rootKeystore;
 
@@ -442,7 +442,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT
           })
         }
-        
+
         //TODO Path Used to
         // valiate -> get Keystore and privateKey
         const privateKey = getPrivateKeyByKeyStoreAndPassword(JSON.stringify(currWallet), password);
@@ -454,8 +454,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT
         })
 
-      }else if (wallet.currWallet.keystoreType == KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE) {
-          
+      } else if (wallet.currWallet.keystoreType == KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE) {
+
         console.log("import privateKey ============ export !!!!");
 
       }
@@ -473,6 +473,14 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       keystore: JSON.stringify(keystore),
       messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND_RESULT
     })
+  }
+
+  //my addresses
+  if (request.messageType === MESSAGE_TYPE.REQUEST_MY_ADDRESSES) {
+    chrome.storage.sync.get(['wallets'], function (wallets) {
+      console.log("wallets ===>", wallets);
+
+    });
   }
 
 });

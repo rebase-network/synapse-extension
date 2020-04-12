@@ -15,6 +15,7 @@ import Home from "./pages/Home"
 import ExportPrivateKey from './pages/ExportPrivateKey'
 import ExportPrivateKeySecond from './pages/ExportPrivateKeySecond'
 import Setting from './pages/Setting'
+import MyAddresses from './pages/MyAddresses'
 
 import AppBar from './Components/AppBar/'
 
@@ -50,6 +51,9 @@ export default function App() {
               <li>
                 <Link to="/export-private-key">Export Private Key</Link>
               </li>
+              <li>
+                <Link to="/my-addresses">My Addresses</Link>
+              </li>
             </ul>
           </nav>
           {/* A <Switch> looks through its children <Route>s and
@@ -78,6 +82,9 @@ export default function App() {
             </Route>
             <Route path="/setting">
               <Setting />
+            </Route>
+            <Route path="/my-addresses">
+              <MyAddresses />
             </Route>
             {/* 通配放到最后 */}
             <Route path="/">
