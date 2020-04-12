@@ -54,7 +54,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       masterKeychain.chainCode.toString('hex')
     )
 
-    const keystore = Keystore.create(extendedKey, password);
+    const rootKeystore = Keystore.create(extendedKey, password);
     const accountKeychain = masterKeychain.derivePath(AccountExtendedPublicKey.ckbAccountPath);
 
     const accountExtendedPublicKey = new AccountExtendedPublicKey(
@@ -65,6 +65,12 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     // 判断 AddressPrefix Mainnet=>Testnet
     const addrTestnet = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Testnet);
     const addrMainnet = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Mainnet);
+
+        
+    const privateKey = masterKeychain.derivePath(addrMainnet.path).privateKey.toString('hex');
+    console.log("privateKey ===>",privateKey);
+    const chainCode = masterKeychain.derivePath(addrMainnet.path).chainCode.toString('hex');
+    const keystore = Keystore.create(new ExtendedPrivateKey(privateKey, chainCode), password);
 
     // const wallet = {
     //   "path": addrMainnet.path,
@@ -87,8 +93,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         "mainnetAddr": addrMainnet.address,
         "testnetAddr": addrTestnet.address,
         "lockHash": addrMainnet.getLockHash(),
-        "rootKeystore": keystore.toJson(),
-        "keystore": "",
+        "rootKeystore": rootKeystore.toJson(),
+        "keystore": keystore.toJson(),
         "keystoreType": KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
       }
       wallets.push(wallet)
@@ -120,7 +126,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           "testnetAddr": addrTestnet.address,
           "lockHash": addrMainnet.getLockHash(),
           "rootKeystore": keystore.toJson(),
-          "keystore": "",
+          "keystore": keystore.toJson(),
           "keystoreType": KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
         }
         wallets.push(wallet)
@@ -189,7 +195,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       masterKeychain.chainCode.toString('hex')
     )
 
-    const keystore = Keystore.create(extendedKey, password);
+    const rootKeystore = Keystore.create(extendedKey, password);
     const accountKeychain = masterKeychain.derivePath(AccountExtendedPublicKey.ckbAccountPath);
 
     const accountExtendedPublicKey = new AccountExtendedPublicKey(
@@ -200,6 +206,12 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const addrTestnet = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Testnet);
     const addrMainnet = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Mainnet);
 
+    const privateKey = masterKeychain.derivePath(addrMainnet.path).privateKey.toString('hex');
+    console.log("privateKey ===>",privateKey);
+    const chainCode = masterKeychain.derivePath(addrMainnet.path).chainCode.toString('hex');
+    const keystore = Keystore.create(new ExtendedPrivateKey(privateKey, chainCode), password);
+
+
     //验证导入的Keystore是否已经存在
     let isExist = false;
     if (addresses.length === 0) {
@@ -209,8 +221,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         "mainnetAddr": addrMainnet.address,
         "testnetAddr": addrTestnet.address,
         "lockHash": addrMainnet.getLockHash(),
-        "rootKeystore": keystore.toJson(),
-        "keystore": "",
+        "rootKeystore": rootKeystore.toJson(),
+        "keystore": keystore.toJson(),
         "keystoreType": KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
       }
       wallets.push(wallet)
@@ -242,7 +254,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           "testnetAddr": addrTestnet.address,
           "lockHash": addrMainnet.getLockHash(),
           "rootKeystore": keystore.toJson(),
-          "keystore": "",
+          "keystore": keystore.toJson(),
           "keystoreType": KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
         }
         wallets.push(wallet)
@@ -334,7 +346,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           Buffer.from(masterPrivateKey.chainCode, 'hex'),
         )
         privateKey = '0x' + masterKeychain.derivePath(wallet.currWallet.path).privateKey.toString('hex')
-        console.log();
+        
+        console.log("privateKey ===>",privateKey);
 
         //PrivateKey导入的情况还未解决      
       } else if (wallet.currWallet.keystoreType == KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE) {
