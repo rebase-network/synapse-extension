@@ -154,6 +154,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       console.log('currWallet is set to storage: ' + JSON.stringify(currWallet));
     });
 
+    chrome.storage.sync.set({ addresses, }, () => {
+      console.log('addresses is set to storage: ' + JSON.stringify(addresses));
+    });
+
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS)
   }
 
@@ -275,6 +279,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     chrome.storage.sync.set({ currWallet, }, () => {
       console.log('currWallet is set to storage: ' + JSON.stringify(currWallet));
+    });
+
+    chrome.storage.sync.set({ addresses, }, () => {
+      console.log('addresses is set to storage: ' + JSON.stringify(addresses));
     });
 
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
@@ -477,8 +485,29 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
   //my addresses
   if (request.messageType === MESSAGE_TYPE.REQUEST_MY_ADDRESSES) {
-    chrome.storage.sync.get(['wallets'], function (wallets) {
-      console.log("wallets ===>", wallets);
+
+    chrome.storage.sync.get(['wallets'], async function (result) {
+
+      const addresses = [];
+      const length = result.wallets.length;
+      const wallets = result.wallets;
+      for (let index = 0; index < length; index++) {
+        const mainnetAddr = wallets[index].mainnetAddr;
+        const testnetAddr = wallets[index].testnetAddr;
+        const lockHash = wallets[index].lockHash;
+        const capacity = await getBalanceByLockHash(lockHash);
+        const address = {
+          "mainnetAddr": mainnetAddr,
+          "testnetAddr": testnetAddr,
+          "capacity": capacity.toString()
+        }
+        addresses.push(address);
+      }
+
+      chrome.runtime.sendMessage({
+        addresses,
+        messageType: MESSAGE_TYPE.RESULT_MY_ADDRESSES
+      })
 
     });
   }
