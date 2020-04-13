@@ -1,7 +1,7 @@
 import * as React from 'react';
-import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles({
   container: {
@@ -46,7 +46,7 @@ export default function(props: AppProps, state: AppState) {
   const classes = useStyles();
   const settingElem = settingItems.map((item, index) => {
     return (
-      <Link href={item.link} className={classes.link} key={index}>
+      <Link to={item.link} className={classes.link} key={index}>
         <div className={classes.linkText} data-testid={item.testId}>
           {item.text}
           <KeyboardArrowRightIcon />
