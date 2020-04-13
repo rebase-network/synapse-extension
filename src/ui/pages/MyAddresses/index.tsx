@@ -28,8 +28,6 @@ export default function (props: AppProps, state: AppState) {
 
   const classes = useStyles();
 
-  const [address, setAddress] = React.useState("ckt1qyq8x6zypd3wpe3n5hpyntuwqt2dmph0ee9qeg279y");
-  const [capacity, setCapacity] = React.useState("100");
   const [addresses, setAddresses] = React.useState([]);
 
   React.useEffect(() => {
@@ -45,34 +43,13 @@ export default function (props: AppProps, state: AppState) {
     ) => {
       
       if (request.messageType === MESSAGE_TYPE.RESULT_MY_ADDRESSES) {
-        
-        console.log("RESULT_MY_ADDRESSES===>");
-
         const addresses = request.addresses;
         setAddresses(addresses);
-        // for(let index = 0; index < addresses.length ; index ++){
-        //   console.log(addresses[index].mainnetAddr);
-        //   console.log(addresses[index].testnetAddr);
-        //   console.log(addresses[index].capacity);
-        // }
       }
 
     });
   }, []);
 
-  // return (
-  //   <div className={classes.container}>
-  //     <Title title="My Addresses" testId="my-addresses-title" />
-  //     <div className="address" data-testid="address">
-  //       {address}
-  //     </div>
-
-  //     <div className="capacity" data-testid="capacity">
-  //       {capacity}
-  //     </div>
-  //     <br />
-  //   </div>
-  // )
   const addressesElem = addresses.map((item, index) => {
     return (
       <div>
