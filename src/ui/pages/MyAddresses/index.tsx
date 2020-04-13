@@ -1,11 +1,20 @@
 import * as React from 'react';
 import Title from '../../Components/Title'
 import { Button, TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { MESSAGE_TYPE } from '../../../utils/constants'
 import { useHistory } from "react-router-dom";
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
 
 const useStyles = makeStyles({
   container: {
@@ -19,6 +28,22 @@ const useStyles = makeStyles({
   }
 });
 
+const useStyles02 = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+      maxWidth: 752,
+    },
+    demo: {
+      backgroundColor: theme.palette.background.paper,
+    },
+    title: {
+      margin: theme.spacing(4, 0, 2),
+    },
+  }),
+);
+
+
 interface AppProps { }
 
 interface AppState { }
@@ -27,8 +52,12 @@ interface AppState { }
 export default function (props: AppProps, state: AppState) {
 
   const classes = useStyles();
-
   const [addresses, setAddresses] = React.useState([]);
+
+  const classes02 = useStyles02();
+  const [dense, setDense] = React.useState(false);
+  const [secondary, setSecondary] = React.useState(false);
+
 
   React.useEffect(() => {
     chrome.runtime.sendMessage({
@@ -52,22 +81,45 @@ export default function (props: AppProps, state: AppState) {
 
   const addressesElem = addresses.map((item, index) => {
     return (
-      <div>
-          <div className="address" data-testid="address">
-            {item.testnetAddr}
-          </div>
-          <div className="capacity" data-testid="capacity">
-            {item.capacity} CKB
-          </div>
-          <br />
-      </div>
+      // <div>
+      //     <div className="address" data-testid="address">
+      //       {item.testnetAddr}
+      //     </div>
+      //     <div className="capacity" data-testid="capacity">
+      //       {item.capacity} CKB
+      //     </div>
+      //     <br />
+      // </div>
+      <ListItem>
+        <ListItemText primary= {item.testnetAddr} secondary= {item.capacity + "CKB"} />
+      </ListItem>
     )
   })
 
   return (
-    <div className={classes.container}>
-      <Title title="My Addresses" testId="my-addresses-title" />
-      {addressesElem}
+    // <div className={classes.container}>
+    //   <Title title="My Addresses" testId="my-addresses-title" />
+    //     {addressesElem}
+    // </div>
+    <div>
+      <Grid item xs={12} md={6}>
+        <Typography variant="h6" className={classes02.title}>
+          My Addresses
+        </Typography>
+        <div className={classes02.demo}>
+          <List dense={dense}>
+            {/* {generate(
+              <ListItem>
+                <ListItemText
+                  primary= {addressesElem}
+                  secondary="secondary-line item"
+                />
+              </ListItem>,
+            )} */}
+            {addressesElem}
+          </List>
+        </div>
+      </Grid>  
     </div>
   );  
 }
