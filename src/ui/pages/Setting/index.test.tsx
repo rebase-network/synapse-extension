@@ -2,6 +2,7 @@ import * as React from 'react';
 import App from './index';
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
+import { BrowserRouter as Router } from "react-router-dom";
 
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
@@ -19,7 +20,7 @@ jest.mock('react-router-dom', () => {
 describe('setting page', () => {
   let tree, container, getByTestId
   beforeEach(() => {
-    tree = render(<App />);
+    tree = render(<Router><App /></Router>);
     container = tree.container
     getByTestId = tree.getByTestId
   })

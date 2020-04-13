@@ -1,10 +1,5 @@
 import * as React from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Address from './pages/Address'
 
 import ImportMnemonic from './pages/ImportMnemonic/index'
