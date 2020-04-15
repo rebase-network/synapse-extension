@@ -335,12 +335,11 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const password = request.password.trim();
       const network = request.network.trim();
 
-      const privateKey = Keystore.decrypt(wallet.currWallet.keystore, password)
+      const privateKey = '0x' + Keystore.decrypt(wallet.currWallet.keystore, password)
 
       console.log("privateKey =>", privateKey);
 
       //PrivateKey导入的情况还未解决
-
       let fromAddress = "";
       if (network === "testnet") {
         fromAddress = wallet.currWallet.testnetAddr;
@@ -377,24 +376,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const fee = request.message.fee;
     const inputs = request.message.fromAddress;
     const outputs = request.message.toAddress;
-    // 测试用数据
-    // const txhash = "0xb95121d9e0947cdabfd63025c00a285657fd40e6bc69215c63f723a5247c8ead";
-    // const address = "ckt1qyqr79tnk3pp34xp92gerxjc4p3mus2690psf0dd70";
-    //001-status
     const status = await getStatusByTxHash(txHash);
-    //002-amount
-
-    // const amount = await getAmountByTxHash(txhash,address);
-    // const tradeAmount = new Number(amount);
-    // console.log(tradeAmount);
-    //003-fee
-    // const fee = await getFeeByTxHash(txhash);
-    // const tradeFee = new Number(fee);
-    // console.log(fee.toString());
-    //004-inputs
-    // const inputs = await getInputAddressByTxHash(txhash);
-    //005-outputs
-    // const outputs = await getOutputAddressByTxHash(txhash);
 
     chrome.runtime.sendMessage({
       status,
