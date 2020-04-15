@@ -6,7 +6,7 @@ import * as crypto from "crypto";
 import * as blake2b from "blake2b";
 import * as randomBytes from "randombytes";
 import * as scrypt from "scrypt.js";
-import * as uuidv4 from "uuid/v4";
+import { v4 as uuidv4 } from 'uuid';
 
 interface V3Params {
   kdf: string
