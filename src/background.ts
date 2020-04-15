@@ -198,8 +198,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       masterKeychain.privateKey.toString('hex'),
       masterKeychain.chainCode.toString('hex')
     )
-
-    const rootKeystore = Keystore.create(extendedKey, password);
+    const rootKeystore = NewKeystore.encrypt(Buffer.from(extendedKey.serialize(), "hex"), password);
     const accountKeychain = masterKeychain.derivePath(AccountExtendedPublicKey.ckbAccountPath);
 
     const accountExtendedPublicKey = new AccountExtendedPublicKey(
@@ -213,7 +212,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const privateKey = masterKeychain.derivePath(addrMainnet.path).privateKey.toString('hex');
     console.log("privateKey ===>", privateKey);
     const chainCode = masterKeychain.derivePath(addrMainnet.path).chainCode.toString('hex');
-    const keystore = Keystore.create(new ExtendedPrivateKey(privateKey, chainCode), password);
+    const keystore = NewKeystore.encrypt(Buffer.from(privateKey, "hex"), password);
 
 
     //验证导入的Keystore是否已经存在
