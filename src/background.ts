@@ -1,5 +1,5 @@
 import { MESSAGE_TYPE, KEYSTORE_TYPE } from './utils/constants'
-import { mnemonicToSeedSync, validateMnemonic } from './wallet/mnemonic';
+import { mnemonicToSeedSync, validateMnemonic,mnemonicToEntropy,entropyToMnemonic } from './wallet/mnemonic';
 
 import { generateMnemonic } from './wallet/key';
 import * as Keystore from './wallet/pkeystore';
@@ -37,6 +37,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       return;
     }
 
+    //store the mnemonic entropy
+    const entropy = mnemonicToEntropy(mnemonic);
+    const entropyKeystore = Keystore.encrypt(Buffer.from(entropy, "hex"), password);
+    
     // words 是否在助记词表中
     const seed = mnemonicToSeedSync(mnemonic)
     const masterKeychain = Keychain.fromSeed(seed)
@@ -71,6 +75,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         "mainnetAddr": addrMainnet.address,
         "testnetAddr": addrTestnet.address,
         "lockHash": addrMainnet.getLockHash(),
+        "entropyKeystore":entropyKeystore,
         "rootKeystore": rootKeystore,
         "keystore": keystore,
         "keystoreType": KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
@@ -101,6 +106,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           "mainnetAddr": addrMainnet.address,
           "testnetAddr": addrTestnet.address,
           "lockHash": addrMainnet.getLockHash(),
+          "entropyKeystore":entropyKeystore,
           "rootKeystore": keystore,
           "keystore": keystore,
           "keystoreType": KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
@@ -156,6 +162,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       return;
     }
 
+    //store the mnemonic entropy
+    const entropy = mnemonicToEntropy(mnemonic);
+    const entropyKeystore = Keystore.encrypt(Buffer.from(entropy, "hex"), password);
+ 
     const seed = mnemonicToSeedSync(mnemonic)
     const masterKeychain = Keychain.fromSeed(seed)
 
@@ -187,6 +197,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         "mainnetAddr": addrMainnet.address,
         "testnetAddr": addrTestnet.address,
         "lockHash": addrMainnet.getLockHash(),
+        "entropyKeystore":entropyKeystore,
         "rootKeystore": rootKeystore,
         "keystore": keystore,
         "keystoreType": KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
@@ -217,6 +228,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           "mainnetAddr": addrMainnet.address,
           "testnetAddr": addrTestnet.address,
           "lockHash": addrMainnet.getLockHash(),
+          "entropyKeystore":entropyKeystore,
           "rootKeystore": keystore,
           "keystore": keystore,
           "keystoreType": KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
@@ -411,22 +423,24 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     chrome.storage.sync.get(['currWallet'], function (wallet) {
 
       const password = request.password;
-      const rootKeystore = wallet.currWallet.rootKeystore
+      console.log("wallet.currWallet ===>",wallet.currWallet)
+      const entropyKeystore = wallet.currWallet.entropyKeystore
       //TODO check the password 
-      const privateKey = Keystore.decrypt(rootKeystore, password)
+      const entropy = Keystore.decrypt(entropyKeystore, password)
 
-      console.log("privateKey ===>",privateKey);
+      console.log("entropy ===>",entropy);
       // //send the check result to the page
-      // if (!privateKey) {
-      //   chrome.runtime.sendMessage({
-      //     isValidatePassword: false,
-      //     messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT
-      //   })
-      // }
+      if (entropy !== "") {
+        chrome.runtime.sendMessage({
+          isValidatePassword: false,
+          messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT
+        })
+      }
 
       chrome.runtime.sendMessage({
         isValidatePassword: true,
-        keystore:rootKeystore,
+        password,
+        entropyKeystore,
         messageType: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT
       })
     });
@@ -435,11 +449,15 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   //export-mneonic-second check
   if (request.messageType === MESSAGE_TYPE.EXPORT_MNEONIC_SECOND) {
 
-    //Mneonic
-    const keystore = request.message.keystore;
+    const password = request.message.password;
+    const entropyKeystore = request.message.entropyKeystore;
+
+    const entropy = Keystore.decrypt(entropyKeystore,password);
+    const mnemonic = entropyToMnemonic(entropy);
 
     chrome.runtime.sendMessage({
-      keystore: JSON.stringify(keystore),
+      // mnemonic: JSON.stringify(mnemonic),
+      mnemonic,
       messageType: MESSAGE_TYPE.EXPORT_MNEONIC_SECOND_RESULT
     })
   }

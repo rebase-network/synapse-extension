@@ -30,15 +30,15 @@ interface AppState { }
 export default function (props: AppProps, state: AppState) {
 
   const classes = useStyles();
-  const [keystore, setKeystore] = React.useState("");
+  const [mnemonic, setMnemonic] = React.useState([]);
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function ( request, sender, sendResponse) {
       
       console.log("request ===>",request);
       if (request.messageType === MESSAGE_TYPE.EXPORT_MNEONIC_SECOND_RESULT) {
-          const keystore = request.keystore;
-          setKeystore(keystore);
+          const mnemonic = request.mnemonic;
+          setMnemonic(mnemonic);
       }
     })
   }, [])
@@ -47,9 +47,9 @@ export default function (props: AppProps, state: AppState) {
     <div className={classes.container}>
       <Title title="Export Mneonic" testId="export-mneonic-title" />
       <br/>
-      <div className="json-keystore" data-testid="json-keystore">
+      <div className="mnemonic" data-testid="mnemonic-id">
           {/* <span className="">JSON/Keystore  </span> */}
-          {keystore}
+          {mnemonic}
       </div>
       <br/>
     </div>
