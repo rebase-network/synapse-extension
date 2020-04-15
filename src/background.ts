@@ -2,8 +2,8 @@ import { MESSAGE_TYPE, KEYSTORE_TYPE } from './utils/constants'
 import { mnemonicToSeedSync, validateMnemonic } from './wallet/mnemonic';
 
 import { generateMnemonic } from './wallet/key';
-// import Keystore from './wallet/keystore';
-import * as Keystore from './wallet/pkeystore';
+import Keystore from './wallet/keystore';
+import * as NewKeystore from './wallet/pkeystore';
 import Keychain from './wallet/keychain';
 
 import { AccountExtendedPublicKey, ExtendedPrivateKey } from "./wallet/key";
@@ -55,7 +55,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       masterKeychain.chainCode.toString('hex')
     )
 
-    const rootKeystore = Keystore.encrypt(Buffer.from(extendedKey.serialize(), "hex"), password);
+    const rootKeystore = NewKeystore.encrypt(Buffer.from(extendedKey.serialize(), "hex"), password);
     const accountKeychain = masterKeychain.derivePath(AccountExtendedPublicKey.ckbAccountPath);
 
     const accountExtendedPublicKey = new AccountExtendedPublicKey(
@@ -70,7 +70,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     const privateKey = masterKeychain.derivePath(addrMainnet.path).privateKey.toString('hex');
     console.log("privateKey ===>", privateKey);
-    const keystore = Keystore.encrypt(Buffer.from(privateKey, "hex"), password);
+    const keystore = NewKeystore.encrypt(Buffer.from(privateKey, "hex"), password);
 
     // const wallet = {
     //   "path": addrMainnet.path,
@@ -78,7 +78,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     //   "mainnetAddr": addrMainnet.address,
     //   "testnetAddr": addrTestnet.address,
     //   "lockHash": addrMainnet.getLockHash(),
-    //   "rootKeystore": keystore.toJson(),
+    //   "rootKeystore": keystore,
     //   "keystore": "",
     //   "keystoreType": KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
     // }
@@ -93,8 +93,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         "mainnetAddr": addrMainnet.address,
         "testnetAddr": addrTestnet.address,
         "lockHash": addrMainnet.getLockHash(),
-        "rootKeystore": rootKeystore.toJson(),
-        "keystore": keystore.toJson(),
+        "rootKeystore": rootKeystore,
+        "keystore": keystore,
         "keystoreType": KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
       }
       wallets.push(wallet)
@@ -125,8 +125,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           "mainnetAddr": addrMainnet.address,
           "testnetAddr": addrTestnet.address,
           "lockHash": addrMainnet.getLockHash(),
-          "rootKeystore": keystore.toJson(),
-          "keystore": keystore.toJson(),
+          "rootKeystore": keystore,
+          "keystore": keystore,
           "keystoreType": KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
         }
         wallets.push(wallet)
@@ -225,8 +225,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         "mainnetAddr": addrMainnet.address,
         "testnetAddr": addrTestnet.address,
         "lockHash": addrMainnet.getLockHash(),
-        "rootKeystore": rootKeystore.toJson(),
-        "keystore": keystore.toJson(),
+        "rootKeystore": rootKeystore,
+        "keystore": keystore,
         "keystoreType": KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
       }
       wallets.push(wallet)
@@ -257,8 +257,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           "mainnetAddr": addrMainnet.address,
           "testnetAddr": addrTestnet.address,
           "lockHash": addrMainnet.getLockHash(),
-          "rootKeystore": keystore.toJson(),
-          "keystore": keystore.toJson(),
+          "rootKeystore": keystore,
+          "keystore": keystore,
           "keystoreType": KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
         }
         wallets.push(wallet)
