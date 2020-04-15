@@ -336,30 +336,11 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const password = request.password.trim();
       const network = request.network.trim();
 
-      //keystore ===>masterKeychain
-      console.log("wallet SendTx =>", wallet);
+      const privateKey = NewKeystore.decrypt(wallet.currWallet.keystore, password)
 
-      let privateKey = "";
-      if (wallet.currWallet.keystoreType === KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
-        || wallet.currWallet.keystoreType === KEYSTORE_TYPE.KEYSTORE_TO_KEYSTORE) {
+      console.log("privateKey =>", privateKey);
 
-        const keystore = Keystore.fromJson(JSON.stringify(wallet.currWallet.rootKeystore)); //参数是String
-        const masterPrivateKey = keystore.extendedPrivateKey(password)
-
-        console.log("masterPrivateKey =>", masterPrivateKey);
-
-        const masterKeychain = new Keychain(
-          Buffer.from(masterPrivateKey.privateKey, 'hex'),
-          Buffer.from(masterPrivateKey.chainCode, 'hex'),
-        )
-        privateKey = '0x' + masterKeychain.derivePath(wallet.currWallet.path).privateKey.toString('hex')
-
-        console.log("privateKey ===>", privateKey);
-
-        //PrivateKey导入的情况还未解决
-      } else if (wallet.currWallet.keystoreType == KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE) {
-        console.log("import privateKey");
-      }
+      //PrivateKey导入的情况还未解决
 
       let fromAddress = "";
       if (network === "testnet") {
@@ -431,41 +412,24 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   //export-private-key check
   if (request.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK) {
     chrome.storage.sync.get(['currWallet'], function (wallet) {
-
       const password = request.password;
-      if (wallet.currWallet.keystoreType === KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
-        || wallet.currWallet.keystoreType === KEYSTORE_TYPE.KEYSTORE_TO_KEYSTORE) {
+      const keystore = wallet.currWallet.keystore
+      const privateKey = NewKeystore.decrypt(keystore, password)
 
-        const currWallet = wallet.currWallet.rootKeystore;
-
-        const keystore = Keystore.fromJson(JSON.stringify(currWallet)); //参数是String
-        //check the password by keystore
-        const checkPassword = keystore.checkPassword(password);
-
-        //send the check result to the page
-        if (!checkPassword) {
-          chrome.runtime.sendMessage({
-            isValidatePassword: checkPassword,
-            messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT
-          })
-        }
-
-        //TODO Path Used to
-        // valiate -> get Keystore and privateKey
-        const privateKey = getPrivateKeyByKeyStoreAndPassword(JSON.stringify(currWallet), password);
-
+      //send the check result to the page
+      if (!privateKey) {
         chrome.runtime.sendMessage({
-          isValidatePassword: checkPassword,
-          keystore: keystore,
-          privateKey: privateKey,
+          isValidatePassword: false,
           messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT
         })
-
-      } else if (wallet.currWallet.keystoreType == KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE) {
-
-        console.log("import privateKey ============ export !!!!");
-
       }
+
+      chrome.runtime.sendMessage({
+        isValidatePassword: true,
+        keystore,
+        privateKey,
+        messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT
+      })
     });
   }
 
