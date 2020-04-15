@@ -79,6 +79,10 @@ export default function (props: AppProps, state: AppState) {
     });
   }, []);
 
+  const handleClickOpen = () => {
+    console.log(" ------ export privateKey --- ");
+  };
+
   const addressesElem = addresses.map((item, index) => {
     return (
       // <div>
@@ -102,6 +106,17 @@ export default function (props: AppProps, state: AppState) {
     //     {addressesElem}
     // </div>
     <div>
+        <Button
+          type="button"
+          id="import-button"
+          color="primary"
+          variant="contained"
+          className={classes.button}
+          data-testid="import"
+          onClick={handleClickOpen}
+        >
+          Import
+        </Button>
       <Grid item xs={12} md={6}>
         <Typography variant="h6" className={classes02.title}>
           My Addresses

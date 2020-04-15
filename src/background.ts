@@ -343,6 +343,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       
       const password = request.password;
       const keystore = wallet.currWallet.keystore
+      //TODO check the password 
       const privateKey = Keystore.decrypt(keystore, password)
 
       //send the check result to the page
@@ -404,4 +405,30 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     });
   }
 
+    //export-mneonic check
+    if (request.messageType === MESSAGE_TYPE.EXPORT_MNEONIC_CHECK) {
+    
+      chrome.storage.sync.get(['currWallet'], function (wallet) {
+        
+        const password = request.password;
+        const rootKeystore = wallet.currWallet.rootKeystore
+        //TODO check the password 
+        const privateKey = Keystore.decrypt(rootKeystore, password)
+  
+        //send the check result to the page
+        if (!privateKey) {
+          chrome.runtime.sendMessage({
+            isValidatePassword: false,
+            messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT
+          })
+        }
+  
+        chrome.runtime.sendMessage({
+          isValidatePassword: true,
+          rootKeystore,
+          messageType: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT
+        })
+      });
+    }
+  
 });
