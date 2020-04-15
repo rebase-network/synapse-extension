@@ -16,6 +16,7 @@ import MyAddresses from './pages/MyAddresses'
 import AppBar from './Components/AppBar/'
 
 import "./styles/global.scss";
+import ExportMnemonicSecond from "./pages/ExportMnemonicSecond";
 
 
 export const AppContext = React.createContext({ network: 'testnet' });
@@ -82,6 +83,9 @@ export default function App() {
             </Route>
             <Route path="/export-private-key-second">
               <ExportPrivateKeySecond />
+            </Route>
+            <Route path="/export-mnemonic-second">
+              <ExportMnemonicSecond />
             </Route>
             <Route path="/setting">
               <Setting />

@@ -338,9 +338,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
   //export-private-key check
   if (request.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK) {
-    
+
     chrome.storage.sync.get(['currWallet'], function (wallet) {
-      
+
       const password = request.password;
       const keystore = wallet.currWallet.keystore
       //TODO check the password 
@@ -384,7 +384,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const addresses = [];
       const length = result.wallets.length;
       const wallets = result.wallets;
-      
+
       for (let index = 0; index < length; index++) {
         const mainnetAddr = wallets[index].mainnetAddr;
         const testnetAddr = wallets[index].testnetAddr;
@@ -405,30 +405,43 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     });
   }
 
-    //export-mneonic check
-    if (request.messageType === MESSAGE_TYPE.EXPORT_MNEONIC_CHECK) {
-    
-      chrome.storage.sync.get(['currWallet'], function (wallet) {
-        
-        const password = request.password;
-        const rootKeystore = wallet.currWallet.rootKeystore
-        //TODO check the password 
-        const privateKey = Keystore.decrypt(rootKeystore, password)
-  
-        //send the check result to the page
-        if (!privateKey) {
-          chrome.runtime.sendMessage({
-            isValidatePassword: false,
-            messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT
-          })
-        }
-  
-        chrome.runtime.sendMessage({
-          isValidatePassword: true,
-          rootKeystore,
-          messageType: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT
-        })
-      });
-    }
-  
+  //export-mneonic check
+  if (request.messageType === MESSAGE_TYPE.EXPORT_MNEONIC_CHECK) {
+
+    chrome.storage.sync.get(['currWallet'], function (wallet) {
+
+      const password = request.password;
+      const rootKeystore = wallet.currWallet.rootKeystore
+      //TODO check the password 
+      const privateKey = Keystore.decrypt(rootKeystore, password)
+
+      console.log("privateKey ===>",privateKey);
+      // //send the check result to the page
+      // if (!privateKey) {
+      //   chrome.runtime.sendMessage({
+      //     isValidatePassword: false,
+      //     messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT
+      //   })
+      // }
+
+      chrome.runtime.sendMessage({
+        isValidatePassword: true,
+        keystore:rootKeystore,
+        messageType: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT
+      })
+    });
+  }
+
+  //export-mneonic-second check
+  if (request.messageType === MESSAGE_TYPE.EXPORT_MNEONIC_SECOND) {
+
+    //Mneonic
+    const keystore = request.message.keystore;
+
+    chrome.runtime.sendMessage({
+      keystore: JSON.stringify(keystore),
+      messageType: MESSAGE_TYPE.EXPORT_MNEONIC_SECOND_RESULT
+    })
+  }
+
 });
