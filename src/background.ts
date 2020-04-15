@@ -2,7 +2,8 @@ import { MESSAGE_TYPE, KEYSTORE_TYPE } from './utils/constants'
 import { mnemonicToSeedSync, validateMnemonic } from './wallet/mnemonic';
 
 import { generateMnemonic } from './wallet/key';
-import Keystore from './wallet/keystore';
+// import Keystore from './wallet/keystore';
+import * as Keystore from './wallet/pkeystore';
 import Keychain from './wallet/keychain';
 
 import { AccountExtendedPublicKey, ExtendedPrivateKey } from "./wallet/key";
@@ -54,7 +55,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       masterKeychain.chainCode.toString('hex')
     )
 
-    const rootKeystore = Keystore.create(extendedKey, password);
+    const rootKeystore = Keystore.encrypt(Buffer.from(extendedKey.serialize(), "hex"), password);
     const accountKeychain = masterKeychain.derivePath(AccountExtendedPublicKey.ckbAccountPath);
 
     const accountExtendedPublicKey = new AccountExtendedPublicKey(
@@ -69,8 +70,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     const privateKey = masterKeychain.derivePath(addrMainnet.path).privateKey.toString('hex');
     console.log("privateKey ===>", privateKey);
-    const chainCode = masterKeychain.derivePath(addrMainnet.path).chainCode.toString('hex');
-    const keystore = Keystore.create(new ExtendedPrivateKey(privateKey, chainCode), password);
+    const keystore = Keystore.encrypt(Buffer.from(privateKey, "hex"), password);
 
     // const wallet = {
     //   "path": addrMainnet.path,
@@ -357,7 +357,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
         console.log("privateKey ===>", privateKey);
 
-        //PrivateKey导入的情况还未解决      
+        //PrivateKey导入的情况还未解决
       } else if (wallet.currWallet.keystoreType == KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE) {
         console.log("import privateKey");
       }
