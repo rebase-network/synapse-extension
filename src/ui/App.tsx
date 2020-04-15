@@ -46,12 +46,12 @@ export default function App() {
               <li>
                 <Link to="/import-mnemonic">Import Mnemonic</Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to="/export-private-key">Export Private Key</Link>
-              </li>
-              <li>
-                <Link to="/export-mnemonic-key">Export Mnemonic</Link>
-              </li>
+              </li> */}
+              {/* <li>
+                <Link to="/export-mnemonic">Export Mnemonic</Link>
+              </li> */}
               <li>
                 <Link to="/my-addresses">My Addresses</Link>
               </li>
@@ -78,7 +78,7 @@ export default function App() {
             <Route path="/export-private-key">
               <ExportPrivateKey />
             </Route>
-            <Route path="/export-mnemonic-key">
+            <Route path="/export-mnemonic">
               <ExportMnemonic />
             </Route>
             <Route path="/export-private-key-second">
