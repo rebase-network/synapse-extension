@@ -2,8 +2,7 @@ import { MESSAGE_TYPE, KEYSTORE_TYPE } from './utils/constants'
 import { mnemonicToSeedSync, validateMnemonic } from './wallet/mnemonic';
 
 import { generateMnemonic } from './wallet/key';
-import Keystore from './wallet/keystore';
-import * as NewKeystore from './wallet/pkeystore';
+import * as Keystore from './wallet/pkeystore';
 import Keychain from './wallet/keychain';
 
 import { AccountExtendedPublicKey, ExtendedPrivateKey } from "./wallet/key";
@@ -55,7 +54,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       masterKeychain.chainCode.toString('hex')
     )
 
-    const rootKeystore = NewKeystore.encrypt(Buffer.from(extendedKey.serialize(), "hex"), password);
+    const rootKeystore = Keystore.encrypt(Buffer.from(extendedKey.serialize(), "hex"), password);
     const accountKeychain = masterKeychain.derivePath(AccountExtendedPublicKey.ckbAccountPath);
 
     const accountExtendedPublicKey = new AccountExtendedPublicKey(
@@ -70,7 +69,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     const privateKey = masterKeychain.derivePath(addrMainnet.path).privateKey.toString('hex');
     console.log("privateKey ===>", privateKey);
-    const keystore = NewKeystore.encrypt(Buffer.from(privateKey, "hex"), password);
+    const keystore = Keystore.encrypt(Buffer.from(privateKey, "hex"), password);
 
     // const wallet = {
     //   "path": addrMainnet.path,
@@ -198,7 +197,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       masterKeychain.privateKey.toString('hex'),
       masterKeychain.chainCode.toString('hex')
     )
-    const rootKeystore = NewKeystore.encrypt(Buffer.from(extendedKey.serialize(), "hex"), password);
+    const rootKeystore = Keystore.encrypt(Buffer.from(extendedKey.serialize(), "hex"), password);
     const accountKeychain = masterKeychain.derivePath(AccountExtendedPublicKey.ckbAccountPath);
 
     const accountExtendedPublicKey = new AccountExtendedPublicKey(
@@ -212,7 +211,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const privateKey = masterKeychain.derivePath(addrMainnet.path).privateKey.toString('hex');
     console.log("privateKey ===>", privateKey);
     const chainCode = masterKeychain.derivePath(addrMainnet.path).chainCode.toString('hex');
-    const keystore = NewKeystore.encrypt(Buffer.from(privateKey, "hex"), password);
+    const keystore = Keystore.encrypt(Buffer.from(privateKey, "hex"), password);
 
 
     //验证导入的Keystore是否已经存在
@@ -336,7 +335,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const password = request.password.trim();
       const network = request.network.trim();
 
-      const privateKey = NewKeystore.decrypt(wallet.currWallet.keystore, password)
+      const privateKey = Keystore.decrypt(wallet.currWallet.keystore, password)
 
       console.log("privateKey =>", privateKey);
 
@@ -414,7 +413,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     chrome.storage.sync.get(['currWallet'], function (wallet) {
       const password = request.password;
       const keystore = wallet.currWallet.keystore
-      const privateKey = NewKeystore.decrypt(keystore, password)
+      const privateKey = Keystore.decrypt(keystore, password)
 
       //send the check result to the page
       if (!privateKey) {
