@@ -78,11 +78,11 @@ export const innerForm = props => {
       {isSubmitting && <div id="submitting">Submitting</div>}
       <Button
         type="submit"
-        id="submit-button"
+        variant="contained"
         disabled={isSubmitting}
         color="primary"
         className={classes.button}
-        data-testid="submit-button"
+        data-testid=""
       >
         Import
       </Button>
@@ -101,12 +101,6 @@ export default function ImportPrivateKey (props: AppProps, state: AppState) {
     chrome.runtime.onMessage.addListener( (msg, sender, sendResp) => {
       // if (msg.messageType === MESSAGE_TYPE.TO_TX_DETAIL) {
       //   console.log("TO_TX_DETAIL msg", JSON.stringify(msg));
-
-      //   chrome.runtime.sendMessage({
-      //     msg,
-      //     messageType: MESSAGE_TYPE.REQUEST_TX_DETAIL
-      //   })
-
       //   history.push('/tx-detail')
       // }
 
@@ -120,6 +114,8 @@ export default function ImportPrivateKey (props: AppProps, state: AppState) {
     console.log("onSubmit=>",values);
     console.log("network =>", network);
 
+    chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_PRIVATE_KEY })
+
     // 消息发送到Background.ts
     // network - TODO
     // chrome.runtime.sendMessage({ ...values, network, messageType: MESSAGE_TYPE.RESQUEST_SEND_TX })
@@ -132,7 +128,6 @@ export default function ImportPrivateKey (props: AppProps, state: AppState) {
   let validateNode = null
   if (!valAddress) validateNode = <div className="success">Invalid Address</div>
 
-
   const classes = useStyles();
   return (
     <div className={classes.container}>
@@ -140,14 +135,14 @@ export default function ImportPrivateKey (props: AppProps, state: AppState) {
       {successNode}
       {validateNode}
       <Formik
-        initialValues={{ address: "", amount: "", fee: "", password: ""}}
+        initialValues={{ password: "", privatekey: "",}}
 
         onSubmit={onSubmit}
         validationSchema={Yup.object().shape({
           password: Yup.string()
-          .required("Required"),
+          .required("Required").min(6),
           privatekey: Yup.string()
-          .required("Required"),
+          .required("Required").length(66).matches(/^0x/),
         })}
       >
         {innerForm}

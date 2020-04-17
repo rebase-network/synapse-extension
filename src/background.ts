@@ -1,5 +1,8 @@
 import { MESSAGE_TYPE, KEYSTORE_TYPE } from './utils/constants'
 import { mnemonicToSeedSync, validateMnemonic, mnemonicToEntropy, entropyToMnemonic } from './wallet/mnemonic';
+import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils'
+import { MESSAGE_TYPE, KEYSTORE_TYPE, Ckb } from './utils/constants'
+import { mnemonicToSeedSync, validateMnemonic,mnemonicToEntropy,entropyToMnemonic } from './wallet/mnemonic';
 
 import { generateMnemonic } from './wallet/key';
 import * as Keystore from './wallet/pkeystore';
@@ -77,7 +80,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const accounts = await KeyperWallet.accounts()
     chrome.storage.sync.set({ accounts, }, () => {
       console.log('keyper accounts is set to storage: ' + JSON.stringify(accounts));
-    });    
+    });
     console.log("Keyper End ==== !!!!");
 
     //验证导入的Keystore是否已经存在
@@ -370,7 +373,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
       const password = request.password;
       const keystore = wallet.currWallet.keystore
-      //TODO check the password 
+      //TODO check the password
       const privateKey = Keystore.decrypt(keystore, password)
 
       //send the check result to the page
@@ -408,7 +411,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     chrome.storage.sync.get(['accounts'], async function (result) {
       console.log("MESSAGE_TYPE.REQUEST_MY_ADDRESSES");
-      
+
       // const addresses = [];
       // const length = result.wallets.length;
       // const wallets = result.wallets;
@@ -464,7 +467,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const password = request.password;
       console.log("wallet.currWallet ===>", wallet.currWallet)
       const entropyKeystore = wallet.currWallet.entropyKeystore
-      //TODO check the password 
+      //TODO check the password
       const entropy = Keystore.decrypt(entropyKeystore, password)
 
       console.log("entropy ===>", entropy);
@@ -501,6 +504,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     })
   }
 
+<<<<<<< HEAD
   //onKeyper test
   // if (request.messageType === MESSAGE_TYPE.ON_KEYPER) {
 
@@ -545,5 +549,36 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   //     messageType: MESSAGE_TYPE.RESULT_MY_ADDRESSES
   //   })
   // }
+=======
+  // import private key
+  if (request.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY) {
+
+    const privatekey = request.privatekey.trim()
+    const password = request.password.trim()
+
+    console.log("privatekey ", privatekey);
+    console.log("password ", password);
+
+    const pubKey = ckbUtils.privateKeyToPublicKey(privatekey)
+
+    const blake160 = ckbUtils.blake160(pubKey, 'hex')
+
+    let opts = {
+      prefix: ckbUtils.AddressPrefix.Mainnet,
+      type: ckbUtils.AddressType.HashIdx,
+      codeHashOrCodeHashIndex: '0x00',
+    }
+
+    const mainnetAddr = ckbUtils.bech32Address("0x" + blake160, opts)
+
+    opts.prefix = ckbUtils.AddressPrefix.Testnet
+
+    const testnetAddr = ckbUtils.bech32Address("0x" + blake160, opts)
+
+    console.log("mainnetAddr ", mainnetAddr)
+    console.log("testnetAddr ", testnetAddr)
+
+  }
+>>>>>>> 535215a... gen ckb addr
 
 });
