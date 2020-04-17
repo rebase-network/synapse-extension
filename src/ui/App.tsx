@@ -7,6 +7,7 @@ import GenerateMnemonic from './pages/ImportMnemonic/generate'
 import Transaction from "./pages/Transaction"
 import TxDetail from "./pages/TxDetail"
 import Home from "./pages/Home"
+import ImportPrivateKey from './pages/ImportPrivateKey/importPrivateKey';
 import ExportPrivateKey from './pages/ExportPrivateKey';
 import ExportMnemonic from "./pages/ExportMnemonic";
 import ExportPrivateKeySecond from './pages/ExportPrivateKeySecond'
@@ -41,7 +42,7 @@ export default function App() {
                 <Link to="/address">Address</Link>
               </li>
               <li>
-                <Link to="/setting">setting</Link>
+                <Link to="/setting">Setting</Link>
               </li>
               <li>
                 <Link to="/import-mnemonic">Import Mnemonic</Link>
@@ -74,6 +75,9 @@ export default function App() {
             </Route>
             <Route path="/tx-detail">
               <TxDetail />
+            </Route>
+            <Route path="/import-private-key">
+              <ImportPrivateKey />
             </Route>
             <Route path="/export-private-key">
               <ExportPrivateKey />
