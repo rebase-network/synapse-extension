@@ -15,7 +15,6 @@
     "@testing-library/jest-dom": "^5.1.1",
     "@testing-library/react": "^10.0.1",
     "@types/chrome": "0.0.60",
-    "@types/elliptic": "6.4.8",
     "@types/jest": "^25.1.4",
     "@types/node": "^12.12.31",
     "@types/react": "^16.9.23",
@@ -40,7 +39,6 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
-    "@ionic/storage": "^2.2.0",
     "@keyper/container": "^0.0.12",
     "@keyper/specs": "^0.0.7",
     "@material-ui/core": "^4.9.7",
@@ -48,12 +46,9 @@
     "@nervosnetwork/ckb-sdk-core": "^0.30.0",
     "@nervosnetwork/ckb-sdk-utils": "^0.30.0",
     "blake2b": "^2.1.3",
-    "bn.js": "^5.1.1",
-    "eccrypto": "^1.1.3",
     "elliptic": "^6.5.2",
     "formik": "^2.1.4",
     "keccak": "^3.0.0",
-    "number-to-bn": "^1.7.0",
     "qrcode.react": "^1.0.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",

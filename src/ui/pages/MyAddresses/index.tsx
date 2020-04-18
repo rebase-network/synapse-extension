@@ -15,6 +15,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
 
 const useStyles = makeStyles({
   container: {
@@ -32,17 +33,16 @@ const useStyles02 = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
-      maxWidth: 752,
+      maxWidth: 600,
     },
     demo: {
       backgroundColor: theme.palette.background.paper,
     },
     title: {
-      margin: theme.spacing(4, 0, 2),
+      margin: theme.spacing(1, 0, 1),
     },
   }),
 );
-
 
 interface AppProps { }
 
@@ -53,11 +53,11 @@ export default function (props: AppProps, state: AppState) {
 
   const classes = useStyles();
   const [addresses, setAddresses] = React.useState([]);
+  const history = useHistory();
 
   const classes02 = useStyles02();
   const [dense, setDense] = React.useState(false);
   const [secondary, setSecondary] = React.useState(false);
-
 
   React.useEffect(() => {
     chrome.runtime.sendMessage({
@@ -85,18 +85,29 @@ export default function (props: AppProps, state: AppState) {
 
   const addressesElem = addresses.map((item, index) => {
     return (
-      // <div>
-      //     <div className="address" data-testid="address">
-      //       {item.testnetAddr}
-      //     </div>
-      //     <div className="capacity" data-testid="capacity">
-      //       {item.capacity} CKB
-      //     </div>
-      //     <br />
-      // </div>
-      <ListItem>
-        <ListItemText primary= {item.testnetAddr} secondary= {item.capacity + "CKB"} />
-      </ListItem>
+      <div>
+          <div className="address" data-testid="address">
+            {item.address}
+          </div>
+          <div className="capacity" data-testid="capacity">
+            {item.capacity} CKB
+          </div>
+          <div className="type" data-testid="type">
+            {item.type}
+          </div>
+      </div>
+      // <ListSubheader>{ item.address }</ListSubheader>
+      // <ListItem>
+      //   <ListItemText primary= {item.type} secondary= {item.capacity + "CKB"} />
+      // </ListItem>
+      // <li key={`section-${item.address}`} >
+      //     <ul >
+      //       <ListSubheader>{ item.address }</ListSubheader>
+      //       <ListItem key={`item-${item.address}`}>
+      //           <ListItemText primary= {item.type} secondary= {item.capacity + "CKB"} />
+      //       </ListItem>
+      //     </ul>
+      // </li>
     )
   })
 

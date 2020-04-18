@@ -1,5 +1,5 @@
 import { MESSAGE_TYPE, KEYSTORE_TYPE } from './utils/constants'
-import { mnemonicToSeedSync, validateMnemonic,mnemonicToEntropy,entropyToMnemonic } from './wallet/mnemonic';
+import { mnemonicToSeedSync, validateMnemonic, mnemonicToEntropy, entropyToMnemonic } from './wallet/mnemonic';
 
 import { generateMnemonic } from './wallet/key';
 import * as Keystore from './wallet/pkeystore';
@@ -13,7 +13,7 @@ import { getAmountByTxHash, getStatusByTxHash, getFeeByTxHash, getInputAddressBy
 import { getPrivateKeyByKeyStoreAndPassword } from './wallet/exportPrivateKey'
 
 // import * as KeyperWallet from '../src/keyper/wallet.js';
-const KeyperWallet = require('../src/keyper/wallet');
+const KeyperWallet = require('../src/keyper/keyperwallet');
 // const EC = require("elliptic").ec;
 
 /**
@@ -44,7 +44,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     //store the mnemonic entropy
     const entropy = mnemonicToEntropy(mnemonic);
     const entropyKeystore = Keystore.encrypt(Buffer.from(entropy, "hex"), password);
-    
+
     // words 是否在助记词表中
     const seed = mnemonicToSeedSync(mnemonic)
     const masterKeychain = Keychain.fromSeed(seed)
@@ -67,8 +67,13 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const addrMainnet = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Mainnet);
 
     const privateKey = masterKeychain.derivePath(addrMainnet.path).privateKey.toString('hex');
-
     const keystore = Keystore.encrypt(Buffer.from(privateKey, "hex"), password);
+
+    //Add Keyper to Synapse
+    console.log("Keyper Init ==== !!!!");
+    await KeyperWallet.init(); //初始化Container
+    await KeyperWallet.generateKeyPrivateKey(password, privateKey);
+    console.log("Keyper End ==== !!!!");
 
     //验证导入的Keystore是否已经存在
     let isExist = false;
@@ -79,7 +84,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         "mainnetAddr": addrMainnet.address,
         "testnetAddr": addrTestnet.address,
         "lockHash": addrMainnet.getLockHash(),
-        "entropyKeystore":entropyKeystore,
+        "entropyKeystore": entropyKeystore,
         "rootKeystore": rootKeystore,
         "keystore": keystore,
         "keystoreType": KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
@@ -110,7 +115,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           "mainnetAddr": addrMainnet.address,
           "testnetAddr": addrTestnet.address,
           "lockHash": addrMainnet.getLockHash(),
-          "entropyKeystore":entropyKeystore,
+          "entropyKeystore": entropyKeystore,
           "rootKeystore": keystore,
           "keystore": keystore,
           "keystoreType": KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
@@ -169,7 +174,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     //store the mnemonic entropy
     const entropy = mnemonicToEntropy(mnemonic);
     const entropyKeystore = Keystore.encrypt(Buffer.from(entropy, "hex"), password);
- 
+
     const seed = mnemonicToSeedSync(mnemonic)
     const masterKeychain = Keychain.fromSeed(seed)
 
@@ -201,7 +206,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         "mainnetAddr": addrMainnet.address,
         "testnetAddr": addrTestnet.address,
         "lockHash": addrMainnet.getLockHash(),
-        "entropyKeystore":entropyKeystore,
+        "entropyKeystore": entropyKeystore,
         "rootKeystore": rootKeystore,
         "keystore": keystore,
         "keystoreType": KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
@@ -232,7 +237,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           "mainnetAddr": addrMainnet.address,
           "testnetAddr": addrTestnet.address,
           "lockHash": addrMainnet.getLockHash(),
-          "entropyKeystore":entropyKeystore,
+          "entropyKeystore": entropyKeystore,
           "rootKeystore": keystore,
           "keystore": keystore,
           "keystoreType": KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE
@@ -396,28 +401,46 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.messageType === MESSAGE_TYPE.REQUEST_MY_ADDRESSES) {
 
     chrome.storage.sync.get(['wallets'], async function (result) {
+      console.log("MESSAGE_TYPE.REQUEST_MY_ADDRESSES");
+      // const addresses = [];
+      // const length = result.wallets.length;
+      // const wallets = result.wallets;
 
+      // for (let index = 0; index < length; index++) {
+      //   const mainnetAddr = wallets[index].mainnetAddr;
+      //   const testnetAddr = wallets[index].testnetAddr;
+      //   const lockHash = wallets[index].lockHash;
+      //   const capacity = await getBalanceByLockHash(lockHash);
+      //   const address = {
+      //     "mainnetAddr": mainnetAddr,
+      //     "testnetAddr": testnetAddr,
+      //     "capacity": capacity.toString()
+      //   }
+      //   addresses.push(address);
+      // }
+
+      // chrome.runtime.sendMessage({
+      //   addresses,
+      //   messageType: MESSAGE_TYPE.RESULT_MY_ADDRESSES
+      // })
+      const accounts = await KeyperWallet.accounts();
       const addresses = [];
-      const length = result.wallets.length;
-      const wallets = result.wallets;
-
-      for (let index = 0; index < length; index++) {
-        const mainnetAddr = wallets[index].mainnetAddr;
-        const testnetAddr = wallets[index].testnetAddr;
-        const lockHash = wallets[index].lockHash;
-        const capacity = await getBalanceByLockHash(lockHash);
+      for (let i = 0; i < accounts.length; i++) {
+        const account = accounts[i];
+        const capacity = await getBalanceByLockHash(account.lock);
         const address = {
-          "mainnetAddr": mainnetAddr,
-          "testnetAddr": testnetAddr,
-          "capacity": capacity.toString()
+          address: account.address,
+          type: account.type,
+          capacity: capacity,
+          lock: account.lock
         }
         addresses.push(address);
       }
-
       chrome.runtime.sendMessage({
         addresses,
         messageType: MESSAGE_TYPE.RESULT_MY_ADDRESSES
       })
+
     });
   }
 
@@ -427,12 +450,12 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     chrome.storage.sync.get(['currWallet'], function (wallet) {
 
       const password = request.password;
-      console.log("wallet.currWallet ===>",wallet.currWallet)
+      console.log("wallet.currWallet ===>", wallet.currWallet)
       const entropyKeystore = wallet.currWallet.entropyKeystore
       //TODO check the password 
       const entropy = Keystore.decrypt(entropyKeystore, password)
 
-      console.log("entropy ===>",entropy);
+      console.log("entropy ===>", entropy);
       // //send the check result to the page
       if (entropy !== "") {
         chrome.runtime.sendMessage({
@@ -456,7 +479,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const password = request.message.password;
     const entropyKeystore = request.message.entropyKeystore;
 
-    const entropy = Keystore.decrypt(entropyKeystore,password);
+    const entropy = Keystore.decrypt(entropyKeystore, password);
     const mnemonic = entropyToMnemonic(entropy);
 
     chrome.runtime.sendMessage({
@@ -466,28 +489,49 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     })
   }
 
-    //onKeyper
-    if (request.messageType === MESSAGE_TYPE.ON_KEYPER) {
+  //onKeyper test
+  // if (request.messageType === MESSAGE_TYPE.ON_KEYPER) {
 
-      await KeyperWallet.init(); //初始化Container
-      // console.log("Init ==== !!!!");
-      const password = "123456";
-      const publicKey = await KeyperWallet.generateKey(password);
-      console.log(publicKey);
+  //   await KeyperWallet.init(); //初始化Container
+  //   // console.log("Init ==== !!!!");
+  //   const password = "123456";
+  //   const privateKey = "";
+  //   const publicKey = await KeyperWallet.generateKeyKeyper(password, privateKey, publicKey);
+  //   console.log(publicKey);
 
-      const accounts = await KeyperWallet.accounts();
-      console.log("accounts ===>: ", accounts);
-      for (let i = 0; i < accounts.length; i++) {
-        const account = accounts[i];
-        console.log("account.lock ===>",account.lock);
-        // const result = await cache.findCells(
-        //   JSON.stringify(
-        //     QueryBuilder.create()
-        //       .setLockHash(account.lock)
-        //       .build()
-        //   )
-        // );
-      }
-    }
-    
+  //   const accounts = await KeyperWallet.accounts();
+
+  //   //Just For Test
+  //   // console.log("accounts ===>: ", accounts);
+  //   // for (let i = 0; i < accounts.length; i++) {
+  //   //   const account = accounts[i];
+  //   //   console.log("account.lock ===>",account.lock);
+  //   //   // const result = await cache.findCells(
+  //   //   //   JSON.stringify(
+  //   //   //     QueryBuilder.create()
+  //   //   //       .setLockHash(account.lock)
+  //   //   //       .build()
+  //   //   //   )
+  //   //   // );
+  //   // }
+  //   const addresses = [];
+  //   for (let i = 0; i < accounts.length; i++) {
+  //     const account = accounts[i];
+  //     // const capacity = await getBalanceByLockHash(account.lock);
+  //     const capacity = 0;
+  //     const address = {
+  //       address: account.address,
+  //       type: account.type,
+  //       capacity: capacity,
+  //       lock: account.lock
+  //     }
+  //     addresses.push(address);
+  //   }
+
+  //   chrome.runtime.sendMessage({
+  //     addresses,
+  //     messageType: MESSAGE_TYPE.RESULT_MY_ADDRESSES
+  //   })
+  // }
+
 });

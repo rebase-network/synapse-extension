@@ -1,30 +1,15 @@
-// const scrypt = require("scrypt.js");
-// const EC = require("elliptic").ec;
-// const { SignatureAlgorithm } = require("@keyper/specs/lib");
-// const { Container } = require("@keyper/container/lib");
-// const { scriptToHash, hexToBytes } = require("@nervosnetwork/ckb-sdk-utils/lib");
-// const { scriptToAddress } = require("@keyper/specs/lib/address");
-// const keystore = require("@keyper/specs/lib/keystore");
-// const storage = require("./storage");
-
 import * as scrypt from "scrypt.js";
-const EC = require("elliptic").ec;
 import { SignatureAlgorithm } from "@keyper/specs/lib";
 import { Container } from "@keyper/container/lib";
 import { scriptToHash, hexToBytes } from "@nervosnetwork/ckb-sdk-utils/lib";
 import { scriptToAddress } from "@keyper/specs/lib/address";
 import * as keystore from "@keyper/specs/lib/keystore";
-// import * as keystore from "../wallet/pkeystore";
-const storage = require("./storage");
 
-//3个LockScript
-// const { Secp256k1LockScript } = require("@keyper/container/lib/locks/secp256k1");
-// const { Keccak256LockScript } = require("./locks/keccak256");
-// const { AnyPayLockScript } = require("./locks/anypay");
-
+const EC = require("elliptic").ec;
 const { Secp256k1LockScript } = require("@keyper/container/lib/locks/secp256k1");
 const Keccak256LockScript = require("./locks/keccak256");
 const AnyPayLockScript = require("./locks/anypay");
+const storage = require("./storage");
 
 let seed, keys, container;
 let addRules = []; //Mod by River
@@ -73,7 +58,6 @@ const init = () => {
   reloadKeys();
 };
 
-//TODO Modify
 const reloadKeys = () => {
   if (storage.keyperStorage().get("keys")) {
     const innerKeys = storage.keyperStorage().get("keys");
@@ -160,12 +144,53 @@ const generateKey = async (password) => {
     keys.push(ks);
     storage.keyperStorage().set("keys", keys);
   }
+  console.log("=== storage.keyperStorage() === ", storage.keyperStorage());
 
-  //=================
-  console.log("storage.keyperStorage() ===>",storage.keyperStorage());
-  //=================
+  //container在init中进行初始化的操作
+  container.addPublicKey({
+    payload: `0x${publicKey}`,
+    algorithm: SignatureAlgorithm.secp256k1,
+  });
+  keys[`0x${publicKey}`] = key;
+  const scripts = container.getScripsByPublicKey({
+    payload: `0x${publicKey}`,
+    algorithm: SignatureAlgorithm.secp256k1,
+  });
 
-  //Cannot read property 'addPublicKey' of undefined
+  scripts.forEach(async (script) => {
+    // await global.cache.addRule({
+    //   name: "LockHash",
+    //   data: scriptToHash(script),
+    // });
+    const addRule = {
+      name: "LockHash",
+      data: scriptToHash(script),
+    }
+    addRules.push(addRule);
+  });
+
+  return publicKey;
+};
+
+const generateKeyPrivateKey = async (password,privateKey) => {
+  const ec = new EC('secp256k1');
+  const key = ec.keyFromPrivate(privateKey);
+  // const key = ec.genKeyPair();
+  const publicKey = Buffer.from(key.getPublic().encodeCompressed()).toString("hex");
+  // const privateKey = key.getPrivate();
+  const privateKeyBuffer = Buffer.from(privateKey, "hex")
+  const ks = keystore.encrypt(privateKeyBuffer, password);
+  ks.publicKey = publicKey;
+
+  if (!storage.keyperStorage().get("keys")) {
+    storage.keyperStorage().set("keys", [ks]);
+  } else {
+    const keys = storage.keyperStorage().get("keys");
+    keys.push(ks);
+    storage.keyperStorage().set("keys", keys);
+  }
+
+  //container在init中进行初始化的操作
   container.addPublicKey({
     payload: `0x${publicKey}`,
     algorithm: SignatureAlgorithm.secp256k1,
@@ -216,7 +241,7 @@ const importKey = async (privateKey, password) => {
     //   name: "LockHash",
     //   data: scriptToHash(script),
     // }, "1000");
-    // TODO 1000 应该怎么修改？
+    // TODO 1000 应该怎么修改？ ===============Problem
       const addRule = {
         name: "LockHash",
         data: scriptToHash(script),
@@ -261,6 +286,7 @@ module.exports = {
   unlock,
   exists,
   generateKey,
+  generateKeyPrivateKey,
   importKey,
   accounts,
   signTx,
