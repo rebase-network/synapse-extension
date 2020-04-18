@@ -12,6 +12,10 @@ import { sendSimpleTransaction } from './sendSimpleTransaction';
 import { getAmountByTxHash, getStatusByTxHash, getFeeByTxHash, getInputAddressByTxHash, getOutputAddressByTxHash, getOutputAddressByTxHashAndIndex } from './transaction';
 import { getPrivateKeyByKeyStoreAndPassword } from './wallet/exportPrivateKey'
 
+// import * as KeyperWallet from '../src/keyper/wallet.js';
+const KeyperWallet = require('../src/keyper/wallet');
+// const EC = require("elliptic").ec;
+
 /**
  * Listen messages from popup
  */
@@ -462,4 +466,28 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     })
   }
 
+    //onKeyper
+    if (request.messageType === MESSAGE_TYPE.ON_KEYPER) {
+
+      await KeyperWallet.init(); //初始化Container
+      // console.log("Init ==== !!!!");
+      const password = "123456";
+      const publicKey = await KeyperWallet.generateKey(password);
+      console.log(publicKey);
+
+      const accounts = await KeyperWallet.accounts();
+      console.log("accounts ===>: ", accounts);
+      for (let i = 0; i < accounts.length; i++) {
+        const account = accounts[i];
+        console.log("account.lock ===>",account.lock);
+        // const result = await cache.findCells(
+        //   JSON.stringify(
+        //     QueryBuilder.create()
+        //       .setLockHash(account.lock)
+        //       .build()
+        //   )
+        // );
+      }
+    }
+    
 });

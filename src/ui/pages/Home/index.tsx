@@ -45,6 +45,11 @@ export default function (props: AppProps, state: AppState) {
     history.push('/generate-mnemonic');
   }
 
+  const onKeyper =() =>{
+    chrome.runtime.sendMessage({messageType: MESSAGE_TYPE.ON_KEYPER })
+  }
+
+
   const classes = useStyles();
 
   return (
@@ -73,6 +78,18 @@ export default function (props: AppProps, state: AppState) {
           data-testid="generate-button"
         >
           Generate Mnemonic
+        </Button>
+
+        <Button
+          type="button"
+          variant="contained"
+          id="generate-button"
+          color="primary"
+          onClick={onKeyper}
+          className={classes.button}
+          data-testid="generate-button"
+        >
+          Keyper Test
         </Button>
       </div>
 
