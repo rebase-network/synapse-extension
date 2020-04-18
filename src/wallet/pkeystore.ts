@@ -191,7 +191,49 @@ function runCipherBuffer(cipher: crypto.Cipher | crypto.Decipher, data: Buffer):
   return Buffer.concat([cipher.update(data), cipher.final()])
 }
 
-export function encrypt(privKey: Buffer, password: string, opts?: Partial<V3Params>): V3Keystore {
+function mac(derivedKey: Buffer, ciphertext: Buffer): Buffer {
+  const mac = blake2b(32).update(
+    Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext)])
+  ).digest('hex');
+
+  return mac
+}
+
+function getDerivedKey(password: string, opts ? : Partial < V3Params > ): Buffer {
+  const v3Params: V3ParamsStrict = mergeToV3ParamsWithDefaults(opts)
+
+  let kdfParams: KDFParams
+  let derivedKey: Buffer
+  switch (v3Params.kdf) {
+    case KDFFunctions.PBKDF:
+      kdfParams = kdfParamsForPBKDF(v3Params)
+      derivedKey = crypto.pbkdf2Sync(
+        Buffer.from(password),
+        kdfParams.salt,
+        kdfParams.c,
+        kdfParams.dklen,
+        'sha256',
+      )
+      break
+    case KDFFunctions.Scrypt:
+      kdfParams = kdfParamsForScrypt(v3Params)
+      derivedKey = scrypt(
+        Buffer.from(password),
+        kdfParams.salt,
+        kdfParams.n,
+        kdfParams.r,
+        kdfParams.p,
+        kdfParams.dklen,
+      )
+      break
+    default:
+      throw new Error('Unsupported kdf')
+  }
+
+  return derivedKey
+}
+
+export function encrypt(privKey: Buffer, password: string, opts ? : Partial < V3Params > ): V3Keystore {
   const v3Params: V3ParamsStrict = mergeToV3ParamsWithDefaults(opts)
 
   let kdfParams: KDFParams
@@ -232,9 +274,7 @@ export function encrypt(privKey: Buffer, password: string, opts?: Partial<V3Para
   }
 
   const ciphertext = runCipherBuffer(cipher, privKey)
-  const mac = blake2b(32).update(
-    Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext)])
-  ).digest('hex');
+  const macStr = mac(derivedKey, ciphertext).toString("hex")
 
   return {
     version: 3,
@@ -248,7 +288,7 @@ export function encrypt(privKey: Buffer, password: string, opts?: Partial<V3Para
         ...kdfParams,
         salt: kdfParams.salt.toString('hex'),
       },
-      mac: mac.toString('hex'),
+      mac: macStr,
     },
   }
 }
@@ -266,6 +306,7 @@ export function decrypt(
   }
 
   let derivedKey: Buffer, kdfparams: any
+
   if (json.crypto.kdf === 'scrypt') {
     kdfparams = json.crypto.kdfparams
 
@@ -310,4 +351,49 @@ export function decrypt(
   )
   const seed = runCipherBuffer(decipher, ciphertext)
   return seed.toString("hex");
+}
+
+export function checkPasswd(input: string | V3Keystore, password: string): boolean {
+
+  const json: V3Keystore =
+    typeof input === 'object' ? input : JSON.parse(input)
+
+  if (json.version !== 3) {
+    throw new Error('Not a V3 wallet')
+  }
+
+  let derivedKey: Buffer, kdfparams: any
+
+  if (json.crypto.kdf === 'scrypt') {
+    kdfparams = json.crypto.kdfparams
+
+    derivedKey = scrypt(
+      Buffer.from(password),
+      Buffer.from(kdfparams.salt, 'hex'),
+      kdfparams.n,
+      kdfparams.r,
+      kdfparams.p,
+      kdfparams.dklen,
+    )
+  } else if (json.crypto.kdf === 'pbkdf2') {
+    kdfparams = json.crypto.kdfparams
+
+    if (kdfparams.prf !== 'hmac-sha256') {
+      throw new Error('Unsupported parameters to PBKDF2')
+    }
+
+    derivedKey = crypto.pbkdf2Sync(
+      Buffer.from(password),
+      Buffer.from(kdfparams.salt, 'hex'),
+      kdfparams.c,
+      kdfparams.dklen,
+      'sha256',
+    )
+  } else {
+    throw new Error('Unsupported key derivation scheme')
+  }
+
+  const ciphertext = Buffer.from(json.crypto.ciphertext, 'hex')
+  const res = mac(derivedKey, ciphertext).toString('hex')
+  return res === json.crypto.mac
 }
