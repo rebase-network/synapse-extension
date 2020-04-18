@@ -48,7 +48,6 @@ interface AppProps { }
 
 interface AppState { }
 
-
 export default function (props: AppProps, state: AppState) {
 
   const classes = useStyles();

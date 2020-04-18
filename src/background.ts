@@ -73,6 +73,11 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     console.log("Keyper Init ==== !!!!");
     await KeyperWallet.init(); //初始化Container
     await KeyperWallet.generateKeyPrivateKey(password, privateKey);
+    //Keyper accounts
+    const accounts = await KeyperWallet.accounts()
+    chrome.storage.sync.set({ accounts, }, () => {
+      console.log('keyper accounts is set to storage: ' + JSON.stringify(accounts));
+    });    
     console.log("Keyper End ==== !!!!");
 
     //验证导入的Keystore是否已经存在
@@ -143,6 +148,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     chrome.storage.sync.set({ addresses, }, () => {
       console.log('addresses is set to storage: ' + JSON.stringify(addresses));
     });
+
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS)
   }
 
@@ -400,8 +406,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   //my addresses
   if (request.messageType === MESSAGE_TYPE.REQUEST_MY_ADDRESSES) {
 
-    chrome.storage.sync.get(['wallets'], async function (result) {
+    chrome.storage.sync.get(['accounts'], async function (result) {
       console.log("MESSAGE_TYPE.REQUEST_MY_ADDRESSES");
+      
       // const addresses = [];
       // const length = result.wallets.length;
       // const wallets = result.wallets;
@@ -423,7 +430,12 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       //   addresses,
       //   messageType: MESSAGE_TYPE.RESULT_MY_ADDRESSES
       // })
-      const accounts = await KeyperWallet.accounts();
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // await KeyperWallet.init();
+      // const accounts = await KeyperWallet.accounts();
+      console.log("result =>",result);
+      const accounts = result.accounts;
       const addresses = [];
       for (let i = 0; i < accounts.length; i++) {
         const account = accounts[i];
@@ -431,16 +443,16 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         const address = {
           address: account.address,
           type: account.type,
-          capacity: capacity,
+          capacity: capacity.toString(),
           lock: account.lock
         }
         addresses.push(address);
       }
+      console.log("addresses =>",addresses);
       chrome.runtime.sendMessage({
-        addresses,
+        addresses: addresses,
         messageType: MESSAGE_TYPE.RESULT_MY_ADDRESSES
       })
-
     });
   }
 
