@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Title from '../../Components/Title'
 import { Button, TextField } from '@material-ui/core';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -28,7 +29,6 @@ export const innerForm = props => {
   const classes = useStyles();
   const {
     values,
-    placeholder,
     touched,
     errors,
     dirty,
@@ -48,6 +48,9 @@ export const innerForm = props => {
         type="text"
         placeholder="私钥"
         fullWidth
+        InputProps={{
+          startAdornment: <InputAdornment position="start">0x</InputAdornment>,
+        }}
         className={classes.textField}
         value={values.privatekey}
         onChange={handleChange}
@@ -95,45 +98,33 @@ export default function ImportPrivateKey (props: AppProps, state: AppState) {
   const [success, setSuccess] = React.useState(false)
   const history = useHistory();
   const { network } = React.useContext(AppContext);
-  const [valAddress, setValAddress] = React.useState(true);
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener( (msg, sender, sendResp) => {
-      // if (msg.messageType === MESSAGE_TYPE.TO_TX_DETAIL) {
-      //   console.log("TO_TX_DETAIL msg", JSON.stringify(msg));
-      //   history.push('/tx-detail')
-      // }
+
+      if (msg.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK) {
+        history.push('/address')
+      }
 
     })
-    // setLoading(true);
   }, [])
+
 
   const onSubmit = async(values) => {
 
     await new Promise(resolve => setTimeout(resolve, 500));
-    console.log("onSubmit=>",values);
-    console.log("network =>", network);
-
     chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_PRIVATE_KEY })
-
-    // 消息发送到Background.ts
-    // network - TODO
-    // chrome.runtime.sendMessage({ ...values, network, messageType: MESSAGE_TYPE.RESQUEST_SEND_TX })
     setSuccess(true)
-
   }
 
   let successNode = null
   if (success) successNode = <div className="success">Successfully</div>
-  let validateNode = null
-  if (!valAddress) validateNode = <div className="success">Invalid Address</div>
 
   const classes = useStyles();
   return (
     <div className={classes.container}>
       <Title title='Import PrivateKey' testId="" />
       {successNode}
-      {validateNode}
       <Formik
         initialValues={{ password: "", privatekey: "",}}
 
@@ -142,7 +133,7 @@ export default function ImportPrivateKey (props: AppProps, state: AppState) {
           password: Yup.string()
           .required("Required").min(6),
           privatekey: Yup.string()
-          .required("Required").length(66).matches(/^0x/),
+          .required("Required").length(64).matches(/[0-9a-fA-F]+/),
         })}
       >
         {innerForm}
