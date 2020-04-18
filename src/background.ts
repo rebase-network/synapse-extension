@@ -68,18 +68,19 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const addrMainnet = accountExtendedPublicKey.address(AddressType.Receiving, 0, AddressPrefix.Mainnet);
 
     const privateKey = masterKeychain.derivePath(addrMainnet.path).privateKey.toString('hex');
+    console.log("PrivateKey ===>", privateKey);
     const keystore = Keystore.encrypt(Buffer.from(privateKey, "hex"), password);
 
-    //Add Keyper to Synapse
-    console.log("Keyper Init ==== !!!!");
-    await KeyperWallet.init(); //初始化Container
-    await KeyperWallet.generateKeyPrivateKey(password, privateKey);
-    //Keyper accounts
-    const accounts = await KeyperWallet.accounts()
-    chrome.storage.sync.set({ accounts, }, () => {
-      console.log('keyper accounts is set to storage: ' + JSON.stringify(accounts));
-    });
-    console.log("Keyper End ==== !!!!");
+    // //Add Keyper to Synapse
+    // console.log("Keyper Init ==== !!!!");
+    // await KeyperWallet.init(); //初始化Container
+    // await KeyperWallet.generateKeyPrivateKey(password, privateKey);
+    // //Keyper accounts
+    // const accounts = await KeyperWallet.accounts()
+    // chrome.storage.sync.set({ accounts, }, () => {
+    //   console.log('keyper accounts is set to storage: ' + JSON.stringify(accounts));
+    // });
+    // console.log("Keyper End ==== !!!!");
 
     //验证导入的Keystore是否已经存在
     let isExist = false;
@@ -90,7 +91,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         "mainnetAddr": addrMainnet.address,
         "testnetAddr": addrTestnet.address,
         "lockHash": addrMainnet.getLockHash(),
-        "entropyKeystore": entropyKeystore,
+        "entropyKeystore": entropyKeystore, //助记词
         "rootKeystore": rootKeystore,
         "keystore": keystore,
         "keystoreType": KEYSTORE_TYPE.MNEMONIC_TO_KEYSTORE

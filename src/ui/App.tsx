@@ -18,7 +18,7 @@ import AppBar from './Components/AppBar/'
 
 import "./styles/global.scss";
 import ExportMnemonicSecond from "./pages/ExportMnemonicSecond";
-
+const KeyperWallet = require('../keyper/keyperwallet');
 
 export const AppContext = React.createContext({ network: 'testnet' });
 
@@ -28,6 +28,16 @@ export default function App() {
   const handleNetworkChange = (value: string) => {
     setNetwork(value);
   };
+
+  React.useEffect(() => {
+    console.log("Keyper Init ==== !!!!");
+    // (async function KeyperWalletInit() {
+    //     // add Keyper by River
+    //     console.log("Keyper Init ==== !!!!");
+    //     await KeyperWallet.init(); //初始化Container
+    //     console.log("Keyper End ==== !!!!");
+    // })();
+  }, []);
 
   return (
     <Router>
