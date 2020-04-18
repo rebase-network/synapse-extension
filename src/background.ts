@@ -1,8 +1,6 @@
-import { MESSAGE_TYPE, KEYSTORE_TYPE } from './utils/constants'
+import { MESSAGE_TYPE, KEYSTORE_TYPE, Ckb } from './utils/constants'
 import { mnemonicToSeedSync, validateMnemonic, mnemonicToEntropy, entropyToMnemonic } from './wallet/mnemonic';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils'
-import { MESSAGE_TYPE, KEYSTORE_TYPE, Ckb } from './utils/constants'
-import { mnemonicToSeedSync, validateMnemonic,mnemonicToEntropy,entropyToMnemonic } from './wallet/mnemonic';
 
 import { generateMnemonic } from './wallet/key';
 import * as Keystore from './wallet/pkeystore';
@@ -504,7 +502,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     })
   }
 
-<<<<<<< HEAD
   //onKeyper test
   // if (request.messageType === MESSAGE_TYPE.ON_KEYPER) {
 
@@ -549,18 +546,25 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   //     messageType: MESSAGE_TYPE.RESULT_MY_ADDRESSES
   //   })
   // }
-=======
-  // import private key
+
+
+ // import private key
   if (request.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY) {
 
-    const privatekey = request.privatekey.trim()
+    const privatekey = "0x" + request.privatekey.trim()
     const password = request.password.trim()
 
-    console.log("privatekey ", privatekey);
-    console.log("password ", password);
+    const keystore = currWallet['keystore']
+
+    if (keystore === undefined || keystore === "" || keystore === "undefined") {
+      throw new Error('currWallet keystore is null')
+    }
+
+    if (!Keystore.checkPasswd(keystore, password)) {
+      throw new Error('password incorrect')
+    }
 
     const pubKey = ckbUtils.privateKeyToPublicKey(privatekey)
-
     const blake160 = ckbUtils.blake160(pubKey, 'hex')
 
     let opts = {
@@ -571,14 +575,71 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     const mainnetAddr = ckbUtils.bech32Address("0x" + blake160, opts)
 
-    opts.prefix = ckbUtils.AddressPrefix.Testnet
+    let exist = false
+    for (const addr of addresses) {
+      if (mainnetAddr === addr['mainnetAddr']) {
+        exist = true
+        break
+      }
+    }
 
+    if (exist) {
+      throw new Error(mainnetAddr + ' is already existed')
+    }
+
+    opts.prefix = ckbUtils.AddressPrefix.Testnet
     const testnetAddr = ckbUtils.bech32Address("0x" + blake160, opts)
 
-    console.log("mainnetAddr ", mainnetAddr)
-    console.log("testnetAddr ", testnetAddr)
+    const buff = Buffer.from(privatekey, 'hex')
+    const newkeystore = Keystore.encrypt(buff, password)
 
+    let _obj = {}
+
+    _obj['id'] = newkeystore.id
+    _obj['version'] = newkeystore.version
+    _obj["crypto"] = newkeystore.crypto
+
+    const lockHash = ckbUtils.scriptToHash({
+      hashType: "type",
+      codeHash: Ckb.MainNetCodeHash,
+      args: "0x" + blake160,
+    })
+
+    const wallet = {
+      "blake160": "0x" + blake160,
+      "mainnetAddr": mainnetAddr,
+      "testnetAddr": testnetAddr,
+      "lockHash": lockHash,
+      "keystore": _obj,
+      "keystoreType": KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE,
+      "index": wallets.length-1,
+    }
+
+    wallets.push(wallet)
+
+    addresses.push({
+      "mainnetAddr": mainnetAddr,
+      "testnetAddr": testnetAddr,
+      "walletIndex": wallets.length - 1
+    })
+
+    currWallet = wallet
+
+    chrome.storage.sync.set({ wallets, }, () => {
+      console.log('wallets is set to storage: ' + JSON.stringify(wallets));
+    });
+
+    chrome.storage.sync.set({ currWallet, }, () => {
+      console.log('currWallet is set to storage: ' + JSON.stringify(currWallet));
+    });
+
+    chrome.storage.sync.set({ addresses, }, () => {
+      console.log('addresses is set to storage: ' + JSON.stringify(addresses));
+    });
+
+    chrome.runtime.sendMessage(MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK);
+
+    // const obj = JSON.stringify(_obj)
+    // const content = Keystore.decrypt(obj, password)
   }
->>>>>>> 535215a... gen ckb addr
-
 });
