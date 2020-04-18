@@ -1,5 +1,6 @@
-import { MESSAGE_TYPE, KEYSTORE_TYPE } from './utils/constants'
+import { MESSAGE_TYPE, KEYSTORE_TYPE, Ckb } from './utils/constants'
 import { mnemonicToSeedSync, validateMnemonic, mnemonicToEntropy, entropyToMnemonic } from './wallet/mnemonic';
+import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils'
 
 import { generateMnemonic } from './wallet/key';
 import * as Keystore from './wallet/pkeystore';
@@ -77,7 +78,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const accounts = await KeyperWallet.accounts()
     chrome.storage.sync.set({ accounts, }, () => {
       console.log('keyper accounts is set to storage: ' + JSON.stringify(accounts));
-    });    
+    });
     console.log("Keyper End ==== !!!!");
 
     //验证导入的Keystore是否已经存在
@@ -370,7 +371,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
       const password = request.password;
       const keystore = wallet.currWallet.keystore
-      //TODO check the password 
+      //TODO check the password
       const privateKey = Keystore.decrypt(keystore, password)
 
       //send the check result to the page
@@ -408,7 +409,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     chrome.storage.sync.get(['accounts'], async function (result) {
       console.log("MESSAGE_TYPE.REQUEST_MY_ADDRESSES");
-      
+
       // const addresses = [];
       // const length = result.wallets.length;
       // const wallets = result.wallets;
@@ -464,7 +465,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const password = request.password;
       console.log("wallet.currWallet ===>", wallet.currWallet)
       const entropyKeystore = wallet.currWallet.entropyKeystore
-      //TODO check the password 
+      //TODO check the password
       const entropy = Keystore.decrypt(entropyKeystore, password)
 
       console.log("entropy ===>", entropy);
@@ -546,4 +547,99 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   //   })
   // }
 
+
+ // import private key
+  if (request.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY) {
+
+    const privatekey = "0x" + request.privatekey.trim()
+    const password = request.password.trim()
+
+    const keystore = currWallet['keystore']
+
+    if (keystore === undefined || keystore === "" || keystore === "undefined") {
+      throw new Error('currWallet keystore is null')
+    }
+
+    if (!Keystore.checkPasswd(keystore, password)) {
+      throw new Error('password incorrect')
+    }
+
+    const pubKey = ckbUtils.privateKeyToPublicKey(privatekey)
+    const blake160 = ckbUtils.blake160(pubKey, 'hex')
+
+    let opts = {
+      prefix: ckbUtils.AddressPrefix.Mainnet,
+      type: ckbUtils.AddressType.HashIdx,
+      codeHashOrCodeHashIndex: '0x00',
+    }
+
+    const mainnetAddr = ckbUtils.bech32Address("0x" + blake160, opts)
+
+    let exist = false
+    for (const addr of addresses) {
+      if (mainnetAddr === addr['mainnetAddr']) {
+        exist = true
+        break
+      }
+    }
+
+    if (exist) {
+      throw new Error(mainnetAddr + ' is already existed')
+    }
+
+    opts.prefix = ckbUtils.AddressPrefix.Testnet
+    const testnetAddr = ckbUtils.bech32Address("0x" + blake160, opts)
+
+    const buff = Buffer.from(privatekey, 'hex')
+    const newkeystore = Keystore.encrypt(buff, password)
+
+    let _obj = {}
+
+    _obj['id'] = newkeystore.id
+    _obj['version'] = newkeystore.version
+    _obj["crypto"] = newkeystore.crypto
+
+    const lockHash = ckbUtils.scriptToHash({
+      hashType: "type",
+      codeHash: Ckb.MainNetCodeHash,
+      args: "0x" + blake160,
+    })
+
+    const wallet = {
+      "blake160": "0x" + blake160,
+      "mainnetAddr": mainnetAddr,
+      "testnetAddr": testnetAddr,
+      "lockHash": lockHash,
+      "keystore": _obj,
+      "keystoreType": KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE,
+      "index": wallets.length-1,
+    }
+
+    wallets.push(wallet)
+
+    addresses.push({
+      "mainnetAddr": mainnetAddr,
+      "testnetAddr": testnetAddr,
+      "walletIndex": wallets.length - 1
+    })
+
+    currWallet = wallet
+
+    chrome.storage.sync.set({ wallets, }, () => {
+      console.log('wallets is set to storage: ' + JSON.stringify(wallets));
+    });
+
+    chrome.storage.sync.set({ currWallet, }, () => {
+      console.log('currWallet is set to storage: ' + JSON.stringify(currWallet));
+    });
+
+    chrome.storage.sync.set({ addresses, }, () => {
+      console.log('addresses is set to storage: ' + JSON.stringify(addresses));
+    });
+
+    chrome.runtime.sendMessage(MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK);
+
+    // const obj = JSON.stringify(_obj)
+    // const content = Keystore.decrypt(obj, password)
+  }
 });

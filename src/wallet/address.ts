@@ -55,6 +55,16 @@ export default class Address {
     return val
   }
 
+  public static toLockHash = (blake160: string) => {
+    const lockHash = ckbUtils.scriptToHash({
+      hashType: "type",
+      codeHash: Ckb.MainNetCodeHash,
+      args: blake160,
+    })
+
+    return lockHash
+  }
+
   public getBlake160 = () => {
     return "0x" + ckbUtils.blake160("0x" + this.publicKey, "hex")
   }
