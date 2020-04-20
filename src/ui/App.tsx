@@ -7,17 +7,18 @@ import GenerateMnemonic from './pages/ImportMnemonic/generate'
 import Transaction from "./pages/Transaction"
 import TxDetail from "./pages/TxDetail"
 import Home from "./pages/Home"
-import ImportPrivateKey from './pages/ImportPrivateKey/importPrivateKey';
+import ImportPrivateKey from './pages/ImportPrivateKey';
 import ExportPrivateKey from './pages/ExportPrivateKey';
 import ExportMnemonic from "./pages/ExportMnemonic";
 import ExportPrivateKeySecond from './pages/ExportPrivateKeySecond'
 import Setting from './pages/Setting'
 import MyAddresses from './pages/MyAddresses'
+import ExportMnemonicSecond from "./pages/ExportMnemonicSecond";
 
 import AppBar from './Components/AppBar/'
 
 import "./styles/global.scss";
-import ExportMnemonicSecond from "./pages/ExportMnemonicSecond";
+
 const KeyperWallet = require('../keyper/keyperwallet');
 
 export const AppContext = React.createContext({ network: 'testnet' });

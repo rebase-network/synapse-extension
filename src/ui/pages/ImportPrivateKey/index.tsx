@@ -94,23 +94,22 @@ export const innerForm = props => {
   );
 }
 
-export default function ImportPrivateKey (props: AppProps, state: AppState) {
+export default function ImportPrivateKey(props: AppProps, state: AppState) {
   const [success, setSuccess] = React.useState(false)
   const history = useHistory();
   const { network } = React.useContext(AppContext);
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener( (msg, sender, sendResp) => {
-
+    chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
+      console.log("msg ===>",msg);
       if (msg.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK) {
         history.push('/address')
       }
-
     })
   }, [])
 
 
-  const onSubmit = async(values) => {
+  const onSubmit = async (values) => {
 
     await new Promise(resolve => setTimeout(resolve, 500));
     chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_PRIVATE_KEY })
@@ -126,14 +125,14 @@ export default function ImportPrivateKey (props: AppProps, state: AppState) {
       <Title title='Import PrivateKey' testId="" />
       {successNode}
       <Formik
-        initialValues={{ password: "", privatekey: "",}}
+        initialValues={{ password: "", privatekey: "", }}
 
         onSubmit={onSubmit}
         validationSchema={Yup.object().shape({
           password: Yup.string()
-          .required("Required").min(6),
+            .required("Required").min(6),
           privatekey: Yup.string()
-          .required("Required").length(64).matches(/[0-9a-fA-F]+/),
+            .required("Required").length(64).matches(/[0-9a-fA-F]+/),
         })}
       >
         {innerForm}

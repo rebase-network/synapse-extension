@@ -59,7 +59,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     const rootKeystore = Keystore.encrypt(Buffer.from(extendedKey.serialize(), "hex"), password);
 
-    const privateKey = '0x'+ masterKeychain.derivePath(Address.pathForReceiving(0)).privateKey.toString('hex');
+    const privateKey = '0x' + masterKeychain.derivePath(Address.pathForReceiving(0)).privateKey.toString('hex');
     console.log("PrivateKey ===>", privateKey);
     const addressObject = Address.fromPrivateKey(privateKey);
     const address = addressObject.address;
@@ -441,17 +441,17 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const privateKey = "0x" + request.privatekey.trim()
     const password = request.password.trim()
 
-    const keystore = currWallet['keystore']
+    //TODO 是否需要currWallet中的keystore的验证;
+    // const keystore = currWallet['keystore']
+    // if (keystore === undefined || keystore === "" || keystore === "undefined") {
+    //   throw new Error('currWallet keystore is null')
+    // }
+    // if (!Keystore.checkPasswd(keystore, password)) {
+    //   throw new Error('password incorrect')
+    // }
 
-    if (keystore === undefined || keystore === "" || keystore === "undefined") {
-      throw new Error('currWallet keystore is null')
-    }
-
-    if (!Keystore.checkPasswd(keystore, password)) {
-      throw new Error('password incorrect')
-    }
-
-    const address = Address.fromPrivateKey(privateKey);
+    const addressObj = Address.fromPrivateKey(privateKey);
+    const address = addressObj.address;
     const isExistObj = addressIsExist(address, addresses);
     if (isExistObj["isExist"]) {
       const index = isExistObj["index"];
@@ -464,8 +464,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     //002-
     saveToStorage();
 
-    chrome.runtime.sendMessage(MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK);
-
+    chrome.runtime.sendMessage({
+      messageType: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK
+    })
   }
 
 });
