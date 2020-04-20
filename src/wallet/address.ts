@@ -38,6 +38,14 @@ export default class Address {
     return instance
   }
 
+  //path 默认可以不传
+  //prefix 默认可以不传
+  public static fromPrivateKey = (privateKey: string, path: string = Address.pathForReceiving(0), prefix: AddressPrefix = AddressPrefix.Testnet) => {
+    const publicKey = ckbUtils.privateKeyToPublicKey(privateKey);
+    const instance = Address.fromPublicKey(publicKey, path, prefix);
+    return instance
+  }
+
   public static pathFor = (type: AddressType, index: number) => {
     return `${AccountExtendedPublicKey.ckbAccountPath}/${type}/${index}`
   }
