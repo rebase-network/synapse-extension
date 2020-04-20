@@ -45,7 +45,7 @@ interface AppState {}
 export default function(props: AppProps, state: AppState) {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(true);
-  const [address, setAddress] = React.useState({});
+  const [address, setAddress] = React.useState("");
   const [balance, setBalance] = React.useState('0');
   const [open, setOpen] = React.useState(false);
   const [tooltip, setTooltip] = React.useState('');
@@ -88,8 +88,8 @@ export default function(props: AppProps, state: AppState) {
 
   React.useEffect(() => {
     (async function copyAddress() {
-      if (open && address[network]) {
-        await navigator.clipboard.writeText(address[network]);
+      if (open && address ) {
+        await navigator.clipboard.writeText(address);
         setTooltip('Address has been copied to clipboard');
       }
     })();
@@ -117,7 +117,7 @@ export default function(props: AppProps, state: AppState) {
     <div className={classes.container}>
       <Title title="Address" testId="address-title" />
       <div className="address" data-testid="address-info">
-        {address[network]}
+        {address}
       </div>
       {balanceNode}
       <div className="">

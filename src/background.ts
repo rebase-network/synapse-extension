@@ -129,7 +129,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     )
     const rootKeystore = Keystore.encrypt(Buffer.from(extendedKey.serialize(), "hex"), password);
 
-    const privateKey = masterKeychain.derivePath(Address.pathForReceiving(0)).privateKey.toString('hex');
+    const privateKey = "0x" + masterKeychain.derivePath(Address.pathForReceiving(0)).privateKey.toString('hex');
     console.log("PrivateKey ===>", privateKey);
     const addressObject = Address.fromPrivateKey(privateKey);
     const address = addressObject.address;
@@ -169,11 +169,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         messageType: MESSAGE_TYPE.ADDRESS_INFO
       }
       if (wallet) {
-        message.address = {
-          testnet: wallet.currWallet.testnetAddr,
-          mainnet: wallet.currWallet.mainnetAddr,
-        }
+        message.address = wallet.currWallet.address
       }
+      console.log(message);
+
       chrome.runtime.sendMessage(message)
     });
   }
@@ -483,8 +482,8 @@ function privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystor
   _obj['version'] = newkeystore.version
   _obj["crypto"] = newkeystore.crypto
 
-  const address = Address.fromPrivateKey("0x" + privateKey, prefix);
-  const blake160 = address.getBlake160(); //publicKeyHash
+  const addressObj = Address.fromPrivateKey(privateKey, prefix);
+  const blake160 = addressObj.getBlake160(); //publicKeyHash
 
   const lockHash = ckbUtils.scriptToHash({
     hashType: "type",
@@ -493,9 +492,9 @@ function privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystor
   })
 
   const wallet = {
-    "path": address.path,
+    "path": addressObj.path, //ckt 有问题
     "blake160": blake160,
-    "address": address,
+    "address": addressObj.address,
     "lockHash": lockHash,
     "entropyKeystore": entropyKeystore, //助记词
     "rootKeystore": rootKeystore, //Root
@@ -505,7 +504,7 @@ function privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystor
   wallets.push(wallet)
 
   const _address = {
-    "address": address.address,
+    "address": addressObj.address,
     "walletIndex": wallets.length - 1
   }
   addresses.push(_address);
