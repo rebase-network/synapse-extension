@@ -59,11 +59,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     const rootKeystore = Keystore.encrypt(Buffer.from(extendedKey.serialize(), "hex"), password);
 
-    const privateKey = masterKeychain.derivePath(Address.pathForReceiving(0)).privateKey.toString('hex');
+    const privateKey = '0x'+ masterKeychain.derivePath(Address.pathForReceiving(0)).privateKey.toString('hex');
     console.log("PrivateKey ===>", privateKey);
     const addressObject = Address.fromPrivateKey(privateKey);
     const address = addressObject.address;
-    console.log("address ===>", address);
 
     // //Add Keyper to Synapse
     // console.log("Keyper Init ==== !!!!");
