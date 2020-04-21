@@ -59,6 +59,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     //没有0x的privateKey
     const privateKey = masterKeychain.derivePath(Address.pathForReceiving(0)).privateKey.toString('hex');
+    console.log("privateKey =>",privateKey);
+
     const addressObject = Address.fromPrivateKey(privateKey);
     const address = addressObject.address;
 
@@ -479,7 +481,7 @@ function privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystor
   _obj['version'] = newkeystore.version
   _obj["crypto"] = newkeystore.crypto
 
-  const addressObj = Address.fromPrivateKey('0x' + privateKey, prefix);
+  const addressObj = Address.fromPrivateKey(privateKey, prefix);
   const blake160 = addressObj.getBlake160(); //publicKeyHash
 
   const lockHash = ckbUtils.scriptToHash({
