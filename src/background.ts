@@ -59,21 +59,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     //没有0x的privateKey
     const privateKey = masterKeychain.derivePath(Address.pathForReceiving(0)).privateKey.toString('hex');
-    console.log("privateKey =>",privateKey);
+    console.log("privateKey =>", privateKey);
 
     const addressObject = Address.fromPrivateKey(privateKey);
     const address = addressObject.address;
-
-    // //Add Keyper to Synapse
-    // console.log("Keyper Init ==== !!!!");
-    // await KeyperWallet.init(); //初始化Container
-    // await KeyperWallet.generateKeyPrivateKey(password, privateKey);
-    // //Keyper accounts
-    // const accounts = await KeyperWallet.accounts()
-    // chrome.storage.sync.set({ accounts, }, () => {
-    //   console.log('keyper accounts is set to storage: ' + JSON.stringify(accounts));
-    // });
-    // console.log("Keyper End ==== !!!!");
 
     //验证导入的Keystore是否已经存在
     const isExistObj = addressIsExist(address, addresses);
@@ -83,6 +72,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     } else {
       //001-
       privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystore);
+      
+      //Add Keyper to Synapse     
+      await AddKeyperWallet(privateKey,password);
     }
     //002-
     saveToStorage();
@@ -132,17 +124,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const addressObject = Address.fromPrivateKey(privateKey);
     const address = addressObject.address;
 
-    // //Add Keyper to Synapse
-    // console.log("Keyper Init ==== !!!!");
-    // await KeyperWallet.init(); //初始化Container
-    // await KeyperWallet.generateKeyPrivateKey(password, privateKey);
-    // //Keyper accounts
-    // const accounts = await KeyperWallet.accounts()
-    // chrome.storage.sync.set({ accounts, }, () => {
-    //   console.log('keyper accounts is set to storage: ' + JSON.stringify(accounts));
-    // });
-    // console.log("Keyper End ==== !!!!");
-
     //验证导入的Keystore是否已经存在
     //000-addressIsExist
     const isExistObj = addressIsExist(address, addresses);
@@ -152,7 +133,11 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     } else {
       //001-privateKeyToKeystore
       privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystore);
+
+      //Add Keyper to Synapse
+      await AddKeyperWallet(privateKey,password);
     }
+
     //002-saveToStorage
     saveToStorage();
 
@@ -168,7 +153,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       if (wallet) {
         message.address = wallet.currWallet.address
       }
-      console.log(message);
 
       chrome.runtime.sendMessage(message)
     });
@@ -292,34 +276,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.messageType === MESSAGE_TYPE.REQUEST_MY_ADDRESSES) {
 
     chrome.storage.sync.get(['accounts'], async function (result) {
-      console.log("MESSAGE_TYPE.REQUEST_MY_ADDRESSES");
 
-      // const addresses = [];
-      // const length = result.wallets.length;
-      // const wallets = result.wallets;
-
-      // for (let index = 0; index < length; index++) {
-      //   const mainnetAddr = wallets[index].mainnetAddr;
-      //   const testnetAddr = wallets[index].testnetAddr;
-      //   const lockHash = wallets[index].lockHash;
-      //   const capacity = await getBalanceByLockHash(lockHash);
-      //   const address = {
-      //     "mainnetAddr": mainnetAddr,
-      //     "testnetAddr": testnetAddr,
-      //     "capacity": capacity.toString()
-      //   }
-      //   addresses.push(address);
-      // }
-
-      // chrome.runtime.sendMessage({
-      //   addresses,
-      //   messageType: MESSAGE_TYPE.RESULT_MY_ADDRESSES
-      // })
       await new Promise(resolve => setTimeout(resolve, 500));
-
-      // await KeyperWallet.init();
-      // const accounts = await KeyperWallet.accounts();
-      console.log("result =>", result);
+      
       const accounts = result.accounts;
       const addresses = [];
       for (let i = 0; i < accounts.length; i++) {
@@ -457,6 +416,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     } else {
       //001-
       privateKeyToKeystore(privateKey, password, "", "");
+
+      //Add Keyper to Synapse     
+      await AddKeyperWallet(privateKey,password);
     }
 
     //002-
@@ -545,4 +507,16 @@ function addressIsExist(address, addresses): {} {
     index: index
   }
   return result;
+}
+
+async function AddKeyperWallet(privateKey, password) {
+
+  await KeyperWallet.init();
+  await KeyperWallet.generateKeyPrivateKey(password, privateKey);
+
+  //Keyper accounts
+  const accounts = await KeyperWallet.accounts()
+  chrome.storage.sync.set({ accounts, }, () => {
+    console.log('keyper accounts is set to storage: ' + JSON.stringify(accounts));
+  });
 }

@@ -30,15 +30,13 @@ export default function App() {
     setNetwork(value);
   };
 
-  React.useEffect(() => {
-    console.log("Keyper Init ==== !!!!");
-    // (async function KeyperWalletInit() {
-    //     // add Keyper by River
-    //     console.log("Keyper Init ==== !!!!");
-    //     await KeyperWallet.init(); //初始化Container
-    //     console.log("Keyper End ==== !!!!");
-    // })();
-  }, []);
+  // add Keyper by River
+  // React.useEffect(() => {
+  //   (async () => {
+  //     await KeyperWallet.init(); //初始化Container
+  //     console.log("Keyper Init ==== !!!!");
+  //   })();
+  // }, []);
 
   return (
     <Router>
