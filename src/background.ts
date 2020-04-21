@@ -438,13 +438,13 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const password = request.password.trim()
 
     //TODO 是否需要currWallet中的keystore的验证;
-    // const keystore = currWallet['keystore']
-    // if (keystore === undefined || keystore === "" || keystore === "undefined") {
-    //   throw new Error('currWallet keystore is null')
-    // }
-    // if (!Keystore.checkPasswd(keystore, password)) {
-    //   throw new Error('password incorrect')
-    // }
+    const keystore = currWallet['keystore']
+    if (keystore === undefined || keystore === "" || keystore === "undefined") {
+      throw new Error('currWallet keystore is null')
+    }
+    if (!Keystore.checkPasswd(keystore, password)) {
+      throw new Error('password incorrect')
+    }
 
     const addressObj = Address.fromPrivateKey(privateKey);
     const address = addressObj.address;
