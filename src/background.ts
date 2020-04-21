@@ -14,9 +14,7 @@ import { getAmountByTxHash, getStatusByTxHash, getFeeByTxHash, getInputAddressBy
 import { getPrivateKeyByKeyStoreAndPassword } from './wallet/exportPrivateKey'
 import Address from './wallet/address';
 
-// import * as KeyperWallet from '../src/keyper/wallet.js';
 const KeyperWallet = require('../src/keyper/keyperwallet');
-// const EC = require("elliptic").ec;
 
 /**
  * Listen messages from popup
@@ -192,26 +190,25 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   //发送交易
   if (request.messageType === MESSAGE_TYPE.RESQUEST_SEND_TX) {
 
-    chrome.storage.sync.get(['currWallet'], async function (wallet) {
+    chrome.storage.sync.get(['currWallet'], async function (result) {
 
-      //1- 从chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.SEND_TX })获取values的值
+      console.log("currWallet ===>", result);
+      console.log("wallet.currWallet.keystore ===>", result.currWallet.keystore);
+
       const toAddress = request.address.trim();
       const amount = request.amount.trim();
       const fee = request.fee.trim();
       const password = request.password.trim();
-      const network = request.network.trim();
 
-      const privateKey = '0x' + Keystore.decrypt(wallet.currWallet.keystore, password);
+      //缺少0x的privateKey
+      const privateKey = Keystore.decrypt(result.currWallet.keystore, password);
+      console.log("privateKey ===>", privateKey);
+
       //PrivateKey导入的情况还未解决
-      let fromAddress = "";
-      if (network === "testnet") {
-        fromAddress = wallet.currWallet.testnetAddr;
-      } else if (network === "mainnet") {
-        fromAddress = wallet.currWallet.mainnetAddr;
-      }
+      const fromAddress = result.currWallet.address;
 
       const sendTxHash = await sendSimpleTransaction(
-        privateKey,
+        '0x' + privateKey,
         fromAddress,
         toAddress,
         BigInt(amount),
@@ -438,7 +435,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   // import private key
   if (request.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY) {
 
-    const privateKey = "0x" + request.privatekey.trim()
+    const privateKey = request.privatekey.trim();
+    const privateKey0x = "0x" + privateKey;
     const password = request.password.trim()
 
     //TODO 是否需要currWallet中的keystore的验证;
@@ -450,7 +448,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     //   throw new Error('password incorrect')
     // }
 
-    const addressObj = Address.fromPrivateKey(privateKey);
+    const addressObj = Address.fromPrivateKey(privateKey0x);
     const address = addressObj.address;
     const isExistObj = addressIsExist(address, addresses);
     if (isExistObj["isExist"]) {
@@ -474,15 +472,17 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 //3- Type
 function privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystore, prefix = AddressPrefix.Testnet) {
 
+  console.log("<=== privateKeyToKeystore ===>", privateKey);
+
   const buff = Buffer.from(privateKey, 'hex')
   const newkeystore = Keystore.encrypt(buff, password)
 
-  let _obj = {}
-  _obj['id'] = newkeystore.id
-  _obj['version'] = newkeystore.version
-  _obj["crypto"] = newkeystore.crypto
+  // let _obj = {}
+  // _obj['id'] = newkeystore.id
+  // _obj['version'] = newkeystore.version
+  // _obj["crypto"] = newkeystore.crypto
 
-  const addressObj = Address.fromPrivateKey(privateKey, prefix);
+  const addressObj = Address.fromPrivateKey('0x' + privateKey, prefix);
   const blake160 = addressObj.getBlake160(); //publicKeyHash
 
   const lockHash = ckbUtils.scriptToHash({
@@ -498,7 +498,7 @@ function privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystor
     "lockHash": lockHash,
     "entropyKeystore": entropyKeystore, //助记词
     "rootKeystore": rootKeystore, //Root
-    "keystore": _obj,
+    "keystore": newkeystore,
     "keystoreType": KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE
   }
   wallets.push(wallet)
