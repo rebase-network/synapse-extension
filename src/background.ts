@@ -477,10 +477,10 @@ function privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystor
   const buff = Buffer.from(privateKey, 'hex')
   const newkeystore = Keystore.encrypt(buff, password)
 
-  // let _obj = {}
-  // _obj['id'] = newkeystore.id
-  // _obj['version'] = newkeystore.version
-  // _obj["crypto"] = newkeystore.crypto
+  let _obj = {}
+  _obj['id'] = newkeystore.id
+  _obj['version'] = newkeystore.version
+  _obj["crypto"] = newkeystore.crypto
 
   const addressObj = Address.fromPrivateKey('0x' + privateKey, prefix);
   const blake160 = addressObj.getBlake160(); //publicKeyHash
@@ -498,7 +498,7 @@ function privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystor
     "lockHash": lockHash,
     "entropyKeystore": entropyKeystore, //助记词
     "rootKeystore": rootKeystore, //Root
-    "keystore": newkeystore,
+    "keystore": _obj,
     "keystoreType": KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE
   }
   wallets.push(wallet)
