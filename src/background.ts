@@ -57,8 +57,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     const rootKeystore = Keystore.encrypt(Buffer.from(extendedKey.serialize(), "hex"), password);
 
-    const privateKey = '0x' + masterKeychain.derivePath(Address.pathForReceiving(0)).privateKey.toString('hex');
-    console.log("PrivateKey ===>", privateKey);
+    //没有0x的privateKey
+    const privateKey = masterKeychain.derivePath(Address.pathForReceiving(0)).privateKey.toString('hex');
     const addressObject = Address.fromPrivateKey(privateKey);
     const address = addressObject.address;
 
@@ -126,11 +126,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     )
     const rootKeystore = Keystore.encrypt(Buffer.from(extendedKey.serialize(), "hex"), password);
 
-    const privateKey = "0x" + masterKeychain.derivePath(Address.pathForReceiving(0)).privateKey.toString('hex');
-    console.log("PrivateKey ===>", privateKey);
+    const privateKey = masterKeychain.derivePath(Address.pathForReceiving(0)).privateKey.toString('hex');
     const addressObject = Address.fromPrivateKey(privateKey);
     const address = addressObject.address;
-    console.log("address ===>", address);
 
     // //Add Keyper to Synapse
     // console.log("Keyper Init ==== !!!!");
@@ -435,8 +433,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   // import private key
   if (request.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY) {
 
+    //没有0x的privateKey
     const privateKey = request.privatekey.trim();
-    const privateKey0x = "0x" + privateKey;
     const password = request.password.trim()
 
     //TODO 是否需要currWallet中的keystore的验证;
@@ -448,7 +446,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     //   throw new Error('password incorrect')
     // }
 
-    const addressObj = Address.fromPrivateKey(privateKey0x);
+    const addressObj = Address.fromPrivateKey(privateKey);
     const address = addressObj.address;
     const isExistObj = addressIsExist(address, addresses);
     if (isExistObj["isExist"]) {
@@ -470,9 +468,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 });
 
 //3- Type
+//privateKey 没有0x前缀
 function privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystore, prefix = AddressPrefix.Testnet) {
-
-  console.log("<=== privateKeyToKeystore ===>", privateKey);
 
   const buff = Buffer.from(privateKey, 'hex')
   const newkeystore = Keystore.encrypt(buff, password)

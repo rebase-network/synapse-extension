@@ -41,7 +41,7 @@ export default class Address {
   //path 默认可以不传
   //prefix 默认可以不传
   public static fromPrivateKey = (privateKey: string, path: string = Address.pathForReceiving(0), prefix: AddressPrefix = AddressPrefix.Testnet) => {
-    const publicKey = ckbUtils.privateKeyToPublicKey(privateKey);
+    const publicKey = ckbUtils.privateKeyToPublicKey('0x'+ privateKey);
     const instance = Address.fromPublicKey(publicKey, path, prefix);
     return instance
   }
