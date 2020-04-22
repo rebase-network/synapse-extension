@@ -19,8 +19,6 @@ import AppBar from './Components/AppBar/'
 
 import "./styles/global.scss";
 
-const KeyperWallet = require('../keyper/keyperwallet');
-
 export const AppContext = React.createContext({ network: 'testnet' });
 
 export default function App() {
@@ -29,14 +27,6 @@ export default function App() {
   const handleNetworkChange = (value: string) => {
     setNetwork(value);
   };
-
-  // add Keyper by River
-  // React.useEffect(() => {
-  //   (async () => {
-  //     await KeyperWallet.init(); //初始化Container
-  //     console.log("Keyper Init ==== !!!!");
-  //   })();
-  // }, []);
 
   return (
     <Router>
