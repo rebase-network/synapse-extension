@@ -1,12 +1,9 @@
 import * as React from 'react';
-import Title from '../../Components/Title'
 import { Button, TextField } from '@material-ui/core';
-// import { makeStyles } from '@material-ui/core/styles';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { MESSAGE_TYPE } from '../../../utils/constants'
-import { useHistory } from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
@@ -18,12 +15,17 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
+
+import { useHistory } from 'react-router-dom';
+
 const useStyles = makeStyles({
   container: {
     margin: 30,
   },
   button: {
-
+    marginLeft:'10px',
+    marginTop:'5px',
+    marginBottom:'5px',
   },
   textField: {
 
@@ -128,27 +130,11 @@ export default function (props: AppProps, state: AppState) {
   }, []);
 
   const handleClickOpen = () => {
-    console.log(" ------ export privateKey --- ");
+    history.push('/import-private-key');
   };
 
   const addressesElem = addresses.map((item, index) => {
     return (
-      // <div>
-      //     <div className="address" data-testid="address">
-      //       {item.address}
-      //     </div>
-      //     <div className="capacity" data-testid="capacity">
-      //       {item.capacity} CKB
-      //     </div>
-      //     <div className="type" data-testid="type">
-      //       {item.type}
-      //     </div>
-      // </div>
-      // <ListSubheader>{ item.address }</ListSubheader>
-      // <ListItem>
-      //   <ListItemText primary= {item.type} secondary= {item.capacity + "CKB"} />
-      // </ListItem>
-      // <li key={`section-${item.address}`} >
           <List key={`item-${item.address}`} className={classes02.root} >
             <ThemeProvider theme={subheaderTheme}>
                 <ListSubheader >{ item.address }</ListSubheader>
@@ -165,11 +151,11 @@ export default function (props: AppProps, state: AppState) {
   })
 
   return (
-    // <div className={classes.container}>
-    //   <Title title="My Addresses" testId="my-addresses-title" />
-    //     {addressesElem}
-    // </div>
     <div>
+      <Grid item xs={12} md={6}>
+        <Typography variant="h6" className={classes02.title}>
+          My Addresses
+        </Typography>
         <Button
           type="button"
           id="import-button"
@@ -181,10 +167,6 @@ export default function (props: AppProps, state: AppState) {
         >
           Import
         </Button>
-      <Grid item xs={12} md={6}>
-        <Typography variant="h6" className={classes02.title}>
-          My Addresses
-        </Typography>
         <div className={classes02.demo}>
           <List dense={dense}>
             {/* {generate(
@@ -198,6 +180,17 @@ export default function (props: AppProps, state: AppState) {
             {addressesElem}
           </List>
         </div>
+        <Button
+          type="button"
+          id="import-button"
+          color="primary"
+          variant="contained"
+          className={classes.button}
+          data-testid="import"
+          onClick={handleClickOpen}
+        >
+          Import
+        </Button>
       </Grid>  
     </div>
   );  
