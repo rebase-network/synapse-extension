@@ -13,6 +13,7 @@ import { sendSimpleTransaction } from './sendSimpleTransaction';
 import { getAmountByTxHash, getStatusByTxHash, getFeeByTxHash, getInputAddressByTxHash, getOutputAddressByTxHash, getOutputAddressByTxHashAndIndex } from './transaction';
 import { getPrivateKeyByKeyStoreAndPassword } from './wallet/exportPrivateKey'
 import Address from './wallet/address';
+import { getBalanceByAddress } from './utils/address'
 
 const KeyperWallet = require('../src/keyper/keyperwallet');
 
@@ -161,9 +162,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   // get balance by address
   if (request.messageType === MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS) {
     chrome.storage.sync.get(['currWallet'], async function (wallet) {
-      const capacity = await getBalanceByLockHash(wallet["currWallet"]["lockHash"]);
-      const balance = capacity.toString()
-
+      if (!wallet) return
+      const address = wallet.currWallet.address
+      const balance = await getBalanceByAddress(address)
+      console.log('bg get balance: ', balance)
       chrome.runtime.sendMessage({
         balance,
         messageType: MESSAGE_TYPE.BALANCE_BY_ADDRESS

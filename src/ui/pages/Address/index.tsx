@@ -46,7 +46,7 @@ export default function(props: AppProps, state: AppState) {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(true);
   const [address, setAddress] = React.useState("");
-  const [balance, setBalance] = React.useState('0');
+  const [balance, setBalance] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [tooltip, setTooltip] = React.useState('');
   const { network } = React.useContext(AppContext);
@@ -66,7 +66,7 @@ export default function(props: AppProps, state: AppState) {
         }
         // get balance by address
       } else if (message.messageType === MESSAGE_TYPE.BALANCE_BY_ADDRESS) {
-        setBalance(message.balance);
+        setBalance(message.balance/10**8);
         setLoading(false);
       }
     });
