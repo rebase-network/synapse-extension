@@ -108,6 +108,7 @@ export const innerForm = props => {
       <Button
         type="submit"
         id="submit-button"
+        variant="contained"
         disabled={isSubmitting}
         color="primary"
         className={classes.button}
@@ -138,20 +139,16 @@ export default function ImportMnemonic(props: AppProps, state: AppState) {
   }
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener(function(
-      message,sender,sendResponse) {
-
-      if (message === MESSAGE_TYPE.IS_NOT_VALIDATE_MNEMONIC) {
-
-        console.log("index.tsx => message",message);
-        setValidate(false);//false验证未通过
-        return;
-
-      }  else if (message === MESSAGE_TYPE.VALIDATE_PASS) {
-        setValidate(true);
-        console.log("index.tsx validate pass");
-        history.push('/address')
-      }
+    chrome.runtime.onMessage.addListener(
+      (msg, sender, sendResp) => {
+        if (msg === MESSAGE_TYPE.IS_NOT_VALIDATE_MNEMONIC) {
+          console.log("index.tsx => message", msg);
+          setValidate(false); //false验证未通过
+          return;
+        } else if (msg === MESSAGE_TYPE.VALIDATE_PASS) {
+          setValidate(true);
+          history.push('/address')
+        }
 
     });
   }, []);
