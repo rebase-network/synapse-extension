@@ -4,6 +4,7 @@ import { Container } from "@keyper/container/lib";
 import { scriptToHash, hexToBytes } from "@nervosnetwork/ckb-sdk-utils/lib";
 import { scriptToAddress } from "@keyper/specs/lib/address";
 import * as keystore from "@keyper/specs/lib/keystore";
+import Keystore from "../wallet/keystore";
 
 const EC = require("elliptic").ec;
 const { Secp256k1LockScript } = require("@keyper/container/lib/locks/secp256k1");
@@ -13,12 +14,13 @@ const storage = require("./storage");
 
 let seed, keys, container;
 let addRules = []; //Mod by River
+let keystoretest;
 
 const init = () => {
   container = new Container([{
     algorithm: SignatureAlgorithm.secp256k1,
     provider: {
-      padToEven: function(value) {
+      padToEven: function (value) {
         var a = value;
         if (typeof a !== 'string') {
           throw new Error(`value must be string, is currently ${typeof a}, while padToEven.`);
@@ -28,12 +30,22 @@ const init = () => {
         }
         return a;
       },
-      sign: async function(context, message) {
+      sign: async function (context, message) {
         const key = keys[context.publicKey];
+        // console.log(" === context === ",context);
+        // === context ===  {
+        //   lockHash: '0xfd63428a2b2111a69264f13ac2e90c1254f82e2273f2147457cf366db4eef53a',
+        //   password: '123456',
+        //   publicKey: '0x03d3319a7a7b8b88747664ca9559ab21e746452e8ed5eddc2f4365a1a9157e9ca2'
+        // }        
+        // console.log(" === keys === ",keys);
+        // console.log(" === key === ",key);
+
         if (!key) {
           throw new Error(`no key for address: ${context.address}`);
         }
-        const privateKey = keystore.decrypt(key, context.password);
+        console.log(" === keystoretest === ",keystoretest);
+        const privateKey = keystore.decrypt(keystoretest, context.password); //
 
         const ec = new EC('secp256k1');
         const keypair = ec.keyFromPrivate(privateKey);
@@ -41,7 +53,7 @@ const init = () => {
         let { r, s, recoveryParam } = keypair.sign(msg, {
           canonical: true,
         });
-        if (recoveryParam === null){
+        if (recoveryParam === null) {
           throw new Error('Fail to sign the message');
         }
         const fmtR = r.toString(16).padStart(64, '0');
@@ -54,6 +66,7 @@ const init = () => {
   container.addLockScript(new Secp256k1LockScript());
   container.addLockScript(new Keccak256LockScript());
   container.addLockScript(new AnyPayLockScript());
+  // console.log("init container", container);
   keys = {};
   reloadKeys();
 };
@@ -88,7 +101,7 @@ const reloadCacheRuls = async () => {
           name: "LockHash",
           data: scriptToHash(script),
         }
-        addRules.push(addRule);        
+        addRules.push(addRule);
       });
     });
   }
@@ -172,25 +185,30 @@ const generateKey = async (password) => {
   return publicKey;
 };
 
-const generateKeyPrivateKey = async (password,privateKey) => {
+const generateByPrivateKey = async (privateKey, password) => {
+  // console.log("=== generateByPrivateKey ===",generateByPrivateKey);
+  
   const ec = new EC('secp256k1');
   const key = ec.keyFromPrivate(privateKey);
-  // const key = ec.genKeyPair();
   const publicKey = Buffer.from(key.getPublic().encodeCompressed()).toString("hex");
-  // const privateKey = key.getPrivate();
   const privateKeyBuffer = Buffer.from(privateKey, "hex")
   const ks = keystore.encrypt(privateKeyBuffer, password);
   ks.publicKey = publicKey;
 
-  if (!storage.keyperStorage().get("keys")) {
-    storage.keyperStorage().set("keys", [ks]);
-  } else {
-    const keys = storage.keyperStorage().get("keys");
-    keys.push(ks);
-    storage.keyperStorage().set("keys", keys);
-  }
+  console.log(" ==== ks ===",ks);
+  //  [pubicKey -> Keystore]
+  keystoretest = ks;
+  // if (!storage.keyperStorage().get("keys")) {
+  //   console.log(" ==== [ks] ===",ks);
+  //   storage.keyperStorage().set("keys", ks);
+  // } else {
+  //   const keys = storage.keyperStorage().get("keys");
+  //   keys.push(ks);
+  //   console.log(" ==== keys ===",keys);
+  //   storage.keyperStorage().set("keys", keys);
+  // }
 
-  //container在init中进行初始化的操作
+  //container在init中进行初始化的操作;根据PublicKey生成Address
   container.addPublicKey({
     payload: `0x${publicKey}`,
     algorithm: SignatureAlgorithm.secp256k1,
@@ -201,6 +219,8 @@ const generateKeyPrivateKey = async (password,privateKey) => {
     algorithm: SignatureAlgorithm.secp256k1,
   });
 
+  // console.log(" === scripts === ",scripts);
+
   scripts.forEach(async (script) => {
     // await global.cache.addRule({
     //   name: "LockHash",
@@ -210,10 +230,12 @@ const generateKeyPrivateKey = async (password,privateKey) => {
       name: "LockHash",
       data: scriptToHash(script),
     }
+    // console.log(" === script === ",script)
+    // console.log(" === LockHash === ",scriptToHash(script));
     addRules.push(addRule);
   });
 
-  return publicKey;
+  return ks;
 };
 
 //002-导入的逻辑
@@ -242,11 +264,11 @@ const importKey = async (privateKey, password) => {
     //   data: scriptToHash(script),
     // }, "1000");
     // TODO 1000 应该怎么修改？ ===============Problem
-      const addRule = {
-        name: "LockHash",
-        data: scriptToHash(script),
-      }
-      addRules.push(addRule);    
+    const addRule = {
+      name: "LockHash",
+      data: scriptToHash(script),
+    }
+    addRules.push(addRule);
   });
   return publicKey;
 };
@@ -257,7 +279,7 @@ const accounts = async () => {
   for (let i = 0; i < scripts.length; i++) {
     const script = scripts[i];
     result.push({
-      address: scriptToAddress(script.meta.script, {networkPrefix: "ckt", short: true}),
+      address: scriptToAddress(script.meta.script, { networkPrefix: "ckt", short: true }),
       type: script.meta.name,
       lock: script.hash,
       amount: 0,
@@ -267,6 +289,8 @@ const accounts = async () => {
 }
 
 const signTx = async (lockHash, password, rawTx, config) => {
+  console.log(" === lockHash ",lockHash);
+
   const tx = await container.sign({
     lockHash: lockHash,
     password,
@@ -286,7 +310,7 @@ module.exports = {
   unlock,
   exists,
   generateKey,
-  generateKeyPrivateKey,
+  generateByPrivateKey,
   importKey,
   accounts,
   signTx,

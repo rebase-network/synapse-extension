@@ -14,6 +14,7 @@ import { getAmountByTxHash, getStatusByTxHash, getFeeByTxHash, getInputAddressBy
 import { getPrivateKeyByKeyStoreAndPassword } from './wallet/exportPrivateKey'
 import Address from './wallet/address';
 import { getBalanceByAddress } from './utils/address'
+import { scriptToAddress } from "@keyper/specs/lib/address";
 
 const KeyperWallet = require('../src/keyper/keyperwallet');
 
@@ -72,10 +73,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       currWallet = wallets[addresses[index].walletIndex];
     } else {
       //001-
-      privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystore);
-      
+      // privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystore);
+
       //Add Keyper to Synapse     
-      await AddKeyperWallet(privateKey,password);
+      await AddKeyperWallet(privateKey, password);
     }
     //002-
     saveToStorage();
@@ -133,10 +134,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       currWallet = wallets[addresses[index].walletIndex];
     } else {
       //001-privateKeyToKeystore
-      privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystore);
+      //privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystore);
 
       //Add Keyper to Synapse
-      await AddKeyperWallet(privateKey,password);
+      await AddKeyperWallet(privateKey, password);
     }
 
     //002-saveToStorage
@@ -280,7 +281,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     chrome.storage.sync.get(['accounts'], async function (result) {
 
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+
       const accounts = result.accounts;
       const addresses = [];
       for (let i = 0; i < accounts.length; i++) {
@@ -416,13 +417,14 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const index = isExistObj["index"];
       currWallet = wallets[addresses[index].walletIndex];
     } else {
-      //001-
-      privateKeyToKeystore(privateKey, password, "", "");
+    //001-
+    //privateKeyToKeystore(privateKey, password, "", "");
 
       //Add Keyper to Synapse     
-      await AddKeyperWallet(privateKey,password);
-    }
+      await AddKeyperWallet(privateKey, password);
 
+      //Add Keystore to wallet
+    }
     //002-
     saveToStorage();
 
@@ -511,14 +513,50 @@ function addressIsExist(address, addresses): {} {
   return result;
 }
 
-async function AddKeyperWallet(privateKey, password) {
+async function AddKeyperWallet(privateKey, password, prefix = AddressPrefix.Testnet) {
 
   await KeyperWallet.init();
-  await KeyperWallet.generateKeyPrivateKey(password, privateKey);
+  const keystore = await KeyperWallet.generateByPrivateKey(privateKey,password);
+  console.log(' === keystore === ', keystore);
 
-  //Keyper accounts
-  const accounts = await KeyperWallet.accounts()
-  chrome.storage.sync.set({ accounts, }, () => {
-    console.log('keyper accounts is set to storage: ' + JSON.stringify(accounts));
-  });
+  const addressObj = Address.fromPrivateKey(privateKey, prefix);
+  const blake160 = addressObj.getBlake160(); //publicKeyHash
+
+  // const result = [];
+  const scripts = await KeyperWallet.getAllLockHashesAndMeta();
+  for (let i = 0; i < scripts.length; i++) {
+    const script = scripts[i];
+    const address = scriptToAddress(script.meta.script, { networkPrefix: "ckt", short: true })
+    const type = script.meta.name;
+    const lock = script.hash;
+    const wallet = {
+      //From Keyper
+      "address": address,
+      "type": type,
+      "lock": lock,
+      "amount": 0,
+      "path": addressObj.path, //ckt 有问题
+      "blake160": blake160,
+      "entropyKeystore": "", //助记词
+      "rootKeystore": "", //Root
+      "keystore": keystore,
+      "keystoreType": KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE
+    }
+    wallets.push(wallet)
+
+    const _address = {
+      "address": address,
+      "type": type,
+      "lock": lock,
+      "amount": 0,
+      "walletIndex": wallets.length - 1
+    }
+    addresses.push(_address);
+    if (i === 0) {
+      currWallet = wallets[_address.walletIndex];
+    }
+  }
+  // chrome.storage.sync.set({ addresses, }, () => {
+  //   console.log('keyper addresses is set to storage: ' + JSON.stringify(addresses));
+  // });
 }

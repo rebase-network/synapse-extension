@@ -21,7 +21,15 @@ describe('transaction test', () => {
     jest.setTimeout(100000)
 
     const secp256k1Dep = await ckb.loadSecp256k1Dep() // load the dependencies of secp256k1 algorithm which is used to verify the signature in transaction's witnesses.
-
+    // console.log(" === secp256k1Dep === ",secp256k1Dep);
+    // === secp256k1Dep ===  {
+    //   hashType: 'type',
+    //   codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+    //   outPoint: {
+    //     txHash: '0x6495cede8d500e4309218ae50bbcadb8f722f24cc7572dd2274f5876cb603e4e',
+    //     index: '0x0'
+    //   }
+    // }    
     const publicKey = ckb.utils.privateKeyToPublicKey(privateKey)
     /**
      * to see the public key
@@ -102,7 +110,20 @@ describe('transaction test', () => {
       cells: unspentCells,
       deps: ckb.config.secp256k1Dep,
     })
-  
+    // console.log(" === rawTransaction === ",rawTransaction);
+    // {
+    //   version: '0x0',
+    //   cellDeps: [ { outPoint: [Object], depType: 'depGroup' } ],
+    //   headerDeps: [],
+    //   inputs: [ { previousOutput: [Object], since: '0x0' } ],
+    //   outputs: [
+    //     { capacity: '0x2959c8f00', lock: [Object] },
+    //     { capacity: '0x646b4df240', lock: [Object] }
+    //   ],
+    //   witnesses: [],
+    //   outputsData: [ '0x', '0x' ]
+    // }
+
     rawTransaction.witnesses = rawTransaction.inputs.map(() => '0x')
     rawTransaction.witnesses[0] = {
       lock: '',
@@ -110,19 +131,19 @@ describe('transaction test', () => {
       outputType: ''
     }
   
-    const signedTx = ckb.signTransaction(privateKey)(rawTransaction)
-    /**
-     * to see the signed transaction
-     */
-    console.log("signedTx =>", JSON.stringify(signedTx, null, 2))
+    // const signedTx = ckb.signTransaction(privateKey)(rawTransaction)
+    // /**
+    //  * to see the signed transaction
+    //  */
+    // console.log("signedTx =>", JSON.stringify(signedTx, null, 2))
   
-    const realTxHash = await ckb.rpc.sendTransaction(signedTx)
-    /**
-     * to see the real transaction hash
-     */
-    console.log(`The real transaction hash is: ${realTxHash}`)
+    // const realTxHash = await ckb.rpc.sendTransaction(signedTx)
+    // /**
+    //  * to see the real transaction hash
+    //  */
+    // console.log(`The real transaction hash is: ${realTxHash}`)
 
-    expect(realTxHash).toHaveLength(66);
+    // expect(realTxHash).toHaveLength(66);
   });
 });
     //add by river
