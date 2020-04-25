@@ -7,8 +7,8 @@ const ckb = new CKB(nodeUrl)
 // privateKey =>  448ff179b923f0602a00f68f23cb8425d30198446a1b5aa2a016deea2762b1f8
 // publicKey =>  0304d793194278a005407cd53e6fbd290d8e2a8e90154b4123dc5e0e06a8a19ecb
 // Address=> ckt1qyqt9ed4emcxyfed77ed0dp7kcm3mxsn97ls38jxjw
-const privateKey = '0x448ff179b923f0602a00f68f23cb8425d30198446a1b5aa2a016deea2762b1f8';
-const toAddress  = "ckt1qyqdh85u4euqkjjhzcl8zdj24nx6msh0sptquvf32p";
+const privateKey = '0x6e678246998b426db75c83c8be213b4ceeb8ae1ff10fcd2f8169e1dc3ca04df1';
+const toAddress  = "ckt1qyqfhpyg02ew59cfnr8lnz2kwhwd98xjd4xsscxlae";
 
 const sendCapacity = BigInt(11100000000);
 const sendFee = BigInt(1100000000);
@@ -131,19 +131,19 @@ describe('transaction test', () => {
       outputType: ''
     }
   
-    // const signedTx = ckb.signTransaction(privateKey)(rawTransaction)
-    // /**
-    //  * to see the signed transaction
-    //  */
-    // console.log("signedTx =>", JSON.stringify(signedTx, null, 2))
-  
-    // const realTxHash = await ckb.rpc.sendTransaction(signedTx)
-    // /**
-    //  * to see the real transaction hash
-    //  */
-    // console.log(`The real transaction hash is: ${realTxHash}`)
+    console.log("=== rawTransaction ===>",rawTransaction);
+    const signedTx = ckb.signTransaction(privateKey)(rawTransaction)
+    /**
+     * to see the signed transaction
+     */
+    console.log("signedTx =>", JSON.stringify(signedTx, null, 2))
+    const realTxHash = await ckb.rpc.sendTransaction(signedTx)
+    /**
+     * to see the real transaction hash
+     */
+    console.log(`The real transaction hash is: ${realTxHash}`)
 
-    // expect(realTxHash).toHaveLength(66);
+    expect(realTxHash).toHaveLength(66);
   });
 });
     //add by river
@@ -155,3 +155,67 @@ describe('transaction test', () => {
     //             .derivePath(`m/44'/309'/0'/0`)
     //             .deriveChild(0,false)
     //             .publicKey.toString('hex')) 
+
+
+    // === rawTransaction ===> {
+    //   version: '0x0',
+    //   cellDeps: [ { outPoint: [Object], depType: 'depGroup' } ],
+    //   headerDeps: [],
+    //   inputs: [ { previousOutput: [Object], since: '0x0' } ],
+    //   outputs: [
+    //     { capacity: '0x2959c8f00', lock: [Object] },
+    //     { capacity: '0x646b4df240', lock: [Object] }
+    //   ],
+    //   witnesses: [ { lock: '', inputType: '', outputType: '' } ],
+    //   outputsData: [ '0x', '0x' ]
+    // }
+
+    // signedTx => {
+    //   "version": "0x0",
+    //   "cellDeps": [
+    //     {
+    //       "outPoint": {
+    //         "txHash": "0x6495cede8d500e4309218ae50bbcadb8f722f24cc7572dd2274f5876cb603e4e",
+    //         "index": "0x0"
+    //       },
+    //       "depType": "depGroup"
+    //     }
+    //   ],
+    //   "headerDeps": [],
+    //   "inputs": [
+    //     {
+    //       "previousOutput": {
+    //         "txHash": "0x254e6fd9954b08784ef7e210e5efb9651505eda56f184429c993b1b40c73324e",
+    //         "index": "0x1"
+    //       },
+    //       "since": "0x0"
+    //     }
+    //   ],
+    //   "outputs": [
+    //     {
+    //       "capacity": "0x2959c8f00",
+    //       "lock": {
+    //         "codeHash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+    //         "hashType": "type",
+    //         "args": "0x9b84887ab2ea170998cff9895675dcd29cd26d4d"
+    //       }
+    //     },
+    //     {
+    //       "capacity": "0x6a2bb7d000",
+    //       "lock": {
+    //         "codeHash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+    //         "hashType": "type",
+    //         "args": "0x9b84887ab2ea170998cff9895675dcd29cd26d4d"
+    //       }
+    //     }
+    //   ],
+    //   "witnesses": [
+    //     "0x5500000010000000550000005500000041000000bec0b4bb83ec19ce56c5a6c9aaa7a664e5b6c51fffaec5ff72d5b427e2495f4f0b26d5369fcc14a51247739e4a3dbf0a749e1f1c68e56610f20ef9af255a0fcb01"
+    //   ],
+    //   "outputsData": [
+    //     "0x",
+    //     "0x"
+    //   ]
+    // }
+
+    //The real transaction hash is: 0x8d562e1b7972966e82e866580bb1fe3228023a7b50813ea42a317067ee692282

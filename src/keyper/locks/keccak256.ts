@@ -16,20 +16,14 @@ import {
 
 class Keccak256LockScript {
   name = "Keccak256";
-  codeHash = "0xac8a4bc0656aeee68d4414681f4b2611341c4f0edd4c022f2d250ef8bb58682f";
+  codeHash = "0xa5b896894539829f5e7c5902f0027511f94c70fa2406d509e7c6d1df76b06f08";
   hashType = "type";
   provider = null;
 
   deps() {
     return [{
       outPoint: {
-        txHash: "0x15fb8111fc78fa36da6af96c45ac4714cc9a33974fdae13cc524b29e1a488c7f",
-        index: "0x3"
-      },
-      depType: "code",
-    }, {
-      outPoint: {
-        txHash: "0x07a824df0419adf4c92ca563085525e7224b014ecc97cf3de684dd7b57c05856",
+        txHash: "0x25635bf587adacf95c9ad302113648f89ecddc2acfe1ea358ea99f715219c4c5",
         index: "0x0"
       },
       depType: "code",
