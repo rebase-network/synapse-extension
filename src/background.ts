@@ -514,7 +514,7 @@ function addressIsExist(address, addresses): {} {
 async function AddKeyperWallet(privateKey, password) {
 
   await KeyperWallet.init();
-  await KeyperWallet.generateKeyPrivateKey(password, privateKey);
+  await KeyperWallet.generateByPrivateKey(password, privateKey);
 
   //Keyper accounts
   const accounts = await KeyperWallet.accounts()
