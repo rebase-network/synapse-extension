@@ -112,8 +112,6 @@ export default function GenerateMnemonic(props: AppProps, state: AppState) {
   const history = useHistory();
 
   const onSubmit = async(values) => {
-    await new Promise(resolve => setTimeout(resolve, 500));
-
     if(vaildate){
       setSuccess(true)
       chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.SAVE_MNEMONIC })

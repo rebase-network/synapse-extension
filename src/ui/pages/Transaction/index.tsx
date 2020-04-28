@@ -140,11 +140,11 @@ export default function (props: AppProps, state: AppState) {
       //跳转到交易详细信息的页面
       if (message.messageType === MESSAGE_TYPE.TO_TX_DETAIL) {
         console.log("TO_TX_DETAIL message", JSON.stringify(message));
-       
+
         //001-传递交易信息
         chrome.runtime.sendMessage({
           message,
-          messageType: MESSAGE_TYPE.REQUEST_TX_DETAIL 
+          messageType: MESSAGE_TYPE.REQUEST_TX_DETAIL
         })
         //002-跳转到页面
         history.push('/tx-detail')
@@ -154,8 +154,6 @@ export default function (props: AppProps, state: AppState) {
   }, [])
 
   const onSubmit = async(values) => {
-
-    // await new Promise(resolve => setTimeout(resolve, 500));
     console.log("onSubmit=>",values);
     console.log("network =>", network);
 

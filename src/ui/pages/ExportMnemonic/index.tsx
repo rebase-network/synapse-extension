@@ -53,7 +53,7 @@ export const innerForm = props => {
 
   return (
     <Form className="export-mnemonic-key" id="export-mnemonic-key" onSubmit={handleSubmit}>
-      
+
       <TextField
         label="Password"
         name="password"
@@ -92,7 +92,6 @@ export default function (props: AppProps, state: AppState) {
   const history = useHistory();
 
   const onSubmit = async(values) => {
-    // await new Promise(resolve => setTimeout(resolve, 500));
     //background.ts check the password
     chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK })
   }
@@ -101,15 +100,15 @@ export default function (props: AppProps, state: AppState) {
     chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
       // console.log("export private key =>",message);
       if (message.messageType === MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT) {
-        
+
         console.log("message ===>",message);
-        
+
         if(message.isValidatePassword){
 
           history.push('/export-mnemonic-second'); //测试成功的地址
-          chrome.runtime.sendMessage({ 
-            message, 
-            messageType: MESSAGE_TYPE.EXPORT_MNEONIC_SECOND 
+          chrome.runtime.sendMessage({
+            message,
+            messageType: MESSAGE_TYPE.EXPORT_MNEONIC_SECOND
         })
         } else {
           setValidate(false);

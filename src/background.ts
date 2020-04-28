@@ -74,7 +74,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       //001-
       privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystore);
 
-      //Add Keyper to Synapse     
+      //Add Keyper to Synapse
       await AddKeyperWallet(privateKey, password);
     }
     //002-
@@ -276,11 +276,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
   //my addresses
   if (request.messageType === MESSAGE_TYPE.REQUEST_MY_ADDRESSES) {
-
     chrome.storage.sync.get(['accounts'], async function (result) {
-
-      await new Promise(resolve => setTimeout(resolve, 500));
-
       const accounts = result.accounts;
       const addresses = [];
       for (let i = 0; i < accounts.length; i++) {
@@ -373,7 +369,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       //001-
       privateKeyToKeystore(privateKey, password, "", "");
 
-      //Add Keyper to Synapse     
+      //Add Keyper to Synapse
       await AddKeyperWallet(privateKey, password);
     }
 
@@ -408,7 +404,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     //03 - get the private by keystore
     const privateKey = Keystore.decrypt(keystore, kPassword);
-    
+
     //04- create the new keystore by the synapsePassword;
     const addressObj = Address.fromPrivateKey(privateKey);
     const address = addressObj.address;
@@ -420,10 +416,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       //001-
       privateKeyToKeystore(privateKey, sPassword, "", "");
 
-      //Add Keyper to Synapse     
+      //Add Keyper to Synapse
       await AddKeyperWallet(privateKey, sPassword);
     }
-    
+
     //002-
     saveToStorage();
 

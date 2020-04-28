@@ -123,13 +123,11 @@ export const innerForm = props => {
 }
 
 export default function ImportMnemonic(props: AppProps, state: AppState) {
-
   const [success, setSuccess] = React.useState(false)
   const [vaildate, setValidate] = React.useState(true)
   const history = useHistory();
 
   const onSubmit = async(values) => {
-    await new Promise(resolve => setTimeout(resolve, 500));
     chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_MNEMONIC })
     console.log(values)
     if(vaildate){

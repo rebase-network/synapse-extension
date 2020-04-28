@@ -210,9 +210,6 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
   }, [])
 
   const onSubmit = async (values) => {
-
-    await new Promise(resolve => setTimeout(resolve, 500));
-
     if (privateKeyOrKeystore === "privateKey") {
 
       chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_PRIVATE_KEY })
@@ -236,9 +233,6 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
         initialValues={{ password: "", privatekey: "", keystore: "", keystorePassword: "", synapsePassword: "", }}
 
         onSubmit={onSubmit}
-        if (privateKeyOrKeystore === "privateKey") {
-          
-        }
         validationSchema={Yup.object().shape({
           password: Yup.string()
             .required("Required").min(6),

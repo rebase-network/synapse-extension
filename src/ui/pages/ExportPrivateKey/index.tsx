@@ -53,7 +53,7 @@ export const innerForm = props => {
 
   return (
     <Form className="export-private-key" id="export-private-key" onSubmit={handleSubmit}>
-      
+
       <TextField
         label="Password"
         name="password"
@@ -92,7 +92,6 @@ export default function (props: AppProps, state: AppState) {
   const history = useHistory();
 
   const onSubmit = async(values) => {
-    await new Promise(resolve => setTimeout(resolve, 500));
     //background.ts check the password
     chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK })
   }
@@ -104,9 +103,9 @@ export default function (props: AppProps, state: AppState) {
         if(message.isValidatePassword){
 
           history.push('/export-private-key-second'); //测试成功的地址
-          chrome.runtime.sendMessage({ 
-            message, 
-            messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND 
+          chrome.runtime.sendMessage({
+            message,
+            messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND
         })
         } else {
           setValidate(false);
