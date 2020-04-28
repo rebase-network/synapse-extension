@@ -73,9 +73,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     } else {
       //001-
       privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystore);
-      
+
       //Add Keyper to Synapse     
-      await AddKeyperWallet(privateKey,password);
+      await AddKeyperWallet(privateKey, password);
     }
     //002-
     saveToStorage();
@@ -136,7 +136,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystore);
 
       //Add Keyper to Synapse
-      await AddKeyperWallet(privateKey,password);
+      await AddKeyperWallet(privateKey, password);
     }
 
     //002-saveToStorage
@@ -280,7 +280,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     chrome.storage.sync.get(['accounts'], async function (result) {
 
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+
       const accounts = result.accounts;
       const addresses = [];
       for (let i = 0; i < accounts.length; i++) {
@@ -347,52 +347,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     })
   }
 
-  //onKeyper test
-  // if (request.messageType === MESSAGE_TYPE.ON_KEYPER) {
-
-  //   await KeyperWallet.init(); //初始化Container
-  //   // console.log("Init ==== !!!!");
-  //   const password = "123456";
-  //   const privateKey = "";
-  //   const publicKey = await KeyperWallet.generateKeyKeyper(password, privateKey, publicKey);
-  //   console.log(publicKey);
-
-  //   const accounts = await KeyperWallet.accounts();
-
-  //   //Just For Test
-  //   // console.log("accounts ===>: ", accounts);
-  //   // for (let i = 0; i < accounts.length; i++) {
-  //   //   const account = accounts[i];
-  //   //   console.log("account.lock ===>",account.lock);
-  //   //   // const result = await cache.findCells(
-  //   //   //   JSON.stringify(
-  //   //   //     QueryBuilder.create()
-  //   //   //       .setLockHash(account.lock)
-  //   //   //       .build()
-  //   //   //   )
-  //   //   // );
-  //   // }
-  //   const addresses = [];
-  //   for (let i = 0; i < accounts.length; i++) {
-  //     const account = accounts[i];
-  //     // const capacity = await getBalanceByLockHash(account.lock);
-  //     const capacity = 0;
-  //     const address = {
-  //       address: account.address,
-  //       type: account.type,
-  //       capacity: capacity,
-  //       lock: account.lock
-  //     }
-  //     addresses.push(address);
-  //   }
-
-  //   chrome.runtime.sendMessage({
-  //     addresses,
-  //     messageType: MESSAGE_TYPE.RESULT_MY_ADDRESSES
-  //   })
-  // }
-
-
   // import private key
   if (request.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY) {
 
@@ -420,7 +374,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       privateKeyToKeystore(privateKey, password, "", "");
 
       //Add Keyper to Synapse     
-      await AddKeyperWallet(privateKey,password);
+      await AddKeyperWallet(privateKey, password);
     }
 
     //002-
@@ -431,6 +385,52 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     })
   }
 
+  // import keystore
+  if (request.messageType === MESSAGE_TYPE.IMPORT_KEYSTORE) {
+
+    //01- get the params from request
+    const keystore = request.keystore.trim();
+    const kPassword = request.keystorePassword.trim();
+    const sPassword = request.synapsePassword.trim()
+
+    //02- check the keystore by the keystorePassword
+    if (!Keystore.checkPasswd(keystore, kPassword)) {
+      throw new Error('password incorrect')
+    }
+    //021- check the synapse password
+    const currentkeystore = currWallet['keystore']
+    if (currentkeystore === undefined || currentkeystore === "" || currentkeystore === "undefined") {
+      throw new Error('currWallet keystore is null')
+    }
+    if (!Keystore.checkPasswd(currentkeystore, sPassword)) {
+      throw new Error('password incorrect')
+    }
+
+    //03 - get the private by keystore
+    const privateKey = Keystore.decrypt(keystore, kPassword);
+    
+    //04- create the new keystore by the synapsePassword;
+    const addressObj = Address.fromPrivateKey(privateKey);
+    const address = addressObj.address;
+    const isExistObj = addressIsExist(address, addresses);
+    if (isExistObj["isExist"]) {
+      const index = isExistObj["index"];
+      currWallet = wallets[addresses[index].walletIndex];
+    } else {
+      //001-
+      privateKeyToKeystore(privateKey, sPassword, "", "");
+
+      //Add Keyper to Synapse     
+      await AddKeyperWallet(privateKey, sPassword);
+    }
+    
+    //002-
+    saveToStorage();
+
+    chrome.runtime.sendMessage({
+      messageType: MESSAGE_TYPE.IMPORT_KEYSTORE_OK
+    })
+  }
 });
 
 //3- Type
