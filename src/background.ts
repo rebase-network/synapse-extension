@@ -347,7 +347,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY) {
 
     //没有0x的privateKey
-    let privateKey: string = request.privatekey.trim();
+    let privateKey: string = request.privateKey.trim();
     if(privateKey.startsWith("0x")){
       privateKey = privateKey.substr(2);
     }
@@ -390,18 +390,19 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     //01- get the params from request
     const keystore = request.keystore.trim();
     const kPassword = request.keystorePassword.trim();
-    const sPassword = request.synapsePassword.trim()
+    const uPassword = request.userPassword.trim()
 
     //02- check the keystore by the keystorePassword
     if (!Keystore.checkPasswd(keystore, kPassword)) {
       throw new Error('password incorrect')
     }
+
     //021- check the synapse password
-    const currentkeystore = currWallet['keystore']
-    if (currentkeystore === undefined || currentkeystore === "" || currentkeystore === "undefined") {
+    const currentKeystore = currWallet['keystore']
+    if (currentKeystore === undefined || currentKeystore === "" || currentKeystore === "undefined") {
       throw new Error('currWallet keystore is null')
     }
-    if (!Keystore.checkPasswd(currentkeystore, sPassword)) {
+    if (!Keystore.checkPasswd(currentKeystore, uPassword)) {
       throw new Error('password incorrect')
     }
 
@@ -417,10 +418,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       currWallet = wallets[addresses[index].walletIndex];
     } else {
       //001-
-      privateKeyToKeystore(privateKey, sPassword, "", "");
+      privateKeyToKeystore(privateKey, uPassword, "", "");
 
       //Add Keyper to Synapse
-      await AddKeyperWallet(privateKey, sPassword);
+      await AddKeyperWallet(privateKey, uPassword);
     }
 
     //002-

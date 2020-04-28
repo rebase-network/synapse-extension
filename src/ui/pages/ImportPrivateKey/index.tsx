@@ -45,7 +45,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
   }, [])
 
   const onSubmit = async (values) => {
-    if (isHidePrivate) {
+    if (!isHidePrivate) {
       chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_PRIVATE_KEY })
       setSuccess(true)
     } else {
@@ -98,7 +98,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           value={values.privateKey}
           onChange={handleChange}
           onBlur={handleBlur}
-          error={!!errors.password}
+          error={!!errors.privateKey}
           // helperText={(errors.confirmPassword && touched.confirmPassword) && errors.confirmPassword}
           margin="normal"
           variant="outlined"
@@ -122,6 +122,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
         />
         {isSubmitting && <div id="submitting">Submitting</div>}
         <Button
+          id="privateKey-form-button"
           type="submit"
           variant="contained"
           disabled={isSubmitting}
@@ -223,7 +224,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
 
   const validateObj: validateObjType = !isHidePrivate ? {
     password: Yup.string().required("Required").min(6),
-    privateKey: Yup.string().required("Required").length(64).matches(/[0-9a-fA-F]+/),
+    privateKey: Yup.string().required("Required"), //TODO
   } : {
     keystore: Yup.string().required("Required"),
     keystorePassword: Yup.string().required("Required").min(6),
