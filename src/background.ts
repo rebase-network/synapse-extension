@@ -347,7 +347,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY) {
 
     //没有0x的privateKey
-    const privateKey = request.privatekey.trim();
+    let privateKey: string = request.privatekey.trim();
+    if(privateKey.startsWith("0x")){
+      privateKey = privateKey.substr(2);
+    }
     const password = request.password.trim()
 
     //TODO 是否需要currWallet中的keystore的验证;

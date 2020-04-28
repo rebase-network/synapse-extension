@@ -83,26 +83,26 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
     } = props;
 
 
-    const privateKeyFrom =
-      <Form className="form-mnemonic" id="form-mnemonic" onSubmit={handleSubmit}>
+    const privateKeyForm =
+      <Form className="form-privateKey" id="form-privateKey" onSubmit={handleSubmit}>
         <TextField
           label="PrivateKey"
-          name="privatekey"
+          name="privateKey"
           type="text"
           placeholder="私钥"
           fullWidth
-          InputProps={{
-            startAdornment: <InputAdornment position="start">0x</InputAdornment>,
-          }}
+          // InputProps={{
+          //   startAdornment: <InputAdornment position="start">0x</InputAdornment>,
+          // }}
           className={classes.textField}
-          value={values.privatekey}
+          value={values.privateKey}
           onChange={handleChange}
           onBlur={handleBlur}
           error={!!errors.password}
           // helperText={(errors.confirmPassword && touched.confirmPassword) && errors.confirmPassword}
           margin="normal"
           variant="outlined"
-          data-testid=""
+          data-testid="testid-form-privateKey"
         />
         <TextField
           label="Password"
@@ -118,7 +118,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           // helperText={(errors.confirmPassword && touched.confirmPassword) && errors.confirmPassword}
           margin="normal"
           variant="outlined"
-          data-testid=""
+          data-testid="testid-form-password"
         />
         {isSubmitting && <div id="submitting">Submitting</div>}
         <Button
@@ -133,7 +133,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
       </Button>
       </Form>
 
-    const keystoreFrom =
+    const keystoreForm =
       <Form className="form-keystore" id="form-keystore" onSubmit={handleSubmit}>
         <TextField
           label="keystore"
@@ -170,16 +170,16 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           data-testid="field-keystore-password"
         />
         <TextField
-          label="synapse password"
-          name="synapsePassword"
+          label="user password"
+          name="userPassword"
           type="password"
           fullWidth
           className={classes.textField}
-          value={values.synapsePassword}
+          value={values.userPassword}
           onChange={handleChange}
           onBlur={handleBlur}
-          error={!!errors.synapsePassword}
-          helperText={(errors.synapsePassword && touched.synapsePassword) && errors.synapsePassword}
+          error={!!errors.userPassword}
+          helperText={(errors.userPassword && touched.userPassword) && errors.userPassword}
           margin="normal"
           variant="outlined"
           data-testid="field-synapse-password"
@@ -202,11 +202,11 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
       <FormControl component="fieldset" >
         <div className={classes.container}>
           <div className="privateKey" data-testid="privateKey" hidden={isHidePrivate}>
-            {privateKeyFrom}
+            {privateKeyForm}
           </div>
           <div className="json-keystore" data-testid="json-keystore" hidden={!isHidePrivate}>
             {/* <span className="">JSON/Keystore  </span> */}
-            {keystoreFrom}
+            {keystoreForm}
           </div>
         </div>
       </FormControl>
@@ -215,19 +215,19 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
 
   type validateObjType = {
     password?: Yup.StringSchema<string>;
-    privatekey?: Yup.StringSchema<string>;
+    privateKey?: Yup.StringSchema<string>;
     keystore?: Yup.StringSchema<string>;
     keystorePassword?: Yup.StringSchema<string>;
-    synapsePassword?: Yup.StringSchema<string>;
+    userPassword?: Yup.StringSchema<string>;
   }
 
   const validateObj: validateObjType = !isHidePrivate ? {
     password: Yup.string().required("Required").min(6),
-    privatekey: Yup.string().required("Required").length(64).matches(/[0-9a-fA-F]+/),
+    privateKey: Yup.string().required("Required").length(64).matches(/[0-9a-fA-F]+/),
   } : {
     keystore: Yup.string().required("Required"),
     keystorePassword: Yup.string().required("Required").min(6),
-    synapsePassword: Yup.string().required("Required").min(6),
+    userPassword: Yup.string().required("Required").min(6),
   }
 
   return (
@@ -239,7 +239,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
       </RadioGroup>
 
       <Formik
-        initialValues={{ password: "", privatekey: "", keystore: "", keystorePassword: "", synapsePassword: "", }}
+        initialValues={{ password: "", privateKey: "", keystore: "", keystorePassword: "", userPassword: "", }}
 
         onSubmit={onSubmit}
         validationSchema={Yup.object().shape(validateObj)}
