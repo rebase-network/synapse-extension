@@ -18,6 +18,7 @@ import { getBalanceByAddress } from './utils/address'
 const KeyperWallet = require('../src/keyper/keyperwallet');
 const EC = require("elliptic").ec;
 
+
 // import { generateKeystore } from './keyper/keyperwallet';
 
 /**
@@ -376,7 +377,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       // saveWallets(privateKey, password, "", "");
 
       //Add Keyper to Synapse
-      await AddKeyperWallet(privateKey, password);
+      await AddKeyperWallet(privateKey, password, "", "");
     }
 
     //002-
@@ -424,7 +425,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       // saveWallets(privateKey, uPassword, "", "");
 
       //Add Keyper to Synapse
-      await AddKeyperWallet(privateKey, uPassword);
+      await AddKeyperWallet(privateKey, uPassword, "", "");
     }
 
     //002-
@@ -442,6 +443,8 @@ function saveWallets(privateKey, entropyKeystore, rootKeystore, keystore, prefix
 
   const addressObj = Address.fromPrivateKey(privateKey, prefix);
   const blake160 = addressObj.getBlake160(); //publicKeyHash
+  const publicKey = ckbUtils.privateKeyToPublicKey("0x" + privateKey);
+  console.log("=== saveWallets publicKey",publicKey);
 
   const lockHash = ckbUtils.scriptToHash({
     hashType: "type",
@@ -450,6 +453,7 @@ function saveWallets(privateKey, entropyKeystore, rootKeystore, keystore, prefix
   })
 
   const wallet = {
+    "publicKey": publicKey, //get Keyper Store by pubicKey
     "path": addressObj.path, //ckt 有问题
     "blake160": blake160,
     "address": addressObj.address,
@@ -507,7 +511,7 @@ function addressIsExist(address, addresses): {} {
 }
 
 let keys = {};
-async function AddKeyperWallet(privateKey, password, entropyKeystore = "", rootKeystore = "") {
+async function AddKeyperWallet(privateKey, password, entropyKeystore, rootKeystore) {
 
   await KeyperWallet.init();
   // await KeyperWallet.generateByPrivateKey(password, privateKey);
@@ -516,6 +520,7 @@ async function AddKeyperWallet(privateKey, password, entropyKeystore = "", rootK
   const ec = new EC('secp256k1');
   const key = ec.keyFromPrivate(privateKey);
   const publicKey = Buffer.from(key.getPublic().encodeCompressed()).toString("hex");
+
   keys = KeyperWallet.saveKeystore(ks, publicKey);
   KeyperWallet.setUpContainer(publicKey);
 
@@ -526,8 +531,26 @@ async function AddKeyperWallet(privateKey, password, entropyKeystore = "", rootK
   chrome.storage.sync.set({ accounts, }, () => {
     console.log('keyper accounts is set to storage: ' + JSON.stringify(accounts));
   });
+
+  getKeystoreFromWallets(publicKey);
 }
 
 export function getKeystoreFromWallets(publicKey){
-  return keys[publicKey];
+  let nPublicKey = publicKey;
+  if(!publicKey.startsWith('0x')){
+    nPublicKey = '0x' + publicKey;
+  }
+  const ks = findKeystoreInWallets(wallets,nPublicKey);
+  // console.log("=== ks001 ===",ks);
+  // console.log("=== ks002 ===",keys[nPublicKey]);
+  // keys[nPublicKey]
+  return ks;
+}
+
+function findKeystoreInWallets(wallets,publicKey){
+  function findKeystore(wallet) { 
+      return wallet.publicKey === publicKey;
+  }
+  const wallet = wallets.find(findKeystore);
+  return wallet.keystore;
 }
