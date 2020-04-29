@@ -271,7 +271,7 @@ module.exports = {
   accounts,
   signTx,
   getAllLockHashesAndMeta,
-  reloadCacheRuls,
+  // reloadCacheRuls,
   generateKeystore,
   saveKeystore,
   setUpContainer,
