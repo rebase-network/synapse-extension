@@ -58,21 +58,21 @@ const init = () => {
   container.addLockScript(new Keccak256LockScript());
   container.addLockScript(new AnyPayLockScript());
   // keys = {};
-  // reloadKeys();
+  reloadKeys();
 };
 
-// const reloadKeys = () => {
-//   if (storage.keyperStorage().get("keys")) {
-//     const innerKeys = storage.keyperStorage().get("keys");
-//     innerKeys.forEach(key => {
-//       container.addPublicKey({
-//         payload: `0x${key.publicKey}`,
-//         algorithm: SignatureAlgorithm.secp256k1,
-//       });
-//       keys[`0x${key.publicKey}`] = key;
-//     });
-//   }
-// };
+const reloadKeys = () => {
+  if (storage.keyperStorage().get("keys")) {
+    const innerKeys = storage.keyperStorage().get("keys");
+    innerKeys.forEach(key => {
+      container.addPublicKey({
+        payload: `0x${key.publicKey}`,
+        algorithm: SignatureAlgorithm.secp256k1,
+      });
+      // keys[`0x${key.publicKey}`] = key;
+    });
+  }
+};
 
 // const reloadCacheRuls = async () => {
 //   if (storage.keyperStorage().get("keys")) {

@@ -1,5 +1,7 @@
 import { addKeyperWallet } from '../wallet/addKeyperWallet'
-const utils = require("@nervosnetwork/ckb-sdk-utils/lib");
+// const utils = require("@nervosnetwork/ckb-sdk-utils/lib");
+// import {default as AnyPayLockScript} from '../keyper/locks/anypay';
+const AnyPayLockScript = require("../keyper/locks/anypay");
 
 const keyperwalletTest = require('../keyper/keyperwallet');
 
@@ -39,18 +41,10 @@ describe('anypay transaction test', () => {
         index: '0x0'
       }
     }
+
     const publicKey = ckb.utils.privateKeyToPublicKey("0x" + privateKey)
-    // const holderScript = {
-    //   codeHash: anypayDep.codeHash,
-    //   hashType: anypayDep.hashType,
-    //   args: `0x${Buffer.from(utils.blake160(publicKey)).toString("hex")}`
-    // };
-    // const holderHash = utils.scriptToHash(holderScript);
-    // console.log("==== holderHash ===",holderHash);
-    
     const publicKeyHash = `0x${ckb.utils.blake160(publicKey, 'hex')}`
     const lockHash = ckb.generateLockHash(publicKeyHash, anypayDep)
-
     console.log(" === lockHash ===", lockHash);
     // method to fetch all unspent cells by lock hash
     const unspentCells = await ckb.loadCells({
@@ -92,9 +86,8 @@ describe('anypay transaction test', () => {
       outputType: ''
     }
 
-
     const signObj = {
-      target: "0x4c8d4999eb02203a7c2ec30858fd8dfbd2c87736c8dd3ffa21922f0d8ccafd39",
+      target: lockHash,
       tx: rawTransaction
     }
     const signedTx = await keyperwalletTest.signTx(signObj.target, password, signObj.tx);
