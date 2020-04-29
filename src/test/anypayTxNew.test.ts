@@ -39,15 +39,14 @@ describe('anypay transaction test', () => {
         index: '0x0'
       }
     }
-
     const publicKey = ckb.utils.privateKeyToPublicKey("0x" + privateKey)
-    const holderScript = {
-      codeHash: anypayDep.codeHash,
-      hashType: anypayDep.hashType,
-      args: `0x${Buffer.from(utils.blake160(publicKey)).toString("hex")}`
-    };
-    const holderHash = utils.scriptToHash(holderScript);
-    console.log("==== holderHash ===",holderHash);
+    // const holderScript = {
+    //   codeHash: anypayDep.codeHash,
+    //   hashType: anypayDep.hashType,
+    //   args: `0x${Buffer.from(utils.blake160(publicKey)).toString("hex")}`
+    // };
+    // const holderHash = utils.scriptToHash(holderScript);
+    // console.log("==== holderHash ===",holderHash);
     
     const publicKeyHash = `0x${ckb.utils.blake160(publicKey, 'hex')}`
     const lockHash = ckb.generateLockHash(publicKeyHash, anypayDep)
@@ -94,7 +93,7 @@ describe('anypay transaction test', () => {
 
 
     const signObj = {
-      target: holderHash,
+      target: lockHash,
       tx: rawTransaction
     }
     const signedTx = await keyperwalletTest.signTx(signObj.target, password, signObj.tx);
