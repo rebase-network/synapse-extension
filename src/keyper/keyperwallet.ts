@@ -128,22 +128,15 @@ const unlock = async (password) => {
 };
 
 
-const generateKeystore = (privateKey, password)=>{
-  
+const generateKeystore = (privateKey, password) => {
   const privateKeyBuffer = Buffer.from(privateKey, "hex")
   const ks = keystore.encrypt(privateKeyBuffer, password);
   return ks;
 }
 
-const generateByPrivateKey = async (privateKey, password) => {
-  const ec = new EC('secp256k1');
-  const key = ec.keyFromPrivate(privateKey);
-  const publicKey = Buffer.from(key.getPublic().encodeCompressed()).toString("hex");
-  // const privateKeyBuffer = Buffer.from(privateKey, "hex")
-  // const ks = keystore.encrypt(privateKeyBuffer, password);
-  const ks = generateKeystore(privateKey, password);
-  ks.publicKey = publicKey;
+const saveKeystore = (ks, publicKey) => {
 
+  ks.publicKey = publicKey;
   if (!storage.keyperStorage().get("keys")) {
     storage.keyperStorage().set("keys", JSON.stringify(ks));
   } else {
@@ -152,13 +145,15 @@ const generateByPrivateKey = async (privateKey, password) => {
     storage.keyperStorage().set("keys", keys);
   }
 
-  //container在init中进行初始化的操作;根据PublicKey生成Address
+  // keys[`0x${publicKey}`] = key;
+  keys[`0x${publicKey}`] = ks;
+}
+
+const setUpContainer = (publicKey) => {
   container.addPublicKey({
     payload: `0x${publicKey}`,
     algorithm: SignatureAlgorithm.secp256k1,
   });
-  // keys[`0x${publicKey}`] = key;
-  keys[`0x${publicKey}`] = ks;
 
   const scripts = container.getScripsByPublicKey({
     payload: `0x${publicKey}`,
@@ -178,6 +173,54 @@ const generateByPrivateKey = async (privateKey, password) => {
     // console.log(" === LockHash === ",scriptToHash(script));
     addRules.push(addRule);
   });
+}
+
+const generateByPrivateKey = async (privateKey, password) => {
+  const ec = new EC('secp256k1');
+  const key = ec.keyFromPrivate(privateKey);
+  const publicKey = Buffer.from(key.getPublic().encodeCompressed()).toString("hex");
+  // const privateKeyBuffer = Buffer.from(privateKey, "hex")
+  // const ks = keystore.encrypt(privateKeyBuffer, password);
+  const ks = generateKeystore(privateKey, password);
+  // ks.publicKey = publicKey;
+
+  // if (!storage.keyperStorage().get("keys")) {
+  //   storage.keyperStorage().set("keys", JSON.stringify(ks));
+  // } else {
+  //   const keys = storage.keyperStorage().get("keys");
+  //   keys.push(JSON.stringify(ks));
+  //   storage.keyperStorage().set("keys", keys);
+  // }
+  saveKeystore(ks, publicKey);
+
+  // keys[`0x${publicKey}`] = key;
+  // keys[`0x${publicKey}`] = ks;
+
+  // //container在init中进行初始化的操作;根据PublicKey生成Address
+  // container.addPublicKey({
+  //   payload: `0x${publicKey}`,
+  //   algorithm: SignatureAlgorithm.secp256k1,
+  // });
+
+  // const scripts = container.getScripsByPublicKey({
+  //   payload: `0x${publicKey}`,
+  //   algorithm: SignatureAlgorithm.secp256k1,
+  // });
+
+  // scripts.forEach(async (script) => {
+  //   // await global.cache.addRule({
+  //   //   name: "LockHash",
+  //   //   data: scriptToHash(script),
+  //   // });
+  //   const addRule = {
+  //     name: "LockHash",
+  //     data: scriptToHash(script),
+  //   }
+  //   // console.log(" === script === ",script)
+  //   // console.log(" === LockHash === ",scriptToHash(script));
+  //   addRules.push(addRule);
+  // });
+  setUpContainer(publicKey);
 
   return ks;
 };
