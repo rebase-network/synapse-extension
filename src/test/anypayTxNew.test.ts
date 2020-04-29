@@ -50,6 +50,7 @@ describe('anypay transaction test', () => {
     
     const publicKeyHash = `0x${ckb.utils.blake160(publicKey, 'hex')}`
     const lockHash = ckb.generateLockHash(publicKeyHash, anypayDep)
+
     console.log(" === lockHash ===", lockHash);
     // method to fetch all unspent cells by lock hash
     const unspentCells = await ckb.loadCells({
@@ -93,7 +94,7 @@ describe('anypay transaction test', () => {
 
 
     const signObj = {
-      target: lockHash,
+      target: "0x4c8d4999eb02203a7c2ec30858fd8dfbd2c87736c8dd3ffa21922f0d8ccafd39",
       tx: rawTransaction
     }
     const signedTx = await keyperwalletTest.signTx(signObj.target, password, signObj.tx);
