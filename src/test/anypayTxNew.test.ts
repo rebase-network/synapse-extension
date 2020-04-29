@@ -33,19 +33,25 @@ describe('anypay transaction test', () => {
     // await keyperwalletTest.generateByPrivateKey(privateKey, password);
     await addKeyperWallet(privateKey, password, "", "");
 
+    // const anypayDep = {
+    //   hashType: 'type',
+    //   codeHash: '0x6a3982f9d018be7e7228f9e0b765f28ceff6d36e634490856d2b186acf78e79b',
+    //   outPoint: {
+    //     txHash: '0x9af66408df4703763acb10871365e4a21f2c3d3bdc06b0ae634a3ad9f18a6525',
+    //     index: '0x0'
+    //   }
+    // }
+    const anypay = new AnyPayLockScript();
+    const deps = anypay.deps();
     const anypayDep = {
-      hashType: 'type',
-      codeHash: '0x6a3982f9d018be7e7228f9e0b765f28ceff6d36e634490856d2b186acf78e79b',
-      outPoint: {
-        txHash: '0x9af66408df4703763acb10871365e4a21f2c3d3bdc06b0ae634a3ad9f18a6525',
-        index: '0x0'
-      }
+      hashType: anypay.hashType,
+      codeHash: anypay.codeHash,
+      outPoint: deps[0].outPoint
     }
-
     const publicKey = ckb.utils.privateKeyToPublicKey("0x" + privateKey)
     const publicKeyHash = `0x${ckb.utils.blake160(publicKey, 'hex')}`
     const lockHash = ckb.generateLockHash(publicKeyHash, anypayDep)
-    console.log(" === lockHash ===", lockHash);
+
     // method to fetch all unspent cells by lock hash
     const unspentCells = await ckb.loadCells({
       lockHash
@@ -90,8 +96,10 @@ describe('anypay transaction test', () => {
       target: lockHash,
       tx: rawTransaction
     }
+
     const signedTx = await keyperwalletTest.signTx(signObj.target, password, signObj.tx);
     const realTxHash = await ckb.rpc.sendTransaction(signedTx)
+    console.log("=== realTxHash ===", realTxHash);
     expect(realTxHash).toHaveLength(66);
   });
 });
