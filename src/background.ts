@@ -14,10 +14,10 @@ import { getAmountByTxHash, getStatusByTxHash, getFeeByTxHash, getInputAddressBy
 import { getPrivateKeyByKeyStoreAndPassword } from './wallet/exportPrivateKey'
 import Address from './wallet/address';
 import { getBalanceByAddress } from './utils/address'
+import { addKeyperWallet, getAddresses, getCurrentWallet, getWallets } from './wallet/addKeyperWallet';
 
-const KeyperWallet = require('../src/keyper/keyperwallet');
-const EC = require("elliptic").ec;
-
+// const KeyperWallet = require('../src/keyper/keyperwallet');
+// const EC = require("elliptic").ec;
 
 // import { generateKeystore } from './keyper/keyperwallet';
 
@@ -79,7 +79,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       // saveWallets(privateKey, password, entropyKeystore, rootKeystore);
 
       //Add Keyper to Synapse
-      await AddKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
+      await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
+      wallets = getWallets();
+      addresses = getAddresses();
+      currWallet = getCurrentWallet();
     }
     //002-
     saveToStorage();
@@ -140,7 +143,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       // saveWallets(privateKey, password, entropyKeystore, rootKeystore);
 
       //Add Keyper to Synapse
-      await AddKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
+      await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
     }
 
     //002-saveToStorage
@@ -308,7 +311,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     chrome.storage.sync.get(['currWallet'], function (wallet) {
 
       const password = request.password;
-      console.log("wallet.currWallet ===>", wallet.currWallet)
       const entropyKeystore = wallet.currWallet.entropyKeystore
       //TODO check the password
       const entropy = Keystore.decrypt(entropyKeystore, password)
@@ -352,7 +354,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     //没有0x的privateKey
     let privateKey: string = request.privateKey.trim();
-    if(privateKey.startsWith("0x")){
+    if (privateKey.startsWith("0x")) {
       privateKey = privateKey.substr(2);
     }
     const password = request.password.trim()
@@ -377,7 +379,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       // saveWallets(privateKey, password, "", "");
 
       //Add Keyper to Synapse
-      await AddKeyperWallet(privateKey, password, "", "");
+      await addKeyperWallet(privateKey, password, "", "");
     }
 
     //002-
@@ -425,7 +427,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       // saveWallets(privateKey, uPassword, "", "");
 
       //Add Keyper to Synapse
-      await AddKeyperWallet(privateKey, uPassword, "", "");
+      await addKeyperWallet(privateKey, uPassword, "", "");
     }
 
     //002-
@@ -444,7 +446,7 @@ function saveWallets(privateKey, entropyKeystore, rootKeystore, keystore, prefix
   const addressObj = Address.fromPrivateKey(privateKey, prefix);
   const blake160 = addressObj.getBlake160(); //publicKeyHash
   const publicKey = ckbUtils.privateKeyToPublicKey("0x" + privateKey);
-  console.log("=== saveWallets publicKey",publicKey);
+  console.log("=== saveWallets publicKey", publicKey);
 
   const lockHash = ckbUtils.scriptToHash({
     hashType: "type",
@@ -474,7 +476,6 @@ function saveWallets(privateKey, entropyKeystore, rootKeystore, keystore, prefix
 }
 
 function saveToStorage() {
-
   chrome.storage.sync.set({ wallets, }, () => {
     console.log('wallets is set to storage: ' + JSON.stringify(wallets));
   });
@@ -508,49 +509,4 @@ function addressIsExist(address, addresses): {} {
     index: index
   }
   return result;
-}
-
-let keys = {};
-async function AddKeyperWallet(privateKey, password, entropyKeystore, rootKeystore) {
-
-  await KeyperWallet.init();
-  // await KeyperWallet.generateByPrivateKey(password, privateKey);
-
-  const ks = KeyperWallet.generateKeystore(privateKey, password);
-  const ec = new EC('secp256k1');
-  const key = ec.keyFromPrivate(privateKey);
-  const publicKey = Buffer.from(key.getPublic().encodeCompressed()).toString("hex");
-
-  keys = KeyperWallet.saveKeystore(ks, publicKey);
-  KeyperWallet.setUpContainer(publicKey);
-
-  saveWallets(privateKey, entropyKeystore, rootKeystore, ks);
-
-  //Keyper accounts
-  const accounts = await KeyperWallet.accounts()
-  chrome.storage.sync.set({ accounts, }, () => {
-    console.log('keyper accounts is set to storage: ' + JSON.stringify(accounts));
-  });
-
-  getKeystoreFromWallets(publicKey);
-}
-
-export function getKeystoreFromWallets(publicKey){
-  let nPublicKey = publicKey;
-  if(!publicKey.startsWith('0x')){
-    nPublicKey = '0x' + publicKey;
-  }
-  const ks = findKeystoreInWallets(wallets,nPublicKey);
-  // console.log("=== ks001 ===",ks);
-  // console.log("=== ks002 ===",keys[nPublicKey]);
-  // keys[nPublicKey]
-  return ks;
-}
-
-function findKeystoreInWallets(wallets,publicKey){
-  function findKeystore(wallet) { 
-      return wallet.publicKey === publicKey;
-  }
-  const wallet = wallets.find(findKeystore);
-  return wallet.keystore;
 }

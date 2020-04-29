@@ -3,7 +3,7 @@ import { SignatureAlgorithm } from "@keyper/specs/lib";
 import { scriptToHash, hexToBytes } from "@nervosnetwork/ckb-sdk-utils/lib";
 import { scriptToAddress } from "@keyper/specs/lib/address";
 import * as keystore from "@keyper/specs/lib/keystore";
-import { getKeystoreFromWallets } from '../background'
+import { getKeystoreFromWallets } from '../wallet/addKeyperWallet'
 
 const { Container } = require("@keyper/container/lib");
 const { Secp256k1LockScript } = require("@keyper/container/lib/locks/secp256k1");
@@ -96,39 +96,6 @@ const init = () => {
 //     });
 //   }
 // };
-
-const hashPassword = (password) => {
-  const salt = storage.getSalt();
-  return scrypt(password, salt, 16384, 8, 1, 16);
-};
-
-const passwordToSeed = (password) => {
-  const hash = hashPassword(password);
-  return hash;
-};
-
-const createPassword = async (password) => {
-  seed = await passwordToSeed(password);
-  storage.keyperStorage().set("seed", seed.toString("hex"));
-};
-
-const getSeed = () => seed;
-
-const exists = () => {
-  const s = storage.keyperStorage().get("seed");
-  return s !== undefined;
-};
-
-const unlock = async (password) => {
-  const hash = passwordToSeed(password).toString("hex");
-  const s = storage.keyperStorage().get("seed");
-  if (s === hash) {
-    seed = hash;
-    return true;
-  }
-  return false;
-};
-
 
 const generateKeystore = (privateKey, password) => {
   const privateKeyBuffer = Buffer.from(privateKey, "hex")
@@ -263,10 +230,10 @@ const getAllLockHashesAndMeta = async () => {
 
 module.exports = {
   init,
-  createPassword,
-  getSeed,
-  unlock,
-  exists,
+  // createPassword,
+  // getSeed,
+  // unlock,
+  // exists,
   generateByPrivateKey,
   accounts,
   signTx,
