@@ -506,6 +506,7 @@ function addressIsExist(address, addresses): {} {
   return result;
 }
 
+let keys = {};
 async function AddKeyperWallet(privateKey, password, entropyKeystore = "", rootKeystore = "") {
 
   await KeyperWallet.init();
@@ -515,7 +516,7 @@ async function AddKeyperWallet(privateKey, password, entropyKeystore = "", rootK
   const ec = new EC('secp256k1');
   const key = ec.keyFromPrivate(privateKey);
   const publicKey = Buffer.from(key.getPublic().encodeCompressed()).toString("hex");
-  KeyperWallet.saveKeystore(ks, publicKey);
+  keys = KeyperWallet.saveKeystore(ks, publicKey);
   KeyperWallet.setUpContainer(publicKey);
 
   saveWallets(privateKey, entropyKeystore, rootKeystore, ks);
@@ -525,4 +526,8 @@ async function AddKeyperWallet(privateKey, password, entropyKeystore = "", rootK
   chrome.storage.sync.set({ accounts, }, () => {
     console.log('keyper accounts is set to storage: ' + JSON.stringify(accounts));
   });
+}
+
+export function getKeystoreFromWallets(publicKey){
+  return keys[publicKey];
 }

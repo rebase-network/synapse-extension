@@ -3,7 +3,7 @@ import { SignatureAlgorithm } from "@keyper/specs/lib";
 import { scriptToHash, hexToBytes } from "@nervosnetwork/ckb-sdk-utils/lib";
 import { scriptToAddress } from "@keyper/specs/lib/address";
 import * as keystore from "@keyper/specs/lib/keystore";
-
+import { getKeystoreFromWallets } from '../background'
 
 const { Container } = require("@keyper/container/lib");
 const { Secp256k1LockScript } = require("@keyper/container/lib/locks/secp256k1");
@@ -12,7 +12,7 @@ const AnyPayLockScript = require("./locks/anypay");
 const storage = require("./storage");
 const EC = require("elliptic").ec;
 
-let seed, keys, container;
+let seed, container;
 let addRules = []; //Mod by River
 
 const init = () => {
@@ -31,7 +31,8 @@ const init = () => {
       },
       sign: async function (context, message) {
 
-        const key = keys[context.publicKey];
+        // const key = keys[context.publicKey];
+        const key = getKeystoreFromWallets(context.publicKey);
         if (!key) {
           throw new Error(`no key for address: ${context.address}`);
         }
@@ -56,45 +57,45 @@ const init = () => {
   container.addLockScript(new Secp256k1LockScript());
   container.addLockScript(new Keccak256LockScript());
   container.addLockScript(new AnyPayLockScript());
-  keys = {};
-  reloadKeys();
+  // keys = {};
+  // reloadKeys();
 };
 
-const reloadKeys = () => {
-  if (storage.keyperStorage().get("keys")) {
-    const innerKeys = storage.keyperStorage().get("keys");
-    innerKeys.forEach(key => {
-      container.addPublicKey({
-        payload: `0x${key.publicKey}`,
-        algorithm: SignatureAlgorithm.secp256k1,
-      });
-      keys[`0x${key.publicKey}`] = key;
-    });
-  }
-};
+// const reloadKeys = () => {
+//   if (storage.keyperStorage().get("keys")) {
+//     const innerKeys = storage.keyperStorage().get("keys");
+//     innerKeys.forEach(key => {
+//       container.addPublicKey({
+//         payload: `0x${key.publicKey}`,
+//         algorithm: SignatureAlgorithm.secp256k1,
+//       });
+//       keys[`0x${key.publicKey}`] = key;
+//     });
+//   }
+// };
 
-const reloadCacheRuls = async () => {
-  if (storage.keyperStorage().get("keys")) {
-    const innerKeys = storage.keyperStorage().get("keys");
-    innerKeys.forEach(key => {
-      const scripts = container.getScripsByPublicKey({
-        payload: `0x${key.publicKey}`,
-        algorithm: SignatureAlgorithm.secp256k1,
-      });
-      scripts.forEach(async (script) => {
-        // await global.cache.addRule({
-        //   name: "LockHash",
-        //   data: scriptToHash(script),
-        // });
-        const addRule = {
-          name: "LockHash",
-          data: scriptToHash(script),
-        }
-        addRules.push(addRule);
-      });
-    });
-  }
-};
+// const reloadCacheRuls = async () => {
+//   if (storage.keyperStorage().get("keys")) {
+//     const innerKeys = storage.keyperStorage().get("keys");
+//     innerKeys.forEach(key => {
+//       const scripts = container.getScripsByPublicKey({
+//         payload: `0x${key.publicKey}`,
+//         algorithm: SignatureAlgorithm.secp256k1,
+//       });
+//       scripts.forEach(async (script) => {
+//         // await global.cache.addRule({
+//         //   name: "LockHash",
+//         //   data: scriptToHash(script),
+//         // });
+//         const addRule = {
+//           name: "LockHash",
+//           data: scriptToHash(script),
+//         }
+//         addRules.push(addRule);
+//       });
+//     });
+//   }
+// };
 
 const hashPassword = (password) => {
   const salt = storage.getSalt();
@@ -137,6 +138,7 @@ const generateKeystore = (privateKey, password) => {
 
 const saveKeystore = (ks, publicKey) => {
 
+  const keys = {};
   ks.publicKey = publicKey;
   if (!storage.keyperStorage().get("keys")) {
     storage.keyperStorage().set("keys", JSON.stringify(ks));
@@ -148,6 +150,7 @@ const saveKeystore = (ks, publicKey) => {
 
   // keys[`0x${publicKey}`] = key;
   keys[`0x${publicKey}`] = ks;
+  return keys;
 }
 
 // const saveKeystoreToWallet = (ks, wallet) => {
@@ -270,4 +273,6 @@ module.exports = {
   getAllLockHashesAndMeta,
   reloadCacheRuls,
   generateKeystore,
+  saveKeystore,
+  setUpContainer,
 };
