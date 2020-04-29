@@ -127,12 +127,21 @@ const unlock = async (password) => {
   return false;
 };
 
+
+const generateKeystore = (privateKey, password)=>{
+  
+  const privateKeyBuffer = Buffer.from(privateKey, "hex")
+  const ks = keystore.encrypt(privateKeyBuffer, password);
+  return ks;
+}
+
 const generateByPrivateKey = async (privateKey, password) => {
   const ec = new EC('secp256k1');
   const key = ec.keyFromPrivate(privateKey);
   const publicKey = Buffer.from(key.getPublic().encodeCompressed()).toString("hex");
-  const privateKeyBuffer = Buffer.from(privateKey, "hex")
-  const ks = keystore.encrypt(privateKeyBuffer, password);
+  // const privateKeyBuffer = Buffer.from(privateKey, "hex")
+  // const ks = keystore.encrypt(privateKeyBuffer, password);
+  const ks = generateKeystore(privateKey, password);
   ks.publicKey = publicKey;
 
   if (!storage.keyperStorage().get("keys")) {
