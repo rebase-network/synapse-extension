@@ -74,10 +74,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       currWallet = wallets[addresses[index].walletIndex];
     } else {
       //001-
-      privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystore);
+      // privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystore);
 
       //Add Keyper to Synapse
-      await AddKeyperWallet(privateKey, password);
+      await AddKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
     }
     //002-
     saveToStorage();
@@ -135,10 +135,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       currWallet = wallets[addresses[index].walletIndex];
     } else {
       //001-privateKeyToKeystore
-      privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystore);
+      // privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystore);
 
       //Add Keyper to Synapse
-      await AddKeyperWallet(privateKey, password);
+      await AddKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
     }
 
     //002-saveToStorage
@@ -372,7 +372,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       currWallet = wallets[addresses[index].walletIndex];
     } else {
       //001-
-      privateKeyToKeystore(privateKey, password, "", "");
+      // privateKeyToKeystore(privateKey, password, "", "");
 
       //Add Keyper to Synapse
       await AddKeyperWallet(privateKey, password);
@@ -420,7 +420,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       currWallet = wallets[addresses[index].walletIndex];
     } else {
       //001-
-      privateKeyToKeystore(privateKey, uPassword, "", "");
+      // privateKeyToKeystore(privateKey, uPassword, "", "");
 
       //Add Keyper to Synapse
       await AddKeyperWallet(privateKey, uPassword);
@@ -441,7 +441,6 @@ function privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystor
 
   const keystore = KeyperWallet.generateKeystore(privateKey, password); //001
   
-
   const addressObj = Address.fromPrivateKey(privateKey, prefix);
   const blake160 = addressObj.getBlake160(); //publicKeyHash
 
@@ -450,7 +449,6 @@ function privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystor
     codeHash: Ckb.MainNetCodeHash,
     args: blake160,
   })
-
 
   const wallet = {
     "path": addressObj.path, //ckt 有问题
@@ -509,10 +507,12 @@ function addressIsExist(address, addresses): {} {
   return result;
 }
 
-async function AddKeyperWallet(privateKey, password) {
+async function AddKeyperWallet(privateKey, password, entropyKeystore = "", rootKeystore = "") {
 
   await KeyperWallet.init();
   await KeyperWallet.generateByPrivateKey(password, privateKey);
+
+  privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystore);
 
   //Keyper accounts
   const accounts = await KeyperWallet.accounts()
