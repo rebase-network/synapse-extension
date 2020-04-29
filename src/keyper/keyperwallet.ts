@@ -4,6 +4,7 @@ import { scriptToHash, hexToBytes } from "@nervosnetwork/ckb-sdk-utils/lib";
 import { scriptToAddress } from "@keyper/specs/lib/address";
 import * as keystore from "@keyper/specs/lib/keystore";
 
+
 const { Container } = require("@keyper/container/lib");
 const { Secp256k1LockScript } = require("@keyper/container/lib/locks/secp256k1");
 const Keccak256LockScript = require("./locks/keccak256");
@@ -149,6 +150,10 @@ const saveKeystore = (ks, publicKey) => {
   keys[`0x${publicKey}`] = ks;
 }
 
+// const saveKeystoreToWallet = (ks, wallet) => {
+//     wallet.keystore = ks;
+// }
+
 const setUpContainer = (publicKey) => {
   container.addPublicKey({
     payload: `0x${publicKey}`,
@@ -264,4 +269,5 @@ module.exports = {
   signTx,
   getAllLockHashesAndMeta,
   reloadCacheRuls,
+  generateKeystore,
 };

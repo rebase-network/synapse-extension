@@ -11,6 +11,8 @@ describe('keyper ks test', () => {
         jest.setTimeout(150000)
 
         await keyperwalletTest.init();
-        await keyperwalletTest.generateByPrivateKey(privateKey, password);
+        const ks = await keyperwalletTest.generateByPrivateKey(privateKey, password);
+        console.log("=== ks ==",ks);
+        
     })
   })

@@ -17,6 +17,8 @@ import { getBalanceByAddress } from './utils/address'
 
 const KeyperWallet = require('../src/keyper/keyperwallet');
 
+// import { generateKeystore } from './keyper/keyperwallet';
+
 /**
  * Listen messages from popup
  */
@@ -437,13 +439,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 //privateKey 没有0x前缀
 function privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystore, prefix = AddressPrefix.Testnet) {
 
-  const buff = Buffer.from(privateKey, 'hex')
-  const newkeystore = Keystore.encrypt(buff, password)
-
-  let _obj = {}
-  _obj['id'] = newkeystore.id
-  _obj['version'] = newkeystore.version
-  _obj["crypto"] = newkeystore.crypto
+  const keystore = KeyperWallet.generateKeystore(privateKey, password); //001
+  
 
   const addressObj = Address.fromPrivateKey(privateKey, prefix);
   const blake160 = addressObj.getBlake160(); //publicKeyHash
@@ -454,6 +451,7 @@ function privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystor
     args: blake160,
   })
 
+
   const wallet = {
     "path": addressObj.path, //ckt 有问题
     "blake160": blake160,
@@ -461,7 +459,7 @@ function privateKeyToKeystore(privateKey, password, entropyKeystore, rootKeystor
     "lockHash": lockHash,
     "entropyKeystore": entropyKeystore, //助记词
     "rootKeystore": rootKeystore, //Root
-    "keystore": _obj,
+    "keystore": keystore,
     "keystoreType": KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE
   }
   wallets.push(wallet)
