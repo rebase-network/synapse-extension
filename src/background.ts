@@ -22,7 +22,7 @@ import { addKeyperWallet, getAddressesList, getCurrentWallet, getWallets } from 
 
 //TODO ====
 let wallets = [];
-let currWallet = {};
+let currentWallet = {};
 let addressesList = [];
 
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
@@ -60,20 +60,18 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     //No '0x' prefix
     const privateKey = masterKeychain.derivePath(Address.pathForReceiving(0)).privateKey.toString('hex');
     const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
-    const addressObject = Address.fromPrivateKey(privateKey);
-    const address = addressObject.address;
 
     //验证导入的Keystore是否已经存在
     // const isExistObj = addressIsExist(address, addressesList);
-    if(addressesList.length !== 0){
+    if (addressesList.length !== 0) {
       const resultPublicKey = findPublicKeyInWallets(publicKey, addressesList);
       if (resultPublicKey !== "") {
         // const index = isExistObj["index"];
-        // currWallet = wallets[addressesList[index].walletIndex];
+        // currentWallet = wallets[addressesList[index].walletIndex];
         const addresses = addressesList[publicKey];
-        currWallet = {
+        currentWallet = {
           publicKey: publicKey,
-          address: addresses[0],
+          account: addresses[0],
         }
       }
     } else {
@@ -84,7 +82,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
       wallets = getWallets();
       addressesList = getAddressesList();
-      currWallet = getCurrentWallet();
+      currentWallet = getCurrentWallet();
     }
     //002-
     saveToStorage();
@@ -139,7 +137,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const isExistObj = addressIsExist(address, addressesList);
     if (isExistObj["isExist"]) {
       const index = isExistObj["index"];
-      currWallet = wallets[addressesList[index].walletIndex];
+      currentWallet = wallets[addressesList[index].walletIndex];
     } else {
       //001-saveWallets
       // saveWallets(privateKey, password, entropyKeystore, rootKeystore);
@@ -156,39 +154,43 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
   //REQUEST_ADDRESS_INFO
   if (request.messageType === MESSAGE_TYPE.REQUEST_ADDRESS_INFO) {
-    chrome.storage.sync.get(['currWallet'], function (wallet) {
+    chrome.storage.sync.get(['currentWallet'], function (wallet) {
+
+      if (!wallet) return
+      const address = wallet.currentWallet.account.address;
       const message: any = {
-        messageType: MESSAGE_TYPE.ADDRESS_INFO
-      }
-      if (wallet) {
-        message.address = wallet.currWallet.address
+        messageType: MESSAGE_TYPE.ADDRESS_INFO,
+        address: address
       }
 
       chrome.runtime.sendMessage(message)
+      
     });
   }
 
   // get balance by address
   if (request.messageType === MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS) {
-    chrome.storage.sync.get(['currWallet'], async function (wallet) {
+    chrome.storage.sync.get(['currentWallet'], async function (wallet) {
+
       if (!wallet) return
-      const address = wallet.currWallet.address
+      const address = wallet.currentWallet.account.address;
       const balance = await getBalanceByAddress(address)
-      console.log('bg get balance: ', balance)
+
       chrome.runtime.sendMessage({
         balance,
         messageType: MESSAGE_TYPE.BALANCE_BY_ADDRESS
       })
+
     });
   }
 
   //发送交易
   if (request.messageType === MESSAGE_TYPE.RESQUEST_SEND_TX) {
 
-    chrome.storage.sync.get(['currWallet'], async function (result) {
+    chrome.storage.sync.get(['currentWallet'], async function (result) {
 
-      console.log("currWallet ===>", result);
-      console.log("wallet.currWallet.keystore ===>", result.currWallet.keystore);
+      console.log("currentWallet ===>", result);
+      console.log("wallet.currentWallet.keystore ===>", result.currentWallet.keystore);
 
       const toAddress = request.address.trim();
       const amount = request.amount.trim();
@@ -196,11 +198,11 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const password = request.password.trim();
 
       //缺少0x的privateKey
-      const privateKey = Keystore.decrypt(result.currWallet.keystore, password);
+      const privateKey = Keystore.decrypt(result.currentWallet.keystore, password);
       console.log("privateKey ===>", privateKey);
 
       //PrivateKey导入的情况还未解决
-      const fromAddress = result.currWallet.address;
+      const fromAddress = result.currentWallet.address;
 
       const sendTxHash = await sendSimpleTransaction(
         '0x' + privateKey,
@@ -246,10 +248,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   //export-private-key check
   if (request.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK) {
 
-    chrome.storage.sync.get(['currWallet'], function (wallet) {
+    chrome.storage.sync.get(['currentWallet'], function (wallet) {
 
       const password = request.password;
-      const keystore = wallet.currWallet.keystore
+      const keystore = wallet.currentWallet.keystore
       //TODO check the password
       const privateKey = Keystore.decrypt(keystore, password)
 
@@ -310,10 +312,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   //export-mneonic check
   if (request.messageType === MESSAGE_TYPE.EXPORT_MNEONIC_CHECK) {
 
-    chrome.storage.sync.get(['currWallet'], function (wallet) {
+    chrome.storage.sync.get(['currentWallet'], function (wallet) {
 
       const password = request.password;
-      const entropyKeystore = wallet.currWallet.entropyKeystore
+      const entropyKeystore = wallet.currentWallet.entropyKeystore
       //TODO check the password
       const entropy = Keystore.decrypt(entropyKeystore, password)
 
@@ -361,10 +363,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     }
     const password = request.password.trim()
 
-    //TODO 是否需要currWallet中的keystore的验证;
-    const keystore = currWallet['keystore']
+    //TODO 是否需要currentWallet中的keystore的验证;
+    const keystore = currentWallet['keystore']
     if (keystore === undefined || keystore === "" || keystore === "undefined") {
-      throw new Error('currWallet keystore is null')
+      throw new Error('currentWallet keystore is null')
     }
     if (!Keystore.checkPasswd(keystore, password)) {
       throw new Error('password incorrect')
@@ -375,7 +377,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const isExistObj = addressIsExist(address, addressesList);
     if (isExistObj["isExist"]) {
       const index = isExistObj["index"];
-      currWallet = wallets[addressesList[index].walletIndex];
+      currentWallet = wallets[addressesList[index].walletIndex];
     } else {
       //001-
       // saveWallets(privateKey, password, "", "");
@@ -406,9 +408,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     }
 
     //021- check the synapse password
-    const currentKeystore = currWallet['keystore']
+    const currentKeystore = currentWallet['keystore']
     if (currentKeystore === undefined || currentKeystore === "" || currentKeystore === "undefined") {
-      throw new Error('currWallet keystore is null')
+      throw new Error('currentWallet keystore is null')
     }
     if (!Keystore.checkPasswd(currentKeystore, uPassword)) {
       throw new Error('password incorrect')
@@ -423,7 +425,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const isExistObj = addressIsExist(address, addressesList);
     if (isExistObj["isExist"]) {
       const index = isExistObj["index"];
-      currWallet = wallets[addressesList[index].walletIndex];
+      currentWallet = wallets[addressesList[index].walletIndex];
     } else {
       //001-
       // saveWallets(privateKey, uPassword, "", "");
@@ -446,8 +448,8 @@ function saveToStorage() {
     console.log('wallets is set to storage: ' + JSON.stringify(wallets));
   });
 
-  chrome.storage.sync.set({ currWallet, }, () => {
-    console.log('currWallet is set to storage: ' + JSON.stringify(currWallet));
+  chrome.storage.sync.set({ currentWallet, }, () => {
+    console.log('currentWallet is set to storage: ' + JSON.stringify(currentWallet));
   });
 
   chrome.storage.sync.set({ addressesList, }, () => {
@@ -479,7 +481,7 @@ function addressIsExist(address, addressesList): {} {
     for (let i = 0; i < addressesList.length; i++) {
       if (address === addressesList[i].address) {
         isExist = true;
-        // currWallet = wallets[addressesList[i].walletIndex];
+        // currentWallet = wallets[addressesList[i].walletIndex];
         index = i;
         break;
       }

@@ -48,13 +48,13 @@ export function saveWallets(privateKey, keystore, accounts, entropyKeystore, roo
 
   const addressesObj = {
     publicKey: publicKey,
-    addressesList: accounts
+    addresses: accounts
   }
   addressesList.push(addressesObj);
 
   const currentAddress = {
     publicKey: publicKey,
-    address: accounts[0],
+    account: accounts[0],
   }
 
   currentWallet = currentAddress;
