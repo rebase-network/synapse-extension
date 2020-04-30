@@ -310,7 +310,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const publicKey = result.currentWallet.publicKey
       const wallet = findInWalletsByPublicKey(publicKey,wallets);
       const entropyKeystore = wallet.entropyKeystore;
-      
+
       //TODO check the password
       const entropy = Keystore.decrypt(entropyKeystore, password)
 
@@ -367,18 +367,25 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       throw new Error('password incorrect')
     }
 
-    const addressObj = Address.fromPrivateKey(privateKey);
-    const address = addressObj.address;
-    const isExistObj = addressIsExist(address, addressesList);
-    if (isExistObj["isExist"]) {
-      const index = isExistObj["index"];
-      currentWallet = wallets[addressesList[index].walletIndex];
+    const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
+    //check the keystore exist or not
+    const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
+
+    if (addressesObj != null && addressesObj != "") {
+      const addresses = addressesObj.addresses;
+      currentWallet = {
+        publicKey: publicKey,
+        address: addresses[0].address,
+        type: addresses[0].type,
+        lock: addresses[0].lock,
+      }
     } else {
-      //001-
-      // saveWallets(privateKey, password, "", "");
 
       //Add Keyper to Synapse
       await addKeyperWallet(privateKey, password, "", "");
+      wallets = getWallets();
+      addressesList = getAddressesList();
+      currentWallet = getCurrentWallet();
     }
 
     //002-
@@ -414,19 +421,26 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     //03 - get the private by keystore
     const privateKey = Keystore.decrypt(keystore, kPassword);
 
-    //04- create the new keystore by the synapsePassword;
-    const addressObj = Address.fromPrivateKey(privateKey);
-    const address = addressObj.address;
-    const isExistObj = addressIsExist(address, addressesList);
-    if (isExistObj["isExist"]) {
-      const index = isExistObj["index"];
-      currentWallet = wallets[addressesList[index].walletIndex];
+    const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
+
+    //check the keystore exist or not
+    const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
+
+    if (addressesObj != null && addressesObj != "") {
+      const addresses = addressesObj.addresses;
+      currentWallet = {
+        publicKey: publicKey,
+        address: addresses[0].address,
+        type: addresses[0].type,
+        lock: addresses[0].lock,
+      }
     } else {
-      //001-
-      // saveWallets(privateKey, uPassword, "", "");
 
       //Add Keyper to Synapse
       await addKeyperWallet(privateKey, uPassword, "", "");
+      wallets = getWallets();
+      addressesList = getAddressesList();
+      currentWallet = getCurrentWallet();
     }
 
     //002-
