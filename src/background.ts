@@ -363,8 +363,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
       //check the keystore 
       const currentPublicKey = result.currentWallet.publicKey;
-      const currentWallet = findInWalletsByPublicKey(currentPublicKey, wallets);
-      const keystore = currentWallet.keystore;
+      const wallet = findInWalletsByPublicKey(currentPublicKey, wallets);
+      const keystore = wallet.keystore;
       if (keystore === undefined || keystore === "" || keystore === "undefined") {
         throw new Error('currentWallet keystore is null')
       }
@@ -418,8 +418,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       //021- check the synapse password
       //check the keystore 
       const currentPublicKey = result.currentWallet.publicKey
-      const wallet = findInWalletsByPublicKey(currentPublicKey, wallets);
-      const currentKeystore = wallet.keystore;
+      const currWallet = findInWalletsByPublicKey(currentPublicKey, wallets);
+      const currentKeystore = currWallet.keystore;
       if (currentKeystore === undefined || currentKeystore === "" || currentKeystore === "undefined") {
         throw new Error('currentWallet keystore is null')
       }
