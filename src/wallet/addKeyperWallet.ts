@@ -10,27 +10,22 @@ let wallets = [];
 let currentWallet = {};
 let addressesList = [];
 
+//privateKey No '0x'
 export async function addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore) {
 
   await KeyperWallet.init();
 
   const keystore = KeyperWallet.generateKeystore(privateKey, password);
-  // const ec = new EC('secp256k1');
-  // const key = ec.keyFromPrivate(privateKey);
-  // const publicKey = Buffer.from(key.getPublic().encodeCompressed()).toString("hex");
-  const publicKey = ckbUtils.privateKeyToPublicKey(privateKey);
-  KeyperWallet.setUpContainer(publicKey);
+  //prefix '0x'
+  const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
+  //params publicKey No '0x'
+  KeyperWallet.setUpContainer(publicKey.substr(2));
 
   //Keyper accounts
   const accounts = await KeyperWallet.accounts()
 
   saveWallets(privateKey, keystore, accounts, entropyKeystore, rootKeystore);
 
-  // chrome.storage.sync.set({ accounts, }, () => {
-  //   console.log('keyper accounts is set to storage: ' + JSON.stringify(accounts));
-  // });
-
-  // getKeystoreFromWallets(publicKey);
 }
 
 //3- Type

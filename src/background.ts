@@ -21,9 +21,9 @@ import { addKeyperWallet, getAddressesList, getCurrentWallet, getWallets } from 
  */
 
 //TODO ====
-let wallets = []
-let currWallet = {}
-let addressesList = []
+let wallets = [];
+let currWallet = {};
+let addressesList = [];
 
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
@@ -57,16 +57,25 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     const rootKeystore = Keystore.encrypt(Buffer.from(extendedKey.serialize(), "hex"), password);
 
-    //No '0x'
+    //No '0x' prefix
     const privateKey = masterKeychain.derivePath(Address.pathForReceiving(0)).privateKey.toString('hex');
+    const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
     const addressObject = Address.fromPrivateKey(privateKey);
     const address = addressObject.address;
 
     //验证导入的Keystore是否已经存在
-    const isExistObj = addressIsExist(address, addressesList);
-    if (isExistObj["isExist"]) {
-      const index = isExistObj["index"];
-      currWallet = wallets[addressesList[index].walletIndex];
+    // const isExistObj = addressIsExist(address, addressesList);
+    if(addressesList.length !== 0){
+      const resultPublicKey = findPublicKeyInWallets(publicKey, addressesList);
+      if (resultPublicKey !== "") {
+        // const index = isExistObj["index"];
+        // currWallet = wallets[addressesList[index].walletIndex];
+        const addresses = addressesList[publicKey];
+        currWallet = {
+          publicKey: publicKey,
+          address: addresses[0],
+        }
+      }
     } else {
       //001-
       // saveWallets(privateKey, password, entropyKeystore, rootKeystore);
@@ -433,9 +442,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 });
 
 function saveToStorage() {
-  wallets = getWallets();
-  currWallet = getCurrentWallet();
-  addressesList = getAddressesList();
   chrome.storage.sync.set({ wallets, }, () => {
     console.log('wallets is set to storage: ' + JSON.stringify(wallets));
   });
@@ -447,6 +453,21 @@ function saveToStorage() {
   chrome.storage.sync.set({ addressesList, }, () => {
     console.log('addressesList is set to storage: ' + JSON.stringify(addressesList));
   });
+}
+
+// function publicKeyIsExist(addressesList, publicKey) {
+//   function findPublicKey(addresses) {
+//     return addresses.publicKey === publicKey;
+//   }
+//   return addressesList.find(findPublicKey);
+// }
+
+function findPublicKeyInWallets(publicKey, wallets) {
+  function findKeystore(wallet) {
+    return wallet.publicKey === publicKey;
+  }
+  const wallet = wallets.find(findKeystore);
+  return wallet;
 }
 
 function addressIsExist(address, addressesList): {} {
