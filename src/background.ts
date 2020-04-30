@@ -238,10 +238,12 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   //export-private-key check
   if (request.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK) {
 
-    chrome.storage.sync.get(['currentWallet'], function (wallet) {
+    chrome.storage.sync.get(['currentWallet'], function (result) {
 
       const password = request.password;
-      const keystore = wallet.currentWallet.keystore
+      const publicKey = result.currentWallet.publicKey
+      const wallet = findInWalletsByPublicKey(publicKey,wallets);
+      const keystore = wallet.keystore;
       //TODO check the password
       const privateKey = Keystore.decrypt(keystore, password)
 
@@ -446,7 +448,6 @@ function saveToStorage() {
     console.log('addressesList is set to storage: ' + JSON.stringify(addressesList));
   });
 }
-
 
 function findInWalletsByPublicKey(publicKey, wallets) {
   function findKeystore(wallet) {
