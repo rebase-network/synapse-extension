@@ -63,16 +63,15 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     //验证导入的Keystore是否已经存在
     // const isExistObj = addressIsExist(address, addressesList);
-    if (addressesList.length !== 0) {
-      const resultPublicKey = findPublicKeyInWallets(publicKey, addressesList);
-      if (resultPublicKey !== "") {
-        // const index = isExistObj["index"];
-        // currentWallet = wallets[addressesList[index].walletIndex];
-        const addresses = addressesList[publicKey];
-        currentWallet = {
-          publicKey: publicKey,
-          account: addresses[0],
-        }
+    const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
+
+    if ( addressesObj != null && addressesObj != "") {
+      const addresses = addressesObj.addresses;
+      currentWallet = {
+        publicKey: publicKey,
+        address: addresses[0].address,
+        type: addresses[0].type,
+        lock: addresses[0].lock,
       }
     } else {
       //001-
@@ -157,14 +156,14 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     chrome.storage.sync.get(['currentWallet'], function (wallet) {
 
       if (!wallet) return
-      const address = wallet.currentWallet.account.address;
+      const address = wallet.currentWallet.address;
       const message: any = {
         messageType: MESSAGE_TYPE.ADDRESS_INFO,
         address: address
       }
 
       chrome.runtime.sendMessage(message)
-      
+
     });
   }
 
@@ -173,7 +172,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     chrome.storage.sync.get(['currentWallet'], async function (wallet) {
 
       if (!wallet) return
-      const address = wallet.currentWallet.account.address;
+      const address = wallet.currentWallet.address;
       const balance = await getBalanceByAddress(address)
 
       chrome.runtime.sendMessage({
@@ -184,32 +183,22 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     });
   }
 
-  //发送交易
+  //send transactioin
   if (request.messageType === MESSAGE_TYPE.RESQUEST_SEND_TX) {
 
     chrome.storage.sync.get(['currentWallet'], async function (result) {
-
-      console.log("currentWallet ===>", result);
-      console.log("wallet.currentWallet.keystore ===>", result.currentWallet.keystore);
 
       const toAddress = request.address.trim();
       const amount = request.amount.trim();
       const fee = request.fee.trim();
       const password = request.password.trim();
 
-      //缺少0x的privateKey
-      const privateKey = Keystore.decrypt(result.currentWallet.keystore, password);
-      console.log("privateKey ===>", privateKey);
-
-      //PrivateKey导入的情况还未解决
       const fromAddress = result.currentWallet.address;
+      const publicKey = result.currentWallet.publicKey;
+      const wallet = findInWalletsByPublicKey(publicKey, wallets);
+      const privateKey = '0x' + Keystore.decrypt(wallet.keystore, password);
 
-      const sendTxHash = await sendSimpleTransaction(
-        '0x' + privateKey,
-        fromAddress,
-        toAddress,
-        BigInt(amount),
-        BigInt(fee));
+      const sendTxHash = await sendSimpleTransaction(privateKey, fromAddress, toAddress, BigInt(amount), BigInt(fee));
 
       chrome.runtime.sendMessage({
         fromAddress: fromAddress,
@@ -219,10 +208,11 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         txHash: sendTxHash,
         messageType: MESSAGE_TYPE.TO_TX_DETAIL
       })
+
     });
   }
 
-  //tx-detail
+  //transactioin detail
   if (request.messageType === MESSAGE_TYPE.REQUEST_TX_DETAIL) {
     // chrome.storage.sync.get(['wallet'], async function( {wallet} ) {
 
@@ -457,19 +447,26 @@ function saveToStorage() {
   });
 }
 
-// function publicKeyIsExist(addressesList, publicKey) {
-//   function findPublicKey(addresses) {
-//     return addresses.publicKey === publicKey;
-//   }
-//   return addressesList.find(findPublicKey);
-// }
 
-function findPublicKeyInWallets(publicKey, wallets) {
+function findInWalletsByPublicKey(publicKey, wallets) {
   function findKeystore(wallet) {
     return wallet.publicKey === publicKey;
   }
   const wallet = wallets.find(findKeystore);
   return wallet;
+}
+
+function findInAddressesListByPublicKey(publicKey, addressesList) {
+
+  console.log("--- publicKey ---", publicKey);
+  console.log("--- addressesList ---", JSON.stringify(addressesList));
+
+  function findAddresses(addresses) {
+    console.log("--- addresses ---", addresses);
+    return addresses.publicKey === publicKey;
+  }
+  const addresses = addressesList.find(findAddresses);
+  return addresses;
 }
 
 function addressIsExist(address, addressesList): {} {

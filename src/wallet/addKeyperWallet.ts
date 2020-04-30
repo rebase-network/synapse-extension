@@ -54,7 +54,9 @@ export function saveWallets(privateKey, keystore, accounts, entropyKeystore, roo
 
   const currentAddress = {
     publicKey: publicKey,
-    account: accounts[0],
+    address: accounts[0].address,
+    type: accounts[0].type,
+    lock: accounts[0].lock,
   }
 
   currentWallet = currentAddress;
