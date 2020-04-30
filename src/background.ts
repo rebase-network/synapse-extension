@@ -49,23 +49,20 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     // words 是否在助记词表中
     const seed = mnemonicToSeedSync(mnemonic)
     const masterKeychain = Keychain.fromSeed(seed)
-
     const extendedKey = new ExtendedPrivateKey(
       masterKeychain.privateKey.toString('hex'),
       masterKeychain.chainCode.toString('hex')
     )
-
     const rootKeystore = Keystore.encrypt(Buffer.from(extendedKey.serialize(), "hex"), password);
 
     //No '0x' prefix
     const privateKey = masterKeychain.derivePath(Address.pathForReceiving(0)).privateKey.toString('hex');
     const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
 
-    //验证导入的Keystore是否已经存在
-    // const isExistObj = addressIsExist(address, addressesList);
+    //check the keystore exist or not
     const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
-    if ( addressesObj != null && addressesObj != "") {
+    if (addressesObj != null && addressesObj != "") {
       const addresses = addressesObj.addresses;
       currentWallet = {
         publicKey: publicKey,
@@ -74,8 +71,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         lock: addresses[0].lock,
       }
     } else {
-      //001-
-      // saveWallets(privateKey, password, entropyKeystore, rootKeystore);
 
       //Add Keyper to Synapse
       await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
@@ -103,7 +98,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.messageType === MESSAGE_TYPE.SAVE_MNEMONIC) {
     const mnemonic = request.mnemonic.trim();
     const password = request.password.trim();
-    const confirmPassword = request.confirmPassword.trim();
+    // const confirmPassword = request.confirmPassword.trim();
 
     //助记词有效性的验证
     const isValidateMnemonic = validateMnemonic(mnemonic);
@@ -120,29 +115,34 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     const seed = mnemonicToSeedSync(mnemonic)
     const masterKeychain = Keychain.fromSeed(seed)
-
     const extendedKey = new ExtendedPrivateKey(
       masterKeychain.privateKey.toString('hex'),
       masterKeychain.chainCode.toString('hex')
     )
     const rootKeystore = Keystore.encrypt(Buffer.from(extendedKey.serialize(), "hex"), password);
 
+    //No '0x' prefix
     const privateKey = masterKeychain.derivePath(Address.pathForReceiving(0)).privateKey.toString('hex');
-    const addressObject = Address.fromPrivateKey(privateKey);
-    const address = addressObject.address;
+    const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
 
-    //验证导入的Keystore是否已经存在
-    //000-addressIsExist
-    const isExistObj = addressIsExist(address, addressesList);
-    if (isExistObj["isExist"]) {
-      const index = isExistObj["index"];
-      currentWallet = wallets[addressesList[index].walletIndex];
+    //check the keystore exist or not
+    const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
+
+    if (addressesObj != null && addressesObj != "") {
+      const addresses = addressesObj.addresses;
+      currentWallet = {
+        publicKey: publicKey,
+        address: addresses[0].address,
+        type: addresses[0].type,
+        lock: addresses[0].lock,
+      }
     } else {
-      //001-saveWallets
-      // saveWallets(privateKey, password, entropyKeystore, rootKeystore);
 
       //Add Keyper to Synapse
       await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
+      wallets = getWallets();
+      addressesList = getAddressesList();
+      currentWallet = getCurrentWallet();
     }
 
     //002-saveToStorage
