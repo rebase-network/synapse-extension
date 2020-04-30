@@ -242,7 +242,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
       const password = request.password;
       const publicKey = result.currentWallet.publicKey
-      const wallet = findInWalletsByPublicKey(publicKey,wallets);
+      const wallet = findInWalletsByPublicKey(publicKey, wallets);
       const keystore = wallet.keystore;
       //TODO check the password
       const privateKey = Keystore.decrypt(keystore, password)
@@ -308,7 +308,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
       const password = request.password;
       const publicKey = result.currentWallet.publicKey
-      const wallet = findInWalletsByPublicKey(publicKey,wallets);
+      const wallet = findInWalletsByPublicKey(publicKey, wallets);
       const entropyKeystore = wallet.entropyKeystore;
 
       //TODO check the password
@@ -350,105 +350,114 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
   // import private key
   if (request.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY) {
+    chrome.storage.sync.get(['currentWallet'], async function (result) {
 
-    //没有0x的privateKey
-    let privateKey: string = request.privateKey.trim();
-    if (privateKey.startsWith("0x")) {
-      privateKey = privateKey.substr(2);
-    }
-    const password = request.password.trim()
-
-    //TODO 是否需要currentWallet中的keystore的验证;
-    const keystore = currentWallet['keystore']
-    if (keystore === undefined || keystore === "" || keystore === "undefined") {
-      throw new Error('currentWallet keystore is null')
-    }
-    if (!Keystore.checkPasswd(keystore, password)) {
-      throw new Error('password incorrect')
-    }
-
-    const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
-    //check the keystore exist or not
-    const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
-
-    if (addressesObj != null && addressesObj != "") {
-      const addresses = addressesObj.addresses;
-      currentWallet = {
-        publicKey: publicKey,
-        address: addresses[0].address,
-        type: addresses[0].type,
-        lock: addresses[0].lock,
+      //没有0x的privateKey
+      let privateKey: string = request.privateKey.trim();
+      if (privateKey.startsWith("0x")) {
+        privateKey = privateKey.substr(2);
       }
-    } else {
 
-      //Add Keyper to Synapse
-      await addKeyperWallet(privateKey, password, "", "");
-      wallets = getWallets();
-      addressesList = getAddressesList();
-      currentWallet = getCurrentWallet();
-    }
+      const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
+      const password = request.password.trim()
 
-    //002-
-    saveToStorage();
+      //check the keystore 
+      const currentPublicKey = result.currentWallet.publicKey;
+      const currentWallet = findInWalletsByPublicKey(currentPublicKey, wallets);
+      const keystore = currentWallet.keystore;
+      if (keystore === undefined || keystore === "" || keystore === "undefined") {
+        throw new Error('currentWallet keystore is null')
+      }
+      if (!Keystore.checkPasswd(keystore, password)) {
+        throw new Error('password incorrect')
+      }
 
-    chrome.runtime.sendMessage({
-      messageType: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK
-    })
+      //check the keystore exist or not
+      const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
+
+      if (addressesObj != null && addressesObj != "") {
+        const addresses = addressesObj.addresses;
+        currentWallet = {
+          publicKey: publicKey,
+          address: addresses[0].address,
+          type: addresses[0].type,
+          lock: addresses[0].lock,
+        }
+      } else {
+
+        //Add Keyper to Synapse
+        await addKeyperWallet(privateKey, password, "", "");
+        wallets = getWallets();
+        addressesList = getAddressesList();
+        currentWallet = getCurrentWallet();
+      }
+
+      //002-
+      saveToStorage();
+
+      chrome.runtime.sendMessage({
+        messageType: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK
+      })
+    });
   }
 
   // import keystore
   if (request.messageType === MESSAGE_TYPE.IMPORT_KEYSTORE) {
 
-    //01- get the params from request
-    const keystore = request.keystore.trim();
-    const kPassword = request.keystorePassword.trim();
-    const uPassword = request.userPassword.trim()
+    chrome.storage.sync.get(['currentWallet'], async function (result) {
+      //01- get the params from request
+      const keystore = request.keystore.trim();
+      const kPassword = request.keystorePassword.trim();
+      const uPassword = request.userPassword.trim()
 
-    //02- check the keystore by the keystorePassword
-    if (!Keystore.checkPasswd(keystore, kPassword)) {
-      throw new Error('password incorrect')
-    }
-
-    //021- check the synapse password
-    const currentKeystore = currentWallet['keystore']
-    if (currentKeystore === undefined || currentKeystore === "" || currentKeystore === "undefined") {
-      throw new Error('currentWallet keystore is null')
-    }
-    if (!Keystore.checkPasswd(currentKeystore, uPassword)) {
-      throw new Error('password incorrect')
-    }
-
-    //03 - get the private by keystore
-    const privateKey = Keystore.decrypt(keystore, kPassword);
-
-    const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
-
-    //check the keystore exist or not
-    const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
-
-    if (addressesObj != null && addressesObj != "") {
-      const addresses = addressesObj.addresses;
-      currentWallet = {
-        publicKey: publicKey,
-        address: addresses[0].address,
-        type: addresses[0].type,
-        lock: addresses[0].lock,
+      //02- check the keystore by the keystorePassword
+      if (!Keystore.checkPasswd(keystore, kPassword)) {
+        throw new Error('password incorrect')
       }
-    } else {
 
-      //Add Keyper to Synapse
-      await addKeyperWallet(privateKey, uPassword, "", "");
-      wallets = getWallets();
-      addressesList = getAddressesList();
-      currentWallet = getCurrentWallet();
-    }
+      //021- check the synapse password
+      //check the keystore 
+      const currentPublicKey = result.currentWallet.publicKey
+      const wallet = findInWalletsByPublicKey(currentPublicKey, wallets);
+      const currentKeystore = wallet.keystore;
+      if (currentKeystore === undefined || currentKeystore === "" || currentKeystore === "undefined") {
+        throw new Error('currentWallet keystore is null')
+      }
+      if (!Keystore.checkPasswd(currentKeystore, uPassword)) {
+        throw new Error('password incorrect')
+      }
 
-    //002-
-    saveToStorage();
+      //03 - get the private by keystore
+      const privateKey = Keystore.decrypt(keystore, kPassword);
+      const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
+      //check the keystore exist or not
+      const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
-    chrome.runtime.sendMessage({
-      messageType: MESSAGE_TYPE.IMPORT_KEYSTORE_OK
-    })
+      if (addressesObj != null && addressesObj != "") {
+        const addresses = addressesObj.addresses;
+        currentWallet = {
+          publicKey: publicKey,
+          address: addresses[0].address,
+          type: addresses[0].type,
+          lock: addresses[0].lock,
+        }
+      } else {
+
+        //Add Keyper to Synapse
+        await addKeyperWallet(privateKey, uPassword, "", "");
+        wallets = getWallets();
+        addressesList = getAddressesList();
+        currentWallet = getCurrentWallet();
+      }
+
+      //002-
+      saveToStorage();
+
+      chrome.runtime.sendMessage({
+        messageType: MESSAGE_TYPE.IMPORT_KEYSTORE_OK
+      })
+
+    });
   }
 });
 
@@ -475,36 +484,9 @@ function findInWalletsByPublicKey(publicKey, wallets) {
 }
 
 function findInAddressesListByPublicKey(publicKey, addressesList) {
-
-  console.log("--- publicKey ---", publicKey);
-  console.log("--- addressesList ---", JSON.stringify(addressesList));
-
   function findAddresses(addresses) {
-    console.log("--- addresses ---", addresses);
     return addresses.publicKey === publicKey;
   }
   const addresses = addressesList.find(findAddresses);
   return addresses;
-}
-
-function addressIsExist(address, addressesList): {} {
-  let isExist = false;
-  let index = 99999;
-  if (addressesList.length === 0) {
-    //不处理
-  } else {
-    for (let i = 0; i < addressesList.length; i++) {
-      if (address === addressesList[i].address) {
-        isExist = true;
-        // currentWallet = wallets[addressesList[i].walletIndex];
-        index = i;
-        break;
-      }
-    }
-  }
-  const result = {
-    isExist: isExist,
-    index: index
-  }
-  return result;
 }
