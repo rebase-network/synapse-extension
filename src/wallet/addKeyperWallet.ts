@@ -1,32 +1,31 @@
 
+import { KEYSTORE_TYPE } from '../utils/constants'
 import Address, { AddressPrefix } from './address';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils'
-import { KEYSTORE_TYPE, Ckb } from '../utils/constants'
 
 const KeyperWallet = require('../keyper/keyperwallet');
 const EC = require("elliptic").ec;
 
 let wallets = [];
 let currentWallet = {};
-let addresses = [];
-// let keys = {};
+let addressesList = [];
+
 export async function addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore) {
 
   await KeyperWallet.init();
-  // await KeyperWallet.generateByPrivateKey(password, privateKey);
 
-  const ks = KeyperWallet.generateKeystore(privateKey, password);
-  const ec = new EC('secp256k1');
-  const key = ec.keyFromPrivate(privateKey);
-  const publicKey = Buffer.from(key.getPublic().encodeCompressed()).toString("hex");
-
-  // keys = KeyperWallet.saveKeystore(ks, publicKey);
+  const keystore = KeyperWallet.generateKeystore(privateKey, password);
+  // const ec = new EC('secp256k1');
+  // const key = ec.keyFromPrivate(privateKey);
+  // const publicKey = Buffer.from(key.getPublic().encodeCompressed()).toString("hex");
+  const publicKey = ckbUtils.privateKeyToPublicKey(privateKey);
   KeyperWallet.setUpContainer(publicKey);
 
-  saveWallets(privateKey, entropyKeystore, rootKeystore, ks);
-
   //Keyper accounts
-  // const accounts = await KeyperWallet.accounts()
+  const accounts = await KeyperWallet.accounts()
+
+  saveWallets(privateKey, keystore, accounts, entropyKeystore, rootKeystore);
+
   // chrome.storage.sync.set({ accounts, }, () => {
   //   console.log('keyper accounts is set to storage: ' + JSON.stringify(accounts));
   // });
@@ -35,47 +34,43 @@ export async function addKeyperWallet(privateKey, password, entropyKeystore, roo
 }
 
 //3- Type
-//privateKey 没有0x前缀
-export function saveWallets(privateKey, entropyKeystore, rootKeystore, keystore, prefix = AddressPrefix.Testnet) {
+//privateKey Not contain '0x'prefix
+export function saveWallets(privateKey, keystore, accounts, entropyKeystore, rootKeystore, prefix = AddressPrefix.Testnet) {
 
   const addressObj = Address.fromPrivateKey(privateKey, prefix);
   const blake160 = addressObj.getBlake160(); //publicKeyHash
   const publicKey = ckbUtils.privateKeyToPublicKey("0x" + privateKey);
-  const lockHash = ckbUtils.scriptToHash({
-    hashType: "type",
-    codeHash: Ckb.MainNetCodeHash,
-    args: blake160,
-  })
 
-  const wallet = {
-    "publicKey": publicKey, //get Keyper Store by pubicKey
-    "path": addressObj.path, //ckt 有问题
-    "blake160": blake160,
-    "address": addressObj.address,
-    "lockHash": lockHash,
-    "entropyKeystore": entropyKeystore, //助记词
-    "rootKeystore": rootKeystore, //Root
-    "keystore": keystore,
-    "keystoreType": KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE
+  const walletCommon = {
+    publicKey: publicKey,
+    blake160: blake160,
+    entropyKeystore: entropyKeystore,
+    rootKeystore: rootKeystore,
+    keystore: keystore,
+    keystoreType: KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE,
+  }
+  wallets.push(walletCommon)
+
+  const addressesObj = {
+    publicKey: publicKey,
+    addressesList: accounts
+  }
+  addressesList.push(addressesObj);
+
+  const currentAddress = {
+    publicKey: publicKey,
+    address: accounts[0],
   }
 
-  wallets.push(wallet)
-
-  const _address = {
-    "address": addressObj.address,
-    "walletIndex": wallets.length - 1
-  }
-
-  addresses.push(_address)
-  currentWallet = wallets[_address.walletIndex];
+  currentWallet = currentAddress;
 }
 
 export function getWallets() {
   return wallets;
 }
 
-export function getAddresses() {
-  return addresses;
+export function getAddressesList() {
+  return addressesList;
 }
 
 export function getCurrentWallet() {

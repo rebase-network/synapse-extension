@@ -1,24 +1,78 @@
 ### wallets数据结构
 
 ```json
-{
-    "wallets":[
-        {
-            "path":"", // 可为空，通过privatekey生成的地址没有
-            "blake160":"xx",
-            "mainnetAddr":"ckb....",
-            "testnetAddr":"ckt.....",
-            "lockHash":".....",
-            "rootKeystore":"", // 可为空，通过privatekey生成的地址没有rootKeystore
-            "keystore":"",
-            "keystoreType":1 // 1-通过助记词生成的， 2-通过keystore生成的，// 3-通过privatekey生成的，只能导出私钥
-        },
-        {
-            ......
-        }
-    ]
+const walletCommon = {
+  publicKey: 'addressObj.path',
+  blake160: 'blake160',
+  entropyKeystore: 'entropyKeystore',
+  rootKeystore: 'rootKeystore',
+  keystore: '_obj',
+  keystoreType: 'KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE',
 }
 
+const addressesObj = {
+  publicKey: 'publicKey',
+  addresses: [
+    {
+      lockScriptType: 'lockScriptType',
+      address: 'address',
+      lockHash: 'lockHash',
+    },
+    {
+      lockScriptType: 'lockScriptType',
+      address: 'address',
+      lockHash: 'lockHash',
+    },
+    {
+      lockScriptType: 'lockScriptType',
+      address: 'address',
+      lockHash: 'lockHash',
+    }
+  ]
+}
+
+const addressesList = [
+  {
+    publicKey: 'publicKey_111',
+    addresses: [
+      {
+        lockScriptType: 'secp256k1',
+        address: 'address_secp256k1', // [{capacity, data, type, lock}]
+        lockHash: 'lockHash_secp256k1',
+      },
+      {
+        lockScriptType: 'keccak256',
+        address: 'address_keccak256',
+        lockHash: 'lockHash_keccak256',
+      },
+      {
+        lockScriptType: 'anypay',
+        address: 'address_anypay',
+        lockHash: 'lockHash_anypay',
+      }
+    ]
+  },
+  {
+    publicKey: 'publicKey_2222',
+    addresses: [
+      {
+        lockScriptType: 'secp256k1',
+        address: 'address_secp256k1',
+        lockHash: 'lockHash_secp256k1',
+      },
+      {
+        lockScriptType: 'keccak256',
+        address: 'address_keccak256',
+        lockHash: 'lockHash_keccak256',
+      },
+      {
+        lockScriptType: 'anypay',
+        address: 'address_anypay',
+        lockHash: 'lockHash_anypay',
+      }
+    ]
+  }
+]
 ```
 
 ### currWallet数据结构
