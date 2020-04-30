@@ -304,10 +304,13 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   //export-mneonic check
   if (request.messageType === MESSAGE_TYPE.EXPORT_MNEONIC_CHECK) {
 
-    chrome.storage.sync.get(['currentWallet'], function (wallet) {
+    chrome.storage.sync.get(['currentWallet'], function (result) {
 
       const password = request.password;
-      const entropyKeystore = wallet.currentWallet.entropyKeystore
+      const publicKey = result.currentWallet.publicKey
+      const wallet = findInWalletsByPublicKey(publicKey,wallets);
+      const entropyKeystore = wallet.entropyKeystore;
+      
       //TODO check the password
       const entropy = Keystore.decrypt(entropyKeystore, password)
 
