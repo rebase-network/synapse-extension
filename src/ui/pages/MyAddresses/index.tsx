@@ -23,9 +23,9 @@ const useStyles = makeStyles({
     margin: 30,
   },
   button: {
-    marginLeft:'10px',
-    marginTop:'5px',
-    marginBottom:'5px',
+    marginLeft: '10px',
+    marginTop: '5px',
+    marginBottom: '5px',
   },
   textField: {
 
@@ -46,8 +46,8 @@ const useStyles02 = makeStyles((theme: Theme) =>
       margin: theme.spacing(1, 0, 1),
     },
     ListSubheader: {
-      font:'10px',
-      height:'4px',
+      font: '10px',
+      height: '4px',
       inlineSize: '4px',
     }
   }),
@@ -67,8 +67,8 @@ const subheaderTheme = createMuiTheme({
         height: '8px',
         padding: '0 3px',
         lineHeight: '8px',
-        marginTop:'4px',
-        marginBottom:'4px',
+        marginTop: '4px',
+        marginBottom: '4px',
       },
     },
   },
@@ -102,7 +102,7 @@ interface AppState { }
 export default function (props: AppProps, state: AppState) {
 
   const classes = useStyles();
-  const [addresses, setAddresses] = React.useState([]);
+  const [addressesList, setAddressesList] = React.useState([]);
   const history = useHistory();
 
   const classes02 = useStyles02();
@@ -120,10 +120,11 @@ export default function (props: AppProps, state: AppState) {
     chrome.runtime.onMessage.addListener((
       request, sender, sendResponse
     ) => {
-      
+
       if (request.messageType === MESSAGE_TYPE.RESULT_MY_ADDRESSES) {
-        const addresses = request.addresses;
-        setAddresses(addresses);
+        const addressesList = request.addressesList;
+        console.log("--- addressesList ---", addressesList);
+        setAddressesList(addressesList);
       }
 
     });
@@ -133,21 +134,23 @@ export default function (props: AppProps, state: AppState) {
     history.push('/import-private-key');
   };
 
-  const addressesElem = addresses.map((item, index) => {
-    return (
-          <List key={`item-${item.address}`} className={classes02.root} >
-            <ThemeProvider theme={subheaderTheme}>
-                <ListSubheader >{ item.address }</ListSubheader>
-            </ThemeProvider>
-            <ThemeProvider theme={listItemTheme}>
-              <ListItem key={`item-${item.address}`} >
-                  <ListItemText primary= {item.capacity + "  CKB"} secondary= {item.type}/>
-                  {/* <ListItemText secondary= {item.type} /> */}
-              </ListItem>
-            </ThemeProvider>
-          </List>
-      /* </li> */
-    )
+  const addressesElem = addressesList.map((addressesObj, index) => {
+    return addressesObj.addresses.map((item, index) => {
+      return (
+        <List key={`item-${item.address}`} className={classes02.root} >
+          <ThemeProvider theme={subheaderTheme}>
+            <ListSubheader >{item.address}</ListSubheader>
+          </ThemeProvider>
+          <ThemeProvider theme={listItemTheme}>
+            <ListItem key={`item-${item.address}`} >
+              <ListItemText primary={item.amount + "  CKB"} secondary={item.type} />
+              {/* <ListItemText secondary= {item.type} /> */}
+            </ListItem>
+          </ThemeProvider>
+        </List>
+        /* </li> */
+      )
+    })
   })
 
   return (
@@ -191,7 +194,7 @@ export default function (props: AppProps, state: AppState) {
         >
           Import
         </Button>
-      </Grid>  
+      </Grid>
     </div>
-  );  
+  );
 }

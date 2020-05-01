@@ -279,24 +279,22 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
   //my addressesList
   if (request.messageType === MESSAGE_TYPE.REQUEST_MY_ADDRESSES) {
-    chrome.storage.sync.get(['accounts'], async function (result) {
-      const accounts = result.accounts;
-      const addressesList = [];
-      for (let i = 0; i < accounts.length; i++) {
-        const account = accounts[i];
-        const capacity = await getBalanceByLockHash(account.lock);
-        const address = {
-          address: account.address,
-          type: account.type,
-          capacity: capacity.toString(),
-          lock: account.lock
-        }
-        addressesList.push(address);
-      }
-      console.log("addressesList =>", addressesList);
+    chrome.storage.sync.get(['addressesList'], async function (result) {
+
+      // const returnAddressesList = [];
+      const addressesListObj = result.addressesList;
+      addressesListObj.forEach(async addressesObj => {
+          const addresses = addressesObj.addresses;
+          addresses.forEach(element => {
+            // const capacity = await getBalanceByAddress(addresses.address); TODO Bug
+            const capacity = "10";
+            element.amount = capacity;
+          });
+      });
+
       chrome.runtime.sendMessage({
-        addressesList: addressesList,
-        messageType: MESSAGE_TYPE.REQUEST_MY_ADDRESSES
+        addressesList: addressesListObj,
+        messageType: MESSAGE_TYPE.RESULT_MY_ADDRESSES
       })
     });
   }
