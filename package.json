@@ -7,7 +7,7 @@
     "dev": "webpack --config webpack.dev.js",
     "watch": "webpack -w --config webpack.dev.js",
     "lint": "tslint 'src/**/*.{ts, tsx}'",
-    "test": "jest --watch"
+    "test": "jest --env=node --watch"
   },
   "author": "Rebase Team",
   "license": "BSD-3-Clause",
