@@ -109,6 +109,7 @@ export const innerForm = props => {
         id="submit-button"
         disabled={isSubmitting}
         color="primary"
+        variant="contained"
         className={classes.button}
         data-testid="submit-button"
       >
@@ -120,6 +121,7 @@ export const innerForm = props => {
         id="submit-button"
         disabled={isSubmitting}
         color="primary"
+        variant="contained"
         className={classes.button}
         data-testid="cancel-button"
       >
@@ -153,13 +155,13 @@ export default function (props: AppProps, state: AppState) {
     // setLoading(true);
   }, [])
 
-  const onSubmit = async(values) => {
-    console.log("onSubmit=>",values);
+  const onSubmit = async (values) => {
+    console.log("onSubmit=>", values);
     console.log("network =>", network);
 
     //check the address
     const toAddress = values.address;
-    validateAddress(toAddress,network);
+    validateAddress(toAddress, network);
 
     // 消息发送到Background.ts
     // network - TODO
@@ -169,18 +171,18 @@ export default function (props: AppProps, state: AppState) {
   }
 
   //check the current network and address
-  const validateAddress = (address,network) => {
+  const validateAddress = (address, network) => {
     if (address.length !== 46) {
-        setValAddress(false);
-        return;
+      setValAddress(false);
+      return;
     }
-    if (network == "testnet" &&  !address.startsWith('ckt')){
-        setValAddress(false);
-        return;
+    if (network == "testnet" && !address.startsWith('ckt')) {
+      setValAddress(false);
+      return;
     }
-    if (network == "mainnet" &&  !address.startsWith('ckb')){
-        setValAddress(false);
-        return;
+    if (network == "mainnet" && !address.startsWith('ckb')) {
+      setValAddress(false);
+      return;
     }
   }
 
@@ -197,7 +199,7 @@ export default function (props: AppProps, state: AppState) {
       {successNode}
       {validateNode}
       <Formik
-        initialValues={{ address: "", amount: "", fee: "", password: ""}}
+        initialValues={{ address: "", amount: "", fee: "", password: "" }}
 
         onSubmit={onSubmit}
         validationSchema={Yup.object().shape({
@@ -208,7 +210,7 @@ export default function (props: AppProps, state: AppState) {
           fee: Yup.string()
             .required("Required"),
           password: Yup.string()
-          .required("Required"),
+            .required("Required"),
         })}
       >
         {innerForm}
