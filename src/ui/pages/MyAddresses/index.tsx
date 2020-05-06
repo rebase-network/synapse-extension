@@ -32,12 +32,14 @@ const useStyles = makeStyles({
   }
 });
 
-const useStyles02 = makeStyles((theme: Theme) =>
+const useStylesTheme = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
       maxWidth: 400,
       backgroundColor: theme.palette.background.paper,
+      marginTop: '0px',
+      marginBottom: '0px',
     },
     demo: {
       // backgroundColor: theme.palette.background.paper,
@@ -56,27 +58,6 @@ const useStyles02 = makeStyles((theme: Theme) =>
   }),
 );
 
-const subheaderTheme = createMuiTheme({
-  overrides: {
-    // Style sheet name ⚛️
-    MuiListSubheader: {
-      // Name of the rule
-      root: {
-        // Some CSS
-        // background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-        // borderRadius: 3,
-        border: 0,
-        color: 'black',
-        height: '8px',
-        padding: '0 3px',
-        lineHeight: '8px',
-        marginTop: '4px',
-        marginBottom: '4px',
-      },
-    },
-  },
-});
-
 const listItemTheme = createMuiTheme({
   overrides: {
     // Style sheet name ⚛️
@@ -91,8 +72,8 @@ const listItemTheme = createMuiTheme({
         height: '6px',
         padding: '0 13px',
         lineHeight: '6px',
-        marginTop: '16px',
-        marginBottom: '4px',
+        marginTop: '0px',
+        marginBottom: '0px',
       },
     },
   },
@@ -108,10 +89,7 @@ export default function (props: AppProps, state: AppState) {
   const [addressesList, setAddressesList] = React.useState([]);
   const history = useHistory();
 
-  const classes02 = useStyles02();
-  const [dense, setDense] = React.useState(false);
-  const [secondary, setSecondary] = React.useState(false);
-  // const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const classTheme =useStylesTheme();
 
   React.useEffect(() => {
     chrome.runtime.sendMessage({
@@ -124,9 +102,6 @@ export default function (props: AppProps, state: AppState) {
     chrome.runtime.onMessage.addListener((
       request, sender, sendResponse
     ) => {
-
-      console.log("--- request ---", request);
-
       if (request.messageType == MESSAGE_TYPE.RESULT_MY_ADDRESSES) {
         const addressesList = request.addressesList;
         setAddressesList(addressesList);
@@ -154,7 +129,7 @@ export default function (props: AppProps, state: AppState) {
   const addressesElem = addressesList.map((addressesObj, index) => {
     return addressesObj.addresses.map((item, index) => {
       return (
-        <List component="nav" aria-label="main mailbox folders" key={`item-${item.address}`} className={classes02.root} >
+        <List component="nav" aria-label="main mailbox folders" key={`item-${item.address}`} className={classTheme.root} >
             <ListItem button key={`item-${item.address}`} 
               onClick={(event) => handleListItemClick(event, item, addressesObj.publicKey)}>
               <ListItemText primary={item.address} 
@@ -163,7 +138,7 @@ export default function (props: AppProps, state: AppState) {
                                 <Typography
                                   component="span"
                                   variant="body2"
-                                  className={classes02.inline}
+                                  className={classTheme.inline}
                                   color="textPrimary"
                                 >
                                 {item.amount + " CKB"}
@@ -181,7 +156,7 @@ export default function (props: AppProps, state: AppState) {
   return (
     <div>
       <Grid item xs={12} md={6}>
-        <Typography variant="h6" className={classes02.title}>
+        <Typography variant="h6" className={classTheme.title}>
           My Addresses
         </Typography>
         <Button
@@ -195,7 +170,7 @@ export default function (props: AppProps, state: AppState) {
         >
           Import
         </Button>
-        <div className={classes02.demo}>  
+        <div className={classTheme.demo}>  
           {addressesElem}
         </div>
         <Button

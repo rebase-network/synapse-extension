@@ -287,6 +287,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         for (let index2 = 0; index2 < addresses.length; index2++) {
           const capacity = await getBalanceByAddress(addresses[index2].address);
           addresses[index2].amount = capacity;
+          // const addressBack = address.substr(0,8) +"******" + address.substr(address.length-8,address.length);
         }
       }
       chrome.runtime.sendMessage({
@@ -460,6 +461,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     //01- get the addressObj and publicKey
     const addressObj = request.addressObj;
     const publicKey = request.publicKey.trim();
+    
     currentWallet = {
       publicKey: publicKey,
       address: addressObj.address,
