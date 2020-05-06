@@ -287,7 +287,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         for (let index2 = 0; index2 < addresses.length; index2++) {
           const capacity = await getBalanceByAddress(addresses[index2].address);
           addresses[index2].amount = capacity;
-          // const addressBack = address.substr(0,8) +"******" + address.substr(address.length-8,address.length);
+          const address = addresses[index2].address;
+          const addressBack = address.substr(0,16) +"******" + address.substr(address.length-16,address.length);
+          addresses[index2].addressBack = addressBack;
         }
       }
       chrome.runtime.sendMessage({

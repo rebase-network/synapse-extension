@@ -54,7 +54,7 @@ const useStylesTheme = makeStyles((theme: Theme) =>
     },
     inline: {
       display: 'inline',
-    },
+    }
   }),
 );
 
@@ -68,10 +68,9 @@ const listItemTheme = createMuiTheme({
         // background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
         // borderRadius: 3,
         border: 0,
-        color: 'black',
-        height: '6px',
-        padding: '0 13px',
-        lineHeight: '6px',
+        // color: 'black',
+        height: '56px',
+        // padding: '0 13px',
         marginTop: '0px',
         marginBottom: '0px',
       },
@@ -130,9 +129,10 @@ export default function (props: AppProps, state: AppState) {
     return addressesObj.addresses.map((item, index) => {
       return (
         <List component="nav" aria-label="main mailbox folders" key={`item-${item.address}`} className={classTheme.root} >
-            <ListItem button key={`item-${item.address}`} 
+            <ThemeProvider theme={listItemTheme}>
+            <ListItem button key={`item-${item.address}`}
               onClick={(event) => handleListItemClick(event, item, addressesObj.publicKey)}>
-              <ListItemText primary={item.address} 
+              <ListItemText primary={item.addressBack} 
                             secondary={
                               <React.Fragment>
                                 <Typography
@@ -148,6 +148,7 @@ export default function (props: AppProps, state: AppState) {
                               </React.Fragment>
                             }/>
             </ListItem>
+            </ThemeProvider>
         </List>
       )
     })
