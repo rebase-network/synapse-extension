@@ -1,3 +1,4 @@
+import Axios, { AxiosRequestConfig } from "axios";
 import Address, { AddressType, publicKeyToAddress, AddressPrefix } from "./wallet/address";
 import * as utils from '@nervosnetwork/ckb-sdk-utils'
 import { Ckb } from "./utils/constants";
@@ -5,6 +6,19 @@ import { Ckb } from "./utils/constants";
 const CKB = require('@nervosnetwork/ckb-sdk-core').default
 
 const ckb = new CKB(Ckb.remoteRpcUrl)
+
+export const getStatusByTxHash = async (txHash) => {
+  const result = await ckb.rpc.getTransaction(txHash);
+  return result.txStatus.status;
+}
+
+export const getTxHistoryByAddress = async (address) => {
+  let url = "http://101.200.147.143:2333/cell/getTxHistoryByAddress"
+  const result = await Axios.get(url + `/${address}`);
+  console.log('result: ', result)
+  return result.data;
+}
+
 
 export const inputs = async (txHash) => {
   const result = await ckb.rpc.getTransaction(txHash);
@@ -14,11 +28,6 @@ export const inputs = async (txHash) => {
 export const outputs = async (txHash) => {
   const result = await ckb.rpc.getTransaction(txHash);
   return result.transaction.outputs;
-}
-
-export const getStatusByTxHash = async (txHash) => {
-  const result = await ckb.rpc.getTransaction(txHash);
-  return result.txStatus.status;
 }
 
 //最后一个地址是找零
