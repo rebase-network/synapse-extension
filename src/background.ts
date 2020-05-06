@@ -281,17 +281,14 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.messageType === MESSAGE_TYPE.REQUEST_MY_ADDRESSES) {
     chrome.storage.sync.get(['addressesList'], async function (result) {
 
-      // const returnAddressesList = [];
       const addressesListObj = result.addressesList;
-      addressesListObj.forEach(async addressesObj => {
-          const addresses = addressesObj.addresses;
-          addresses.forEach(element => {
-            // const capacity = await getBalanceByAddress(addresses.address); TODO Bug
-            const capacity = "10";
-            element.amount = capacity;
-          });
-      });
-
+      for (let index = 0; index < addressesListObj.length; index++) {
+        const addresses = addressesListObj[index].addresses;
+        for (let index2 = 0; index2 < addresses.length; index2++) {
+          const capacity = await getBalanceByAddress(addresses[index2].address);
+          addresses[index2].amount = capacity;
+        }
+      }
       chrome.runtime.sendMessage({
         addressesList: addressesListObj,
         messageType: MESSAGE_TYPE.RESULT_MY_ADDRESSES
@@ -457,7 +454,32 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     });
   }
+
+  // selected my addresses
+  if (request.messageType == MESSAGE_TYPE.SELECTED_MY_ADDRESSES) {
+    //01- get the addressObj and publicKey
+    const addressObj = request.addressObj;
+    const publicKey = request.publicKey.trim();
+    currentWallet = {
+      publicKey: publicKey,
+      address: addressObj.address,
+      type: addressObj.type,
+      lock: addressObj.lock,
+    }
+    saveToCurrentWallet(currentWallet);
+
+    chrome.runtime.sendMessage({
+      messageType: MESSAGE_TYPE.RETURN_SELECTED_MY_ADDRESSES
+    });
+  }
+
 });
+
+function saveToCurrentWallet(currentWallet) {
+  chrome.storage.sync.set({ currentWallet, }, () => {
+    console.log('currentWallet is set to storage: ' + JSON.stringify(currentWallet));
+  });
+}
 
 function saveToStorage() {
   chrome.storage.sync.set({ wallets, }, () => {

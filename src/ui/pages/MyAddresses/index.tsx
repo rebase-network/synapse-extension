@@ -37,7 +37,7 @@ const useStyles02 = makeStyles((theme: Theme) =>
     root: {
       width: '100%',
       maxWidth: 400,
-      // backgroundColor: theme.palette.background.paper,
+      backgroundColor: theme.palette.background.paper,
     },
     demo: {
       // backgroundColor: theme.palette.background.paper,
@@ -49,7 +49,10 @@ const useStyles02 = makeStyles((theme: Theme) =>
       font: '10px',
       height: '4px',
       inlineSize: '4px',
-    }
+    },
+    inline: {
+      display: 'inline',
+    },
   }),
 );
 
@@ -108,6 +111,7 @@ export default function (props: AppProps, state: AppState) {
   const classes02 = useStyles02();
   const [dense, setDense] = React.useState(false);
   const [secondary, setSecondary] = React.useState(false);
+  // const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   React.useEffect(() => {
     chrome.runtime.sendMessage({
@@ -121,10 +125,15 @@ export default function (props: AppProps, state: AppState) {
       request, sender, sendResponse
     ) => {
 
-      if (request.messageType === MESSAGE_TYPE.RESULT_MY_ADDRESSES) {
+      console.log("--- request ---", request);
+
+      if (request.messageType == MESSAGE_TYPE.RESULT_MY_ADDRESSES) {
         const addressesList = request.addressesList;
-        console.log("--- addressesList ---", addressesList);
         setAddressesList(addressesList);
+      }
+
+      if (request.messageType == MESSAGE_TYPE.RETURN_SELECTED_MY_ADDRESSES) {
+        history.push('/address');
       }
 
     });
@@ -134,21 +143,37 @@ export default function (props: AppProps, state: AppState) {
     history.push('/import-private-key');
   };
 
+  const handleListItemClick = (event, addressObj, publicKey) => {
+    chrome.runtime.sendMessage({
+      addressObj,
+      publicKey,
+      messageType: MESSAGE_TYPE.SELECTED_MY_ADDRESSES
+    })
+  };
+
   const addressesElem = addressesList.map((addressesObj, index) => {
     return addressesObj.addresses.map((item, index) => {
       return (
-        <List key={`item-${item.address}`} className={classes02.root} >
-          <ThemeProvider theme={subheaderTheme}>
-            <ListSubheader >{item.address}</ListSubheader>
-          </ThemeProvider>
-          <ThemeProvider theme={listItemTheme}>
-            <ListItem key={`item-${item.address}`} >
-              <ListItemText primary={item.amount + "  CKB"} secondary={item.type} />
-              {/* <ListItemText secondary= {item.type} /> */}
+        <List component="nav" aria-label="main mailbox folders" key={`item-${item.address}`} className={classes02.root} >
+            <ListItem button key={`item-${item.address}`} 
+              onClick={(event) => handleListItemClick(event, item, addressesObj.publicKey)}>
+              <ListItemText primary={item.address} 
+                            secondary={
+                              <React.Fragment>
+                                <Typography
+                                  component="span"
+                                  variant="body2"
+                                  className={classes02.inline}
+                                  color="textPrimary"
+                                >
+                                {item.amount + " CKB"}
+                                </Typography>
+                                <br/>
+                                {item.type}
+                              </React.Fragment>
+                            }/>
             </ListItem>
-          </ThemeProvider>
         </List>
-        /* </li> */
       )
     })
   })
@@ -170,18 +195,8 @@ export default function (props: AppProps, state: AppState) {
         >
           Import
         </Button>
-        <div className={classes02.demo}>
-          <List dense={dense}>
-            {/* {generate(
-              <ListItem>
-                <ListItemText
-                  primary= {addressesElem}
-                  secondary="secondary-line item"
-                />
-              </ListItem>,
-            )} */}
-            {addressesElem}
-          </List>
+        <div className={classes02.demo}>  
+          {addressesElem}
         </div>
         <Button
           type="button"
