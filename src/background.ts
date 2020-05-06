@@ -13,7 +13,7 @@ import { sendSimpleTransaction } from './sendSimpleTransaction';
 import { getAmountByTxHash, getStatusByTxHash, getFeeByTxHash, getInputAddressByTxHash, getOutputAddressByTxHash, getOutputAddressByTxHashAndIndex } from './transaction';
 import { getPrivateKeyByKeyStoreAndPassword } from './wallet/exportPrivateKey'
 import Address from './wallet/address';
-import { getBalanceByAddress } from './utils/address'
+import { getBalanceByAddress } from './background/address'
 import { addKeyperWallet, getAddressesList, getCurrentWallet, getWallets } from './wallet/addKeyperWallet';
 
 /**
