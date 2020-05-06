@@ -172,7 +172,7 @@ function kdfParamsForScrypt(opts: V3ParamsStrict): ScryptKDFParams {
   }
 }
 
-interface V3Keystore {
+export interface V3Keystore {
   crypto: {
     cipher: string
     cipherparams: {

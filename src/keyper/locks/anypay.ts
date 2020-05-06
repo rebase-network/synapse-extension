@@ -10,14 +10,14 @@ import { SignatureAlgorithm } from "@keyper/specs/lib";
 
 class AnyPayLockScript {
   name = "AnyPay";
-  codeHash = "0x390e1c7cb59fbd5cf9bfb9370acb0d2bbbbbcf4136c90b2f3ea5277b4c13b540";
+  codeHash = "0x6a3982f9d018be7e7228f9e0b765f28ceff6d36e634490856d2b186acf78e79b";
   hashType = "type";
   provider = null;
 
   deps() {
     return [{
       outPoint: {
-        txHash: "0xf860285b77069801f91d32a316bf07c8caee7ff1ab39b506d6708de7dd88595f",
+        txHash: "0x9af66408df4703763acb10871365e4a21f2c3d3bdc06b0ae634a3ad9f18a6525",
         index: "0x0"
       },
       depType: "depGroup",
