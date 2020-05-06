@@ -38,11 +38,11 @@ const useStyles = makeStyles({
   }
 });
 
-interface AppProps {}
+interface AppProps { }
 
-interface AppState {}
+interface AppState { }
 
-export default function(props: AppProps, state: AppState) {
+export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(true);
   const [address, setAddress] = React.useState("");
@@ -54,19 +54,19 @@ export default function(props: AppProps, state: AppState) {
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener((
-      message,
+      msg,
       sender,
       sendResponse
-    ) =>{
-      if (message.messageType === MESSAGE_TYPE.ADDRESS_INFO) {
-        if (message.address) {
-          setAddress(message.address);
+    ) => {
+      if (msg.messageType === MESSAGE_TYPE.ADDRESS_INFO) {
+        if (msg.address) {
+          setAddress(msg.address);
         } else {
           history.push('./import-mnemonic');
         }
         // get balance by address
-      } else if (message.messageType === MESSAGE_TYPE.BALANCE_BY_ADDRESS) {
-        setBalance(message.balance/10**8);
+      } else if (msg.messageType === MESSAGE_TYPE.BALANCE_BY_ADDRESS) {
+        setBalance(msg.balance / 10 ** 8);
         setLoading(false);
       }
     });
@@ -88,7 +88,7 @@ export default function(props: AppProps, state: AppState) {
 
   React.useEffect(() => {
     (async function copyAddress() {
-      if (open && address ) {
+      if (open && address) {
         await navigator.clipboard.writeText(address);
         setTooltip('Address has been copied to clipboard');
       }
@@ -98,11 +98,11 @@ export default function(props: AppProps, state: AppState) {
   const balanceNode = loading ? (
     <div>loading</div>
   ) : (
-    <div className="balance" data-testid="balance">
-      {balance}
-      <span className="">CKB</span>
-    </div>
-  );
+      <div className="balance" data-testid="balance">
+        {balance}
+        <span className="">CKB</span>
+      </div>
+    );
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -159,8 +159,8 @@ export default function(props: AppProps, state: AppState) {
           {address[network] ? (
             <QrCode value={address[network]} size={200} />
           ) : (
-            <div>loading</div>
-          )}
+              <div>loading</div>
+            )}
           <div className={classes.address}>{address[network]}</div>
         </div>
       </Dialog>
