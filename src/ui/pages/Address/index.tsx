@@ -14,6 +14,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Divider from '@material-ui/core/Divider';
+import Box from '@material-ui/core/Box';
 import { shannonToCKBFormatter } from '../../../utils/formatters';
 import Title from '../../Components/Title';
 import { MESSAGE_TYPE } from '../../../utils/constants';
@@ -201,16 +202,29 @@ export default function (props: AppProps, state: AppState) {
       <div className="classesTheme.root">
         <Grid container spacing={2}>
             <Grid item xs={12} alignContent="center" alignItems="center">
-              <Paper className={classesTheme.paper}>Address</Paper>
+              {/* <Paper className={classesTheme.paper}>Address</Paper> */}
+              <Box textAlign="center" fontSize={22}>
+                  Address
+              </Box>
             </Grid>
             <Grid item xs={12}>
-              <Paper className={classesTheme.paper}>{addressShort}</Paper>
+              {/* <Paper className={classesTheme.paper}>{addressShort}</Paper> */}
+              <Box textAlign="center" fontSize={22}>
+                {addressShort}
+              </Box>
             </Grid>
         </Grid>
-
+        <br/>
+        <Divider variant="middle" />
+        <br/>
+        <br/>
+        <br/>
         <Grid container spacing={3}>
             <Grid item xs={12}>
-              <Paper className={classesTheme.paper}>{balanceNode}</Paper>
+              {/* <Paper className={classesTheme.paper}>{balanceNode}</Paper> */}
+              <Box textAlign="center" fontSize={22}>
+                {balanceNode}
+              </Box>
             </Grid>
             <Grid item xs={6} sm={3} alignItems="center" alignContent="center">
               <BootstrapButton
