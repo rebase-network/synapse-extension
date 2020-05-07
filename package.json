@@ -53,6 +53,7 @@
     "elliptic": "^6.5.2",
     "formik": "^2.1.4",
     "keccak": "^3.0.0",
+    "poetic": "^1.5.0",
     "qrcode.react": "^1.0.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
