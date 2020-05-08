@@ -14,6 +14,7 @@ import { getAmountByTxHash, getStatusByTxHash, getFeeByTxHash, getInputAddressBy
 import { getPrivateKeyByKeyStoreAndPassword } from './wallet/exportPrivateKey'
 import Address from './wallet/address';
 import { getBalanceByAddress } from './background/address'
+import { getTxHistoryByAddress } from './background/transaction'
 import { addKeyperWallet, getAddressesList, getCurrentWallet, getWallets } from './wallet/addKeyperWallet';
 
 /**
@@ -178,6 +179,24 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       chrome.runtime.sendMessage({
         balance,
         messageType: MESSAGE_TYPE.BALANCE_BY_ADDRESS
+      })
+
+    });
+  }
+
+  // get tx history by address
+  if (request.messageType === MESSAGE_TYPE.GET_TX_HISTORY) {
+    chrome.storage.sync.get(['currentWallet'], async function (wallet) {
+
+      if (!wallet) return
+      const addr = wallet.currentWallet.address
+
+      console.error("addr ", addr)
+      const txs = await getTxHistoryByAddress(addr)
+
+      chrome.runtime.sendMessage({
+        txs,
+        messageType: MESSAGE_TYPE.SEND_TX_HISTORY
       })
 
     });
@@ -359,7 +378,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
       const password = request.password.trim()
 
-      //check the keystore 
+      //check the keystore
       const currentPublicKey = result.currentWallet.publicKey;
       const wallet = findInWalletsByPublicKey(currentPublicKey, wallets);
       const keystore = wallet.keystore;
@@ -414,7 +433,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       }
 
       //021- check the synapse password
-      //check the keystore 
+      //check the keystore
       const currentPublicKey = result.currentWallet.publicKey
       const currWallet = findInWalletsByPublicKey(currentPublicKey, wallets);
       const currentKeystore = currWallet.keystore;
@@ -463,7 +482,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     //01- get the addressObj and publicKey
     const addressObj = request.addressObj;
     const publicKey = request.publicKey.trim();
-    
+
     currentWallet = {
       publicKey: publicKey,
       address: addressObj.address,

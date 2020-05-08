@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Dialog, IconButton } from '@material-ui/core';
+import {Grid, ListItem, ListItemText, List, Button, Dialog, IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { useHistory } from 'react-router-dom';
 import {
@@ -10,9 +10,6 @@ import {
   Theme,
   ThemeProvider,
 } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
 import Divider from '@material-ui/core/Divider';
 import Box from '@material-ui/core/Box';
 import { shannonToCKBFormatter } from '../../../utils/formatters';
@@ -130,8 +127,17 @@ export default function (props: AppProps, state: AppState) {
   const [balance, setBalance] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [tooltip, setTooltip] = React.useState('');
+  const [txs, setTxs] = React.useState([]);
   const { network } = React.useContext(AppContext);
   const history = useHistory();
+
+  function generate(element) {
+    return txs.map((value) =>
+      React.cloneElement(element, {
+        key: value,
+      }),
+    );
+  }
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener((
@@ -164,6 +170,23 @@ export default function (props: AppProps, state: AppState) {
       network
     });
     setLoading(true);
+
+    chrome.runtime.sendMessage({
+      messageType: MESSAGE_TYPE.GET_TX_HISTORY
+    });
+
+    chrome.runtime.onMessage.addListener((
+      msg,
+      sender,
+      sendResponse
+    ) => {
+      if (msg.messageType === MESSAGE_TYPE.SEND_TX_HISTORY) {
+        const txs = msg.txs
+        if (txs) {
+          setTxs(txs)
+        }
+    }});
+
   }, []);
 
   const onSendtx = () => {
@@ -255,6 +278,24 @@ export default function (props: AppProps, state: AppState) {
       </div>
       <br/>
       <br/>
+
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <div>
+            <List>
+            {txs.map((item) => (
+              <ListItem>
+                <ListItemText primary={`Hash ${item.hash.slice(0,6)}`} />
+                <ListItemText secondary={`BlkNum ${item.block_num}`} />
+                <ListItemText secondary={`Time ${item.timestamp}`} />
+              </ListItem>
+            ))}
+
+            </List>
+          </div>
+        </Grid>
+      </Grid>
+
       <Divider variant="middle" />
 
       <Dialog open={open}>
