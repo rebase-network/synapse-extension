@@ -1,11 +1,11 @@
 import * as React from 'react';
-import Title from '../../Components/Title';
+import Title from '../../Components/Title'
 import { Button, TextField } from '@material-ui/core';
 
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
-import { MESSAGE_TYPE } from '../../../utils/constants';
-import { useHistory } from 'react-router-dom';
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import { MESSAGE_TYPE } from '../../../utils/constants'
+import { useHistory } from "react-router-dom";
 
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -18,8 +18,12 @@ const useStyles = makeStyles((theme) => ({
   container: {
     margin: 30,
   },
-  button: {},
-  textField: {},
+  button: {
+
+  },
+  textField: {
+
+  },
   root: {
     flexGrow: 1,
     overflow: 'hidden',
@@ -32,22 +36,24 @@ const useStyles = makeStyles((theme) => ({
     // margin: `${theme.spacing(1)}px auto`,
     // padding: theme.spacing(2),
   },
+ 
 }));
 
-interface AppProps {}
+interface AppProps { }
 
-interface AppState {}
+interface AppState { }
 
 export default function (props: AppProps, state: AppState) {
+
   const classes = useStyles();
 
-  const [status, setStatus] = React.useState('');
+  const [status, setStatus] = React.useState("");
   const [amount, setAmount] = React.useState(0);
   const [fee, setFee] = React.useState(0);
-  const [inputs, setInputs] = React.useState('');
-  const [outputs, setOutputs] = React.useState('');
-  const [txHash, setTxHash] = React.useState('');
-  const [block, setBlock] = React.useState('');
+  const [inputs, setInputs] = React.useState("");
+  const [outputs, setOutputs] = React.useState("");
+  const [txHash, setTxHash] = React.useState("");
+  const [block, setBlock] = React.useState("");
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
@@ -60,14 +66,14 @@ export default function (props: AppProps, state: AppState) {
         setTxHash(message.txHash);
         setBlock(message.block);
       }
-    });
-  }, []);
+    })
+  }, [])
 
   return (
     <div>
       {/* 001- */}
       <div className={classes.root}>
-        <Paper className={classes.paper}>
+        <Paper className={classes.paper} >
           <Grid container wrap="nowrap" spacing={2} alignContent="center" alignItems="center">
             {/* <Grid item>
               <Avatar>W</Avatar>
@@ -82,13 +88,13 @@ export default function (props: AppProps, state: AppState) {
         <br />
       </div>
 
-      {/* 002 */}
+      {/* 002 */}      
       <div className={classes.root}>
         <Paper className={classes.paper}>
           <Grid container wrap="nowrap" spacing={2}>
             <Grid item>
               {/* <Avatar>W</Avatar> */}
-              <Typography noWrap>Amount </Typography>
+              <Typography noWrap >Amount </Typography>
             </Grid>
             <Grid item xs>
               <Typography>{amount}</Typography>
@@ -97,7 +103,7 @@ export default function (props: AppProps, state: AppState) {
           <Grid container wrap="nowrap" spacing={2}>
             <Grid item>
               {/* <Avatar>W</Avatar> */}
-              <Typography noWrap>Fee&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Typography>
+              <Typography noWrap >Fee&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Typography>
             </Grid>
             <Grid item xs>
               <Typography>{fee}</Typography>
@@ -106,7 +112,7 @@ export default function (props: AppProps, state: AppState) {
           <Grid container wrap="nowrap" spacing={2}>
             <Grid item>
               {/* <Avatar>W</Avatar> */}
-              <Typography noWrap>Inputs &nbsp;&nbsp;</Typography>
+              <Typography noWrap >Inputs &nbsp;&nbsp;</Typography>
             </Grid>
             <Grid item xs>
               <Typography>{inputs}</Typography>
@@ -115,7 +121,7 @@ export default function (props: AppProps, state: AppState) {
           <Grid container wrap="nowrap" spacing={2}>
             <Grid item>
               {/* <Avatar>W</Avatar> */}
-              <Typography noWrap>Outputs&nbsp; </Typography>
+              <Typography noWrap >Outputs&nbsp; </Typography>
             </Grid>
             <Grid item xs>
               <Typography>{outputs}</Typography>
@@ -124,13 +130,13 @@ export default function (props: AppProps, state: AppState) {
         </Paper>
         <br />
       </div>
-      {/* 003 */}
+      {/* 003 */}  
       <div className={classes.root}>
         <Paper className={classes.paper}>
           <Grid container wrap="nowrap" spacing={2}>
             <Grid item>
               {/* <Avatar>W</Avatar> */}
-              <Typography noWrap>Tx Hash</Typography>
+              <Typography noWrap >Tx Hash</Typography>
             </Grid>
             <Grid item xs>
               <Typography>{txHash}</Typography>
@@ -139,7 +145,7 @@ export default function (props: AppProps, state: AppState) {
           <Grid container wrap="nowrap" spacing={2}>
             <Grid item>
               {/* <Avatar>W</Avatar> */}
-              <Typography noWrap>Block&nbsp;&nbsp;&nbsp;&nbsp; </Typography>
+              <Typography noWrap >Block&nbsp;&nbsp;&nbsp;&nbsp; </Typography>
             </Grid>
             <Grid item xs>
               <Typography>{block}</Typography>
@@ -147,8 +153,9 @@ export default function (props: AppProps, state: AppState) {
           </Grid>
         </Paper>
         <br />
-      </div>
+      </div>      
     </div>
+
 
     // <div className={classes.container}>
     //   <Title title="Transaction Detail" testId="tx-detail-title" />
@@ -195,5 +202,5 @@ export default function (props: AppProps, state: AppState) {
     //   </div>
     //   <br/>
     // </div>
-  );
+  )
 }

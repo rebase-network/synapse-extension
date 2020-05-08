@@ -1,8 +1,8 @@
 import * as React from 'react';
 import App from './index';
-import { render, fireEvent, waitFor, cleanup } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
-import * as chrome from 'sinon-chrome';
+import { render, fireEvent, waitFor, cleanup } from '@testing-library/react'
+import '@testing-library/jest-dom/extend-expect'
+import * as chrome from "sinon-chrome";
 import ExportPrivateKey from './index';
 
 jest.mock('react-router-dom', () => {
@@ -19,15 +19,15 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('import mnemonic page', () => {
-  let tree, container, getByTestId;
+  let tree, container, getByTestId
   beforeEach(() => {
     tree = render(<ExportPrivateKey />);
-    container = tree.container;
-    getByTestId = tree.getByTestId;
-  });
+    container = tree.container
+    getByTestId = tree.getByTestId
+  })
   beforeAll(() => {
-    window.chrome = chrome;
-  });
+    window.chrome = chrome
+  })
 
   it('should render title', async () => {
     const { getByTestId, container } = tree;
@@ -52,4 +52,6 @@ describe('import mnemonic page', () => {
     expect(container).toContainElement(json_keystore);
     expect(json_keystore).toHaveTextContent('JSON/Keystore');
   });
+
 });
+

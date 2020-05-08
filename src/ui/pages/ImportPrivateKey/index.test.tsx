@@ -1,6 +1,12 @@
 import * as React from 'react';
 import App from '../../App';
-import { render, fireEvent, waitFor, cleanup, screen } from '@testing-library/react';
+import {
+  render,
+  fireEvent,
+  waitFor,
+  cleanup,
+  screen
+} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import * as chrome from 'sinon-chrome';
 import ImportPrivateKey from '.';
@@ -19,63 +25,61 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('import privateKey page', () => {
-  let tree, container, getByTestId;
+  let tree, container, getByTestId
   beforeEach(() => {
     tree = render(<ImportPrivateKey />);
-    container = tree.container;
-    getByTestId = tree.getByTestId;
-  });
+    container = tree.container
+    getByTestId = tree.getByTestId
+  })
 
   beforeAll(() => {
-    window.chrome = chrome;
-  });
+    window.chrome = chrome
+  })
 
   it('should change privateKey form fields', async () => {
     const { getByTestId, container } = tree;
 
-    const privateKey = container.querySelector('[name="privateKey"]');
-    const password = container.querySelector('[name="password"]');
+    const privateKey = container.querySelector('[name="privateKey"]')
+    const password = container.querySelector('[name="password"]')
 
-    expect(privateKey).toBeEmpty();
-    expect(password).toBeEmpty();
+    expect(privateKey).toBeEmpty()
+    expect(password).toBeEmpty()
 
     await waitFor(() => {
-      fireEvent.change(privateKey, {
-        target: {
-          value: 'test 0x6e678246998b426db75c83c8be213b4ceeb8ae1ff10fcd2f8169e1dc3ca04df1',
-        },
-      });
-      fireEvent.change(password, { target: { value: 'test 123456' } });
-    });
+      fireEvent.change(privateKey, { target: { value: "test 0x6e678246998b426db75c83c8be213b4ceeb8ae1ff10fcd2f8169e1dc3ca04df1" } });
+      fireEvent.change(password, { target: { value: "test 123456" } });
+    })
 
     expect(container.querySelector('#form-privateKey')).toHaveFormValues({
-      privateKey: 'test 0x6e678246998b426db75c83c8be213b4ceeb8ae1ff10fcd2f8169e1dc3ca04df1',
-      password: 'test 123456',
-    });
+      privateKey: "test 0x6e678246998b426db75c83c8be213b4ceeb8ae1ff10fcd2f8169e1dc3ca04df1",
+      password: "test 123456",
+    })
+
   });
 
   it('should change keystore form fields', async () => {
     const { getByTestId, container } = tree;
 
-    const keystore = container.querySelector('[name="keystore"]');
-    const keystorePassword = container.querySelector('[name="keystorePassword"]');
-    const userPassword = container.querySelector('[name="userPassword"]');
+    const keystore = container.querySelector('[name="keystore"]')
+    const keystorePassword = container.querySelector('[name="keystorePassword"]')
+    const userPassword = container.querySelector('[name="userPassword"]')
 
-    expect(keystore).toBeEmpty();
-    expect(keystorePassword).toBeEmpty();
-    expect(userPassword).toBeEmpty();
+    expect(keystore).toBeEmpty()
+    expect(keystorePassword).toBeEmpty()
+    expect(userPassword).toBeEmpty()
 
     await waitFor(() => {
-      fireEvent.change(keystore, { target: { value: 'test keystore' } });
-      fireEvent.change(keystorePassword, { target: { value: 'test keystorePassword 123456' } });
-      fireEvent.change(userPassword, { target: { value: 'test userPassword 123456' } });
-    });
+      fireEvent.change(keystore, { target: { value: "test keystore" } });
+      fireEvent.change(keystorePassword, { target: { value: "test keystorePassword 123456" } });
+      fireEvent.change(userPassword, { target: { value: "test userPassword 123456" } });
+    })
 
     expect(container.querySelector('#form-keystore')).toHaveFormValues({
-      keystore: 'test keystore',
-      keystorePassword: 'test keystorePassword 123456',
-      userPassword: 'test userPassword 123456',
-    });
+      keystore: "test keystore",
+      keystorePassword: "test keystorePassword 123456",
+      userPassword: "test userPassword 123456",
+    })
+
   });
 
   // it('should render keystore radio', async () => {
@@ -102,11 +106,14 @@ describe('import privateKey page', () => {
   //   expect(container).toContainElement(outputs);
   //   // expect(outputs).toHaveTextContent("ckt1qyqr79tnk3pp34xp92gerxjc4p3mus2690psf0dd70")
   //   expect(outputs).toHaveTextContent("outputs")
-  // });
+  // });  
 
   // it('should render TxHash', async () => {
   //   const txHash = screen.queryByTestId('txHash');
   //   expect(container).toContainElement(txHash);
   //   expect(txHash).toHaveTextContent("TxHash")
-  // });
+  // });  
+
+
+
 });

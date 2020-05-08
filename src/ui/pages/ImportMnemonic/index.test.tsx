@@ -1,8 +1,8 @@
 import * as React from 'react';
 import App from './index';
-import { render, fireEvent, waitFor, cleanup } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
-import * as chrome from 'sinon-chrome';
+import { render, fireEvent, waitFor, cleanup } from '@testing-library/react'
+import '@testing-library/jest-dom/extend-expect'
+import * as chrome from "sinon-chrome";
 
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
@@ -18,30 +18,30 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('import mnemonic page', () => {
-  let tree, container, getByTestId;
+  let tree, container, getByTestId
   beforeEach(() => {
     tree = render(<App />);
-    container = tree.container;
-    getByTestId = tree.getByTestId;
-  });
+    container = tree.container
+    getByTestId = tree.getByTestId
+  })
   beforeAll(() => {
-    window.chrome = chrome;
-  });
+    window.chrome = chrome
+  })
 
-  it('should render form fields: Mnemonic', async () => {
-    const mnemonic = container.querySelector('[name="mnemonic"]');
-    expect(container).toContainElement(mnemonic);
-  });
+  it('should render form fields: Mnemonic', async() => {
+    const mnemonic = container.querySelector('[name="mnemonic"]')
+    expect(container).toContainElement(mnemonic)
+  })
 
-  it('should render form fields: Password', async () => {
-    const password = container.querySelector('[name="password"]');
-    expect(container).toContainElement(password);
-  });
+  it('should render form fields: Password', async() => {
+    const password = container.querySelector('[name="password"]')
+    expect(container).toContainElement(password)
+  })
 
-  it('should render form fields: Confirm Password', async () => {
-    const confirmPassword = container.querySelector('[name="confirmPassword"]');
-    expect(container).toContainElement(confirmPassword);
-  });
+  it('should render form fields: Confirm Password', async() => {
+    const confirmPassword = container.querySelector('[name="confirmPassword"]')
+    expect(container).toContainElement(confirmPassword)
+  })
 
   // it('should change form fields: Mnemonic', async() => {
   //   const mnemonic = container.querySelector('[name="mnemonic"]')
@@ -55,25 +55,28 @@ describe('import mnemonic page', () => {
   //   expect(mnemonic.textContent).toBe("test mnemonic");
   // })
 
-  it('should change form fields: password', async () => {
-    const mnemonic = container.querySelector('[name="mnemonic"]');
-    const password = container.querySelector('[name="password"]');
-    const confirmPassword = container.querySelector('[name="confirmPassword"]');
+  it('should change form fields: password', async() => {
+    const mnemonic = container.querySelector('[name="mnemonic"]')
+    const password = container.querySelector('[name="password"]')
+    const confirmPassword = container.querySelector('[name="confirmPassword"]')
 
-    expect(mnemonic).toBeEmpty();
-    expect(password).toBeEmpty();
-    expect(confirmPassword).toBeEmpty();
+    expect(mnemonic).toBeEmpty()
+    expect(password).toBeEmpty()
+    expect(confirmPassword).toBeEmpty()
 
     await waitFor(() => {
-      fireEvent.change(mnemonic, { target: { value: 'test mnemonic' } });
-      fireEvent.change(password, { target: { value: 'test password' } });
-      fireEvent.change(confirmPassword, { target: { value: 'test password' } });
-    });
+      fireEvent.change(mnemonic, { target: { value: "test mnemonic" } });
+      fireEvent.change(password, { target: { value: "test password" } });
+      fireEvent.change(confirmPassword, { target: { value: "test password" } });
+    })
 
     expect(container.querySelector('#form-mnemonic')).toHaveFormValues({
-      mnemonic: 'test mnemonic',
-      password: 'test password',
-      confirmPassword: 'test password',
-    });
-  });
+      mnemonic: "test mnemonic",
+      password: "test password",
+      confirmPassword: "test password",
+    })
+  })
+
+
 });
+

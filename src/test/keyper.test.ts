@@ -7,13 +7,14 @@
 // import { ec as EC } from 'elliptic'
 
 describe('Keyper genKeyPair test', () => {
+
   it('01- genKeyPair', async () => {
     // const ec = new EC('secp256k1');
     // const privateKey = ec.genKeyPair();
     // console.log("key ===>",privateKey) ;
     // await wallet.generateKey("123456"); OK
-    console.log('OK');
-  });
+    console.log("OK");
+  })
 
   // it('02- genKeyPair', async () => {
   //   console.log(eccrypto);
@@ -25,4 +26,5 @@ describe('Keyper genKeyPair test', () => {
   //   console.log(privateKey);
 
   // })
-});
+
+})

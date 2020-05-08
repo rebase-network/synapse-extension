@@ -1,12 +1,12 @@
 import * as React from 'react';
 // import './Popup.scss';
-import Title from '../../Components/Title';
+import Title from '../../Components/Title'
 import { Button, TextField } from '@material-ui/core';
 // import { makeStyles } from '@material-ui/core/styles';
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
-import { MESSAGE_TYPE } from '../../../utils/constants';
-import { useHistory } from 'react-router-dom';
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import { MESSAGE_TYPE } from '../../../utils/constants'
+import { useHistory } from "react-router-dom";
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Popper from '@material-ui/core/Popper';
 
@@ -24,16 +24,22 @@ const useStyles = makeStyles({
   container: {
     margin: 30,
   },
-  button: {},
-  textField: {},
+  button: {
+
+  },
+  textField: {
+
+  }
 });
 
-interface AppProps {}
 
-interface AppState {}
+interface AppProps { }
 
-export const innerForm = (props) => {
+interface AppState { }
+
+export const innerForm = props => {
   const classes = useStyles();
+
 
   const {
     values,
@@ -44,7 +50,7 @@ export const innerForm = (props) => {
     handleChange,
     handleBlur,
     handleSubmit,
-    handleReset,
+    handleReset
   } = props;
 
   return (
@@ -60,7 +66,7 @@ export const innerForm = (props) => {
         onChange={handleChange}
         onBlur={handleBlur}
         error={!!errors.mnemonic}
-        helperText={errors.mnemonic && touched.mnemonic && errors.mnemonic}
+        helperText={(errors.mnemonic && touched.mnemonic) && errors.mnemonic}
         margin="normal"
         variant="outlined"
         data-testid="field-mnemonic"
@@ -78,7 +84,7 @@ export const innerForm = (props) => {
         onChange={handleChange}
         onBlur={handleBlur}
         error={!!errors.password}
-        helperText={errors.password && touched.password && errors.password}
+        helperText={(errors.password && touched.password) && errors.password}
         margin="normal"
         variant="outlined"
         data-testid="field-password"
@@ -93,7 +99,7 @@ export const innerForm = (props) => {
         onChange={handleChange}
         onBlur={handleBlur}
         error={!!errors.confirmPassword}
-        helperText={errors.confirmPassword && touched.confirmPassword && errors.confirmPassword}
+        helperText={(errors.confirmPassword && touched.confirmPassword) && errors.confirmPassword}
         margin="normal"
         variant="outlined"
         data-testid="field-confirm-password"
@@ -110,59 +116,67 @@ export const innerForm = (props) => {
       >
         Import
       </Button>
+
+
     </Form>
   );
-};
+}
 
 export default function ImportMnemonic(props: AppProps, state: AppState) {
-  const [success, setSuccess] = React.useState(false);
-  const [vaildate, setValidate] = React.useState(true);
+  const [success, setSuccess] = React.useState(false)
+  const [vaildate, setValidate] = React.useState(true)
   const history = useHistory();
 
-  const onSubmit = async (values) => {
-    chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_MNEMONIC });
-    console.log(values);
-    if (vaildate) {
-      setSuccess(true);
+  const onSubmit = async(values) => {
+    chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_MNEMONIC })
+    console.log(values)
+    if(vaildate){
+      setSuccess(true)
       // go to address page
     }
-  };
+  }
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
-      if (msg === MESSAGE_TYPE.IS_NOT_VALIDATE_MNEMONIC) {
-        console.log('index.tsx => message', msg);
-        setValidate(false); //false验证未通过
-        return;
-      } else if (msg === MESSAGE_TYPE.VALIDATE_PASS) {
-        setValidate(true);
-        history.push('/address');
-      }
+    chrome.runtime.onMessage.addListener(
+      (msg, sender, sendResp) => {
+        if (msg === MESSAGE_TYPE.IS_NOT_VALIDATE_MNEMONIC) {
+          console.log("index.tsx => message", msg);
+          setValidate(false); //false验证未通过
+          return;
+        } else if (msg === MESSAGE_TYPE.VALIDATE_PASS) {
+          setValidate(true);
+          history.push('/address')
+        }
+
     });
   }, []);
 
-  let successNode = null;
-  if (success) successNode = <div className="success">Successfully</div>;
-  if (!vaildate) successNode = <div className="success">Invalid mnemonic</div>;
+
+  let successNode = null
+  if (success) successNode = <div className="success">Successfully</div>
+  if (!vaildate) successNode = <div className="success">Invalid mnemonic</div>
   const classes = useStyles();
 
   return (
     <div className={classes.container}>
-      <Title title="Import Mnemonic" testId="mnemonic-form-title" />
+      <Title title='Import Mnemonic' testId="mnemonic-form-title" />
       {successNode}
       <Formik
-        initialValues={{ mnemonic: '', password: '', confirmPassword: '' }}
+        initialValues={{ mnemonic: "", password: "", confirmPassword: "" }}
         onSubmit={onSubmit}
         validationSchema={Yup.object().shape({
-          mnemonic: Yup.string().required('Required'),
-          password: Yup.string().min(6).required('Required'),
+          mnemonic: Yup.string()
+            .required("Required"),
+          password: Yup.string()
+            .min(6)
+            .required("Required"),
           confirmPassword: Yup.string()
             .oneOf([Yup.ref('password')], "Passwords don't match!")
-            .required('Required'),
+            .required("Required")
         })}
       >
         {innerForm}
       </Formik>
     </div>
-  );
+  )
 }

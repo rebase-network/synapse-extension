@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Button, TextField } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
-import { MESSAGE_TYPE } from '../../../utils/constants';
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import { MESSAGE_TYPE } from '../../../utils/constants'
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
@@ -14,6 +14,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+
 
 import { useHistory } from 'react-router-dom';
 
@@ -26,7 +27,9 @@ const useStyles = makeStyles({
     marginTop: '5px',
     marginBottom: '5px',
   },
-  textField: {},
+  textField: {
+
+  }
 });
 
 const useStylesTheme = makeStyles((theme: Theme) =>
@@ -51,7 +54,7 @@ const useStylesTheme = makeStyles((theme: Theme) =>
     },
     inline: {
       display: 'inline',
-    },
+    }
   }),
 );
 
@@ -75,25 +78,29 @@ const listItemTheme = createMuiTheme({
   },
 });
 
-interface AppProps {}
+interface AppProps { }
 
-interface AppState {}
+interface AppState { }
 
 export default function (props: AppProps, state: AppState) {
+
   const classes = useStyles();
   const [addressesList, setAddressesList] = React.useState([]);
   const history = useHistory();
 
-  const classTheme = useStylesTheme();
+  const classTheme =useStylesTheme();
 
   React.useEffect(() => {
     chrome.runtime.sendMessage({
-      messageType: MESSAGE_TYPE.REQUEST_MY_ADDRESSES,
-    });
+      messageType: MESSAGE_TYPE.REQUEST_MY_ADDRESSES
+    })
   }, []);
 
+
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    chrome.runtime.onMessage.addListener((
+      request, sender, sendResponse
+    ) => {
       if (request.messageType == MESSAGE_TYPE.RESULT_MY_ADDRESSES) {
         const addressesList = request.addressesList;
         setAddressesList(addressesList);
@@ -102,6 +109,7 @@ export default function (props: AppProps, state: AppState) {
       if (request.messageType == MESSAGE_TYPE.RETURN_SELECTED_MY_ADDRESSES) {
         history.push('/address');
       }
+
     });
   }, []);
 
@@ -113,48 +121,38 @@ export default function (props: AppProps, state: AppState) {
     chrome.runtime.sendMessage({
       addressObj,
       publicKey,
-      messageType: MESSAGE_TYPE.SELECTED_MY_ADDRESSES,
-    });
+      messageType: MESSAGE_TYPE.SELECTED_MY_ADDRESSES
+    })
   };
 
   const addressesElem = addressesList.map((addressesObj, index) => {
     return addressesObj.addresses.map((item, index) => {
       return (
-        <List
-          component="nav"
-          aria-label="main mailbox folders"
-          key={`item-${item.address}`}
-          className={classTheme.root}
-        >
-          <ThemeProvider theme={listItemTheme}>
-            <ListItem
-              button
-              key={`item-${item.address}`}
-              onClick={(event) => handleListItemClick(event, item, addressesObj.publicKey)}
-            >
-              <ListItemText
-                primary={item.addressBack}
-                secondary={
-                  <React.Fragment>
-                    <Typography
-                      component="span"
-                      variant="body2"
-                      className={classTheme.inline}
-                      color="textPrimary"
-                    >
-                      {item.amount + ' CKB'}
-                    </Typography>
-                    <br />
-                    {item.type}
-                  </React.Fragment>
-                }
-              />
+        <List component="nav" aria-label="main mailbox folders" key={`item-${item.address}`} className={classTheme.root} >
+            <ThemeProvider theme={listItemTheme}>
+            <ListItem button key={`item-${item.address}`}
+              onClick={(event) => handleListItemClick(event, item, addressesObj.publicKey)}>
+              <ListItemText primary={item.addressBack} 
+                            secondary={
+                              <React.Fragment>
+                                <Typography
+                                  component="span"
+                                  variant="body2"
+                                  className={classTheme.inline}
+                                  color="textPrimary"
+                                >
+                                {item.amount + " CKB"}
+                                </Typography>
+                                <br/>
+                                {item.type}
+                              </React.Fragment>
+                            }/>
             </ListItem>
-          </ThemeProvider>
+            </ThemeProvider>
         </List>
-      );
-    });
-  });
+      )
+    })
+  })
 
   return (
     <div>
@@ -173,7 +171,9 @@ export default function (props: AppProps, state: AppState) {
         >
           Import
         </Button>
-        <div className={classTheme.demo}>{addressesElem}</div>
+        <div className={classTheme.demo}>  
+          {addressesElem}
+        </div>
         <Button
           type="button"
           id="import-button"

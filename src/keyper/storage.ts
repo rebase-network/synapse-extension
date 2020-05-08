@@ -1,7 +1,7 @@
 // const Store = require("electron-store");
 import Dictionary from './Dictionary';
 
-const KEYPER_DATA_NAME = 'keyper';
+const KEYPER_DATA_NAME = "keyper";
 
 const stores = {};
 
@@ -18,7 +18,7 @@ const getStore = (name) => {
 const keyperStorage = () => getStore(KEYPER_DATA_NAME);
 
 const getSalt = () => {
-  return keyperStorage().get('salt') || 'SALT_ME';
+  return keyperStorage().get("salt") || "SALT_ME";
 };
 
 module.exports = {

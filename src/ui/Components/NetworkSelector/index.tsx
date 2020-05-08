@@ -17,15 +17,13 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     select: {
       color: 'white',
-    },
+    }
   }),
 );
 
-interface AppProps {
-  handleNetworkChange: Function;
-}
+interface AppProps { handleNetworkChange: Function }
 
-interface AppState {}
+interface AppState { }
 
 export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
@@ -33,7 +31,7 @@ export default function (props: AppProps, state: AppState) {
 
   const handleChange = (event: React.ChangeEvent<{ value: string }>) => {
     setNetwork(event.target.value);
-    props.handleNetworkChange(event.target.value);
+    props.handleNetworkChange(event.target.value)
   };
 
   return (

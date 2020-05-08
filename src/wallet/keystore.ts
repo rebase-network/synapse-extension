@@ -1,70 +1,70 @@
-import * as crypto from 'crypto';
-const scryptsy = require('scrypt.js');
+import * as crypto from 'crypto'
+const scryptsy = require('scrypt.js')
 
-import { Keccak } from 'sha3';
-import { v4 as uuid } from 'uuid';
+import { Keccak } from 'sha3'
+import { v4 as uuid } from 'uuid'
 
-import { UnsupportedCipher, IncorrectPassword, InvalidKeystore } from '../exceptions';
-import { ExtendedPrivateKey } from './key';
+import { UnsupportedCipher, IncorrectPassword, InvalidKeystore } from '../exceptions'
+import { ExtendedPrivateKey } from './key'
 
-const CIPHER = 'aes-128-ctr';
-const CKB_CLI_ORIGIN = 'ckb-cli';
+const CIPHER = 'aes-128-ctr'
+const CKB_CLI_ORIGIN = 'ckb-cli'
 
 interface CipherParams {
-  iv: string;
+  iv: string
 }
 
 interface KdfParams {
-  dklen: number;
-  n: number;
-  r: number;
-  p: number;
-  salt: string;
+  dklen: number
+  n: number
+  r: number
+  p: number
+  salt: string
 }
 
 interface Crypto {
-  cipher: string;
-  cipherparams: CipherParams;
-  ciphertext: string;
-  kdf: string;
-  kdfparams: KdfParams;
-  mac: string;
+  cipher: string
+  cipherparams: CipherParams
+  ciphertext: string
+  kdf: string
+  kdfparams: KdfParams
+  mac: string
 }
 
 // Encrypt and save master extended private key.
 export default class Keystore {
-  crypto: Crypto;
-  id: string;
-  version: number = 3;
+  crypto: Crypto
+  id: string
+  version: number = 3
 
   constructor(theCrypto: Crypto, id: string) {
-    this.crypto = theCrypto;
-    this.id = id;
+    this.crypto = theCrypto
+    this.id = id
   }
 
   static fromJson = (json: string) => {
     try {
-      const object = JSON.parse(json);
+      const object = JSON.parse(json)
       if (object.origin === CKB_CLI_ORIGIN) {
-        throw 'Keystore from CKB CLI is not supported';
+        throw 'Keystore from CKB CLI is not supported'
       }
-      return new Keystore(object.crypto, object.id);
+      return new Keystore(object.crypto, object.id)
     } catch {
-      throw new InvalidKeystore();
+      throw new InvalidKeystore()
     }
-  };
+  }
 
   // Create an empty keystore object that contains empty private key
   static createEmpty = () => {
-    const salt = crypto.randomBytes(32);
-    const iv = crypto.randomBytes(16);
+    const salt = crypto.randomBytes(32)
+    const iv = crypto.randomBytes(16)
     const kdfparams: KdfParams = {
       dklen: 32,
       salt: salt.toString('hex'),
       n: 2 ** 18,
       r: 8,
       p: 1,
-    };
+    }
     return new Keystore(
       {
         ciphertext: '',
@@ -74,26 +74,26 @@ export default class Keystore {
         cipher: CIPHER,
         kdf: 'scrypt',
         kdfparams,
-        mac: '',
+        mac: ''
       },
-      uuid(),
-    );
-  };
+      uuid()
+    )
+  }
 
   static create = (
     extendedPrivateKey: ExtendedPrivateKey,
     password: string,
-    options: { salt?: Buffer; iv?: Buffer } = {},
+    options: { salt?: Buffer; iv?: Buffer } = {}
   ) => {
-    const salt = options.salt || crypto.randomBytes(32);
-    const iv = options.iv || crypto.randomBytes(16);
+    const salt = options.salt || crypto.randomBytes(32)
+    const iv = options.iv || crypto.randomBytes(16)
     const kdfparams: KdfParams = {
       dklen: 32,
       salt: salt.toString('hex'),
       n: 2 ** 18,
       r: 8,
       p: 1,
-    };
+    }
 
     // https://github.com/ethereumjs/ethereumjs-wallet/blob/master/src/index.ts#L316
     const derivedKey = scryptsy(
@@ -103,16 +103,16 @@ export default class Keystore {
       kdfparams.r,
       kdfparams.p,
       kdfparams.dklen,
-    );
+    )
 
-    const cipher = crypto.createCipheriv(CIPHER, derivedKey.slice(0, 16), iv);
+    const cipher = crypto.createCipheriv(CIPHER, derivedKey.slice(0, 16), iv)
     if (!cipher) {
-      throw new UnsupportedCipher();
+      throw new UnsupportedCipher()
     }
     const ciphertext = Buffer.concat([
       cipher.update(Buffer.from(extendedPrivateKey.serialize(), 'hex')),
       cipher.final(),
-    ]);
+    ])
 
     return new Keystore(
       {
@@ -125,34 +125,34 @@ export default class Keystore {
         kdfparams,
         mac: Keystore.mac(derivedKey, ciphertext),
       },
-      uuid(),
-    );
-  };
+      uuid()
+    )
+  }
 
   // Decrypt and return serialized extended private key.
   decrypt(password: string): string {
-    const derivedKey = this.derivedKey(password);
-    const ciphertext = Buffer.from(this.crypto.ciphertext, 'hex');
+    const derivedKey = this.derivedKey(password)
+    const ciphertext = Buffer.from(this.crypto.ciphertext, 'hex')
     if (Keystore.mac(derivedKey, ciphertext) !== this.crypto.mac) {
-      throw new IncorrectPassword();
+      throw new IncorrectPassword()
     }
     const decipher = crypto.createDecipheriv(
       this.crypto.cipher,
       derivedKey.slice(0, 16),
-      Buffer.from(this.crypto.cipherparams.iv, 'hex'),
-    );
-    return Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('hex');
+      Buffer.from(this.crypto.cipherparams.iv, 'hex')
+    )
+    return Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('hex')
   }
 
   extendedPrivateKey = (password: string): ExtendedPrivateKey => {
-    return ExtendedPrivateKey.parse(this.decrypt(password));
-  };
+    return ExtendedPrivateKey.parse(this.decrypt(password))
+  }
 
   checkPassword = (password: string) => {
-    const derivedKey = this.derivedKey(password);
-    const ciphertext = Buffer.from(this.crypto.ciphertext, 'hex');
-    return Keystore.mac(derivedKey, ciphertext) === this.crypto.mac;
-  };
+    const derivedKey = this.derivedKey(password)
+    const ciphertext = Buffer.from(this.crypto.ciphertext, 'hex')
+    return Keystore.mac(derivedKey, ciphertext) === this.crypto.mac
+  }
 
   // derivedKey = (password: string) => {
   //   const { kdfparams } = this.crypto
@@ -163,8 +163,8 @@ export default class Keystore {
   //     Keystore.scryptOptions(kdfparams)
   //   )
   // }
-  derivedKey = (password: string) => {
-    const { kdfparams } = this.crypto;
+    derivedKey = (password: string) => {
+    const { kdfparams } = this.crypto
     return scryptsy(
       Buffer.from(password),
       Buffer.from(kdfparams.salt, 'hex'),
@@ -172,14 +172,12 @@ export default class Keystore {
       kdfparams.r,
       kdfparams.p,
       kdfparams.dklen,
-    );
-  };
+    )
+  }
 
   static mac = (derivedKey: Buffer, ciphertext: Buffer) => {
-    return new Keccak(256)
-      .update(Buffer.concat([derivedKey.slice(16, 32), ciphertext]))
-      .digest('hex');
-  };
+    return new Keccak(256).update(Buffer.concat([derivedKey.slice(16, 32), ciphertext])).digest('hex')
+  }
 
   static scryptOptions = (kdfparams: KdfParams) => {
     return {
@@ -187,14 +185,15 @@ export default class Keystore {
       r: kdfparams.r,
       p: kdfparams.p,
       maxmem: 128 * (kdfparams.n + kdfparams.p + 2) * kdfparams.r,
-    };
-  };
+    }
+  }
 
   public toJson = () => {
-    let obj = {};
-    obj['id'] = this.id;
-    obj['version'] = this.version;
-    obj['crypto'] = this.crypto;
-    return obj;
-  };
+    let obj = {}
+    obj['id'] = this.id
+    obj['version'] = this.version
+    obj['crypto'] = this.crypto
+    return obj
+  }
+
 }

@@ -1,14 +1,5 @@
 import * as React from 'react';
-import {
-  Grid,
-  ListSubheader,
-  ListItem,
-  ListItemText,
-  List,
-  Button,
-  Dialog,
-  IconButton,
-} from '@material-ui/core';
+import {Grid, ListSubheader, ListItem, ListItemText, List, Button, Dialog, IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { useHistory } from 'react-router-dom';
 import {
@@ -31,30 +22,30 @@ const QrCode = require('qrcode.react');
 
 const useStyles = makeStyles({
   container: {
-    margin: 30,
+    margin: 30
   },
   button: {},
   dialogTitle: {
-    textAlign: 'right',
+    textAlign: 'right'
   },
   dialogContent: {
     padding: '0 16px 24px',
     textAlign: 'center',
-    minWidth: 200,
+    minWidth: 200
   },
   address: {
     marginTop: 16,
-    fontSize: 8,
+    fontSize: 8
   },
   loading: {
     width: 200,
     padding: 24,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   tip: {
     marginBottom: 24,
-    color: 'green',
-  },
+    color: 'green'
+  }
 });
 
 const useStylesTheme = makeStyles((theme: Theme) =>
@@ -76,7 +67,7 @@ const useStylesTheme = makeStyles((theme: Theme) =>
 
 const BootstrapButton = withStyles({
   root: {
-    width: '88px',
+    width: "88px",
     size: 'medium',
     boxShadow: 'none',
     textTransform: 'none',
@@ -122,9 +113,9 @@ const useStylesButton = makeStyles((theme: Theme) =>
   }),
 );
 
-interface AppProps {}
+interface AppProps { }
 
-interface AppState {}
+interface AppState { }
 
 export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
@@ -132,8 +123,8 @@ export default function (props: AppProps, state: AppState) {
   const classesButton = useStylesButton();
 
   const [loading, setLoading] = React.useState(true);
-  const [address, setAddress] = React.useState('');
-  const [addressShort, setAddressShort] = React.useState('');
+  const [address, setAddress] = React.useState("");
+  const [addressShort, setAddressShort] = React.useState("");
   const [balance, setBalance] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [tooltip, setTooltip] = React.useState('');
@@ -142,13 +133,16 @@ export default function (props: AppProps, state: AppState) {
   const history = useHistory();
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+    chrome.runtime.onMessage.addListener((
+      msg,
+      sender,
+      sendResponse
+    ) => {
       if (msg.messageType === MESSAGE_TYPE.ADDRESS_INFO) {
         if (msg.address) {
           setAddress(msg.address);
           const address = msg.address;
-          const addressShort =
-            address.substr(0, 10) + '...' + address.substr(address.length - 10, address.length);
+          const addressShort = address.substr(0, 10) + "..." + address.substr(address.length - 10, address.length);
           setAddressShort(addressShort);
         } else {
           history.push('./import-mnemonic');
@@ -161,27 +155,31 @@ export default function (props: AppProps, state: AppState) {
     });
 
     chrome.runtime.sendMessage({
-      messageType: MESSAGE_TYPE.REQUEST_ADDRESS_INFO,
+      messageType: MESSAGE_TYPE.REQUEST_ADDRESS_INFO
     });
 
     chrome.runtime.sendMessage({
       messageType: MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS,
-      network,
+      network
     });
     setLoading(true);
 
     chrome.runtime.sendMessage({
-      messageType: MESSAGE_TYPE.GET_TX_HISTORY,
+      messageType: MESSAGE_TYPE.GET_TX_HISTORY
     });
 
-    chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+    chrome.runtime.onMessage.addListener((
+      msg,
+      sender,
+      sendResponse
+    ) => {
       if (msg.messageType === MESSAGE_TYPE.SEND_TX_HISTORY) {
-        const txs = msg.txs;
+        const txs = msg.txs
         if (txs) {
-          setTxs(txs);
+          setTxs(txs)
         }
-      }
-    });
+    }});
+
   }, []);
 
   const onSendtx = () => {
@@ -200,19 +198,19 @@ export default function (props: AppProps, state: AppState) {
   const balanceNode = loading ? (
     <div>loading</div>
   ) : (
-    <div className="balance" data-testid="balance">
-      {balance}
-      <span className="">CKB</span>
-    </div>
-  );
+      <div className="balance" data-testid="balance">
+        {balance}
+        <span className="">CKB</span>
+      </div>
+    );
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const onTxDetail = () => {
-    history.push('/tx-history-detail');
-  };
+    history.push('/tx-history-detail')
+  }
 
   const handleClose = () => {
     setOpen(false);
@@ -223,80 +221,83 @@ export default function (props: AppProps, state: AppState) {
     <div className={classes.container}>
       <div className="classesTheme.root">
         <Grid container spacing={2}>
-          <Grid item xs={12} alignContent="center" alignItems="center">
-            {/* <Paper className={classesTheme.paper}>Address</Paper> */}
-            <Box textAlign="center" fontSize={22}>
-              Address
-            </Box>
-          </Grid>
-          <Grid item xs={12}>
-            {/* <Paper className={classesTheme.paper}>{addressShort}</Paper> */}
-            <Box textAlign="center" fontSize={22}>
-              {addressShort}
-            </Box>
-          </Grid>
+            <Grid item xs={12} alignContent="center" alignItems="center">
+              {/* <Paper className={classesTheme.paper}>Address</Paper> */}
+              <Box textAlign="center" fontSize={22}>
+                  Address
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
+              {/* <Paper className={classesTheme.paper}>{addressShort}</Paper> */}
+              <Box textAlign="center" fontSize={22}>
+                {addressShort}
+              </Box>
+            </Grid>
         </Grid>
-        <br />
+        <br/>
         <Divider variant="middle" />
-        <br />
-        <br />
-        <br />
+        <br/>
+        <br/>
+        <br/>
         <Grid container spacing={3}>
-          <Grid item xs={12}>
-            {/* <Paper className={classesTheme.paper}>{balanceNode}</Paper> */}
-            <Box textAlign="center" fontSize={22}>
-              {balanceNode}
-            </Box>
-          </Grid>
-          <Grid item xs={6} sm={3} alignItems="center" alignContent="center">
-            <BootstrapButton
-              type="button"
-              id="receive-button"
-              color="primary"
-              variant="contained"
-              className={classesButton.margin}
-              data-testid="receive"
-              onClick={handleClickOpen}
-            >
-              Receive
-            </BootstrapButton>
-          </Grid>
-          <Grid item xs={6} sm={3} alignItems="center" alignContent="center">
-            <BootstrapButton
-              id="send-button"
-              color="primary"
-              onClick={onSendtx}
-              variant="contained"
-              className={classesButton.margin}
-              data-testid="send"
-            >
-              Send
-            </BootstrapButton>
-          </Grid>
+            <Grid item xs={12}>
+              {/* <Paper className={classesTheme.paper}>{balanceNode}</Paper> */}
+              <Box textAlign="center" fontSize={22}>
+                {balanceNode}
+              </Box>
+            </Grid>
+            <Grid item xs={6} sm={3} alignItems="center" alignContent="center">
+              <BootstrapButton
+                  type="button"
+                  id="receive-button"
+                  color="primary"
+                  variant="contained"
+                  className={classesButton.margin}
+                  data-testid="receive"
+                  onClick={handleClickOpen}
+                >
+                Receive
+              </BootstrapButton>
+            </Grid>
+            <Grid item xs={6} sm={3} alignItems="center" alignContent="center">
+              <BootstrapButton
+                  id="send-button"
+                  color="primary"
+                  onClick={onSendtx}
+                  variant="contained"
+                  className={classesButton.margin}
+                  data-testid="send"
+                >
+                Send
+              </BootstrapButton>
+            </Grid>
         </Grid>
       </div>
-      <br />
-      <br />
+      <br/>
+      <br/>
 
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <div>
             <ListSubheader>Transactions</ListSubheader>
-            <Divider />
+            <Divider/>
 
             {txs.map((item) => (
               <List onClick={onTxDetail}>
-                <ListItem>
-                  <ListItemText primary={moment(item.timestamp).format('YYYY-DD-MM hh:mm:ss')} />
+                <ListItem >
+                  <ListItemText primary={moment(item.timestamp).format("YYYY-DD-MM hh:mm:ss")}/>
                 </ListItem>
                 <ListItem>
-                  <ListItemText secondary={`${item.amount / 10 ** 8} CKB`} />
-                  <ListItemText secondary={item.income ? `Received` : `Send`} />
+                  <ListItemText secondary={`${item.amount / (10**8)} CKB`} />
+                  <ListItemText secondary={item.income ? `Received` : `Send` } />
                 </ListItem>
 
-                <Divider />
+                <Divider/>
+
               </List>
+
             ))}
+
           </div>
         </Grid>
       </Grid>
@@ -312,7 +313,11 @@ export default function (props: AppProps, state: AppState) {
 
         <div className={classes.dialogContent}>
           <div className={classes.tip}>{tooltip}</div>
-          {address[network] ? <QrCode value={address[network]} size={200} /> : <div>loading</div>}
+          {address[network] ? (
+            <QrCode value={address[network]} size={200} />
+          ) : (
+              <div>loading</div>
+            )}
           <div className={classes.address}>{address[network]}</div>
         </div>
       </Dialog>

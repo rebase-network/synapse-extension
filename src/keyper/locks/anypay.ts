@@ -1,29 +1,27 @@
 // const numberToBN = require("number-to-bn");
 // const utils = require("@nervosnetwork/ckb-sdk-utils/lib");
-// const {
+// const { 
 //   SignatureAlgorithm
 // } = require("@keyper/specs/lib");
 
-import * as numberToBN from 'number-to-bn';
-import * as utils from '@nervosnetwork/ckb-sdk-utils/lib';
-import { SignatureAlgorithm } from '@keyper/specs/lib';
+import * as numberToBN from "number-to-bn";
+import * as utils from "@nervosnetwork/ckb-sdk-utils/lib";
+import { SignatureAlgorithm } from "@keyper/specs/lib";
 
 class AnyPayLockScript {
-  name = 'AnyPay';
-  codeHash = '0x6a3982f9d018be7e7228f9e0b765f28ceff6d36e634490856d2b186acf78e79b';
-  hashType = 'type';
+  name = "AnyPay";
+  codeHash = "0x6a3982f9d018be7e7228f9e0b765f28ceff6d36e634490856d2b186acf78e79b";
+  hashType = "type";
   provider = null;
 
   deps() {
-    return [
-      {
-        outPoint: {
-          txHash: '0x9af66408df4703763acb10871365e4a21f2c3d3bdc06b0ae634a3ad9f18a6525',
-          index: '0x0',
-        },
-        depType: 'depGroup',
+    return [{
+      outPoint: {
+        txHash: "0x9af66408df4703763acb10871365e4a21f2c3d3bdc06b0ae634a3ad9f18a6525",
+        index: "0x0"
       },
-    ];
+      depType: "depGroup",
+    }];
   }
 
   script(publicKey) {
@@ -31,7 +29,7 @@ class AnyPayLockScript {
     return {
       codeHash: this.codeHash,
       hashType: this.hashType,
-      args: `0x${Buffer.from(args).toString('hex')}`,
+      args: `0x${Buffer.from(args).toString("hex")}`
     };
   }
 
@@ -51,10 +49,10 @@ class AnyPayLockScript {
     }
 
     if (config.length + config.index > rawTx.witnesses.length) {
-      throw new Error('request config error');
+      throw new Error("request config error");
     }
     if (typeof rawTx.witnesses[config.index] !== 'object') {
-      throw new Error('first witness in the group should be type of WitnessArgs');
+      throw new Error("first witness in the group should be type of WitnessArgs");
     }
 
     const emptyWitness = {
@@ -68,22 +66,14 @@ class AnyPayLockScript {
 
     const s = utils.blake2b(32, null, null, utils.PERSONAL);
     s.update(utils.hexToBytes(txHash));
-    s.update(
-      utils.hexToBytes(
-        utils.toHexInLittleEndian(`0x${numberToBN(serialziedEmptyWitnessSize).toString(16)}`, 8),
-      ),
-    );
+    s.update(utils.hexToBytes(utils.toHexInLittleEndian(`0x${numberToBN(serialziedEmptyWitnessSize).toString(16)}`, 8)));
     s.update(serializedEmptyWitnessBytes);
 
     for (let i = config.index + 1; i < config.index + config.length; i++) {
       const w = rawTx.witnesses[i];
       // @ts-ignore
       const bytes = utils.hexToBytes(typeof w === 'string' ? w : utils.serializeWitnessArgs(w));
-      s.update(
-        utils.hexToBytes(
-          utils.toHexInLittleEndian(`0x${numberToBN(bytes.length).toString(16)}`, 8),
-        ),
-      );
+      s.update(utils.hexToBytes(utils.toHexInLittleEndian(`0x${numberToBN(bytes.length).toString(16)}`, 8)));
       s.update(bytes);
     }
 

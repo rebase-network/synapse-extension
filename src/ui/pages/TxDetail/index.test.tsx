@@ -1,6 +1,12 @@
 import * as React from 'react';
 import App from '../../App';
-import { render, fireEvent, waitFor, cleanup, screen } from '@testing-library/react';
+import {
+  render,
+  fireEvent,
+  waitFor,
+  cleanup,
+  screen
+} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import * as chrome from 'sinon-chrome';
 import TxDetail from '.';
@@ -19,16 +25,16 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('txDetail page', () => {
-  let tree, container, getByTestId;
+  let tree, container, getByTestId
   beforeEach(() => {
     tree = render(<TxDetail />);
-    container = tree.container;
-    getByTestId = tree.getByTestId;
-  });
+    container = tree.container
+    getByTestId = tree.getByTestId
+  })
 
   beforeAll(() => {
-    window.chrome = chrome;
-  });
+    window.chrome = chrome
+  })
 
   it('should render title', async () => {
     const { getByTestId, container } = tree;
@@ -41,25 +47,28 @@ describe('txDetail page', () => {
   it('should render amount', async () => {
     const amount = screen.queryByTestId('amount');
     expect(container).toContainElement(amount);
-    expect(amount).toHaveTextContent('0');
+    expect(amount).toHaveTextContent("0")
   });
 
   it('should render inputs', async () => {
     const inputs = screen.queryByTestId('inputs');
     expect(container).toContainElement(inputs);
-    expect(inputs).toHaveTextContent('inputs');
+    expect(inputs).toHaveTextContent("inputs")
   });
 
   it('should render outputs', async () => {
     const outputs = screen.queryByTestId('outputs');
     expect(container).toContainElement(outputs);
     // expect(outputs).toHaveTextContent("ckt1qyqr79tnk3pp34xp92gerxjc4p3mus2690psf0dd70")
-    expect(outputs).toHaveTextContent('outputs');
-  });
+    expect(outputs).toHaveTextContent("outputs")
+  });  
 
   it('should render TxHash', async () => {
     const txHash = screen.queryByTestId('txHash');
     expect(container).toContainElement(txHash);
-    expect(txHash).toHaveTextContent('TxHash');
-  });
+    expect(txHash).toHaveTextContent("TxHash")
+  });  
+
+
+
 });

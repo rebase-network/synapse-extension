@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles({
   container: {
-    margin: 30,
+    margin: 30
   },
   link: {
     textDecoration: 'none',
-    fontSize: 16,
+    fontSize: 16
   },
   linkText: {
     color: '#333',
@@ -39,10 +39,10 @@ const settingItems = [
     link: '/import-private-key',
     text: 'Import Private Key',
     testId: 'importPrivateKey',
-  },
-];
+  }
+]
 
-export default function (props: AppProps, state: AppState) {
+export default function(props: AppProps, state: AppState) {
   const classes = useStyles();
   const settingElem = settingItems.map((item, index) => {
     return (
@@ -52,8 +52,12 @@ export default function (props: AppProps, state: AppState) {
           <KeyboardArrowRightIcon />
         </div>
       </Link>
-    );
-  });
+    )
+  })
 
-  return <div className={classes.container}>{settingElem}</div>;
+  return (
+    <div className={classes.container}>
+      {settingElem}
+    </div>
+  );
 }

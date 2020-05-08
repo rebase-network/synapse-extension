@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import App from '../../App';
-import { render, fireEvent, waitFor, cleanup, screen } from '@testing-library/react';
+import {
+  render,
+  fireEvent,
+  waitFor,
+  cleanup,
+  screen
+} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import * as chrome from 'sinon-chrome';
 
@@ -11,7 +17,7 @@ describe('Home testing', () => {
     tree = render(
       <MemoryRouter initialEntries={['/']}>
         <App />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
   });
   afterEach(cleanup);

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import Title from '../../Components/Title';
 import { Button, TextField } from '@material-ui/core';
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
 import { MESSAGE_TYPE } from '../../../utils/constants';
-import { useHistory } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
+import { useHistory } from "react-router-dom";
+import { makeStyles, } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,11 +17,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface AppProps {}
+interface AppProps { }
 
-interface AppState {}
+interface AppState { }
 
-export const genForm = (props) => {
+export const genForm = props => {
+
   const classes = useStyles();
 
   const {
@@ -34,7 +35,7 @@ export const genForm = (props) => {
     handleBlur,
     handleSubmit,
     enableReinitialize,
-    handleReset,
+    handleReset
   } = props;
 
   return (
@@ -49,7 +50,7 @@ export const genForm = (props) => {
         onChange={handleChange}
         onBlur={handleBlur}
         error={!!errors.mnemonic}
-        helperText={errors.mnemonic && touched.mnemonic && errors.mnemonic}
+        helperText={(errors.mnemonic && touched.mnemonic) && errors.mnemonic}
         margin="normal"
         variant="outlined"
         data-testid=""
@@ -64,7 +65,7 @@ export const genForm = (props) => {
         onChange={handleChange}
         onBlur={handleBlur}
         error={!!errors.password}
-        helperText={errors.password && touched.password && errors.password}
+        helperText={(errors.password && touched.password) && errors.password}
         margin="normal"
         variant="outlined"
         data-testid=""
@@ -79,7 +80,7 @@ export const genForm = (props) => {
         onChange={handleChange}
         onBlur={handleBlur}
         error={!!errors.confirmPassword}
-        helperText={errors.confirmPassword && touched.confirmPassword && errors.confirmPassword}
+        helperText={(errors.confirmPassword && touched.confirmPassword) && errors.confirmPassword}
         margin="normal"
         variant="outlined"
         data-testid=""
@@ -97,62 +98,70 @@ export const genForm = (props) => {
       >
         Create
       </Button>
+
     </Form>
   );
-};
+}
 
 export default function GenerateMnemonic(props: AppProps, state: AppState) {
-  const [success, setSuccess] = React.useState(false);
-  const [vaildate, setValidate] = React.useState(true);
-  const [mnemonic, setMnemonic] = React.useState('');
+
+  const [success, setSuccess] = React.useState(false)
+  const [vaildate, setValidate] = React.useState(true)
+  const [mnemonic, setMnemonic] = React.useState("")
 
   const history = useHistory();
 
-  const onSubmit = async (values) => {
-    if (vaildate) {
-      setSuccess(true);
-      chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.SAVE_MNEMONIC });
-      history.push('/address');
+  const onSubmit = async(values) => {
+    if(vaildate){
+      setSuccess(true)
+      chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.SAVE_MNEMONIC })
+      history.push('/address')
     }
-  };
+  }
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
-      if (msg.messageType === MESSAGE_TYPE.RECE_MNEMONIC) {
-        if (msg.mnemonic) {
-          console.log(msg.mnemonic);
-          setMnemonic(msg.mnemonic);
-        } else {
-          // history.push('/')
+    chrome.runtime.onMessage.addListener(
+      (msg, sender, sendResp) =>{
+        if (msg.messageType === MESSAGE_TYPE.RECE_MNEMONIC) {
+
+          if (msg.mnemonic) {
+            console.log(msg.mnemonic);
+            setMnemonic(msg.mnemonic)
+          } else {
+            // history.push('/')
+          }
         }
-      }
-    });
+      });
+
   }, []);
 
-  let successNode = null;
-  if (success) successNode = <div className="success">Successfully</div>;
-  if (!vaildate) successNode = <div className="success">Invalid xxxx</div>;
+  let successNode = null
+  if (success) successNode = <div className="success">Successfully</div>
+  if (!vaildate) successNode = <div className="success">Invalid xxxx</div>
   const classes = useStyles();
 
   return (
     <div className={classes.container}>
-      <Title title="Generate Mnemonic" testId="" />
+      <Title title='Generate Mnemonic' testId="" />
       {successNode}
       <Formik
         enableReinitialize={true}
-        initialValues={{ mnemonic: mnemonic, password: '', confirmPassword: '' }}
+        initialValues={{ mnemonic: mnemonic, password: "", confirmPassword: "" }}
         onSubmit={onSubmit}
         validationSchema={Yup.object().shape({
-          mnemonic: Yup.string().trim().required('Required'),
-          password: Yup.string().trim().min(6).required('Required'),
-          confirmPassword: Yup.string()
-            .trim()
+          mnemonic: Yup.string().trim()
+          .required("Required"),
+          password: Yup.string().trim()
+            .min(6)
+            .required("Required"),
+          confirmPassword: Yup.string().trim()
             .oneOf([Yup.ref('password')], "Passwords don't match!")
-            .required('Required'),
+            .required("Required")
         })}
       >
         {genForm}
       </Formik>
+
     </div>
-  );
+  )
 }

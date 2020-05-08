@@ -1,27 +1,28 @@
-import { publicKeyToAddress } from '../wallet/address';
+import { publicKeyToAddress } from "../wallet/address";
 const BN = require('bn.js');
 
-const { scriptToHash } = require('@nervosnetwork/ckb-sdk-utils/lib');
-const { addressToScript } = require('@keyper/specs');
+const { scriptToHash } = require("@nervosnetwork/ckb-sdk-utils/lib");
+const { addressToScript } = require("@keyper/specs");
 const keyperwalletTest = require('../keyper/keyperwallet');
 
-const CKB = require('@nervosnetwork/ckb-sdk-core').default;
-const nodeUrl = 'http://106.13.40.34:8114/';
-const ckb = new CKB(nodeUrl);
+const CKB = require('@nervosnetwork/ckb-sdk-core').default
+const nodeUrl = 'http://106.13.40.34:8114/'
+const ckb = new CKB(nodeUrl)
+
 
 const sendCapacity = BigInt(11100000000);
 const sendFee = BigInt(1100000000);
 
-const privateKey = '6e678246998b426db75c83c8be213b4ceeb8ae1ff10fcd2f8169e1dc3ca04df1';
-const password = '123456';
+const privateKey = "6e678246998b426db75c83c8be213b4ceeb8ae1ff10fcd2f8169e1dc3ca04df1";
+const password = "123456";
 // const fromAddress = "ckt1qjkg5j7qv44wae5dgs2xs86tycgng8z0pmw5cq3095jsa79mtp5zls7nwu6x3pnl82rz3xmqypfhcway723ng03alg8";
 // const toAddress = "ckt1qjkg5j7qv44wae5dgs2xs86tycgng8z0pmw5cq3095jsa79mtp5zls7nwu6x3pnl82rz3xmqypfhcway723ng03alg8";
-const anypayAddress =
-  'ckt1qsusu8rukk0m6h8eh7unwzktp54mhw70gymvjze086jjw76vzw65pxuy3pat96shpxvvl7vf2e6ae55u6fk560m2alm';
-const kaccak256Address =
-  'ckt1qjkg5j7qv44wae5dgs2xs86tycgng8z0pmw5cq3095jsa79mtp5zls7nwu6x3pnl82rz3xmqypfhcway723ng03alg8';
+const anypayAddress = "ckt1qsusu8rukk0m6h8eh7unwzktp54mhw70gymvjze086jjw76vzw65pxuy3pat96shpxvvl7vf2e6ae55u6fk560m2alm";
+const kaccak256Address = "ckt1qjkg5j7qv44wae5dgs2xs86tycgng8z0pmw5cq3095jsa79mtp5zls7nwu6x3pnl82rz3xmqypfhcway723ng03alg8";
 describe('transaction test', () => {
+
   it('send simple transaction by Keccak256LockScript', async () => {
+
     jest.setTimeout(100000);
 
     await keyperwalletTest.init();
@@ -34,9 +35,9 @@ describe('transaction test', () => {
       codeHash: '0x9af66408df4703763acb10871365e4a21f2c3d3bdc06b0ae634a3ad9f18a6525',
       outPoint: {
         txHash: '0x6495cede8d500e4309218ae50bbcadb8f722f24cc7572dd2274f5876cb603e4e',
-        index: '0x0',
-      },
-    };
+        index: '0x0'
+      }
+    }
 
     /**
      * calculate the lockHash by the address publicKeyHash
@@ -54,11 +55,11 @@ describe('transaction test', () => {
      */
     // console.log(JSON.stringify(lockScript, null, 2))
 
-    const publicKey = ckb.utils.privateKeyToPublicKey('0x' + privateKey);
-    const publicKeyHash = `0x${ckb.utils.blake160(publicKey, 'hex')}`;
-    const lockHash = ckb.generateLockHash(publicKeyHash, keccak256Dep);
-    console.log(lockHash);
-
+    const publicKey = ckb.utils.privateKeyToPublicKey("0x" + privateKey)
+    const publicKeyHash = `0x${ckb.utils.blake160(publicKey, 'hex')}`
+    const lockHash = ckb.generateLockHash(publicKeyHash, keccak256Dep)
+    console.log(lockHash)
+    
     // const lockHash = ckb.utils.scriptToHash(lockScript)
     // const lockHash = "0x5d67b4eeb98698535f76f1b34a77d852112a35072eb6b834cb4cc8868ac02fb2";
     /**
@@ -67,13 +68,13 @@ describe('transaction test', () => {
     // console.log(lockHash)
     // method to fetch all unspent cells by lock hash
     const unspentCells = await ckb.loadCells({
-      lockHash,
-    });
+      lockHash
+    })
 
     /**
      * to see the unspent cells
      */
-    console.log('unspentCells => ', unspentCells);
+    console.log("unspentCells => ",unspentCells)
 
     // const rawTransaction = ckb.generateRawTransaction({
     //   fromAddress: kaccak256Address,
@@ -122,8 +123,8 @@ describe('transaction test', () => {
     // expect(realTxHash).toHaveLength(66);
   });
 
-  // it('send Anypay', async () => {
-
+  // it('send Anypay', async () => {  
+  
   //   jest.setTimeout(100000);
 
   //   await keyperwalletTest.init();
@@ -149,7 +150,7 @@ describe('transaction test', () => {
   //   const lock = addressToScript(anypayAddress);
   //   const unspentCells = await ckb.loadCells({
   //     lockHash
-  //   })
+  //   }) 
   //   // console.log("=== unspentCells ===",unspentCells);
   //   console.log("=== unspentCells ===",JSON.stringify(unspentCells));
   //   const rawTx = await createRawTx(
@@ -160,12 +161,12 @@ describe('transaction test', () => {
   //     target: scriptToHash(lock),
   //     tx: rawTx,
   //   }
-
+    
   //   const signedTx = ckb.signTransaction('0x' + privateKey)(rawTx);
   //   // const signedTx = await keyperwalletTest.signTx(signObj.target, password, signObj.tx);
   //   console.log("signedTx =>", JSON.stringify(signedTx, null, 2))
 
-  //   const realTxHash = await ckb.rpc.sendTransaction(signedTx)
+  //   const realTxHash = await ckb.rpc.sendTransaction(signedTx) 
   //   console.log("realTxHash =>", JSON.stringify(realTxHash));
 
   // });
@@ -200,31 +201,29 @@ describe('transaction test', () => {
 // console.log(masterKeychain
 //             .derivePath(`m/44'/309'/0'/0`)
 //             .deriveChild(0,false)
-//             .publicKey.toString('hex'))
+//             .publicKey.toString('hex')) 
 
 async function createRawTx(toAmount, toLock, cells, lock) {
   const rawTx = {
-    version: '0x0',
-    cellDeps: [
-      {
-        outPoint: {
-          txHash: '0xf860285b77069801f91d32a316bf07c8caee7ff1ab39b506d6708de7dd88595f',
-          index: '0x0',
-        },
-        depType: 'depGroup',
+    version: "0x0",
+    cellDeps: [{
+      outPoint: {
+        txHash: "0xf860285b77069801f91d32a316bf07c8caee7ff1ab39b506d6708de7dd88595f",
+        index: "0x0"
       },
-    ],
+      depType: "depGroup",
+    }],
     headerDeps: [],
     inputs: [],
     outputs: [],
     witnesses: [],
-    outputsData: [],
+    outputsData: []
   };
   rawTx.outputs.push({
     capacity: `0x${new BN(toAmount).toString(16)}`,
     lock: toLock,
   });
-  rawTx.outputsData.push('0x');
+  rawTx.outputsData.push("0x");
   let totalcapacity = new BN(0);
   // const total = new BN(toAmount).add(new BN("1000"));
   for (let i = 0; i < cells.length; i++) {
@@ -236,22 +235,22 @@ async function createRawTx(toAmount, toLock, cells, lock) {
         txHash: element.txHash,
         index: element.index,
       },
-      since: '0x0',
+      since: "0x0",
     });
-    rawTx.witnesses.push('0x');
-    totalcapacity = totalcapacity.add(new BN(cells[i].capacity));
+    rawTx.witnesses.push("0x");
+    totalcapacity = totalcapacity.add(new BN(cells[i].capacity))
   }
   rawTx.witnesses[0] = {
-    lock: '',
-    inputType: '',
-    outputType: '',
+    lock: "",
+    inputType: "",
+    outputType: "",
   };
   // if (cells.total.gt(total) && cells.total.sub(total).gt(new BN("6100000000"))) {
   rawTx.outputs.push({
     capacity: `0x${totalcapacity.sub(toAmount).toString(16)}`,
-    lock: lock,
+    lock: lock
   });
-  rawTx.outputsData.push('0x');
+  rawTx.outputsData.push("0x");
   // }
   return rawTx;
 }
@@ -276,6 +275,8 @@ async function createRawTx(toAmount, toLock, cells, lock) {
 //     status: 'live'
 //   }
 // ]
+
+
 
 // signedTx => {
 //   "version": "0x0",
