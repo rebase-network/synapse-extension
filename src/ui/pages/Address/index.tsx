@@ -16,6 +16,7 @@ import { shannonToCKBFormatter } from '../../../utils/formatters';
 import Title from '../../Components/Title';
 import { MESSAGE_TYPE } from '../../../utils/constants';
 import { AppContext } from '../../App';
+import * as moment from 'moment';
 
 const QrCode = require('qrcode.react');
 
@@ -287,7 +288,7 @@ export default function (props: AppProps, state: AppState) {
               <ListItem>
                 <ListItemText primary={`Hash ${item.hash.slice(0,6)}`} />
                 <ListItemText secondary={`BlkNum ${item.block_num}`} />
-                <ListItemText secondary={`Time ${item.timestamp}`} />
+                <ListItemText secondary={`${moment(item.timestamp).format("YYYY-DD-MM hh:mm:ss")}`} />
               </ListItem>
             ))}
 

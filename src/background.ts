@@ -34,7 +34,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const mnemonic = request.mnemonic.trim();
     const password = request.password.trim();
 
-    //助记词有效性的验证
+    // 验证助记词有效性
     const isValidateMnemonic = validateMnemonic(mnemonic);
     console.log(isValidateMnemonic)
     if (!isValidateMnemonic) {
@@ -191,7 +191,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       if (!wallet) return
       const addr = wallet.currentWallet.address
 
-      console.error("addr ", addr)
       const txs = await getTxHistoryByAddress(addr)
 
       chrome.runtime.sendMessage({
