@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Grid, ListItem, ListItemText, List, Button, Dialog, IconButton } from '@material-ui/core';
+import {Grid, ListSubheader, ListItem, ListItemText, List, Button, Dialog, IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { useHistory } from 'react-router-dom';
 import {
@@ -132,14 +132,6 @@ export default function (props: AppProps, state: AppState) {
   const { network } = React.useContext(AppContext);
   const history = useHistory();
 
-  function generate(element) {
-    return txs.map((value) =>
-      React.cloneElement(element, {
-        key: value,
-      }),
-    );
-  }
-
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener((
       msg,
@@ -150,7 +142,7 @@ export default function (props: AppProps, state: AppState) {
         if (msg.address) {
           setAddress(msg.address);
           const address = msg.address;
-          const addressShort = address.substr(0,10) +"..." + address.substr(address.length-10,address.length);
+          const addressShort = address.substr(0, 10) + "..." + address.substr(address.length - 10, address.length);
           setAddressShort(addressShort);
         } else {
           history.push('./import-mnemonic');
@@ -283,12 +275,19 @@ export default function (props: AppProps, state: AppState) {
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <div>
+            <ListSubheader>Transactions</ListSubheader>
+            <Divider/>
+
             <List>
             {txs.map((item) => (
               <ListItem>
-                <ListItemText primary={`Hash ${item.hash.slice(0,6)}`} />
-                <ListItemText secondary={`BlkNum ${item.block_num}`} />
-                <ListItemText secondary={`${moment(item.timestamp).format("YYYY-DD-MM hh:mm:ss")}`} />
+                {/* <ListItemText primary={`Hash ${item.hash.slice(0,6)}`} /> */}
+                {/* <ListItemText secondary={`BlkNum ${item.block_num}`} /> */}
+                UTC:<ListItemText secondary={moment(item.timestamp).format("YYYY-DD-MM hh:mm:ss")}/>
+                fee: <ListItemText secondary={item.fee} />
+                income:<ListItemText secondary={item.income.toString()} />
+                amount:<ListItemText secondary={item.amount / (10**8)} />
+
               </ListItem>
             ))}
 
