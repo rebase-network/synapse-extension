@@ -34,8 +34,6 @@ export default function (props: AppProps, state: AppState) {
 
   const history = useHistory();
 
-  React.useEffect(() => { }, []);
-
   const onImport = () => {
     history.push('/import-mnemonic')
   }

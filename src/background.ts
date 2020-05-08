@@ -228,6 +228,35 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     });
   }
 
+  if (request.messageType === "xxxx") {
+
+    const tx = {
+      "hash": "0x670133ec69d03de5f76f320b38c434cb474620d961c0dcecc5b73f64c3755947",
+      "block_num": 190532,
+      "timestamp": 1588864031062,
+      "inputs": [{
+        "capacity": 830659346699766400,
+        "address": "ckt1qyqr79tnk3pp34xp92gerxjc4p3mus2690psf0dd70"
+      }],
+      "outputs": [{
+        "capacity": 500000000000,
+        "address": "ckt1qyq9lm2qlxray4utne5pq8m8d387wtspnuus0hfun4"
+      }, {
+        "capacity": 830658846699765900,
+        "address": "ckt1qyqr79tnk3pp34xp92gerxjc4p3mus2690psf0dd70"
+      }],
+      "fee": 512,
+      "income": true,
+      "amount": 500000000000
+    }
+
+    chrome.runtime.sendMessage({
+      tx: tx,
+      messageType: "yyyy"
+    })
+
+  }
+
   //send transactioin
   if (request.messageType === MESSAGE_TYPE.RESQUEST_SEND_TX) {
 

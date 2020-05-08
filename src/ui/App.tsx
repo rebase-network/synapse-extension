@@ -6,6 +6,7 @@ import ImportMnemonic from './pages/ImportMnemonic/index'
 import GenerateMnemonic from './pages/ImportMnemonic/generate'
 import Transaction from "./pages/Transaction"
 import TxDetail from "./pages/TxDetail"
+import TxHistoryDetail from "./pages/Transaction/txHistoryDetail"
 import Home from "./pages/Home"
 import ImportPrivateKey from './pages/ImportPrivateKey';
 import ExportPrivateKey from './pages/ExportPrivateKey';
@@ -71,6 +72,9 @@ export default function App() {
             </Route>
             <Route path="/send-tx">
               <Transaction />
+            </Route>
+            <Route path="/tx-history-detail">
+              <TxHistoryDetail />
             </Route>
             <Route path="/tx-detail">
               <TxDetail />

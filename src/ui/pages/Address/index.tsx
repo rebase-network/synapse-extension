@@ -208,6 +208,10 @@ export default function (props: AppProps, state: AppState) {
     setOpen(true);
   };
 
+  const onTxDetail = () => {
+    history.push('/tx-history-detail')
+  }
+
   const handleClose = () => {
     setOpen(false);
     setTooltip('');
@@ -279,17 +283,16 @@ export default function (props: AppProps, state: AppState) {
             <Divider/>
 
             {txs.map((item) => (
-            <List>
+              <List onClick={onTxDetail}>
+                <ListItem >
+                  <ListItemText primary={moment(item.timestamp).format("YYYY-DD-MM hh:mm:ss")}/>
+                </ListItem>
+                <ListItem>
+                  <ListItemText secondary={`${item.amount / (10**8)} CKB`} />
+                  <ListItemText secondary={item.income ? `Received` : `Send` } />
+                </ListItem>
 
-              <ListItem>
-                <ListItemText primary={moment(item.timestamp).format("YYYY-DD-MM hh:mm:ss")}/>
-              </ListItem>
-
-              <ListItem>
-                <ListItemText secondary={item.income ? `Received` : `Send` } />
-                <ListItemText secondary={`${item.amount / (10**8)} CKB`} />
-              </ListItem>
-              <Divider/>
+                <Divider/>
 
               </List>
 
