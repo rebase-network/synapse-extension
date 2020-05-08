@@ -18,7 +18,7 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('setting page', () => {
-  let tree, container, getByTestId;
+  let tree; let container; let getByTestId;
   beforeEach(() => {
     tree = render(
       <Router>

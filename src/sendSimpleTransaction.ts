@@ -60,8 +60,8 @@ export const sendSimpleTransaction = async (
   // })
 
   const rawTransaction = ckb.generateRawTransaction({
-    fromAddress: fromAddress,
-    toAddress: toAddress,
+    fromAddress,
+    toAddress,
     capacity: sendCapacity,
     fee: sendFee,
     safeMode: true,
@@ -90,7 +90,7 @@ export const sendSimpleTransaction = async (
   return realTxHash;
 };
 
-//add by river
+// add by river
 // console.log(masterKeychain
 //             .derivePath(`m/44'/309'/0'/0`)
 //             .deriveChild(0,false)

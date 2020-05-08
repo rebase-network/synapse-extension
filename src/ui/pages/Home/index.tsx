@@ -1,8 +1,8 @@
 import * as React from 'react';
-import Title from '../../Components/Title';
 import { Button } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import Title from '../../Components/Title';
 import { MESSAGE_TYPE } from '../../../utils/constants';
 
 const useStylesPopper = makeStyles((theme: Theme) =>

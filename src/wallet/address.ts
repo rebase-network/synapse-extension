@@ -21,11 +21,14 @@ export const publicKeyToAddress = (publicKey: string, prefix = AddressPrefix.Tes
 
 export default class Address {
   publicKey?: string;
+
   address: string;
+
   path: string; // BIP44 path
+
   blake160: string;
 
-  constructor(address: string, path: string = Address.pathForReceiving(0), blake160: string = '') {
+  constructor(address: string, path: string = Address.pathForReceiving(0), blake160 = '') {
     this.address = address;
     this.path = path;
     this.blake160 = blake160;
@@ -42,14 +45,14 @@ export default class Address {
     return instance;
   };
 
-  //path 默认可以不传
-  //prefix 默认可以不传
+  // path 默认可以不传
+  // prefix 默认可以不传
   public static fromPrivateKey = (
     privateKey: string,
     path: string = Address.pathForReceiving(0),
     prefix: AddressPrefix = AddressPrefix.Testnet,
   ) => {
-    const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
+    const publicKey = ckbUtils.privateKeyToPublicKey(`0x${  privateKey}`);
     const instance = Address.fromPublicKey(publicKey, path, prefix);
     return instance;
   };
@@ -82,7 +85,7 @@ export default class Address {
   };
 
   public getBlake160 = () => {
-    return '0x' + ckbUtils.blake160('0x' + this.publicKey, 'hex');
+    return `0x${  ckbUtils.blake160(`0x${  this.publicKey}`, 'hex')}`;
   };
 
   public publicKeyHash = () => {

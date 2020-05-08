@@ -1,14 +1,14 @@
 import * as React from 'react';
 // import './Popup.scss';
-import Title from '../../Components/Title';
 import { Button, TextField } from '@material-ui/core';
 // import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { MESSAGE_TYPE } from '../../../utils/constants';
 import { useHistory } from 'react-router-dom';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Popper from '@material-ui/core/Popper';
+import { MESSAGE_TYPE } from '../../../utils/constants';
+import Title from '../../Components/Title';
 
 const useStylesPopper = makeStyles((theme: Theme) =>
   createStyles({
@@ -132,8 +132,8 @@ export default function ImportMnemonic(props: AppProps, state: AppState) {
     chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
       if (msg === MESSAGE_TYPE.IS_NOT_VALIDATE_MNEMONIC) {
         console.log('index.tsx => message', msg);
-        setValidate(false); //false验证未通过
-        return;
+        setValidate(false); // false验证未通过
+        
       } else if (msg === MESSAGE_TYPE.VALIDATE_PASS) {
         setValidate(true);
         history.push('/address');

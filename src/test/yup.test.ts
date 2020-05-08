@@ -30,7 +30,7 @@ describe('yup validate', () => {
         return err;
       });
 
-    expect(err1['errors']).toBe(undefined);
+    expect(err1.errors).toBe(undefined);
 
     const err2 = await contactSchema
       .validate({
@@ -45,7 +45,7 @@ describe('yup validate', () => {
 
     console.log('err2 => ', err2);
 
-    expect(err2['errors']).toStrictEqual(['password Required']);
+    expect(err2.errors).toStrictEqual(['password Required']);
 
     const err3 = await contactSchema
       .validate({
@@ -58,7 +58,7 @@ describe('yup validate', () => {
         return err;
       });
 
-    expect(err3['errors']).toStrictEqual(['address must be exactly 46 characters']);
+    expect(err3.errors).toStrictEqual(['address must be exactly 46 characters']);
 
     const err4 = await contactSchema
       .validate({
@@ -71,7 +71,7 @@ describe('yup validate', () => {
         return err;
       });
 
-    expect(err4['errors']).toStrictEqual(['address must match the following: "/^ckb|ckt/"']);
+    expect(err4.errors).toStrictEqual(['address must match the following: "/^ckb|ckt/"']);
 
     const err5 = await contactSchema
       .validate({
@@ -84,6 +84,6 @@ describe('yup validate', () => {
         return err;
       });
 
-    expect(err5['errors']).toStrictEqual(['fee must be a positive number']);
+    expect(err5.errors).toStrictEqual(['fee must be a positive number']);
   });
 });

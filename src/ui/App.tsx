@@ -16,7 +16,7 @@ import Setting from './pages/Setting';
 import MyAddresses from './pages/MyAddresses';
 import ExportMnemonicSecond from './pages/ExportMnemonicSecond';
 
-import AppBar from './Components/AppBar/';
+import AppBar from "./Components/AppBar";
 
 import './styles/global.scss';
 

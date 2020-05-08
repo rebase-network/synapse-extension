@@ -1,13 +1,13 @@
-const CkbUtils = require('@nervosnetwork/ckb-sdk-utils');
-
+import * as chrome from 'sinon-chrome';
+import browser from 'sinon-chrome/webextensions';
 import { generateMnemonic, AccountExtendedPublicKey, ExtendedPrivateKey } from '../wallet/key';
 import Keystore from '../wallet/keystore';
 import Keychain from '../wallet/keychain';
 import { entropyToMnemonic, mnemonicToSeedSync } from '../wallet/mnemonic';
 import Address, { AddressType, AddressPrefix } from '../wallet/address';
 
-import * as chrome from 'sinon-chrome';
-import browser from 'sinon-chrome/webextensions';
+
+const CkbUtils = require('@nervosnetwork/ckb-sdk-utils');
 // import * as browser from 'sinon-chrome/webextensions'
 // import extensions from 'sinon-chrome/extensions'
 
@@ -81,11 +81,11 @@ describe('wallet', () => {
     );
 
     const hdPrivateKey =
-      '0x' +
+      `0x${ 
       newMasterKeychain
         .derivePath(`m/44'/309'/0'/0`)
         .deriveChild(0, false)
-        .privateKey.toString('hex');
+        .privateKey.toString('hex')}`;
 
     const hdtestnetAddr = CkbUtils.privateKeyToAddress(hdPrivateKey, {
       prefix: 'ckt',
@@ -149,7 +149,7 @@ describe('save keystore to chrome plugin', () => {
         key: keystore,
       },
       () => {
-        console.log('Value is set to ' + keystore);
+        console.log(`Value is set to ${  keystore}`);
       },
     );
 

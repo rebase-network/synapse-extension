@@ -296,7 +296,7 @@ export function encrypt(privKey: Buffer, password: string, opts?: Partial<V3Para
 export function decrypt(
   input: string | V3Keystore,
   password: string,
-  nonStrict: boolean = false,
+  nonStrict = false,
 ): string {
   const json: V3Keystore =
     typeof input === 'object' ? input : JSON.parse(nonStrict ? input.toLowerCase() : input);
@@ -305,7 +305,7 @@ export function decrypt(
     throw new Error('Not a V3 wallet');
   }
 
-  let derivedKey: Buffer, kdfparams: any;
+  let derivedKey: Buffer; let kdfparams: any;
 
   if (json.crypto.kdf === 'scrypt') {
     kdfparams = json.crypto.kdfparams;
@@ -360,7 +360,7 @@ export function checkPasswd(input: string | V3Keystore, password: string): boole
     throw new Error('Not a V3 wallet');
   }
 
-  let derivedKey: Buffer, kdfparams: any;
+  let derivedKey: Buffer; let kdfparams: any;
 
   if (json.crypto.kdf === 'scrypt') {
     kdfparams = json.crypto.kdfparams;

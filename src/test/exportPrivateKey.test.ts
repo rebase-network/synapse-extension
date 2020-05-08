@@ -25,15 +25,15 @@ describe('export privateKey or Keystore', () => {
   });
 
   it('02- export privateKey by keystore and password', () => {
-    const keystore = Keystore.fromJson(keystoreString); //参数是String
+    const keystore = Keystore.fromJson(keystoreString); // 参数是String
     const masterPrivateKey = keystore.extendedPrivateKey(password);
     const masterKeychain = new Keychain(
       Buffer.from(masterPrivateKey.privateKey, 'hex'),
       Buffer.from(masterPrivateKey.chainCode, 'hex'),
     );
     const privateKey =
-      '0x' +
-      masterKeychain.derivePath(`m/44'/309'/0'/0`).deriveChild(0, false).privateKey.toString('hex');
+      `0x${ 
+      masterKeychain.derivePath(`m/44'/309'/0'/0`).deriveChild(0, false).privateKey.toString('hex')}`;
     expect(expextPrivateKey).toEqual(privateKey);
   });
 
@@ -45,7 +45,7 @@ describe('export privateKey or Keystore', () => {
     );
     // console.log("keystore =>", keystore);
 
-    //get password by Keystore
+    // get password by Keystore
     const extendedPrivateKey = keystore.extendedPrivateKey(password);
     expect(extendedPrivateKey.privateKey).toEqual(fixture.privateKey);
   });
@@ -58,7 +58,7 @@ describe('export privateKey or Keystore', () => {
     );
     // console.log("keystore =>", keystore);
 
-    //get password by Keystore
+    // get password by Keystore
     const extendedPrivateKey = keystore.extendedPrivateKey(password);
     expect(extendedPrivateKey.privateKey).toEqual(fixture02.privateKey);
   });

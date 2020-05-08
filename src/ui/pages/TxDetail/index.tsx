@@ -1,10 +1,8 @@
 import * as React from 'react';
-import Title from '../../Components/Title';
 import { Button, TextField } from '@material-ui/core';
 
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { MESSAGE_TYPE } from '../../../utils/constants';
 import { useHistory } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,6 +11,8 @@ import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import { MESSAGE_TYPE } from '../../../utils/constants';
+import Title from '../../Components/Title';
 
 const useStyles = makeStyles((theme) => ({
   container: {

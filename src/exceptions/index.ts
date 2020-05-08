@@ -14,6 +14,7 @@ export class InvalidMnemonic extends Error {
 
 export class IncorrectPassword extends Error {
   public code = 103;
+
   constructor() {
     super('messages.incorrect-password');
   }

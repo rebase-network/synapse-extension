@@ -1,13 +1,13 @@
 import * as React from 'react';
 // import './Popup.scss';
-import Title from '../../Components/Title';
 import { Button, TextField } from '@material-ui/core';
 // import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { MESSAGE_TYPE } from '../../../utils/constants';
 import { useHistory } from 'react-router-dom';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { MESSAGE_TYPE } from '../../../utils/constants';
+import Title from '../../Components/Title';
 
 const useStylesPopper = makeStyles((theme: Theme) =>
   createStyles({
@@ -85,7 +85,7 @@ export default function (props: AppProps, state: AppState) {
   const history = useHistory();
 
   const onSubmit = async (values) => {
-    //background.ts check the password
+    // background.ts check the password
     chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK });
   };
 
@@ -94,7 +94,7 @@ export default function (props: AppProps, state: AppState) {
       // console.log("export private key =>",message);
       if (message.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT) {
         if (message.isValidatePassword) {
-          history.push('/export-private-key-second'); //测试成功的地址
+          history.push('/export-private-key-second'); // 测试成功的地址
           chrome.runtime.sendMessage({
             message,
             messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND,

@@ -1,17 +1,17 @@
 import * as React from 'react';
-import Title from '../../Components/Title';
 import { Button, TextField } from '@material-ui/core';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { MESSAGE_TYPE } from '../../../utils/constants';
 import { useHistory } from 'react-router-dom';
-import { AppContext } from '../../App';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
+import { AppContext } from '../../App';
+import { MESSAGE_TYPE } from '../../../utils/constants';
+import Title from '../../Components/Title';
 
 const useStyles = makeStyles({
   container: {
@@ -227,7 +227,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
   const validateObj: validateObjType = !isHidePrivate
     ? {
         password: Yup.string().required('Required').min(6),
-        privateKey: Yup.string().required('Required'), //TODO
+        privateKey: Yup.string().required('Required'), // TODO
       }
     : {
         keystore: Yup.string().required('Required'),

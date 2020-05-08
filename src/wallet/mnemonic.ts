@@ -1,7 +1,7 @@
 // import crypto from 'crypto'
-const crypto = require('crypto');
-
 import wordList from './en-words';
+
+const crypto = require('crypto');
 
 const RADIX = 2048;
 const PBKDF2_ROUNDS = 2048;
@@ -40,13 +40,13 @@ const salt = (password = '') => {
   return `mnemonic${password}`;
 };
 
-export const mnemonicToSeedSync = (mnemonic: string = '', password: string = '') => {
+export const mnemonicToSeedSync = (mnemonic = '', password = '') => {
   const mnemonicBuffer = Buffer.from(mnemonic.normalize('NFKD'), 'utf8');
   const saltBuffer = Buffer.from(salt(password.normalize('NFKD')), 'utf8');
   return crypto.pbkdf2Sync(mnemonicBuffer, saltBuffer, PBKDF2_ROUNDS, KEY_LEN, 'sha512');
 };
 
-export function mnemonicToSeed(mnemonic: string = '', password: string = ''): Promise<Buffer> {
+export function mnemonicToSeed(mnemonic = '', password = ''): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     try {
       const mnemonicBuffer = Buffer.from(mnemonic.normalize('NFKD'), 'utf8');
@@ -63,7 +63,7 @@ export function mnemonicToSeed(mnemonic: string = '', password: string = ''): Pr
   });
 }
 
-export function mnemonicToEntropy(mnemonic: string = '') {
+export function mnemonicToEntropy(mnemonic = '') {
   const words = mnemonic.normalize('NFKD').split(' ');
   if (words.length < MIN_WORDS_SIZE) {
     throw new Error(WORDS_TOO_SHORT);

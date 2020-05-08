@@ -3,6 +3,7 @@ import loadCells from './wallet/balance/loadCells';
 import { Ckb } from './utils/constants';
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default;
+
 const ckb = new CKB(Ckb.remoteRpcUrl);
 
 export const getBalanceByPublicKey = async (publicKey) => {
@@ -14,7 +15,7 @@ export const getBalanceByPublicKey = async (publicKey) => {
   const tipBlockNumber = await ckb.rpc.getTipBlockNumber();
 
   const cells = await loadCells({
-    lockHash: lockHash,
+    lockHash,
     start: BigInt(30000),
     end: tipBlockNumber,
     STEP: '0x64',
@@ -22,8 +23,8 @@ export const getBalanceByPublicKey = async (publicKey) => {
   });
 
   let capacityAll = BigInt(0);
-  for (let cell of cells) {
-    capacityAll = capacityAll + BigInt(cell.capacity);
+  for (const cell of cells) {
+    capacityAll += BigInt(cell.capacity);
   }
 
   return BigInt(capacityAll);
@@ -41,7 +42,7 @@ export const getBalanceByLockHash = async (lockHash) => {
   const tipBlockNumber = await ckb.rpc.getTipBlockNumber();
 
   const cells = await loadCells({
-    lockHash: lockHash,
+    lockHash,
     start: BigInt(30000),
     end: tipBlockNumber,
     STEP: '0x64',
@@ -49,8 +50,8 @@ export const getBalanceByLockHash = async (lockHash) => {
   });
 
   let capacityAll = BigInt(0);
-  for (let cell of cells) {
-    capacityAll = capacityAll + BigInt(cell.capacity);
+  for (const cell of cells) {
+    capacityAll += BigInt(cell.capacity);
   }
 
   return BigInt(capacityAll);

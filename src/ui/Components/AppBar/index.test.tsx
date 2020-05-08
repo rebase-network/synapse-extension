@@ -1,10 +1,10 @@
 import * as React from 'react';
-import AppBar from './index';
 import { render, fireEvent, waitFor, cleanup } from '@testing-library/react';
+import AppBar from './index';
 import '@testing-library/jest-dom/extend-expect';
 
 describe('React testing library', () => {
-  let tree, container, getByTestId;
+  let tree; let container; let getByTestId;
   beforeEach(() => {
     tree = render(<AppBar handleNetworkChange={null} />);
     container = tree.container;

@@ -21,11 +21,11 @@ import {
 } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Box from '@material-ui/core/Box';
+import * as moment from 'moment';
 import { shannonToCKBFormatter } from '../../../utils/formatters';
 import Title from '../../Components/Title';
 import { MESSAGE_TYPE } from '../../../utils/constants';
 import { AppContext } from '../../App';
-import * as moment from 'moment';
 
 const QrCode = require('qrcode.react');
 
@@ -146,9 +146,9 @@ export default function (props: AppProps, state: AppState) {
       if (msg.messageType === MESSAGE_TYPE.ADDRESS_INFO) {
         if (msg.address) {
           setAddress(msg.address);
-          const address = msg.address;
+          const {address} = msg;
           const addressShort =
-            address.substr(0, 10) + '...' + address.substr(address.length - 10, address.length);
+            `${address.substr(0, 10)  }...${  address.substr(address.length - 10, address.length)}`;
           setAddressShort(addressShort);
         } else {
           history.push('./import-mnemonic');
@@ -176,7 +176,7 @@ export default function (props: AppProps, state: AppState) {
 
     chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.messageType === MESSAGE_TYPE.SEND_TX_HISTORY) {
-        const txs = msg.txs;
+        const {txs} = msg;
         if (txs) {
           setTxs(txs);
         }

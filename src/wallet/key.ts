@@ -1,10 +1,10 @@
 // import crypto from 'crypto'
 
-const crypto = require('crypto');
-
 import Address, { AddressType, AddressPrefix } from './address';
 import Keychain, { privateToPublic } from './keychain';
 import { entropyToMnemonic } from './mnemonic';
+
+const crypto = require('crypto');
 
 export interface PathAndPrivateKey {
   path: string;
@@ -13,6 +13,7 @@ export interface PathAndPrivateKey {
 
 export class ExtendedPublicKey {
   publicKey: string;
+
   chainCode: string;
 
   constructor(publicKey: string, chainCode: string) {
@@ -66,6 +67,7 @@ export class AccountExtendedPublicKey extends ExtendedPublicKey {
 
 export class ExtendedPrivateKey {
   privateKey: string;
+
   chainCode: string;
 
   constructor(privateKey: string, chainCode: string) {
