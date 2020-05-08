@@ -1,5 +1,4 @@
 import { publicKeyToAddress } from '../wallet/address';
-
 const BN = require('bn.js');
 
 const { scriptToHash } = require('@nervosnetwork/ckb-sdk-utils/lib');
@@ -7,7 +6,6 @@ const { addressToScript } = require('@keyper/specs');
 const keyperwalletTest = require('../keyper/keyperwallet');
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default;
-
 const nodeUrl = 'http://106.13.40.34:8114/';
 const ckb = new CKB(nodeUrl);
 
@@ -56,7 +54,7 @@ describe('transaction test', () => {
      */
     // console.log(JSON.stringify(lockScript, null, 2))
 
-    const publicKey = ckb.utils.privateKeyToPublicKey(`0x${  privateKey}`);
+    const publicKey = ckb.utils.privateKeyToPublicKey('0x' + privateKey);
     const publicKeyHash = `0x${ckb.utils.blake160(publicKey, 'hex')}`;
     const lockHash = ckb.generateLockHash(publicKeyHash, keccak256Dep);
     console.log(lockHash);
@@ -194,7 +192,7 @@ describe('transaction test', () => {
 //   }
 // ]
 
-// add by river
+//add by river
 // console.log(masterKeychain
 //             .derivePath(`m/44'/309'/0'/0`)
 //             .deriveChild(0,false)
@@ -251,7 +249,7 @@ async function createRawTx(toAmount, toLock, cells, lock) {
   // if (cells.total.gt(total) && cells.total.sub(total).gt(new BN("6100000000"))) {
   rawTx.outputs.push({
     capacity: `0x${totalcapacity.sub(toAmount).toString(16)}`,
-    lock,
+    lock: lock,
   });
   rawTx.outputsData.push('0x');
   // }

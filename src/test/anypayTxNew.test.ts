@@ -6,7 +6,6 @@ const AnyPayLockScript = require('../keyper/locks/anypay');
 const keyperwalletTest = require('../keyper/keyperwallet');
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default;
-
 const nodeUrl = 'http://106.13.40.34:8114/';
 const ckb = new CKB(nodeUrl);
 
@@ -48,7 +47,7 @@ describe('anypay transaction test', () => {
       codeHash: anypay.codeHash,
       outPoint: deps[0].outPoint,
     };
-    const publicKey = ckb.utils.privateKeyToPublicKey(`0x${  privateKey}`);
+    const publicKey = ckb.utils.privateKeyToPublicKey('0x' + privateKey);
     const publicKeyHash = `0x${ckb.utils.blake160(publicKey, 'hex')}`;
     const lockHash = ckb.generateLockHash(publicKeyHash, anypayDep);
 
@@ -57,15 +56,15 @@ describe('anypay transaction test', () => {
       lockHash,
     });
 
-    // generate transaction
+    //generate transaction
     const generateAnyTransaction = (params) => {
       const rawTransaction = ckb.generateRawTransaction(params);
-      // the custom lock logic
+      //the custom lock logic
       if (params.isCustomLock === 1) {
-        const {outputs} = rawTransaction;
+        const outputs = rawTransaction.outputs;
         outputs.forEach((output) => {
-          const {args} = output.lock;
-          const newargs = `0x${  args.substr(64)}`;
+          const args = output.lock.args;
+          const newargs = '0x' + args.substr(64);
           output.lock.args = newargs;
         });
       }

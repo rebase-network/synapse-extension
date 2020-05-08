@@ -1,11 +1,11 @@
 import * as React from 'react';
+import Title from '../../Components/Title';
 import { Button, TextField } from '@material-ui/core';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
+import { MESSAGE_TYPE } from '../../../utils/constants';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { MESSAGE_TYPE } from '../../../utils/constants';
-import Title from '../../Components/Title';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -139,8 +139,8 @@ export default function GenerateMnemonic(props: AppProps, state: AppState) {
       <Title title="Generate Mnemonic" testId="" />
       {successNode}
       <Formik
-        enableReinitialize
-        initialValues={{ mnemonic, password: '', confirmPassword: '' }}
+        enableReinitialize={true}
+        initialValues={{ mnemonic: mnemonic, password: '', confirmPassword: '' }}
         onSubmit={onSubmit}
         validationSchema={Yup.object().shape({
           mnemonic: Yup.string().trim().required('Required'),

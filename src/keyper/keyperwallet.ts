@@ -7,21 +7,21 @@ import { getKeystoreFromWallets } from '../wallet/addKeyperWallet';
 
 const { Container } = require('@keyper/container/lib');
 const { Secp256k1LockScript } = require('@keyper/container/lib/locks/secp256k1');
-const EC = require('elliptic').ec;
 const Keccak256LockScript = require('./locks/keccak256');
 const AnyPayLockScript = require('./locks/anypay');
 const storage = require('./storage');
+const EC = require('elliptic').ec;
 
-let seed; let container;
-const addRules = []; // Mod by River
+let seed, container;
+let addRules = []; //Mod by River
 
 const init = () => {
   container = new Container([
     {
       algorithm: SignatureAlgorithm.secp256k1,
       provider: {
-        padToEven (value) {
-          let a = value;
+        padToEven: function (value) {
+          var a = value;
           if (typeof a !== 'string') {
             throw new Error(`value must be string, is currently ${typeof a}, while padToEven.`);
           }
@@ -30,7 +30,7 @@ const init = () => {
           }
           return a;
         },
-        async sign (context, message) {
+        sign: async function (context, message) {
           // const key = keys[context.publicKey];
           const key = getKeystoreFromWallets(context.publicKey);
           if (!key) {
@@ -41,7 +41,7 @@ const init = () => {
           const ec = new EC('secp256k1');
           const keypair = ec.keyFromPrivate(privateKey);
           const msg = typeof message === 'string' ? hexToBytes(message) : message;
-          const { r, s, recoveryParam } = keypair.sign(msg, {
+          let { r, s, recoveryParam } = keypair.sign(msg, {
             canonical: true,
           });
           if (recoveryParam === null) {
@@ -218,7 +218,7 @@ const accounts = async () => {
 const signTx = async (lockHash, password, rawTx, config) => {
   const tx = await container.sign(
     {
-      lockHash,
+      lockHash: lockHash,
       password,
     },
     rawTx,

@@ -45,9 +45,9 @@ export type currencyCode = 'CKB' | 'CNY' | 'USD';
  * @returns
  */
 export const currencyFormatter = (
-  shannons = '0',
+  shannons: string = '0',
   unit: currencyCode = 'CKB',
-  exchange = '0.000000001',
+  exchange: string = '0.000000001',
 ): string => {
   if (Number.isNaN(+shannons)) {
     throw new TypeError(`Shannons is not a valid number`);
@@ -73,7 +73,7 @@ export const currencyFormatter = (
 };
 
 export const CKBToShannonFormatter = (
-  amount = '0',
+  amount: string = '0',
   unit: CapacityUnit = CapacityUnit.CKB,
 ) => {
   if (Number.isNaN(+amount)) {
@@ -101,9 +101,9 @@ export const CKBToShannonFormatter = (
 };
 
 export const shannonToCKBFormatter = (
-  shannon = '0',
+  shannon: string = '0',
   showPositiveSign?: boolean,
-  delimiter = ',',
+  delimiter: string = ',',
 ) => {
   if (Number.isNaN(+shannon)) {
     console.warn(`Shannon is not a valid number`);

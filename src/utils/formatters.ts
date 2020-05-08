@@ -1,9 +1,9 @@
 // const base = 10e9
 
 export const shannonToCKBFormatter = (
-  shannon = '0',
+  shannon: string = '0',
   showPositiveSign?: boolean,
-  delimiter = ',',
+  delimiter: string = ',',
 ) => {
   if (Number.isNaN(+shannon)) {
     console.warn(`Shannon is not a valid number`);

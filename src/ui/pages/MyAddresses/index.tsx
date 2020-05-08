@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Button, TextField } from '@material-ui/core';
-import { makeStyles, Theme, createStyles , createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
+import { MESSAGE_TYPE } from '../../../utils/constants';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
@@ -12,10 +13,9 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
-
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 import { useHistory } from 'react-router-dom';
-import { MESSAGE_TYPE } from '../../../utils/constants';
 
 const useStyles = makeStyles({
   container: {
@@ -95,7 +95,7 @@ export default function (props: AppProps, state: AppState) {
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       if (request.messageType == MESSAGE_TYPE.RESULT_MY_ADDRESSES) {
-        const {addressesList} = request;
+        const addressesList = request.addressesList;
         setAddressesList(addressesList);
       }
 
@@ -135,18 +135,18 @@ export default function (props: AppProps, state: AppState) {
               <ListItemText
                 primary={item.addressBack}
                 secondary={
-                  <>
+                  <React.Fragment>
                     <Typography
                       component="span"
                       variant="body2"
                       className={classTheme.inline}
                       color="textPrimary"
                     >
-                      {`${item.amount  } CKB`}
+                      {item.amount + ' CKB'}
                     </Typography>
                     <br />
                     {item.type}
-                  </>
+                  </React.Fragment>
                 }
               />
             </ListItem>

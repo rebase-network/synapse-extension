@@ -17,20 +17,13 @@ const EMPTY_BUFFER = Buffer.from('');
 // BIP32 Keychain. Not a full implementation.
 export default class Keychain {
   privateKey: Buffer = EMPTY_BUFFER;
-
   publicKey: Buffer = EMPTY_BUFFER;
-
   chainCode: Buffer = EMPTY_BUFFER;
-
-  index = 0;
-
-  depth = 0;
-
+  index: number = 0;
+  depth: number = 0;
   identifier: Buffer = EMPTY_BUFFER;
-
-  fingerprint = 0;
-
-  parentFingerprint = 0;
+  fingerprint: number = 0;
+  parentFingerprint: number = 0;
 
   constructor(privateKey: Buffer, chainCode: Buffer) {
     this.privateKey = privateKey;
@@ -58,7 +51,7 @@ export default class Keychain {
 
   // Create a child keychain with extended public key and path.
   // Children of this keychain should not have any hardened paths.
-  public static fromPublicKey = (publicKey: Buffer, chainCode: Buffer, path: string): Keychain => {
+  public static fromPublicKey = (publicKey: Buffer, chainCode: Buffer, path: String): Keychain => {
     const keychain = new Keychain(EMPTY_BUFFER, chainCode);
     keychain.publicKey = publicKey;
     keychain.calculateFingerprint();
@@ -128,7 +121,7 @@ export default class Keychain {
     return bip32;
   };
 
-  isNeutered = (): boolean => {
+  isNeutered = (): Boolean => {
     return this.privateKey === EMPTY_BUFFER;
   };
 

@@ -1,7 +1,6 @@
 import { publicKeyToAddress } from '../wallet/address';
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default;
-
 const nodeUrl = 'http://106.13.40.34:8114/';
 const ckb = new CKB(nodeUrl);
 
@@ -33,7 +32,7 @@ describe('transaction test', () => {
     /**
      * to see the public key
      */
-    // 0304d793194278a005407cd53e6fbd290d8e2a8e90154b4123dc5e0e06a8a19ecb
+    //0304d793194278a005407cd53e6fbd290d8e2a8e90154b4123dc5e0e06a8a19ecb
     // console.log(`Public key: ${publicKey}`)
     // console.log src/test/sendSimpleTransaction.test.ts:25
     // Public key: 0x03ec80924627d484afd9da7e701dbc7acbf612f573eb1098a1e0c813dbbdcc543c
@@ -51,7 +50,7 @@ describe('transaction test', () => {
         prefix: 'ckt',
       }),
     };
-    // ckt1qyqrpkej44pkt0anq8g0qv8wzlyusjx082xs2c2ux4
+    //ckt1qyqrpkej44pkt0anq8g0qv8wzlyusjx082xs2c2ux4
     // console.log("fromAddress =>", addresses.testnetAddress);
 
     /**
@@ -102,7 +101,7 @@ describe('transaction test', () => {
 
     const rawTransaction = ckb.generateRawTransaction({
       fromAddress: addresses.testnetAddress,
-      toAddress,
+      toAddress: toAddress,
       capacity: sendCapacity,
       fee: sendFee,
       safeMode: true,
@@ -145,7 +144,7 @@ describe('transaction test', () => {
     expect(realTxHash).toHaveLength(66);
   });
 });
-// add by river
+//add by river
 // console.log(masterKeychain
 //             .derivePath(`m/44'/309'/0'/0`)
 //             .deriveChild(0,false)
@@ -216,4 +215,4 @@ describe('transaction test', () => {
 //   ]
 // }
 
-// The real transaction hash is: 0x8d562e1b7972966e82e866580bb1fe3228023a7b50813ea42a317067ee692282
+//The real transaction hash is: 0x8d562e1b7972966e82e866580bb1fe3228023a7b50813ea42a317067ee692282

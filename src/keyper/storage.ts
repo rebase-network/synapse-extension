@@ -7,7 +7,7 @@ const stores = {};
 
 const getStore = (name) => {
   if (!stores.hasOwnProperty(name)) {
-    const store = new Dictionary();
+    let store = new Dictionary();
     store.set(name, name);
     stores[name] = store;
   }

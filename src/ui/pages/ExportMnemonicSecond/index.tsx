@@ -1,14 +1,14 @@
 import * as React from 'react';
+import Title from '../../Components/Title';
 import { Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
+import { MESSAGE_TYPE } from '../../../utils/constants';
 import { useHistory } from 'react-router-dom';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { MESSAGE_TYPE } from '../../../utils/constants';
-import Title from '../../Components/Title';
 
 const useStyles = makeStyles({
   container: {
@@ -30,7 +30,7 @@ export default function (props: AppProps, state: AppState) {
     chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       console.log('request ===>', request);
       if (request.messageType === MESSAGE_TYPE.EXPORT_MNEONIC_SECOND_RESULT) {
-        const {mnemonic} = request;
+        const mnemonic = request.mnemonic;
         setMnemonic(mnemonic);
       }
     });

@@ -1,4 +1,3 @@
-import { privateKeyToPublicKey, pubkeyToAddress } from '@nervosnetwork/ckb-sdk-utils';
 import Address, { AddressType, publicKeyToAddress, AddressPrefix } from '../wallet/address';
 import loadCells from '../wallet/balance/loadCells';
 import { getBalanceByPublicKey } from '../balance';
@@ -6,10 +5,10 @@ import { mnemonicToSeedSync } from '../wallet/mnemonic';
 import Keystore from '../wallet/keystore';
 import Keychain from '../wallet/keychain';
 import { AccountExtendedPublicKey, ExtendedPrivateKey } from '../wallet/key';
+import { privateKeyToPublicKey, pubkeyToAddress } from '@nervosnetwork/ckb-sdk-utils';
 import { CKBToShannonFormatter, shannonToCKBFormatter } from '../wallet/formatters';
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default;
-
 const nodeUrl = 'http://localhost:8114';
 const ckb = new CKB(nodeUrl);
 // console.log("ckb => ",JSON.stringify(ckb))
@@ -22,7 +21,7 @@ const expectMasterKeychain =
   '{"privateKey":{"type":"Buffer","data":[199,136,252,116,86,25,199,64,62,107,4,59,106,18,6,136,180,216,10,96,91,155,28,37,110,241,163,123,115,71,140,249]},"publicKey":{"type":"Buffer","data":[3,213,244,72,237,170,217,90,202,90,244,112,169,123,72,114,106,8,255,226,26,160,218,112,177,17,10,144,5,120,100,221,144]},"chainCode":{"type":"Buffer","data":[68,149,98,215,97,33,247,211,236,112,154,243,140,198,37,210,5,140,213,85,101,246,169,196,1,200,52,150,77,248,156,25]},"index":0,"depth":0,"identifier":{"type":"Buffer","data":[98,42,17,174,27,228,112,244,239,226,182,228,198,35,199,232,87,179,148,55]},"fingerprint":1646924206,"parentFingerprint":0}';
 const expectExtendedKey =
   '{"privateKey":"c788fc745619c7403e6b043b6a120688b4d80a605b9b1c256ef1a37b73478cf9","chainCode":"449562d76121f7d3ec709af38cc625d2058cd55565f6a9c401c834964df89c19"}';
-// expectKeystore每次生成都会变化
+//expectKeystore每次生成都会变化
 const expectKeystore =
   '{"version":3,"crypto":{"ciphertext":"6ce0024645d3f6accdae141e9911826b3743bcab32691a611f84040ba86e010d5acb82f7d0307dee87d51c00d08b0c2ff540d5836d34d6d4861af17fd3748e11","cipherparams":{"iv":"7d0dfd85ae8834e3d693a42798747a54"},"cipher":"aes-128-ctr","kdf":"scrypt","kdfparams":{"dklen":32,"salt":"9b4d20b6bad3f29cd6095eb586523879188c97f11d41006d2daa659c6dced340","n":262144,"r":8,"p":1},"mac":"398ca21b017c68bdd118c133f4e85bf3819845af1f6849354b330c08616c3a57"},"id":"ac42c0fc-fc31-4367-b510-dda64948989b"}';
 const expectTestAddress = 'ckt1qyqpershwv97zr6qrwshre8z3yn08ytr2tlq0ua0yl';
@@ -95,7 +94,7 @@ describe('balance test privateKey,publicKey,address,keystore', () => {
     // console.log('addrTestnet: ' + JSON.stringify(addrTestnet));
     // console.log('addrMainnet: ' + JSON.stringify(addrMainnet));
     expect(addrTestnet.address).toBe(expectTestAddress);
-    expect(`0x${  addrTestnet.publicKey}`).toBe(expectTestPublicKey);
+    expect('0x' + addrTestnet.publicKey).toBe(expectTestPublicKey);
   });
 
   it('get privateKey publicKey address by mnemonic', async () => {
@@ -103,8 +102,8 @@ describe('balance test privateKey,publicKey,address,keystore', () => {
     const masterKeychain = Keychain.fromSeed(seed);
 
     const privateKey =
-      `0x${ 
-      masterKeychain.derivePath(`m/44'/309'/0'/0`).deriveChild(0, false).privateKey.toString('hex')}`;
+      '0x' +
+      masterKeychain.derivePath(`m/44'/309'/0'/0`).deriveChild(0, false).privateKey.toString('hex');
     const publicKey = privateKeyToPublicKey(privateKey);
     const address = pubkeyToAddress(publicKey);
 
@@ -114,15 +113,15 @@ describe('balance test privateKey,publicKey,address,keystore', () => {
   });
 
   it('get privateKey publicKey address by keystore', async () => {
-    const keystore = Keystore.fromJson(expectKeystore); // 参数是String
+    const keystore = Keystore.fromJson(expectKeystore); //参数是String
     const masterPrivateKey = keystore.extendedPrivateKey(password);
     const masterKeychain = new Keychain(
       Buffer.from(masterPrivateKey.privateKey, 'hex'),
       Buffer.from(masterPrivateKey.chainCode, 'hex'),
     );
     const privateKey =
-      `0x${ 
-      masterKeychain.derivePath(`m/44'/309'/0'/0`).deriveChild(0, false).privateKey.toString('hex')}`;
+      '0x' +
+      masterKeychain.derivePath(`m/44'/309'/0'/0`).deriveChild(0, false).privateKey.toString('hex');
     const publicKey = privateKeyToPublicKey(privateKey);
     const address = pubkeyToAddress(publicKey);
 

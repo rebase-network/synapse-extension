@@ -18,7 +18,7 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('import mnemonic page', () => {
-  let tree; let container; let getByTestId;
+  let tree, container, getByTestId;
   beforeEach(() => {
     tree = render(<App />);
     container = tree.container;

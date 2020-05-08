@@ -1,6 +1,6 @@
 import Axios, { AxiosRequestConfig } from 'axios';
-import * as utils from '@nervosnetwork/ckb-sdk-utils';
 import Address, { AddressType, publicKeyToAddress, AddressPrefix } from './wallet/address';
+import * as utils from '@nervosnetwork/ckb-sdk-utils';
 import { Ckb } from './utils/constants';
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default;
@@ -13,8 +13,8 @@ export const getStatusByTxHash = async (txHash) => {
 };
 
 export const getTxHistoryByAddress = async (address) => {
-  const url = 'http://101.200.147.143:2333/cell/getTxHistoryByAddress';
-  const result = await Axios.get(`${url  }/${address}`);
+  let url = 'http://101.200.147.143:2333/cell/getTxHistoryByAddress';
+  const result = await Axios.get(url + `/${address}`);
   console.log('result: ', result);
   return result.data;
 };
@@ -29,11 +29,11 @@ export const outputs = async (txHash) => {
   return result.transaction.outputs;
 };
 
-// 最后一个地址是找零
+//最后一个地址是找零
 export const getAmountByTxHash = async (txHash, address) => {
   let result = BigInt(0);
   const outputsData = await outputs(txHash);
-  for (let i = 0; i < outputsData.length; i++) {
+  for (var i = 0; i < outputsData.length; i++) {
     const publicKeyHash = outputsData[i].lock.args;
     const addressOutput = utils.bech32Address(publicKeyHash);
     if (!addressOutput.match(address)) {
@@ -53,12 +53,12 @@ export const getFeeByTxHash = async (txHash) => {
 export const getInputAddressByTxHash = async (txHash) => {
   let result = '';
   const inputsData = await inputs(txHash);
-  for (let i = 0; i < inputsData.length; i++) {
+  for (var i = 0; i < inputsData.length; i++) {
     const inputTxHash = inputsData[i].previousOutput.txHash;
     const inputIndex = inputsData[i].previousOutput.index;
-    const index = new Number(inputIndex);
+    let index = new Number(inputIndex);
     const inputAddress = await getOutputAddressByTxHashAndIndex(inputTxHash, index.valueOf());
-    result = `${result + inputAddress  },`;
+    result = result + inputAddress + ',';
   }
   result = result.substring(0, result.length - 1);
   return result;
@@ -67,12 +67,12 @@ export const getInputAddressByTxHash = async (txHash) => {
 export const getInputCapacityByTxHash = async (txHash) => {
   let result = BigInt(0);
   const inputsData = await inputs(txHash);
-  for (let i = 0; i < inputsData.length; i++) {
+  for (var i = 0; i < inputsData.length; i++) {
     const inputTxHash = inputsData[i].previousOutput.txHash;
     const inputIndex = inputsData[i].previousOutput.index;
-    const index = new Number(inputIndex);
+    let index = new Number(inputIndex);
     const inputCapacity = await getInputCapacityByTxHashAndIndex(inputTxHash, index.valueOf());
-    result += BigInt(inputCapacity);
+    result = result + BigInt(inputCapacity);
   }
   return result;
 };
@@ -91,9 +91,9 @@ export const getOutputAddressByTxHashAndIndex = async (txHash, index) => {
 export const getOutputAddressByTxHash = async (txHash) => {
   let result = '';
   const outputsData = await outputs(txHash);
-  for (let i = 0; i < outputsData.length; i++) {
+  for (var i = 0; i < outputsData.length; i++) {
     const publicKeyHash = outputsData[i].lock.args;
-    result = `${result + utils.bech32Address(publicKeyHash)  },`;
+    result = result + utils.bech32Address(publicKeyHash) + ',';
   }
   result = result.substring(0, result.length - 1);
   return result;
@@ -102,7 +102,7 @@ export const getOutputAddressByTxHash = async (txHash) => {
 export const getOutputCapacityByTxHash = async (txHash) => {
   let result = BigInt(0);
   const outputsData = await outputs(txHash);
-  for (let i = 0; i < outputsData.length; i++) {
+  for (var i = 0; i < outputsData.length; i++) {
     result = BigInt(result) + BigInt(outputsData[i].capacity);
   }
   return result;

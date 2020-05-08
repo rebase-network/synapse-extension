@@ -20,7 +20,7 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('export mnemonic page', () => {
-  let tree; let container; let getByTestId;
+  let tree, container, getByTestId;
   beforeEach(() => {
     tree = render(<ExportMnemonic />);
     container = tree.container;

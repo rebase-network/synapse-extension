@@ -47,8 +47,8 @@ export default function (props: AppProps, state: AppState) {
           onChange={handleChange}
           className={classes.select}
         >
-          <MenuItem value="testnet">Aggron Testnet</MenuItem>
-          <MenuItem value="mainnet">Mainnet</MenuItem>
+          <MenuItem value={'testnet'}>Aggron Testnet</MenuItem>
+          <MenuItem value={'mainnet'}>Mainnet</MenuItem>
         </Select>
       </FormControl>
     </div>

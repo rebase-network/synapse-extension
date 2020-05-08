@@ -1,11 +1,11 @@
 import * as React from 'react';
+import Title from '../../Components/Title';
 import { Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { useHistory } from 'react-router-dom';
 import { MESSAGE_TYPE } from '../../../utils/constants';
-import Title from '../../Components/Title';
+import { useHistory } from 'react-router-dom';
 import { AppContext } from '../../App';
 
 const useStyles = makeStyles({
@@ -134,16 +134,16 @@ export default function (props: AppProps, state: AppState) {
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-      // 跳转到交易详细信息的页面
+      //跳转到交易详细信息的页面
       if (message.messageType === MESSAGE_TYPE.TO_TX_DETAIL) {
         console.log('TO_TX_DETAIL message', JSON.stringify(message));
 
-        // 001-传递交易信息
+        //001-传递交易信息
         chrome.runtime.sendMessage({
           message,
           messageType: MESSAGE_TYPE.REQUEST_TX_DETAIL,
         });
-        // 002-跳转到页面
+        //002-跳转到页面
         history.push('/tx-detail');
       }
     });
@@ -154,7 +154,7 @@ export default function (props: AppProps, state: AppState) {
     console.log('onSubmit=>', values);
     console.log('network =>', network);
 
-    // check the address
+    //check the address
     const toAddress = values.address;
     validateAddress(toAddress, network);
 
@@ -164,7 +164,7 @@ export default function (props: AppProps, state: AppState) {
     setSuccess(true);
   };
 
-  // check the current network and address
+  //check the current network and address
   const validateAddress = (address, network) => {
     if (address.length !== 46) {
       setValAddress(false);
@@ -176,7 +176,7 @@ export default function (props: AppProps, state: AppState) {
     }
     if (network == 'mainnet' && !address.startsWith('ckb')) {
       setValAddress(false);
-      
+      return;
     }
   };
 

@@ -1,4 +1,3 @@
-import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 import { MESSAGE_TYPE, KEYSTORE_TYPE, Ckb } from './utils/constants';
 import {
   mnemonicToSeedSync,
@@ -6,13 +5,14 @@ import {
   mnemonicToEntropy,
   entropyToMnemonic,
 } from './wallet/mnemonic';
+import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 
-import { generateMnemonic , AccountExtendedPublicKey, ExtendedPrivateKey } from './wallet/key';
+import { generateMnemonic } from './wallet/key';
 import * as Keystore from './wallet/pkeystore';
 import Keychain from './wallet/keychain';
 
-
-import Address, { AddressType, AddressPrefix } from './wallet/address';
+import { AccountExtendedPublicKey, ExtendedPrivateKey } from './wallet/key';
+import { AddressType, AddressPrefix } from './wallet/address';
 import { getBalanceByPublicKey, getBalanceByLockHash } from './balance';
 import { sendSimpleTransaction } from './sendSimpleTransaction';
 import {
@@ -24,7 +24,7 @@ import {
   getOutputAddressByTxHashAndIndex,
 } from './transaction';
 import { getPrivateKeyByKeyStoreAndPassword } from './wallet/exportPrivateKey';
-
+import Address from './wallet/address';
 import { getBalanceByAddress } from './background/address';
 import { getTxHistoryByAddress } from './background/transaction';
 import {
@@ -38,13 +38,13 @@ import {
  * Listen messages from popup
  */
 
-// TODO ====
+//TODO ====
 let wallets = [];
 let currentWallet = {};
 let addressesList = [];
 
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-  // IMPORT_MNEMONIC
+  //IMPORT_MNEMONIC
   if (request.messageType === MESSAGE_TYPE.IMPORT_MNEMONIC) {
     // call import mnemonic method
     const mnemonic = request.mnemonic.trim();
@@ -59,7 +59,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       return;
     }
 
-    // store the mnemonic entropy
+    //store the mnemonic entropy
     const entropy = mnemonicToEntropy(mnemonic);
     const entropyKeystore = Keystore.encrypt(Buffer.from(entropy, 'hex'), password);
 
@@ -72,37 +72,37 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     );
     const rootKeystore = Keystore.encrypt(Buffer.from(extendedKey.serialize(), 'hex'), password);
 
-    // No '0x' prefix
+    //No '0x' prefix
     const privateKey = masterKeychain
       .derivePath(Address.pathForReceiving(0))
       .privateKey.toString('hex');
-    const publicKey = ckbUtils.privateKeyToPublicKey(`0x${  privateKey}`);
+    const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
 
-    // check the keystore exist or not
+    //check the keystore exist or not
     const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
     if (addressesObj != null && addressesObj != '') {
-      const {addresses} = addressesObj;
+      const addresses = addressesObj.addresses;
       currentWallet = {
-        publicKey,
+        publicKey: publicKey,
         address: addresses[0].address,
         type: addresses[0].type,
         lock: addresses[0].lock,
       };
     } else {
-      // Add Keyper to Synapse
+      //Add Keyper to Synapse
       await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
       wallets = getWallets();
       addressesList = getAddressesList();
       currentWallet = getCurrentWallet();
     }
-    // 002-
+    //002-
     saveToStorage();
 
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
   }
 
-  // GEN_MNEMONIC
+  //GEN_MNEMONIC
   if (request.messageType === MESSAGE_TYPE.GEN_MNEMONIC) {
     const newmnemonic = generateMnemonic();
 
@@ -112,13 +112,13 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     });
   }
 
-  // SAVE_MNEMONIC
+  //SAVE_MNEMONIC
   if (request.messageType === MESSAGE_TYPE.SAVE_MNEMONIC) {
     const mnemonic = request.mnemonic.trim();
     const password = request.password.trim();
     // const confirmPassword = request.confirmPassword.trim();
 
-    // 助记词有效性的验证
+    //助记词有效性的验证
     const isValidateMnemonic = validateMnemonic(mnemonic);
 
     if (!isValidateMnemonic) {
@@ -127,7 +127,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       return;
     }
 
-    // store the mnemonic entropy
+    //store the mnemonic entropy
     const entropy = mnemonicToEntropy(mnemonic);
     const entropyKeystore = Keystore.encrypt(Buffer.from(entropy, 'hex'), password);
 
@@ -139,45 +139,45 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     );
     const rootKeystore = Keystore.encrypt(Buffer.from(extendedKey.serialize(), 'hex'), password);
 
-    // No '0x' prefix
+    //No '0x' prefix
     const privateKey = masterKeychain
       .derivePath(Address.pathForReceiving(0))
       .privateKey.toString('hex');
-    const publicKey = ckbUtils.privateKeyToPublicKey(`0x${  privateKey}`);
+    const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
 
-    // check the keystore exist or not
+    //check the keystore exist or not
     const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
     if (addressesObj != null && addressesObj != '') {
-      const {addresses} = addressesObj;
+      const addresses = addressesObj.addresses;
       currentWallet = {
-        publicKey,
+        publicKey: publicKey,
         address: addresses[0].address,
         type: addresses[0].type,
         lock: addresses[0].lock,
       };
     } else {
-      // Add Keyper to Synapse
+      //Add Keyper to Synapse
       await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
       wallets = getWallets();
       addressesList = getAddressesList();
       currentWallet = getCurrentWallet();
     }
 
-    // 002-saveToStorage
+    //002-saveToStorage
     saveToStorage();
 
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
   }
 
-  // REQUEST_ADDRESS_INFO
+  //REQUEST_ADDRESS_INFO
   if (request.messageType === MESSAGE_TYPE.REQUEST_ADDRESS_INFO) {
     chrome.storage.sync.get(['currentWallet'], function (wallet) {
       if (!wallet) return;
-      const {address} = wallet.currentWallet;
+      const address = wallet.currentWallet.address;
       const message: any = {
         messageType: MESSAGE_TYPE.ADDRESS_INFO,
-        address,
+        address: address,
       };
 
       chrome.runtime.sendMessage(message);
@@ -188,7 +188,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.messageType === MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS) {
     chrome.storage.sync.get(['currentWallet'], async function (wallet) {
       if (!wallet) return;
-      const {address} = wallet.currentWallet;
+      const address = wallet.currentWallet.address;
       const balance = await getBalanceByAddress(address);
 
       chrome.runtime.sendMessage({
@@ -204,9 +204,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       if (!wallet) return;
       const addr = wallet.currentWallet.address;
 
-      const txs = await getTxHistoryByAddress(addr);
+      let txs = await getTxHistoryByAddress(addr);
 
-      for (const tx of txs) {
+      for (let tx of txs) {
         // Object.values(tx.inputs).map(item => item.capacity);
         // Object.values(tx.outputs).map(item => item.capacity);
 
@@ -214,20 +214,20 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         const outSum = tx.outputs.reduce((prev, next) => prev + next.capacity, 0);
         const fee = inSum - outSum;
 
-        tx.fee = fee;
+        tx['fee'] = fee;
 
         for (const input of tx.inputs) {
           if (input.address === addr) {
-            tx.income = false; // 入账\收入
-            tx.amount = input.capacity;
+            tx['income'] = false; // 入账\收入
+            tx['amount'] = input.capacity;
             break;
           }
         }
 
         for (const output of tx.outputs) {
           if (output.address === addr) {
-            tx.income = true;
-            tx.amount = output.capacity;
+            tx['income'] = true;
+            tx['amount'] = output.capacity;
             break;
           }
         }
@@ -267,12 +267,12 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     };
 
     chrome.runtime.sendMessage({
-      tx,
+      tx: tx,
       messageType: 'yyyy',
     });
   }
 
-  // send transactioin
+  //send transactioin
   if (request.messageType === MESSAGE_TYPE.RESQUEST_SEND_TX) {
     chrome.storage.sync.get(['currentWallet'], async function (result) {
       const toAddress = request.address.trim();
@@ -281,9 +281,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const password = request.password.trim();
 
       const fromAddress = result.currentWallet.address;
-      const {publicKey} = result.currentWallet;
+      const publicKey = result.currentWallet.publicKey;
       const wallet = findInWalletsByPublicKey(publicKey, wallets);
-      const privateKey = `0x${  Keystore.decrypt(wallet.keystore, password)}`;
+      const privateKey = '0x' + Keystore.decrypt(wallet.keystore, password);
 
       const sendTxHash = await sendSimpleTransaction(
         privateKey,
@@ -294,8 +294,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       );
 
       chrome.runtime.sendMessage({
-        fromAddress,
-        toAddress,
+        fromAddress: fromAddress,
+        toAddress: toAddress,
         amount: amount.toString(),
         fee: fee.toString(),
         txHash: sendTxHash,
@@ -304,13 +304,13 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     });
   }
 
-  // transactioin detail
+  //transactioin detail
   if (request.messageType === MESSAGE_TYPE.REQUEST_TX_DETAIL) {
     // chrome.storage.sync.get(['wallet'], async function( {wallet} ) {
 
-    const {txHash} = request.message;
-    const {amount} = request.message;
-    const {fee} = request.message;
+    const txHash = request.message.txHash;
+    const amount = request.message.amount;
+    const fee = request.message.fee;
     const inputs = request.message.fromAddress;
     const outputs = request.message.toAddress;
     const status = await getStatusByTxHash(txHash);
@@ -327,17 +327,17 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     // });
   }
 
-  // export-private-key check
+  //export-private-key check
   if (request.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK) {
     chrome.storage.sync.get(['currentWallet'], function (result) {
-      const {password} = request;
-      const {publicKey} = result.currentWallet;
+      const password = request.password;
+      const publicKey = result.currentWallet.publicKey;
       const wallet = findInWalletsByPublicKey(publicKey, wallets);
-      const {keystore} = wallet;
-      // TODO check the password
+      const keystore = wallet.keystore;
+      //TODO check the password
       const privateKey = Keystore.decrypt(keystore, password);
 
-      // send the check result to the page
+      //send the check result to the page
       if (!privateKey) {
         chrome.runtime.sendMessage({
           isValidatePassword: false,
@@ -354,10 +354,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     });
   }
 
-  // export-private-key-second check
+  //export-private-key-second check
   if (request.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND) {
-    const {privateKey} = request.message;
-    const {keystore} = request.message;
+    const privateKey = request.message.privateKey;
+    const keystore = request.message.keystore;
 
     chrome.runtime.sendMessage({
       privateKey,
@@ -366,18 +366,18 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     });
   }
 
-  // my addressesList
+  //my addressesList
   if (request.messageType === MESSAGE_TYPE.REQUEST_MY_ADDRESSES) {
     chrome.storage.sync.get(['addressesList'], async function (result) {
       const addressesListObj = result.addressesList;
       for (let index = 0; index < addressesListObj.length; index++) {
-        const {addresses} = addressesListObj[index];
+        const addresses = addressesListObj[index].addresses;
         for (let index2 = 0; index2 < addresses.length; index2++) {
           const capacity = await getBalanceByAddress(addresses[index2].address);
           addresses[index2].amount = capacity;
-          const {address} = addresses[index2];
+          const address = addresses[index2].address;
           const addressBack =
-            `${address.substr(0, 16)  }******${  address.substr(address.length - 16, address.length)}`;
+            address.substr(0, 16) + '******' + address.substr(address.length - 16, address.length);
           addresses[index2].addressBack = addressBack;
         }
       }
@@ -388,15 +388,15 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     });
   }
 
-  // export-mneonic check
+  //export-mneonic check
   if (request.messageType === MESSAGE_TYPE.EXPORT_MNEONIC_CHECK) {
     chrome.storage.sync.get(['currentWallet'], function (result) {
-      const {password} = request;
-      const {publicKey} = result.currentWallet;
+      const password = request.password;
+      const publicKey = result.currentWallet.publicKey;
       const wallet = findInWalletsByPublicKey(publicKey, wallets);
-      const {entropyKeystore} = wallet;
+      const entropyKeystore = wallet.entropyKeystore;
 
-      // TODO check the password
+      //TODO check the password
       const entropy = Keystore.decrypt(entropyKeystore, password);
 
       console.log('entropy ===>', entropy);
@@ -417,10 +417,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     });
   }
 
-  // export-mneonic-second check
+  //export-mneonic-second check
   if (request.messageType === MESSAGE_TYPE.EXPORT_MNEONIC_SECOND) {
-    const {password} = request.message;
-    const {entropyKeystore} = request.message;
+    const password = request.message.password;
+    const entropyKeystore = request.message.entropyKeystore;
 
     const entropy = Keystore.decrypt(entropyKeystore, password);
     const mnemonic = entropyToMnemonic(entropy);
@@ -435,19 +435,19 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   // import private key
   if (request.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY) {
     chrome.storage.sync.get(['currentWallet'], async function (result) {
-      // 没有0x的privateKey
+      //没有0x的privateKey
       let privateKey: string = request.privateKey.trim();
       if (privateKey.startsWith('0x')) {
         privateKey = privateKey.substr(2);
       }
 
-      const publicKey = ckbUtils.privateKeyToPublicKey(`0x${  privateKey}`);
+      const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
       const password = request.password.trim();
 
-      // check the keystore
+      //check the keystore
       const currentPublicKey = result.currentWallet.publicKey;
       const wallet = findInWalletsByPublicKey(currentPublicKey, wallets);
-      const {keystore} = wallet;
+      const keystore = wallet.keystore;
       if (keystore === undefined || keystore === '' || keystore === 'undefined') {
         throw new Error('currentWallet keystore is null');
       }
@@ -455,26 +455,26 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         throw new Error('password incorrect');
       }
 
-      // check the keystore exist or not
+      //check the keystore exist or not
       const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
       if (addressesObj != null && addressesObj != '') {
-        const {addresses} = addressesObj;
+        const addresses = addressesObj.addresses;
         currentWallet = {
-          publicKey,
+          publicKey: publicKey,
           address: addresses[0].address,
           type: addresses[0].type,
           lock: addresses[0].lock,
         };
       } else {
-        // Add Keyper to Synapse
+        //Add Keyper to Synapse
         await addKeyperWallet(privateKey, password, '', '');
         wallets = getWallets();
         addressesList = getAddressesList();
         currentWallet = getCurrentWallet();
       }
 
-      // 002-
+      //002-
       saveToStorage();
 
       chrome.runtime.sendMessage({
@@ -486,18 +486,18 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   // import keystore
   if (request.messageType === MESSAGE_TYPE.IMPORT_KEYSTORE) {
     chrome.storage.sync.get(['currentWallet'], async function (result) {
-      // 01- get the params from request
+      //01- get the params from request
       const keystore = request.keystore.trim();
       const kPassword = request.keystorePassword.trim();
       const uPassword = request.userPassword.trim();
 
-      // 02- check the keystore by the keystorePassword
+      //02- check the keystore by the keystorePassword
       if (!Keystore.checkPasswd(keystore, kPassword)) {
         throw new Error('password incorrect');
       }
 
-      // 021- check the synapse password
-      // check the keystore
+      //021- check the synapse password
+      //check the keystore
       const currentPublicKey = result.currentWallet.publicKey;
       const currWallet = findInWalletsByPublicKey(currentPublicKey, wallets);
       const currentKeystore = currWallet.keystore;
@@ -512,29 +512,29 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         throw new Error('password incorrect');
       }
 
-      // 03 - get the private by keystore
+      //03 - get the private by keystore
       const privateKey = Keystore.decrypt(keystore, kPassword);
-      const publicKey = ckbUtils.privateKeyToPublicKey(`0x${  privateKey}`);
-      // check the keystore exist or not
+      const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
+      //check the keystore exist or not
       const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
       if (addressesObj != null && addressesObj != '') {
-        const {addresses} = addressesObj;
+        const addresses = addressesObj.addresses;
         currentWallet = {
-          publicKey,
+          publicKey: publicKey,
           address: addresses[0].address,
           type: addresses[0].type,
           lock: addresses[0].lock,
         };
       } else {
-        // Add Keyper to Synapse
+        //Add Keyper to Synapse
         await addKeyperWallet(privateKey, uPassword, '', '');
         wallets = getWallets();
         addressesList = getAddressesList();
         currentWallet = getCurrentWallet();
       }
 
-      // 002-
+      //002-
       saveToStorage();
 
       chrome.runtime.sendMessage({
@@ -545,12 +545,12 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
   // selected my addresses
   if (request.messageType == MESSAGE_TYPE.SELECTED_MY_ADDRESSES) {
-    // 01- get the addressObj and publicKey
-    const {addressObj} = request;
+    //01- get the addressObj and publicKey
+    const addressObj = request.addressObj;
     const publicKey = request.publicKey.trim();
 
     currentWallet = {
-      publicKey,
+      publicKey: publicKey,
       address: addressObj.address,
       type: addressObj.type,
       lock: addressObj.lock,
@@ -565,21 +565,21 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
 function saveToCurrentWallet(currentWallet) {
   chrome.storage.sync.set({ currentWallet }, () => {
-    console.log(`currentWallet is set to storage: ${  JSON.stringify(currentWallet)}`);
+    console.log('currentWallet is set to storage: ' + JSON.stringify(currentWallet));
   });
 }
 
 function saveToStorage() {
   chrome.storage.sync.set({ wallets }, () => {
-    console.log(`wallets is set to storage: ${  JSON.stringify(wallets)}`);
+    console.log('wallets is set to storage: ' + JSON.stringify(wallets));
   });
 
   chrome.storage.sync.set({ currentWallet }, () => {
-    console.log(`currentWallet is set to storage: ${  JSON.stringify(currentWallet)}`);
+    console.log('currentWallet is set to storage: ' + JSON.stringify(currentWallet));
   });
 
   chrome.storage.sync.set({ addressesList }, () => {
-    console.log(`addressesList is set to storage: ${  JSON.stringify(addressesList)}`);
+    console.log('addressesList is set to storage: ' + JSON.stringify(addressesList));
   });
 }
 

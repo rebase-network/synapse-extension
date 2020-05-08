@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { render, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import NetworkSelector from './index';
+import { render, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 
 describe('React testing library', () => {
-  let tree; let container; let getByTestId;
+  let tree, container, getByTestId;
   beforeEach(() => {
     tree = render(<NetworkSelector handleNetworkChange={null} />);
     container = tree.container;

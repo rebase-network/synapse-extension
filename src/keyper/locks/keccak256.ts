@@ -14,11 +14,8 @@ import { SignatureAlgorithm } from '@keyper/specs/lib';
 
 class Keccak256LockScript {
   name = 'Keccak256';
-
   codeHash = '0xa5b896894539829f5e7c5902f0027511f94c70fa2406d509e7c6d1df76b06f08';
-
   hashType = 'type';
-
   provider = null;
 
   deps() {
@@ -56,14 +53,14 @@ class Keccak256LockScript {
   }
 
   hashMessage(message) {
-    const preamble = `\x19Ethereum Signed Message:\n${  message.length}`;
-    const preambleBuffer = Buffer.from(preamble);
-    const ethMessage = Buffer.concat([preambleBuffer, message]);
+    var preamble = '\x19Ethereum Signed Message:\n' + message.length;
+    var preambleBuffer = Buffer.from(preamble);
+    var ethMessage = Buffer.concat([preambleBuffer, message]);
     return `0x${createKeccakHash('keccak256').update(ethMessage).digest('hex')}`;
   }
 
   mergeTypedArraysUnsafe(a, b) {
-    const c = new a.constructor(a.length + b.length);
+    var c = new a.constructor(a.length + b.length);
     c.set(a);
     c.set(b, a.length);
 

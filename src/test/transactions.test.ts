@@ -3,7 +3,6 @@
 // import {getBalanceByPublicKey} from '../balance';
 
 import * as utils from '@nervosnetwork/ckb-sdk-utils';
-import { config } from 'process';
 import {
   getStatusByTxHash,
   getOutputAddressByTxHash,
@@ -11,11 +10,11 @@ import {
   getInputCapacityByTxHash,
   getFeeByTxHash,
   getAmountByTxHash,
- getTxHistoryByAddress } from '../Transaction';
-
+} from '../Transaction';
+import { getTxHistoryByAddress } from '../Transaction';
+import { config } from 'process';
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default;
-
 const nodeUrl = 'http://106.13.40.34:8114/';
 const ckb = new CKB(nodeUrl);
 
@@ -218,7 +217,7 @@ describe('transaction test', () => {
     // const tradeCapacity = outputs[0].capacity;
     // expect(BigInt(tradeCapacity)).toEqual(expectCapacity);
     // let bar: bigint = 100n;
-    // ERROR
+    //ERROR
     const expectCapacity_8 = '831324834499834603';
     const inputsCapacity_8 = await getInputCapacityByTxHash(transaction_hash);
     // console.log(BigInt(inputsCapacity_8)); //831324834499834603n
@@ -253,7 +252,7 @@ describe('transaction test', () => {
   });
 
   it('91- get trade fee by publicKeyHash', async () => {
-    // 001
+    //001
     // const expectFee:Number = new Number(564);
     // const result = await ckb.rpc.getTransaction(transaction_hash);
     // const inputs = result.transaction.inputs;
@@ -281,10 +280,10 @@ describe('transaction test', () => {
     // let fee = new Number(inputsCap - outputsCap);
     // console.log("fee =>",fee.valueOf());
     // expect(expectFee).toEqual(fee);
-    // 002
-    const expectFee: number = new Number(564);
+    //002
+    const expectFee: Number = new Number(564);
     const fee = await getFeeByTxHash(transaction_hash);
-    const feeNumber = new Number(fee);
+    let feeNumber = new Number(fee);
     expect(expectFee).toEqual(feeNumber);
   });
 
