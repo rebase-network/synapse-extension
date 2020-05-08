@@ -1,10 +1,9 @@
-
-import { KEYSTORE_TYPE } from '../utils/constants'
+import { KEYSTORE_TYPE } from '../utils/constants';
 import Address, { AddressPrefix } from './address';
-import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils'
+import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 
 const KeyperWallet = require('../keyper/keyperwallet');
-const EC = require("elliptic").ec;
+const EC = require('elliptic').ec;
 
 let wallets = [];
 let currentWallet = {};
@@ -12,7 +11,6 @@ let addressesList = [];
 
 //privateKey No '0x'
 export async function addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore) {
-
   await KeyperWallet.init();
 
   const keystore = KeyperWallet.generateKeystore(privateKey, password);
@@ -22,19 +20,24 @@ export async function addKeyperWallet(privateKey, password, entropyKeystore, roo
   KeyperWallet.setUpContainer(publicKey.substr(2));
 
   //Keyper accounts
-  const accounts = await KeyperWallet.accounts()
+  const accounts = await KeyperWallet.accounts();
 
   saveWallets(privateKey, keystore, accounts, entropyKeystore, rootKeystore);
-
 }
 
 //3- Type
 //privateKey Not contain '0x'prefix
-export function saveWallets(privateKey, keystore, accounts, entropyKeystore, rootKeystore, prefix = AddressPrefix.Testnet) {
-
+export function saveWallets(
+  privateKey,
+  keystore,
+  accounts,
+  entropyKeystore,
+  rootKeystore,
+  prefix = AddressPrefix.Testnet,
+) {
   const addressObj = Address.fromPrivateKey(privateKey, prefix);
   const blake160 = addressObj.getBlake160(); //publicKeyHash
-  const publicKey = ckbUtils.privateKeyToPublicKey("0x" + privateKey);
+  const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
 
   const walletCommon = {
     publicKey: publicKey,
@@ -43,13 +46,13 @@ export function saveWallets(privateKey, keystore, accounts, entropyKeystore, roo
     rootKeystore: rootKeystore,
     keystore: keystore,
     keystoreType: KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE,
-  }
-  wallets.push(walletCommon)
+  };
+  wallets.push(walletCommon);
 
   const addressesObj = {
     publicKey: publicKey,
-    addresses: accounts
-  }
+    addresses: accounts,
+  };
   addressesList.push(addressesObj);
 
   const currentAddress = {
@@ -57,7 +60,7 @@ export function saveWallets(privateKey, keystore, accounts, entropyKeystore, roo
     address: accounts[0].address,
     type: accounts[0].type,
     lock: accounts[0].lock,
-  }
+  };
 
   currentWallet = currentAddress;
 }

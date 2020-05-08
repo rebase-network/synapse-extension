@@ -19,9 +19,11 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface AppProps { handleNetworkChange: Function }
+interface AppProps {
+  handleNetworkChange: Function;
+}
 
-interface AppState { }
+interface AppState {}
 
 export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
@@ -34,7 +36,13 @@ export default function (props: AppProps, state: AppState) {
             Synapse
           </Typography>
           <NetworkSelector handleNetworkChange={props.handleNetworkChange} />
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" data-testid="setting-icon">
+          <IconButton
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="menu"
+            data-testid="setting-icon"
+          >
             <MenuIcon />
           </IconButton>
           {/* <Button color="inherit">Login</Button> */}

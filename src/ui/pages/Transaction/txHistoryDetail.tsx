@@ -1,9 +1,9 @@
 import * as React from 'react';
-import Title from '../../Components/Title'
+import Title from '../../Components/Title';
 import { Button, TextField } from '@material-ui/core';
 
-import { MESSAGE_TYPE } from '../../../utils/constants'
-import { useHistory } from "react-router-dom";
+import { MESSAGE_TYPE } from '../../../utils/constants';
+import { useHistory } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -13,17 +13,12 @@ import Typography from '@material-ui/core/Typography';
 
 import * as moment from 'moment';
 
-
 const useStyles = makeStyles((theme) => ({
   container: {
     margin: 30,
   },
-  button: {
-
-  },
-  textField: {
-
-  },
+  button: {},
+  textField: {},
   root: {
     flexGrow: 1,
     overflow: 'hidden',
@@ -33,45 +28,43 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 400,
     marginLeft: '5px',
   },
-
 }));
 
-interface AppProps { }
+interface AppProps {}
 
-interface AppState { }
+interface AppState {}
 
 export default function TxHistoryDetail(props: AppProps, state: AppState) {
   const [tx, setTx] = React.useState({});
   const classes = useStyles();
 
   React.useEffect(() => {
-
     chrome.runtime.sendMessage({
-      messageType: "xxxx"
+      messageType: 'xxxx',
     });
 
     chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
-
-      if (msg.msgType === "yyyy") {
+      if (msg.msgType === 'yyyy') {
         if (!!msg.tx) {
-          setTx(tx)
+          setTx(tx);
 
-          alert(tx['fee'])
+          alert(tx['fee']);
         }
       }
-    })
-
-  }, [])
+    });
+  }, []);
 
   return (
     <div>
       <div className={classes.root}>
-        <Paper className={classes.paper} >
+        <Paper className={classes.paper}>
           <Grid container wrap="nowrap" spacing={2} alignContent="center" alignItems="center">
             <Grid item xs zeroMinWidth>
               <Avatar>W</Avatar>
               <Typography noWrap>{status}</Typography>
-              <Typography noWrap>{moment(tx['timestamp']).format("YYYY-DD-MM hh:mm:ss")}</Typography>
+              <Typography noWrap>
+                {moment(tx['timestamp']).format('YYYY-DD-MM hh:mm:ss')}
+              </Typography>
             </Grid>
           </Grid>
         </Paper>
@@ -103,19 +96,19 @@ export default function TxHistoryDetail(props: AppProps, state: AppState) {
           <Grid container wrap="nowrap" spacing={2}>
             <Grid item>
               {/* <Avatar>W</Avatar> */}
-              <Typography noWrap >Inputs &nbsp;&nbsp;</Typography>
+              <Typography noWrap>Inputs &nbsp;&nbsp;</Typography>
             </Grid>
             <Grid item xs>
-             <Typography>{tx['inputs']}</Typography>
+              <Typography>{tx['inputs']}</Typography>
             </Grid>
           </Grid>
           <Grid container wrap="nowrap" spacing={2}>
             <Grid item>
               {/* <Avatar>W</Avatar> */}
-              <Typography noWrap >Outputs&nbsp; </Typography>
+              <Typography noWrap>Outputs&nbsp; </Typography>
             </Grid>
             <Grid item xs>
-             <Typography>{tx['outputs']}</Typography>
+              <Typography>{tx['outputs']}</Typography>
             </Grid>
           </Grid>
         </Paper>
@@ -127,7 +120,7 @@ export default function TxHistoryDetail(props: AppProps, state: AppState) {
           <Grid container wrap="nowrap" spacing={2}>
             <Grid item>
               {/* <Avatar>W</Avatar> */}
-              <Typography noWrap >Tx Hash</Typography>
+              <Typography noWrap>Tx Hash</Typography>
             </Grid>
             <Grid item xs>
               <Typography>{tx['hash']}</Typography>
@@ -136,7 +129,7 @@ export default function TxHistoryDetail(props: AppProps, state: AppState) {
           <Grid container wrap="nowrap" spacing={2}>
             <Grid item>
               {/* <Avatar>W</Avatar> */}
-              <Typography noWrap >Block Number&nbsp;&nbsp;&nbsp;&nbsp;</Typography>
+              <Typography noWrap>Block Number&nbsp;&nbsp;&nbsp;&nbsp;</Typography>
             </Grid>
             <Grid item xs>
               <Typography>{tx['block_num']}</Typography>
@@ -146,5 +139,5 @@ export default function TxHistoryDetail(props: AppProps, state: AppState) {
         <br />
       </div>
     </div>
-  )
+  );
 }

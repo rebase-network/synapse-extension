@@ -18,15 +18,15 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('Address page', () => {
-  let tree, container, getByTestId
+  let tree, container, getByTestId;
   beforeEach(() => {
     tree = render(<App />);
-    container = tree.container
-    getByTestId = tree.getByTestId
-  })
+    container = tree.container;
+    getByTestId = tree.getByTestId;
+  });
   beforeAll(() => {
-    window.chrome = chrome
-  })
+    window.chrome = chrome;
+  });
 
   it('should render title', async () => {
     const { getByTestId, container } = tree;
