@@ -278,20 +278,23 @@ export default function (props: AppProps, state: AppState) {
             <ListSubheader>Transactions</ListSubheader>
             <Divider/>
 
-            <List>
             {txs.map((item) => (
-              <ListItem>
-                {/* <ListItemText primary={`Hash ${item.hash.slice(0,6)}`} /> */}
-                {/* <ListItemText secondary={`BlkNum ${item.block_num}`} /> */}
-                UTC:<ListItemText secondary={moment(item.timestamp).format("YYYY-DD-MM hh:mm:ss")}/>
-                fee: <ListItemText secondary={item.fee} />
-                income:<ListItemText secondary={item.income.toString()} />
-                amount:<ListItemText secondary={item.amount / (10**8)} />
+            <List>
 
+              <ListItem>
+                <ListItemText primary={moment(item.timestamp).format("YYYY-DD-MM hh:mm:ss")}/>
               </ListItem>
+
+              <ListItem>
+                <ListItemText secondary={item.income ? `Received` : `Send` } />
+                <ListItemText secondary={`${item.amount / (10**8)} CKB`} />
+              </ListItem>
+              <Divider/>
+
+              </List>
+
             ))}
 
-            </List>
           </div>
         </Grid>
       </Grid>
