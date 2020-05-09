@@ -63,6 +63,7 @@ export default function (props: AppProps) {
           </IconButton>
           <Drawer anchor={"right"} open={state["right"]} onClose={toggleDrawer("right", false)}>
               <MyAddresses onSelectAddress={setState}/>
+              <Link to="/setting" onClick={toggleDrawer("right", false)}>Setting</Link>
           </Drawer>
           {/* <Button color="inherit">Login</Button> */}
         </Toolbar>
