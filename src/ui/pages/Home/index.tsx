@@ -32,6 +32,7 @@ const useStylesTheme = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
+      marginTop: "120px",
     },
     paper: {
       padding: theme.spacing(2),
@@ -56,7 +57,7 @@ const BootstrapButton = withStyles({
   root: {
     width: "208px",
     size: 'medium',
-    marginTop: '25px',
+    // marginTop: '225px',
     marginBottom:'25px',
     boxShadow: 'none',
     textTransform: 'none',
