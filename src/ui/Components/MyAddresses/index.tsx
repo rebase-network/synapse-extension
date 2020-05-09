@@ -72,7 +72,7 @@ const listItemTheme = createMuiTheme({
   },
 });
 
-interface AppProps { }
+interface AppProps { onSelectAddress:Function}
 
 interface AppState { }
 
@@ -117,6 +117,7 @@ export default function (props: AppProps, state: AppState) {
       publicKey,
       messageType: MESSAGE_TYPE.SELECTED_MY_ADDRESSES
     })
+    props.onSelectAddress({"right":false});
   };
 
   const addressesElem = addressesList.map((addressesObj, index) => {

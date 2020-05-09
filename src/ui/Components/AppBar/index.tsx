@@ -29,10 +29,6 @@ interface AppState { }
 export default function (props: AppProps) {
   const classes = useStyles();
 
-  const menuClick = () => {
-
-  }
-
   const [state, setState] = React.useState({
     top: false,
     left: false,
@@ -66,7 +62,7 @@ export default function (props: AppProps) {
             <MenuIcon />
           </IconButton>
           <Drawer anchor={"right"} open={state["right"]} onClose={toggleDrawer("right", false)}>
-              <MyAddresses/>
+              <MyAddresses onSelectAddress={setState}/>
           </Drawer>
           {/* <Button color="inherit">Login</Button> */}
         </Toolbar>
