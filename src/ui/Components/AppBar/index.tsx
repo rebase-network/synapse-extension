@@ -5,6 +5,8 @@ import NetworkSelector from '../NetworkSelector';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Drawer from '@material-ui/core/Drawer';
+import { Link } from "react-router-dom";
+import MyAddresses from '../MyAddresses';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -64,7 +66,7 @@ export default function (props: AppProps) {
             <MenuIcon />
           </IconButton>
           <Drawer anchor={"right"} open={state["right"]} onClose={toggleDrawer("right", false)}>
-              <div>"right"</div>
+              <MyAddresses/>
           </Drawer>
           {/* <Button color="inherit">Login</Button> */}
         </Toolbar>

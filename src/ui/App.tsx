@@ -13,7 +13,7 @@ import ExportPrivateKey from './pages/ExportPrivateKey';
 import ExportMnemonic from "./pages/ExportMnemonic";
 import ExportPrivateKeySecond from './pages/ExportPrivateKeySecond'
 import Setting from './pages/Setting'
-import MyAddresses from './pages/MyAddresses'
+
 import ExportMnemonicSecond from "./pages/ExportMnemonicSecond";
 
 import AppBar from './Components/AppBar/'
@@ -74,9 +74,6 @@ export default function App() {
             </Route>
             <Route path="/setting">
               <Setting />
-            </Route>
-            <Route path="/my-addresses">
-              <MyAddresses />
             </Route>
             {/* 通配放到最后 */}
             <Route path="/">
