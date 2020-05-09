@@ -71,7 +71,7 @@ export default function TxHistoryDetail(props: AppProps, state: AppState) {
 
   })
   
-  if(Object.keys(tx).length ===0){ return(<div> loding</div>)}
+  if(Object.keys(tx).length ===0){ return(<div>loading</div>)}
 
   return (
     <div>
