@@ -7,6 +7,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Drawer from '@material-ui/core/Drawer';
 import { Link } from "react-router-dom";
 import MyAddresses from '../MyAddresses';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,6 +19,13 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       flexGrow: 1,
+    },
+    link:{
+      marginLeft:'60px',
+    },
+    icon: {
+      width: 30,
+      height: 30,
     },
   }),
 );
@@ -63,7 +71,9 @@ export default function (props: AppProps) {
           </IconButton>
           <Drawer anchor={"right"} open={state["right"]} onClose={toggleDrawer("right", false)}>
               <MyAddresses onSelectAddress={setState}/>
-              <Link to="/setting" onClick={toggleDrawer("right", false)}>Setting</Link>
+              <Link to="/setting" onClick={toggleDrawer("right", false)} className={classes.link}>
+                    <SettingsIcon className={classes.icon}/>
+              </Link>
           </Drawer>
           {/* <Button color="inherit">Login</Button> */}
         </Toolbar>
