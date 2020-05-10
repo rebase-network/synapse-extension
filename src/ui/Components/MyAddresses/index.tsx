@@ -1,14 +1,19 @@
 import * as React from 'react';
 import { Button } from '@material-ui/core';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { makeStyles, Theme, createStyles,withStyles } from '@material-ui/core/styles';
 import { MESSAGE_TYPE } from '../../../utils/constants'
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import Paper from '@material-ui/core/Paper';
+import Divider from '@material-ui/core/Divider';
 
 import { useHistory } from 'react-router-dom';
 
@@ -29,12 +34,39 @@ const useStyles = makeStyles({
 const useStylesTheme = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: '100%',
-      maxWidth: 400,
+      flexGrow: 1,
+      width: '380px',
       backgroundColor: theme.palette.background.paper,
       marginTop: '0px',
       marginBottom: '0px',
     },
+    paper: {
+      padding: theme.spacing(2),
+      textAlign: 'center',
+      color: theme.palette.text.secondary,
+      width: '380px',
+    },
+    grid:{
+      width: '380px',
+    },
+    typography:{
+      marginLeft:"108px",
+      fontSize:"20px",
+    },
+    adressesElem:{
+      marginLeft:"28px",
+    },
+    // link: {
+    //   // display: 'flex',
+    //   textAlign: 'center',
+    //   font: "40px",
+    //   height: 50,
+    // },
+    // icon: {
+    //   marginRight: theme.spacing(0.5),
+    //   width: 40,
+    //   height: 20,
+    // },
     demo: {
       // backgroundColor: theme.palette.background.paper,
     },
@@ -71,6 +103,25 @@ const listItemTheme = createMuiTheme({
     },
   },
 });
+
+
+const BootstrapButton = withStyles({
+  root: {
+    width: "208px",
+    size: 'medium',
+    marginTop:'25px',
+    marginLeft:'88px',
+    marginBottom:'25px',
+    boxShadow: 'none',
+    textTransform: 'none',
+    fontSize: 18,
+    padding: '8px 12px',
+    border: '1px solid',
+    lineHeight: 1.5,
+    backgroundColor: '#0063cc',
+    borderColor: '#0063cc',
+  },
+})(Button);
 
 interface AppProps { onSelectAddress:Function}
 
@@ -120,6 +171,11 @@ export default function (props: AppProps, state: AppState) {
     props.onSelectAddress({"right":false});
   };
 
+  function handleClickBreadcrumbs(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+    event.preventDefault();
+    console.info('You clicked a breadcrumb.');
+  }
+
   const addressesElem = addressesList.map((addressesObj, index) => {
     return addressesObj.addresses.map((item, index) => {
       return (
@@ -151,36 +207,48 @@ export default function (props: AppProps, state: AppState) {
 
   return (
     <div>
-      <Grid item xs={12} md={6}>
-        <Typography variant="h6" className={classTheme.title}>
-          My Addresses
-        </Typography>
-        <Button
-          type="button"
-          id="import-button"
-          color="primary"
-          variant="contained"
-          className={classes.button}
-          data-testid="import"
-          onClick={handleClickOpen}
-        >
-          Import
-        </Button>
-        <div className={classTheme.demo}>  
-          {addressesElem}
-        </div>
-        <Button
-          type="button"
-          id="import-button"
-          color="primary"
-          variant="contained"
-          className={classes.button}
-          data-testid="import"
-          onClick={handleClickOpen}
-        >
-          Import
-        </Button>
+      <div className={classTheme.root}>
+      <Grid container spacing={3} className={classTheme.grid}>
+        <Grid item xs={12}>
+          {/* <Paper className={classTheme.paper}>My Addresses</Paper>   */}
+          <Paper className={classTheme.paper}>
+            <Breadcrumbs aria-label="breadcrumb" color="textPrimary">
+                <Typography color="textPrimary" className={classTheme.typography}>
+                  {/* {<NavigateBeforeIcon className={classTheme.icon}/>} */}
+                  {/* <Link color="inherit" href="/" onClick={handleClickBreadcrumbs}> */}
+                    {/* <NavigateBeforeIcon className={classTheme.icon} /> */}
+                      My Addresses
+                  {/* </Link> */}
+                </Typography>
+            </Breadcrumbs>           
+          </Paper>  
+        </Grid>
+      </Grid>        
+      </div>
+      <div className={classTheme.root}>
+      <Grid container spacing={3} className={classTheme.grid}>
+        <Grid item xs={12} > 
+          <div className={classTheme.adressesElem}>
+              {addressesElem}
+          </div>
+        </Grid>
+
+        <Divider />
+
+        <Grid item xs={12} >
+          <BootstrapButton
+            type="button"
+            id="import-button"
+            color="primary"
+            variant="contained"
+            data-testid="import"
+            onClick={handleClickOpen}
+          >
+            Import Wallet
+          </BootstrapButton>
+        </Grid>
       </Grid>
+      </div>
     </div>
   );
 }
