@@ -9,7 +9,6 @@ import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      flexGrow: 1,
       background: theme.palette.background.default,
     },
     menuButton: {
@@ -25,15 +24,19 @@ interface AppProps {
 
 export default function DenseAppBar(props: AppProps) {
   const classes = useStyles();
-
+  const navButton = props.to ? (
+    <IconButton edge="start" className={classes.menuButton} aria-label="nav">
+      <Link to={props.to}>
+        <NavigateBeforeIcon />
+      </Link>
+    </IconButton>
+  ) : (
+    ''
+  );
   return (
     <div className={classes.root}>
-      <Toolbar variant="dense">
-        <IconButton edge="start" className={classes.menuButton} aria-label="nav">
-          <Link to={props.to}>
-            <NavigateBeforeIcon />
-          </Link>
-        </IconButton>
+      <Toolbar>
+        {navButton}
         <Typography variant="h6">{props.title}</Typography>
       </Toolbar>
     </div>

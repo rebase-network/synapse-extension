@@ -1,21 +1,22 @@
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import { Button } from '@material-ui/core';
-import { makeStyles, Theme, createStyles, withStyles } from '@material-ui/core/styles';
-import { MESSAGE_TYPE } from '../../../utils/constants';
+import {
+  makeStyles,
+  Theme,
+  createStyles,
+  withStyles,
+  createMuiTheme,
+  ThemeProvider,
+} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
-
-import { useHistory } from 'react-router-dom';
+import { MESSAGE_TYPE } from '../../../utils/constants';
+import PageNav from '../PageNav';
 
 const useStyles = makeStyles({
   container: {
@@ -26,26 +27,17 @@ const useStyles = makeStyles({
     marginTop: '5px',
     marginBottom: '5px',
   },
-  textField: {},
 });
 
 const useStylesTheme = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      flexGrow: 1,
       width: 320,
-      backgroundColor: theme.palette.background.paper,
-      marginTop: '0px',
-      marginBottom: '0px',
     },
     paper: {
       padding: theme.spacing(2),
       textAlign: 'center',
       color: theme.palette.text.secondary,
-      width: '380px',
-    },
-    grid: {
-      width: '380px',
     },
     typography: {
       marginLeft: '108px',
@@ -53,11 +45,6 @@ const useStylesTheme = makeStyles((theme: Theme) =>
     },
     title: {
       margin: theme.spacing(1, 0, 1),
-    },
-    ListSubheader: {
-      font: '10px',
-      height: '4px',
-      inlineSize: '4px',
     },
     inline: {
       display: 'inline',
@@ -182,21 +169,10 @@ export default function (props: AppProps, state: AppState) {
 
   return (
     <div>
+      <PageNav to="" title="My Addresses" />
+
       <div className={classTheme.root}>
-        <Grid container spacing={3} className={classTheme.grid}>
-          <Grid item xs={12}>
-            <Paper className={classTheme.paper}>
-              <Breadcrumbs aria-label="breadcrumb" color="textPrimary">
-                <Typography color="textPrimary" className={classTheme.typography}>
-                  My Addresses
-                </Typography>
-              </Breadcrumbs>
-            </Paper>
-          </Grid>
-        </Grid>
-      </div>
-      <div className={classTheme.root}>
-        <Grid container spacing={3} className={classTheme.grid}>
+        <Grid container spacing={3}>
           <Grid item xs={12}>
             <div>{addressesElem}</div>
           </Grid>
