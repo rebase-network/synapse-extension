@@ -303,8 +303,8 @@ export default function (props: AppProps, state: AppState) {
 
         <div className={classes.dialogContent}>
           <div className={classes.tip}>{tooltip}</div>
-          {address[network] ? <QrCode value={address[network]} size={200} /> : <div>loading</div>}
-          <div className={classes.address}>{address[network]}</div>
+          {address ? <QrCode value={address} size={200} /> : <div>loading</div>}
+          <div className={classes.address}>{address}</div>
         </div>
       </Dialog>
     </div>
