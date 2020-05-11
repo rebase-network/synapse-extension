@@ -8,23 +8,12 @@ import * as Yup from 'yup';
 import { MESSAGE_TYPE } from '../../../utils/constants';
 import { useHistory } from 'react-router-dom';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-
-const useStylesPopper = makeStyles((theme: Theme) =>
-  createStyles({
-    paper: {
-      border: '1px solid',
-      padding: theme.spacing(1),
-      backgroundColor: theme.palette.background.paper,
-    },
-  }),
-);
+import PageNav from '../../Components/PageNav';
 
 const useStyles = makeStyles({
   container: {
     margin: 30,
   },
-  button: {},
-  textField: {},
 });
 
 interface AppProps {}
@@ -53,7 +42,6 @@ export const innerForm = (props) => {
         name="password"
         type="password"
         fullWidth
-        className={classes.textField}
         value={values.password}
         onChange={handleChange}
         onBlur={handleBlur}
@@ -70,7 +58,6 @@ export const innerForm = (props) => {
         id="submit-button"
         disabled={isSubmitting}
         color="primary"
-        className={classes.button}
         data-testid="submit-button"
       >
         Confirm
@@ -80,9 +67,8 @@ export const innerForm = (props) => {
 };
 
 export default function (props: AppProps, state: AppState) {
-  const [success, setSuccess] = React.useState(false);
-  const [vaildate, setValidate] = React.useState(true);
   const history = useHistory();
+  const classes = useStyles();
 
   const onSubmit = async (values) => {
     //background.ts check the password
@@ -91,32 +77,21 @@ export default function (props: AppProps, state: AppState) {
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-      // console.log("export private key =>",message);
       if (message.messageType === MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT) {
-        console.log('message ===>', message);
-
         if (message.isValidatePassword) {
           history.push('/export-mnemonic-second'); //测试成功的地址
           chrome.runtime.sendMessage({
             message,
             messageType: MESSAGE_TYPE.EXPORT_MNEONIC_SECOND,
           });
-        } else {
-          setValidate(false);
         }
       }
     });
   }, []);
 
-  let successNode = null;
-  if (success) successNode = <div className="success">Successfully</div>;
-  if (!vaildate) successNode = <div className="success">Invalid passwrod</div>;
-  const classes = useStyles();
-
   return (
     <div className={classes.container}>
-      <Title title="Export Mnemonic" testId="export-mnemonic-key-title" />
-      {successNode}
+      <PageNav to="/setting" title="Export Mnemonic" />
       <Formik
         initialValues={{ password: '' }}
         onSubmit={onSubmit}

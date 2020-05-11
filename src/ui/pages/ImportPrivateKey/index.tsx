@@ -12,6 +12,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
+import PageNav from '../../Components/PageNav';
 
 const useStyles = makeStyles({
   container: {
@@ -63,7 +64,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
   };
 
   let successNode = null;
-  if (success) successNode = <div className="success">Successfully</div>;
+  if (success) successNode = <div className="success">Import Successfully</div>;
 
   const classes = useStyles();
 
@@ -89,15 +90,11 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           type="text"
           placeholder="私钥"
           fullWidth
-          // InputProps={{
-          //   startAdornment: <InputAdornment position="start">0x</InputAdornment>,
-          // }}
           className={classes.textField}
           value={values.privateKey}
           onChange={handleChange}
           onBlur={handleBlur}
           error={!!errors.privateKey}
-          // helperText={(errors.confirmPassword && touched.confirmPassword) && errors.confirmPassword}
           margin="normal"
           variant="outlined"
           data-testid="testid-form-privateKey"
@@ -113,7 +110,6 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           onChange={handleChange}
           onBlur={handleBlur}
           error={!!errors.password}
-          // helperText={(errors.confirmPassword && touched.confirmPassword) && errors.confirmPassword}
           margin="normal"
           variant="outlined"
           data-testid="testid-form-password"
@@ -151,9 +147,6 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           variant="outlined"
           data-testid="field-keystore"
         />
-        {/* <Popper id={'simple-popper'} open={true} >
-              <div className={classesPopper.paper}>Invalid mnemonic</div>
-            </Popper> */}
         <TextField
           label="keystore password"
           name="keystorePassword"
@@ -208,7 +201,6 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
             {privateKeyForm}
           </div>
           <div className="json-keystore" data-testid="json-keystore" hidden={!isHidePrivate}>
-            {/* <span className="">JSON/Keystore  </span> */}
             {keystoreForm}
           </div>
         </div>
@@ -237,6 +229,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
 
   return (
     <div className={classes.container}>
+      <PageNav to="/setting" title="Import Private Key" />
       {successNode}
       <RadioGroup row value={value} onChange={handleRadioChange}>
         <FormControlLabel
