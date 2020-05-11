@@ -1,31 +1,49 @@
 import * as React from 'react';
-// import './Popup.scss';
 import Title from '../../Components/Title';
 import { Button, TextField } from '@material-ui/core';
-// import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { MESSAGE_TYPE } from '../../../utils/constants';
 import { useHistory } from 'react-router-dom';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 
-const useStylesPopper = makeStyles((theme: Theme) =>
+const useStylesTheme = makeStyles((theme: Theme) =>
   createStyles({
-    paper: {
-      border: '1px solid',
-      padding: theme.spacing(1),
+    root: {
+      flexGrow: 1,
+      width: '380px',
       backgroundColor: theme.palette.background.paper,
+      marginTop: '0px',
+      marginBottom: '0px',
+    },
+    container: {
+      margin: 30,
+    },
+    paper: {
+      padding: theme.spacing(2),
+      textAlign: 'center',
+      color: theme.palette.text.secondary,
+      width: '400px',
+    },
+    grid: {
+      width: '380px',
+    },
+    typography: {
+      fontSize: '20px',
+    },
+    icon: {
+      marginRight: theme.spacing(0.5),
+      width: 40,
+      height: 20,
     },
   }),
 );
-
-const useStyles = makeStyles({
-  container: {
-    margin: 30,
-  },
-  button: {},
-  textField: {},
-});
 
 interface AppProps {}
 
@@ -80,6 +98,7 @@ export const innerForm = (props) => {
 };
 
 export default function (props: AppProps, state: AppState) {
+  const classTheme = useStylesTheme();
   const [success, setSuccess] = React.useState(false);
   const [vaildate, setValidate] = React.useState(true);
   const history = useHistory();
@@ -91,7 +110,6 @@ export default function (props: AppProps, state: AppState) {
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-      // console.log("export private key =>",message);
       if (message.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT) {
         if (message.isValidatePassword) {
           history.push('/export-private-key-second'); //测试成功的地址
@@ -106,24 +124,48 @@ export default function (props: AppProps, state: AppState) {
     });
   }, []);
 
+  function handleClickBreadcrumbs(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+    event.preventDefault();
+    console.info('You clicked a breadcrumb.');
+  }
+
   let successNode = null;
   if (success) successNode = <div className="success">Successfully</div>;
   if (!vaildate) successNode = <div className="success">Invalid passwrod</div>;
   const classes = useStyles();
 
   return (
-    <div className={classes.container}>
-      <Title title="Export Private Key" testId="export-private-key-title" />
-      {successNode}
-      <Formik
-        initialValues={{ password: '' }}
-        onSubmit={onSubmit}
-        validationSchema={Yup.object().shape({
-          password: Yup.string().min(6).required('Required'),
-        })}
-      >
-        {innerForm}
-      </Formik>
+    <div>
+      <div className={classTheme.root}>
+        <Grid container spacing={3} className={classTheme.grid}>
+          <Grid item xs={12}>
+            <Paper className={classTheme.paper}>
+              <Breadcrumbs aria-label="breadcrumb" color="textPrimary">
+                <Typography color="textPrimary" className={classTheme.typography}>
+                  <Link color="inherit" href="/" onClick={handleClickBreadcrumbs}>
+                    <NavigateBeforeIcon className={classTheme.icon} />
+                    Export Private Key
+                  </Link>
+                </Typography>
+              </Breadcrumbs>
+            </Paper>
+          </Grid>
+        </Grid>
+      </div>
+
+      <div className={classes.container}>
+        <Title title="Export Private Key" testId="export-private-key-title" />
+        {successNode}
+        <Formik
+          initialValues={{ password: '' }}
+          onSubmit={onSubmit}
+          validationSchema={Yup.object().shape({
+            password: Yup.string().min(6).required('Required'),
+          })}
+        >
+          {innerForm}
+        </Formik>
+      </div>
     </div>
   );
 }
