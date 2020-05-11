@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Title from '../../Components/Title';
 import { Button, TextField } from '@material-ui/core';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -20,6 +19,9 @@ const useStyles = makeStyles({
   },
   button: {},
   textField: {},
+  radioGroup: {
+    'justify-content': 'center',
+  },
 });
 
 interface AppProps {}
@@ -232,7 +234,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
       <PageNav to="/setting" title="Import Private Key" />
       <div className={classes.container}>
         {successNode}
-        <RadioGroup row value={value} onChange={handleRadioChange}>
+        <RadioGroup row value={value} onChange={handleRadioChange} className={classes.radioGroup}>
           <FormControlLabel
             value="1"
             labelPlacement="bottom"
