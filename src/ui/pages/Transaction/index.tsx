@@ -69,18 +69,18 @@ export const innerForm = (props) => {
       />
       <TextField
         label="Fee"
+        id="fee"
         name="fee"
         type="text"
         fullWidth
         className={classes.textField}
-        value={values.fee}
-        defaultValue="Default Value"
+        value={values.fee ? values.fee : 1000}
         onChange={handleChange}
         onBlur={handleBlur}
         error={!!errors.fee}
         margin="normal"
         variant="outlined"
-        data-testid="field-amount"
+        data-testid="field-fee"
       />
       <TextField
         label="Password"
