@@ -1,12 +1,12 @@
 import * as React from 'react';
-import Title from '../../Components/Title'
+import Title from '../../Components/Title';
 import { Button, TextField } from '@material-ui/core';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { makeStyles } from '@material-ui/core/styles';
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
-import { MESSAGE_TYPE } from '../../../utils/constants'
-import { useHistory } from "react-router-dom";
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
+import { MESSAGE_TYPE } from '../../../utils/constants';
+import { useHistory } from 'react-router-dom';
 import { AppContext } from '../../App';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -17,58 +17,57 @@ const useStyles = makeStyles({
   container: {
     margin: 30,
   },
-  button: {
-
-  },
-  textField: {
-
-  }
+  button: {},
+  textField: {},
 });
 
-interface AppProps { }
+interface AppProps {}
 
-interface AppState { }
+interface AppState {}
 
 export default function ImportPrivateKey(props: AppProps, state: AppState) {
-  const [success, setSuccess] = React.useState(false)
+  const [success, setSuccess] = React.useState(false);
   const history = useHistory();
   const { network } = React.useContext(AppContext);
   const [isHidePrivate, setIsHidePrivate] = React.useState(false);
-  const [value, setValue] = React.useState("1");
+  const [value, setValue] = React.useState('1');
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
-      if (msg.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK || msg.messageType === MESSAGE_TYPE.IMPORT_KEYSTORE_OK) {
-        history.push('/address')
+      if (
+        msg.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK ||
+        msg.messageType === MESSAGE_TYPE.IMPORT_KEYSTORE_OK
+      ) {
+        history.push('/address');
       }
-    })
-  }, [])
+    });
+  }, []);
 
   const onSubmit = async (values) => {
     if (!isHidePrivate) {
-      chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_PRIVATE_KEY })
-      setSuccess(true)
+      chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_PRIVATE_KEY });
+      setSuccess(true);
     } else {
-      chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_KEYSTORE })
-      setSuccess(true)
+      chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_KEYSTORE });
+      setSuccess(true);
     }
-  }
+  };
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue((event.target as HTMLInputElement).value);
-    if (value === "1") {
+    if (value === '1') {
       setIsHidePrivate(true);
     } else {
       setIsHidePrivate(false);
     }
   };
 
-  let successNode = null
-  if (success) successNode = <div className="success">Successfully</div>
+  let successNode = null;
+  if (success) successNode = <div className="success">Successfully</div>;
 
   const classes = useStyles();
 
-  const innerForm = props => {
+  const innerForm = (props) => {
     const classes = useStyles();
     const {
       values,
@@ -79,11 +78,10 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
       handleChange,
       handleBlur,
       handleSubmit,
-      handleReset
+      handleReset,
     } = props;
 
-
-    const privateKeyForm =
+    const privateKeyForm = (
       <Form className="form-privateKey" id="form-privateKey" onSubmit={handleSubmit}>
         <TextField
           label="PrivateKey"
@@ -131,10 +129,11 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           data-testid="import-privateKey-submit"
         >
           Import
-      </Button>
+        </Button>
       </Form>
+    );
 
-    const keystoreForm =
+    const keystoreForm = (
       <Form className="form-keystore" id="form-keystore" onSubmit={handleSubmit}>
         <TextField
           label="keystore"
@@ -147,7 +146,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           onChange={handleChange}
           onBlur={handleBlur}
           error={!!errors.keystore}
-          helperText={(errors.keystore && touched.keystore) && errors.keystore}
+          helperText={errors.keystore && touched.keystore && errors.keystore}
           margin="normal"
           variant="outlined"
           data-testid="field-keystore"
@@ -165,7 +164,9 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           onChange={handleChange}
           onBlur={handleBlur}
           error={!!errors.keystorePassword}
-          helperText={(errors.keystorePassword && touched.keystorePassword) && errors.keystorePassword}
+          helperText={
+            errors.keystorePassword && touched.keystorePassword && errors.keystorePassword
+          }
           margin="normal"
           variant="outlined"
           data-testid="field-keystore-password"
@@ -180,7 +181,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           onChange={handleChange}
           onBlur={handleBlur}
           error={!!errors.userPassword}
-          helperText={(errors.userPassword && touched.userPassword) && errors.userPassword}
+          helperText={errors.userPassword && touched.userPassword && errors.userPassword}
           margin="normal"
           variant="outlined"
           data-testid="field-synapse-password"
@@ -198,9 +199,10 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           Import
         </Button>
       </Form>
+    );
 
     return (
-      <FormControl component="fieldset" >
+      <FormControl component="fieldset">
         <div className={classes.container}>
           <div className="privateKey" data-testid="privateKey" hidden={isHidePrivate}>
             {privateKeyForm}
@@ -212,7 +214,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
         </div>
       </FormControl>
     );
-  }
+  };
 
   type validateObjType = {
     password?: Yup.StringSchema<string>;
@@ -220,33 +222,45 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
     keystore?: Yup.StringSchema<string>;
     keystorePassword?: Yup.StringSchema<string>;
     userPassword?: Yup.StringSchema<string>;
-  }
+  };
 
-  const validateObj: validateObjType = !isHidePrivate ? {
-    password: Yup.string().required("Required").min(6),
-    privateKey: Yup.string().required("Required"), //TODO
-  } : {
-    keystore: Yup.string().required("Required"),
-    keystorePassword: Yup.string().required("Required").min(6),
-    userPassword: Yup.string().required("Required").min(6),
-  }
+  const validateObj: validateObjType = !isHidePrivate
+    ? {
+        password: Yup.string().required('Required').min(6),
+        privateKey: Yup.string().required('Required'), //TODO
+      }
+    : {
+        keystore: Yup.string().required('Required'),
+        keystorePassword: Yup.string().required('Required').min(6),
+        userPassword: Yup.string().required('Required').min(6),
+      };
 
   return (
     <div className={classes.container}>
       {successNode}
-      <RadioGroup row value={value} onChange={handleRadioChange} >
-        <FormControlLabel value="1" labelPlacement="bottom" control={<Radio />} label="PrivateKey" />
+      <RadioGroup row value={value} onChange={handleRadioChange}>
+        <FormControlLabel
+          value="1"
+          labelPlacement="bottom"
+          control={<Radio />}
+          label="PrivateKey"
+        />
         <FormControlLabel value="2" labelPlacement="bottom" control={<Radio />} label="Keystore" />
       </RadioGroup>
 
       <Formik
-        initialValues={{ password: "", privateKey: "", keystore: "", keystorePassword: "", userPassword: "", }}
-
+        initialValues={{
+          password: '',
+          privateKey: '',
+          keystore: '',
+          keystorePassword: '',
+          userPassword: '',
+        }}
         onSubmit={onSubmit}
         validationSchema={Yup.object().shape(validateObj)}
       >
         {innerForm}
       </Formik>
     </div>
-  )
+  );
 }

@@ -5,7 +5,7 @@ import NetworkSelector from '../NetworkSelector';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Drawer from '@material-ui/core/Drawer';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import MyAddresses from '../MyAddresses';
 import SettingsIcon from '@material-ui/icons/Settings';
 
@@ -20,8 +20,8 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
       flexGrow: 1,
     },
-    link:{
-      marginLeft:'60px',
+    link: {
+      marginLeft: '60px',
     },
     icon: {
       width: 30,
@@ -30,9 +30,11 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface AppProps { handleNetworkChange: Function }
+interface AppProps {
+  handleNetworkChange: Function;
+}
 
-interface AppState { }
+interface AppState {}
 
 export default function (props: AppProps) {
   const classes = useStyles();
@@ -66,14 +68,21 @@ export default function (props: AppProps) {
             Synapse
           </Typography>
           <NetworkSelector handleNetworkChange={props.handleNetworkChange} />
-          <IconButton onClick={toggleDrawer("right", true)} edge="start" className={classes.menuButton} color="inherit" aria-label="menu" data-testid="setting-icon">
+          <IconButton
+            onClick={toggleDrawer('right', true)}
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="menu"
+            data-testid="setting-icon"
+          >
             <MenuIcon />
           </IconButton>
-          <Drawer anchor={"right"} open={state["right"]} onClose={toggleDrawer("right", false)}>
-              <MyAddresses onSelectAddress={setState}/>
-              <Link to="/setting" onClick={toggleDrawer("right", false)} className={classes.link}>
-                    <SettingsIcon className={classes.icon}/>
-              </Link>
+          <Drawer anchor={'right'} open={state['right']} onClose={toggleDrawer('right', false)}>
+            <MyAddresses onSelectAddress={setState} />
+            <Link to="/setting" onClick={toggleDrawer('right', false)} className={classes.link}>
+              <SettingsIcon className={classes.icon} />
+            </Link>
           </Drawer>
           {/* <Button color="inherit">Login</Button> */}
         </Toolbar>

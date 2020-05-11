@@ -1,8 +1,8 @@
-import * as React from "react";
+import * as React from 'react';
 
 interface AppProps {
-  title: string,
-  testId: string,
+  title: string;
+  testId: string;
 }
 
 interface AppState {}
@@ -13,10 +13,6 @@ export default class extends React.Component<AppProps, AppState> {
   }
 
   render() {
-    return (
-      <h3 data-testid={this.props.testId || "title"}>
-        {this.props.title}
-      </h3>
-    )
+    return <h3 data-testid={this.props.testId || 'title'}>{this.props.title}</h3>;
   }
 }

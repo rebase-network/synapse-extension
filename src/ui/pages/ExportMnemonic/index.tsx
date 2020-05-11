@@ -1,12 +1,12 @@
 import * as React from 'react';
 // import './Popup.scss';
-import Title from '../../Components/Title'
+import Title from '../../Components/Title';
 import { Button, TextField } from '@material-ui/core';
 // import { makeStyles } from '@material-ui/core/styles';
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
-import { MESSAGE_TYPE } from '../../../utils/constants'
-import { useHistory } from "react-router-dom";
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
+import { MESSAGE_TYPE } from '../../../utils/constants';
+import { useHistory } from 'react-router-dom';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 
 const useStylesPopper = makeStyles((theme: Theme) =>
@@ -23,20 +23,15 @@ const useStyles = makeStyles({
   container: {
     margin: 30,
   },
-  button: {
-
-  },
-  textField: {
-
-  }
+  button: {},
+  textField: {},
 });
 
+interface AppProps {}
 
-interface AppProps { }
+interface AppState {}
 
-interface AppState { }
-
-export const innerForm = props => {
+export const innerForm = (props) => {
   const classes = useStyles();
 
   const {
@@ -48,12 +43,11 @@ export const innerForm = props => {
     handleChange,
     handleBlur,
     handleSubmit,
-    handleReset
+    handleReset,
   } = props;
 
   return (
     <Form className="export-mnemonic-key" id="export-mnemonic-key" onSubmit={handleSubmit}>
-
       <TextField
         label="Password"
         name="password"
@@ -64,7 +58,7 @@ export const innerForm = props => {
         onChange={handleChange}
         onBlur={handleBlur}
         error={!!errors.password}
-        helperText={(errors.password && touched.password) && errors.password}
+        helperText={errors.password && touched.password && errors.password}
         margin="normal"
         variant="outlined"
         data-testid="field-password"
@@ -83,33 +77,30 @@ export const innerForm = props => {
       </Button>
     </Form>
   );
-}
+};
 
 export default function (props: AppProps, state: AppState) {
-
-  const [success, setSuccess] = React.useState(false)
-  const [vaildate, setValidate] = React.useState(true)
+  const [success, setSuccess] = React.useState(false);
+  const [vaildate, setValidate] = React.useState(true);
   const history = useHistory();
 
-  const onSubmit = async(values) => {
+  const onSubmit = async (values) => {
     //background.ts check the password
-    chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK })
-  }
+    chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK });
+  };
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
+    chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       // console.log("export private key =>",message);
       if (message.messageType === MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT) {
+        console.log('message ===>', message);
 
-        console.log("message ===>",message);
-
-        if(message.isValidatePassword){
-
+        if (message.isValidatePassword) {
           history.push('/export-mnemonic-second'); //测试成功的地址
           chrome.runtime.sendMessage({
             message,
-            messageType: MESSAGE_TYPE.EXPORT_MNEONIC_SECOND
-        })
+            messageType: MESSAGE_TYPE.EXPORT_MNEONIC_SECOND,
+          });
         } else {
           setValidate(false);
         }
@@ -117,27 +108,24 @@ export default function (props: AppProps, state: AppState) {
     });
   }, []);
 
-
-  let successNode = null
-  if (success) successNode = <div className="success">Successfully</div>
-  if (!vaildate) successNode = <div className="success">Invalid passwrod</div>
+  let successNode = null;
+  if (success) successNode = <div className="success">Successfully</div>;
+  if (!vaildate) successNode = <div className="success">Invalid passwrod</div>;
   const classes = useStyles();
 
   return (
     <div className={classes.container}>
-      <Title title='Export Mnemonic' testId="export-mnemonic-key-title" />
-        {successNode}
+      <Title title="Export Mnemonic" testId="export-mnemonic-key-title" />
+      {successNode}
       <Formik
-        initialValues={{ password: "" }}
+        initialValues={{ password: '' }}
         onSubmit={onSubmit}
         validationSchema={Yup.object().shape({
-          password: Yup.string()
-            .min(6)
-            .required("Required")
+          password: Yup.string().min(6).required('Required'),
         })}
       >
         {innerForm}
       </Formik>
     </div>
-  )
+  );
 }

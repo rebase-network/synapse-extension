@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button } from '@material-ui/core';
-import { makeStyles, Theme, createStyles,withStyles } from '@material-ui/core/styles';
-import { MESSAGE_TYPE } from '../../../utils/constants'
+import { makeStyles, Theme, createStyles, withStyles } from '@material-ui/core/styles';
+import { MESSAGE_TYPE } from '../../../utils/constants';
 import Grid from '@material-ui/core/Grid';
 
 import List from '@material-ui/core/List';
@@ -26,9 +26,7 @@ const useStyles = makeStyles({
     marginTop: '5px',
     marginBottom: '5px',
   },
-  textField: {
-
-  }
+  textField: {},
 });
 
 const useStylesTheme = makeStyles((theme: Theme) =>
@@ -46,15 +44,15 @@ const useStylesTheme = makeStyles((theme: Theme) =>
       color: theme.palette.text.secondary,
       width: '380px',
     },
-    grid:{
+    grid: {
       width: '380px',
     },
-    typography:{
-      marginLeft:"108px",
-      fontSize:"20px",
+    typography: {
+      marginLeft: '108px',
+      fontSize: '20px',
     },
-    adressesElem:{
-      marginLeft:"28px",
+    adressesElem: {
+      marginLeft: '28px',
     },
     // link: {
     //   // display: 'flex',
@@ -80,7 +78,7 @@ const useStylesTheme = makeStyles((theme: Theme) =>
     },
     inline: {
       display: 'inline',
-    }
+    },
   }),
 );
 
@@ -104,14 +102,13 @@ const listItemTheme = createMuiTheme({
   },
 });
 
-
 const BootstrapButton = withStyles({
   root: {
-    width: "208px",
+    width: '208px',
     size: 'medium',
-    marginTop:'25px',
-    marginLeft:'88px',
-    marginBottom:'25px',
+    marginTop: '25px',
+    marginLeft: '88px',
+    marginBottom: '25px',
     boxShadow: 'none',
     textTransform: 'none',
     fontSize: 18,
@@ -123,29 +120,27 @@ const BootstrapButton = withStyles({
   },
 })(Button);
 
-interface AppProps { onSelectAddress:Function}
+interface AppProps {
+  onSelectAddress: Function;
+}
 
-interface AppState { }
+interface AppState {}
 
 export default function (props: AppProps, state: AppState) {
-
   const classes = useStyles();
   const [addressesList, setAddressesList] = React.useState([]);
   const history = useHistory();
 
-  const classTheme =useStylesTheme();
+  const classTheme = useStylesTheme();
 
   React.useEffect(() => {
     chrome.runtime.sendMessage({
-      messageType: MESSAGE_TYPE.REQUEST_MY_ADDRESSES
-    })
+      messageType: MESSAGE_TYPE.REQUEST_MY_ADDRESSES,
+    });
   }, []);
 
-
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener((
-      request, sender, sendResponse
-    ) => {
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       if (request.messageType == MESSAGE_TYPE.RESULT_MY_ADDRESSES) {
         const addressesList = request.addressesList;
         setAddressesList(addressesList);
@@ -154,7 +149,6 @@ export default function (props: AppProps, state: AppState) {
       if (request.messageType == MESSAGE_TYPE.RETURN_SELECTED_MY_ADDRESSES) {
         history.push('/address');
       }
-
     });
   }, []);
 
@@ -166,9 +160,9 @@ export default function (props: AppProps, state: AppState) {
     chrome.runtime.sendMessage({
       addressObj,
       publicKey,
-      messageType: MESSAGE_TYPE.SELECTED_MY_ADDRESSES
-    })
-    props.onSelectAddress({"right":false});
+      messageType: MESSAGE_TYPE.SELECTED_MY_ADDRESSES,
+    });
+    props.onSelectAddress({ right: false });
   };
 
   function handleClickBreadcrumbs(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
@@ -179,75 +173,83 @@ export default function (props: AppProps, state: AppState) {
   const addressesElem = addressesList.map((addressesObj, index) => {
     return addressesObj.addresses.map((item, index) => {
       return (
-        <List component="nav" aria-label="main mailbox folders" key={`item-${item.address}`} className={classTheme.root} >
-            <ThemeProvider theme={listItemTheme}>
-            <ListItem button key={`item-${item.address}`}
-              onClick={(event) => handleListItemClick(event, item, addressesObj.publicKey)}>
-              <ListItemText primary={item.addressBack} 
-                            secondary={
-                              <React.Fragment>
-                                <Typography
-                                  component="span"
-                                  variant="body2"
-                                  className={classTheme.inline}
-                                  color="textPrimary"
-                                >
-                                {item.amount + " CKB"}
-                                </Typography>
-                                <br/>
-                                {item.type}
-                              </React.Fragment>
-                            }/>
+        <List
+          component="nav"
+          aria-label="main mailbox folders"
+          key={`item-${item.address}`}
+          className={classTheme.root}
+        >
+          <ThemeProvider theme={listItemTheme}>
+            <ListItem
+              button
+              key={`item-${item.address}`}
+              onClick={(event) => handleListItemClick(event, item, addressesObj.publicKey)}
+            >
+              <ListItemText
+                primary={item.addressBack}
+                secondary={
+                  <React.Fragment>
+                    <Typography
+                      component="span"
+                      variant="body2"
+                      className={classTheme.inline}
+                      color="textPrimary"
+                    >
+                      {item.amount + ' CKB'}
+                    </Typography>
+                    <br />
+                    {item.type}
+                  </React.Fragment>
+                }
+              />
             </ListItem>
-            </ThemeProvider>
+          </ThemeProvider>
         </List>
-      )
-    })
-  })
+      );
+    });
+  });
 
   return (
     <div>
       <div className={classTheme.root}>
-      <Grid container spacing={3} className={classTheme.grid}>
-        <Grid item xs={12}>
-          {/* <Paper className={classTheme.paper}>My Addresses</Paper>   */}
-          <Paper className={classTheme.paper}>
-            <Breadcrumbs aria-label="breadcrumb" color="textPrimary">
+        <Grid container spacing={3} className={classTheme.grid}>
+          <Grid item xs={12}>
+            {/* <Paper className={classTheme.paper}>My Addresses</Paper>   */}
+            <Paper className={classTheme.paper}>
+              <Breadcrumbs aria-label="breadcrumb" color="textPrimary">
                 <Typography color="textPrimary" className={classTheme.typography}>
                   {/* {<NavigateBeforeIcon className={classTheme.icon}/>} */}
                   {/* <Link color="inherit" href="/" onClick={handleClickBreadcrumbs}> */}
-                    {/* <NavigateBeforeIcon className={classTheme.icon} /> */}
-                      My Addresses
+                  {/* <NavigateBeforeIcon className={classTheme.icon} /> */}
+                  My Addresses
                   {/* </Link> */}
                 </Typography>
-            </Breadcrumbs>           
-          </Paper>  
+              </Breadcrumbs>
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>        
       </div>
       <div className={classTheme.root}>
-      <Grid container spacing={3} className={classTheme.grid}>
-        <Grid item xs={12} > 
-          <div className={classTheme.adressesElem}>
-              {addressesElem}
-          </div>
-        </Grid>
+        <Grid container spacing={3} className={classTheme.grid}>
+          <Grid item xs={12}>
+            <div className={classTheme.adressesElem}>{addressesElem}</div>
+          </Grid>
 
-        <Divider />
+          <Divider />
 
-        <Grid item xs={12} >
-          <BootstrapButton
-            type="button"
-            id="import-button"
-            color="primary"
-            variant="contained"
-            data-testid="import"
-            onClick={handleClickOpen}
-          >
-            Import Wallet
-          </BootstrapButton>
+          <Grid item xs={12}>
+            <BootstrapButton
+              type="button"
+              id="import-button"
+              color="primary"
+              variant="contained"
+              data-testid="import"
+              onClick={handleClickOpen}
+            >
+              Import Wallet
+            </BootstrapButton>
+          </Grid>
         </Grid>
-      </Grid>
       </div>
     </div>
   );

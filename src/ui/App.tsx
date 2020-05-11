@@ -1,29 +1,29 @@
-import * as React from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import Address from "./pages/Address";
+import * as React from 'react';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import Address from './pages/Address';
 
-import ImportMnemonic from "./pages/ImportMnemonic/index";
-import GenerateMnemonic from "./pages/ImportMnemonic/generate";
-import Transaction from "./pages/Transaction";
-import TxDetail from "./pages/TxDetail";
-import TxHistoryDetail from "./pages/Transaction/txHistoryDetail";
-import MnemonicSetting from "./pages/MnemonicSetting";
-import ImportPrivateKey from "./pages/ImportPrivateKey";
-import ExportPrivateKey from "./pages/ExportPrivateKey";
-import ExportMnemonic from "./pages/ExportMnemonic";
-import ExportPrivateKeySecond from "./pages/ExportPrivateKeySecond";
-import Setting from "./pages/Setting";
+import ImportMnemonic from './pages/ImportMnemonic/index';
+import GenerateMnemonic from './pages/ImportMnemonic/generate';
+import Transaction from './pages/Transaction';
+import TxDetail from './pages/TxDetail';
+import TxHistoryDetail from './pages/Transaction/txHistoryDetail';
+import MnemonicSetting from './pages/MnemonicSetting';
+import ImportPrivateKey from './pages/ImportPrivateKey';
+import ExportPrivateKey from './pages/ExportPrivateKey';
+import ExportMnemonic from './pages/ExportMnemonic';
+import ExportPrivateKeySecond from './pages/ExportPrivateKeySecond';
+import Setting from './pages/Setting';
 
-import ExportMnemonicSecond from "./pages/ExportMnemonicSecond";
+import ExportMnemonicSecond from './pages/ExportMnemonicSecond';
 
-import AppBar from "./Components/AppBar/";
+import AppBar from './Components/AppBar/';
 
-import "./styles/global.scss";
+import './styles/global.scss';
 
-export const AppContext = React.createContext({ network: "testnet" });
+export const AppContext = React.createContext({ network: 'testnet' });
 
 export default function App() {
-  const [network, setNetwork] = React.useState("testnet");
+  const [network, setNetwork] = React.useState('testnet');
 
   const handleNetworkChange = (value: string) => {
     setNetwork(value);

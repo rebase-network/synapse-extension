@@ -1,8 +1,8 @@
 import * as React from 'react';
-import Title from '../../Components/Title'
-import { Button, } from '@material-ui/core';
-import { useHistory } from "react-router-dom";
-import { makeStyles, Theme, createStyles,withStyles } from '@material-ui/core/styles';
+import Title from '../../Components/Title';
+import { Button } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
+import { makeStyles, Theme, createStyles, withStyles } from '@material-ui/core/styles';
 import { MESSAGE_TYPE } from '../../../utils/constants';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -21,10 +21,9 @@ const useStyles = makeStyles({
   container: {
     margin: 30,
   },
-  home: {
-  },
+  home: {},
   button: {
-    "margin-bottom": "20px",
+    'margin-bottom': '20px',
   },
 });
 
@@ -32,7 +31,7 @@ const useStylesTheme = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
-      marginTop: "120px",
+      marginTop: '120px',
     },
     paper: {
       padding: theme.spacing(2),
@@ -40,8 +39,8 @@ const useStylesTheme = makeStyles((theme: Theme) =>
       color: theme.palette.text.secondary,
     },
     button: {
-      "margin-left": "60px",
-      "margin-bottom": "20px",
+      'margin-left': '60px',
+      'margin-bottom': '20px',
       padding: theme.spacing(3),
     },
     title: {
@@ -52,13 +51,12 @@ const useStylesTheme = makeStyles((theme: Theme) =>
   }),
 );
 
-
 const BootstrapButton = withStyles({
   root: {
-    width: "208px",
+    width: '208px',
     size: 'medium',
     // marginTop: '225px',
-    marginBottom:'25px',
+    marginBottom: '25px',
     boxShadow: 'none',
     textTransform: 'none',
     fontSize: 16,
@@ -95,21 +93,20 @@ const BootstrapButton = withStyles({
   },
 })(Button);
 
-interface AppProps { }
-interface AppState { }
+interface AppProps {}
+interface AppState {}
 
 export default function (props: AppProps, state: AppState) {
-
   const history = useHistory();
 
   const onImport = () => {
-    history.push('/import-mnemonic')
-  }
+    history.push('/import-mnemonic');
+  };
 
   const onGenerate = () => {
-    chrome.runtime.sendMessage({ messageType: MESSAGE_TYPE.GEN_MNEMONIC })
+    chrome.runtime.sendMessage({ messageType: MESSAGE_TYPE.GEN_MNEMONIC });
     history.push('/generate-mnemonic');
-  }
+  };
 
   const classes = useStylesTheme();
 
@@ -140,9 +137,9 @@ export default function (props: AppProps, state: AppState) {
             data-testid="generate-button"
           >
             Generate Mnemonic
-            </BootstrapButton>
+          </BootstrapButton>
         </Grid>
       </Grid>
     </div>
-  )
+  );
 }

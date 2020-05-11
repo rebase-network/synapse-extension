@@ -1,23 +1,23 @@
-import * as React from "react";
+import * as React from 'react';
 // import './Popup.scss';
-import Title from "../../Components/Title";
-import { Button, TextField } from "@material-ui/core";
+import Title from '../../Components/Title';
+import { Button, TextField } from '@material-ui/core';
 // import { makeStyles } from '@material-ui/core/styles';
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
-import { MESSAGE_TYPE } from "../../../utils/constants";
-import { useHistory } from "react-router-dom";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import Popper from "@material-ui/core/Popper";
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
+import { MESSAGE_TYPE } from '../../../utils/constants';
+import { useHistory } from 'react-router-dom';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import Popper from '@material-ui/core/Popper';
 
 const useStylesPopper = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
-      border: "1px solid",
+      border: '1px solid',
       padding: theme.spacing(1),
       backgroundColor: theme.palette.background.paper,
     },
-  })
+  }),
 );
 
 const useStyles = makeStyles({
@@ -93,11 +93,7 @@ export const innerForm = (props) => {
         onChange={handleChange}
         onBlur={handleBlur}
         error={!!errors.confirmPassword}
-        helperText={
-          errors.confirmPassword &&
-          touched.confirmPassword &&
-          errors.confirmPassword
-        }
+        helperText={errors.confirmPassword && touched.confirmPassword && errors.confirmPassword}
         margin="normal"
         variant="outlined"
         data-testid="field-confirm-password"
@@ -133,18 +129,18 @@ export default function ImportMnemonic(props: AppProps, state: AppState) {
       setSuccess(true);
       // go to address page
     }
-    localStorage.setItem("IS_MNEMONIC_IMPORTED", "YES");
+    localStorage.setItem('IS_MNEMONIC_IMPORTED', 'YES');
   };
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
       if (msg === MESSAGE_TYPE.IS_NOT_VALIDATE_MNEMONIC) {
-        console.log("index.tsx => message", msg);
+        console.log('index.tsx => message', msg);
         setValidate(false); //false验证未通过
         return;
       } else if (msg === MESSAGE_TYPE.VALIDATE_PASS) {
         setValidate(true);
-        history.push("/address");
+        history.push('/address');
       }
     });
   }, []);
@@ -159,14 +155,14 @@ export default function ImportMnemonic(props: AppProps, state: AppState) {
       <Title title="Import Mnemonic" testId="mnemonic-form-title" />
       {successNode}
       <Formik
-        initialValues={{ mnemonic: "", password: "", confirmPassword: "" }}
+        initialValues={{ mnemonic: '', password: '', confirmPassword: '' }}
         onSubmit={onSubmit}
         validationSchema={Yup.object().shape({
-          mnemonic: Yup.string().required("Required"),
-          password: Yup.string().min(6).required("Required"),
+          mnemonic: Yup.string().required('Required'),
+          password: Yup.string().min(6).required('Required'),
           confirmPassword: Yup.string()
-            .oneOf([Yup.ref("password")], "Passwords don't match!")
-            .required("Required"),
+            .oneOf([Yup.ref('password')], "Passwords don't match!")
+            .required('Required'),
         })}
       >
         {innerForm}
