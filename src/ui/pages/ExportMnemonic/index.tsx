@@ -90,17 +90,19 @@ export default function (props: AppProps, state: AppState) {
   }, []);
 
   return (
-    <div className={classes.container}>
+    <div>
       <PageNav to="/setting" title="Export Mnemonic" />
-      <Formik
-        initialValues={{ password: '' }}
-        onSubmit={onSubmit}
-        validationSchema={Yup.object().shape({
-          password: Yup.string().min(6).required('Required'),
-        })}
-      >
-        {innerForm}
-      </Formik>
+      <div className={classes.container}>
+        <Formik
+          initialValues={{ password: '' }}
+          onSubmit={onSubmit}
+          validationSchema={Yup.object().shape({
+            password: Yup.string().min(6).required('Required'),
+          })}
+        >
+          {innerForm}
+        </Formik>
+      </div>
     </div>
   );
 }
