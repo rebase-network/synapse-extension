@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   Grid,
   ListSubheader,
@@ -8,22 +8,17 @@ import {
   Button,
   Dialog,
   IconButton,
-} from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
-import { useHistory } from "react-router-dom";
-import {
-  createStyles,
-  withStyles,
-  makeStyles,
-  Theme,
-} from "@material-ui/core/styles";
-import Divider from "@material-ui/core/Divider";
-import Box from "@material-ui/core/Box";
-import { MESSAGE_TYPE } from "../../../utils/constants";
-import { AppContext } from "../../App";
-import * as moment from "moment";
+} from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
+import { useHistory } from 'react-router-dom';
+import { createStyles, withStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import Divider from '@material-ui/core/Divider';
+import Box from '@material-ui/core/Box';
+import { MESSAGE_TYPE } from '../../../utils/constants';
+import { AppContext } from '../../App';
+import * as moment from 'moment';
 
-const QrCode = require("qrcode.react");
+const QrCode = require('qrcode.react');
 
 const useStyles = makeStyles({
   container: {
@@ -31,11 +26,11 @@ const useStyles = makeStyles({
   },
   button: {},
   dialogTitle: {
-    textAlign: "right",
+    textAlign: 'right',
   },
   dialogContent: {
-    padding: "0 16px 24px",
-    textAlign: "center",
+    padding: '0 16px 24px',
+    textAlign: 'center',
     minWidth: 200,
   },
   address: {
@@ -45,67 +40,67 @@ const useStyles = makeStyles({
   loading: {
     width: 200,
     padding: 24,
-    textAlign: "center",
+    textAlign: 'center',
   },
   tip: {
     marginBottom: 24,
-    color: "green",
+    color: 'green',
   },
 });
 
 const useStylesTheme = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      "& > *": {
+      '& > *': {
         margin: theme.spacing(1),
       },
     },
     paper: {
       padding: theme.spacing(2),
-      textAlign: "center",
+      textAlign: 'center',
       color: theme.palette.text.primary,
       fontSize: 18,
       border: 0,
     },
-  })
+  }),
 );
 
 const BootstrapButton = withStyles({
   root: {
-    width: "88px",
-    size: "medium",
-    boxShadow: "none",
-    textTransform: "none",
+    width: '88px',
+    size: 'medium',
+    boxShadow: 'none',
+    textTransform: 'none',
     fontSize: 16,
-    padding: "8px 12px",
-    border: "1px solid",
+    padding: '8px 12px',
+    border: '1px solid',
     lineHeight: 1.5,
-    backgroundColor: "#0063cc",
-    borderColor: "#0063cc",
+    backgroundColor: '#0063cc',
+    borderColor: '#0063cc',
     fontFamily: [
-      "-apple-system",
-      "BlinkMacSystemFont",
+      '-apple-system',
+      'BlinkMacSystemFont',
       '"Segoe UI"',
-      "Roboto",
+      'Roboto',
       '"Helvetica Neue"',
-      "Arial",
-      "sans-serif",
+      'Arial',
+      'sans-serif',
       '"Apple Color Emoji"',
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
-    ].join(","),
-    "&:hover": {
-      backgroundColor: "#0069d9",
-      borderColor: "#0062cc",
-      boxShadow: "none",
+    ].join(','),
+    '&:hover': {
+      backgroundColor: '#0069d9',
+      borderColor: '#0062cc',
+      boxShadow: 'none',
     },
-    "&:active": {
-      boxShadow: "none",
-      backgroundColor: "#0062cc",
-      borderColor: "#005cbf",
+    '&:active': {
+      boxShadow: 'none',
+      backgroundColor: '#0062cc',
+      borderColor: '#005cbf',
     },
-    "&:focus": {
-      boxShadow: "0 0 0 0.2rem rgba(0,123,255,.5)",
+    '&:focus': {
+      boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
     },
   },
 })(Button);
@@ -115,7 +110,7 @@ const useStylesButton = makeStyles((theme: Theme) =>
     margin: {
       margin: theme.spacing(1),
     },
-  })
+  }),
 );
 
 interface AppProps {}
@@ -127,11 +122,11 @@ export default function (props: AppProps, state: AppState) {
   const classesButton = useStylesButton();
 
   const [loading, setLoading] = React.useState(true);
-  const [address, setAddress] = React.useState("");
-  const [addressShort, setAddressShort] = React.useState("");
+  const [address, setAddress] = React.useState('');
+  const [addressShort, setAddressShort] = React.useState('');
   const [balance, setBalance] = React.useState(0);
   const [open, setOpen] = React.useState(false);
-  const [tooltip, setTooltip] = React.useState("");
+  const [tooltip, setTooltip] = React.useState('');
   const [txs, setTxs] = React.useState([]);
   const { network } = React.useContext(AppContext);
   const history = useHistory();
@@ -143,9 +138,7 @@ export default function (props: AppProps, state: AppState) {
           setAddress(msg.address);
           const address = msg.address;
           const addressShort =
-            address.substr(0, 10) +
-            "..." +
-            address.substr(address.length - 10, address.length);
+            address.substr(0, 10) + '...' + address.substr(address.length - 10, address.length);
           setAddressShort(addressShort);
         }
         // get balance by address
@@ -177,23 +170,22 @@ export default function (props: AppProps, state: AppState) {
   }, []);
 
   const onSendtx = () => {
-    history.push("/send-tx");
+    history.push('/send-tx');
   };
 
   React.useEffect(() => {
     (async function copyAddress() {
       if (open && address) {
         await navigator.clipboard.writeText(address);
-        setTooltip("Address has been copied to clipboard");
+        setTooltip('Address has been copied to clipboard');
       }
     })();
   }, [open, address]);
 
-  const isMnemonicImported =
-    localStorage.getItem("IS_MNEMONIC_IMPORTED") === "YES";
+  const isMnemonicImported = localStorage.getItem('IS_MNEMONIC_IMPORTED') === 'YES';
 
   if (!isMnemonicImported) {
-    history.push("./mnemonic-setting");
+    history.push('./mnemonic-setting');
   }
 
   const balanceNode = loading ? (
@@ -210,12 +202,12 @@ export default function (props: AppProps, state: AppState) {
   };
 
   const onTxDetail = () => {
-    history.push("/tx-history-detail");
+    history.push('/tx-history-detail');
   };
 
   const handleClose = () => {
     setOpen(false);
-    setTooltip("");
+    setTooltip('');
   };
 
   return (
@@ -286,11 +278,7 @@ export default function (props: AppProps, state: AppState) {
             {txs.map((item) => (
               <List onClick={onTxDetail}>
                 <ListItem>
-                  <ListItemText
-                    primary={moment(item.timestamp).format(
-                      "YYYY-MM-DD hh:mm:ss"
-                    )}
-                  />
+                  <ListItemText primary={moment(item.timestamp).format('YYYY-MM-DD hh:mm:ss')} />
                 </ListItem>
                 <ListItem>
                   <ListItemText secondary={`${item.amount / 10 ** 8} CKB`} />
@@ -315,11 +303,7 @@ export default function (props: AppProps, state: AppState) {
 
         <div className={classes.dialogContent}>
           <div className={classes.tip}>{tooltip}</div>
-          {address[network] ? (
-            <QrCode value={address[network]} size={200} />
-          ) : (
-            <div>loading</div>
-          )}
+          {address[network] ? <QrCode value={address[network]} size={200} /> : <div>loading</div>}
           <div className={classes.address}>{address[network]}</div>
         </div>
       </Dialog>
