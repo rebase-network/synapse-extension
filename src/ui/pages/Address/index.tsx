@@ -12,17 +12,13 @@ import {
 import CloseIcon from "@material-ui/icons/Close";
 import { useHistory } from "react-router-dom";
 import {
-  createMuiTheme,
   createStyles,
   withStyles,
   makeStyles,
   Theme,
-  ThemeProvider,
 } from "@material-ui/core/styles";
 import Divider from "@material-ui/core/Divider";
 import Box from "@material-ui/core/Box";
-import { shannonToCKBFormatter } from "../../../utils/formatters";
-import Title from "../../Components/Title";
 import { MESSAGE_TYPE } from "../../../utils/constants";
 import { AppContext } from "../../App";
 import * as moment from "moment";
@@ -128,7 +124,6 @@ interface AppState {}
 
 export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
-  const classesTheme = useStylesTheme();
   const classesButton = useStylesButton();
 
   const [loading, setLoading] = React.useState(true);
