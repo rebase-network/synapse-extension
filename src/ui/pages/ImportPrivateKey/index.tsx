@@ -196,7 +196,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
 
     return (
       <FormControl component="fieldset">
-        <div className={classes.container}>
+        <div>
           <div className="privateKey" data-testid="privateKey" hidden={isHidePrivate}>
             {privateKeyForm}
           </div>
@@ -228,32 +228,39 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
       };
 
   return (
-    <div className={classes.container}>
+    <div>
       <PageNav to="/setting" title="Import Private Key" />
-      {successNode}
-      <RadioGroup row value={value} onChange={handleRadioChange}>
-        <FormControlLabel
-          value="1"
-          labelPlacement="bottom"
-          control={<Radio />}
-          label="PrivateKey"
-        />
-        <FormControlLabel value="2" labelPlacement="bottom" control={<Radio />} label="Keystore" />
-      </RadioGroup>
+      <div className={classes.container}>
+        {successNode}
+        <RadioGroup row value={value} onChange={handleRadioChange}>
+          <FormControlLabel
+            value="1"
+            labelPlacement="bottom"
+            control={<Radio />}
+            label="PrivateKey"
+          />
+          <FormControlLabel
+            value="2"
+            labelPlacement="bottom"
+            control={<Radio />}
+            label="Keystore"
+          />
+        </RadioGroup>
 
-      <Formik
-        initialValues={{
-          password: '',
-          privateKey: '',
-          keystore: '',
-          keystorePassword: '',
-          userPassword: '',
-        }}
-        onSubmit={onSubmit}
-        validationSchema={Yup.object().shape(validateObj)}
-      >
-        {innerForm}
-      </Formik>
+        <Formik
+          initialValues={{
+            password: '',
+            privateKey: '',
+            keystore: '',
+            keystorePassword: '',
+            userPassword: '',
+          }}
+          onSubmit={onSubmit}
+          validationSchema={Yup.object().shape(validateObj)}
+        >
+          {innerForm}
+        </Formik>
+      </div>
     </div>
   );
 }
