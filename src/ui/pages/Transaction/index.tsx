@@ -120,6 +120,8 @@ export const innerForm = (props) => {
         variant="contained"
         className={classes.button}
         data-testid="cancel-button"
+        component={Link}
+        to={"/address"}
       >
         Cancel
       </Button>
