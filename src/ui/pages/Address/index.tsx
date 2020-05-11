@@ -170,11 +170,8 @@ export default function (props: AppProps, state: AppState) {
     });
 
     chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-      if (msg.messageType === MESSAGE_TYPE.SEND_TX_HISTORY) {
-        const txs = msg.txs;
-        if (txs) {
-          setTxs(txs);
-        }
+      if (msg.messageType === MESSAGE_TYPE.SEND_TX_HISTORY && msg.txs) {
+        setTxs(msg.txs);
       }
     });
   }, []);
