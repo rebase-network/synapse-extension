@@ -1,46 +1,16 @@
 import * as React from 'react';
-import Title from '../../Components/Title';
-import { Button, TextField } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { MESSAGE_TYPE } from '../../../utils/constants';
-import { useHistory } from 'react-router-dom';
+import { Button, TextField } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
-import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
+import { MESSAGE_TYPE } from '../../../utils/constants';
+import PageNav from '../../Components/PageNav';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      flexGrow: 1,
-      width: '380px',
-      backgroundColor: theme.palette.background.paper,
-      marginTop: '0px',
-      marginBottom: '0px',
-    },
     container: {
       margin: 30,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      color: theme.palette.text.secondary,
-      width: '400px',
-    },
-    grid: {
-      width: '380px',
-    },
-    typography: {
-      fontSize: '20px',
-    },
-    icon: {
-      marginRight: theme.spacing(0.5),
-      width: 40,
-      height: 20,
     },
   }),
 );
@@ -50,8 +20,6 @@ interface AppProps {}
 interface AppState {}
 
 export const innerForm = (props) => {
-  const classes = useStyles();
-
   const {
     values,
     touched,
@@ -97,8 +65,6 @@ export const innerForm = (props) => {
 
 export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
-  const [success, setSuccess] = React.useState(false);
-  const [vaildate, setValidate] = React.useState(true);
   const history = useHistory();
 
   const onSubmit = async (values) => {
@@ -108,51 +74,23 @@ export default function (props: AppProps, state: AppState) {
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-      if (message.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT) {
-        if (message.isValidatePassword) {
-          history.push('/export-private-key-second'); //测试成功的地址
-          chrome.runtime.sendMessage({
-            message,
-            messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND,
-          });
-        } else {
-          setValidate(false);
-        }
+      if (
+        message.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT &&
+        message.isValidatePassword
+      ) {
+        history.push('/export-private-key-second'); //测试成功的地址
+        chrome.runtime.sendMessage({
+          message,
+          messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND,
+        });
       }
     });
   }, []);
 
-  function handleClickBreadcrumbs(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
-    event.preventDefault();
-    console.info('You clicked a breadcrumb.');
-  }
-
-  let successNode = null;
-  if (success) successNode = <div className="success">Successfully</div>;
-  if (!vaildate) successNode = <div className="success">Invalid passwrod</div>;
-
   return (
     <div>
-      <div className={classes.root}>
-        <Grid container spacing={3} className={classes.grid}>
-          <Grid item xs={12}>
-            <Paper className={classes.paper}>
-              <Breadcrumbs aria-label="breadcrumb" color="textPrimary">
-                <Typography color="textPrimary" className={classes.typography}>
-                  <Link color="inherit" href="/" onClick={handleClickBreadcrumbs}>
-                    <NavigateBeforeIcon className={classes.icon} />
-                    Export Private Key
-                  </Link>
-                </Typography>
-              </Breadcrumbs>
-            </Paper>
-          </Grid>
-        </Grid>
-      </div>
-
+      <PageNav to="/setting" title="Export Private Key" />
       <div className={classes.container}>
-        <Title title="Export Private Key" testId="export-private-key-title" />
-        {successNode}
         <Formik
           initialValues={{ password: '' }}
           onSubmit={onSubmit}
