@@ -13,7 +13,7 @@ import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
-const useStylesTheme = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
@@ -71,7 +71,6 @@ export const innerForm = (props) => {
         name="password"
         type="password"
         fullWidth
-        className={classes.textField}
         value={values.password}
         onChange={handleChange}
         onBlur={handleBlur}
@@ -88,7 +87,6 @@ export const innerForm = (props) => {
         id="submit-button"
         disabled={isSubmitting}
         color="primary"
-        className={classes.button}
         data-testid="submit-button"
       >
         Confirm
@@ -98,7 +96,7 @@ export const innerForm = (props) => {
 };
 
 export default function (props: AppProps, state: AppState) {
-  const classTheme = useStylesTheme();
+  const classes = useStyles();
   const [success, setSuccess] = React.useState(false);
   const [vaildate, setValidate] = React.useState(true);
   const history = useHistory();
@@ -132,18 +130,17 @@ export default function (props: AppProps, state: AppState) {
   let successNode = null;
   if (success) successNode = <div className="success">Successfully</div>;
   if (!vaildate) successNode = <div className="success">Invalid passwrod</div>;
-  const classes = useStyles();
 
   return (
     <div>
-      <div className={classTheme.root}>
-        <Grid container spacing={3} className={classTheme.grid}>
+      <div className={classes.root}>
+        <Grid container spacing={3} className={classes.grid}>
           <Grid item xs={12}>
-            <Paper className={classTheme.paper}>
+            <Paper className={classes.paper}>
               <Breadcrumbs aria-label="breadcrumb" color="textPrimary">
-                <Typography color="textPrimary" className={classTheme.typography}>
+                <Typography color="textPrimary" className={classes.typography}>
                   <Link color="inherit" href="/" onClick={handleClickBreadcrumbs}>
-                    <NavigateBeforeIcon className={classTheme.icon} />
+                    <NavigateBeforeIcon className={classes.icon} />
                     Export Private Key
                   </Link>
                 </Typography>
