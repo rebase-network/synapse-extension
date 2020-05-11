@@ -33,7 +33,7 @@ const useStylesTheme = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
-      width: '380px',
+      width: 320,
       backgroundColor: theme.palette.background.paper,
       marginTop: '0px',
       marginBottom: '0px',
@@ -51,23 +51,6 @@ const useStylesTheme = makeStyles((theme: Theme) =>
       marginLeft: '108px',
       fontSize: '20px',
     },
-    adressesElem: {
-      marginLeft: '28px',
-    },
-    // link: {
-    //   // display: 'flex',
-    //   textAlign: 'center',
-    //   font: "40px",
-    //   height: 50,
-    // },
-    // icon: {
-    //   marginRight: theme.spacing(0.5),
-    //   width: 40,
-    //   height: 20,
-    // },
-    demo: {
-      // backgroundColor: theme.palette.background.paper,
-    },
     title: {
       margin: theme.spacing(1, 0, 1),
     },
@@ -84,17 +67,10 @@ const useStylesTheme = makeStyles((theme: Theme) =>
 
 const listItemTheme = createMuiTheme({
   overrides: {
-    // Style sheet name ⚛️
     MuiListItem: {
-      // Name of the rule
       root: {
-        // Some CSS
-        // background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-        // borderRadius: 3,
         border: 0,
-        // color: 'black',
         height: '56px',
-        // padding: '0 13px',
         marginTop: '0px',
         marginBottom: '0px',
       },
@@ -165,11 +141,6 @@ export default function (props: AppProps, state: AppState) {
     props.onSelectAddress({ right: false });
   };
 
-  function handleClickBreadcrumbs(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
-    event.preventDefault();
-    console.info('You clicked a breadcrumb.');
-  }
-
   const addressesElem = addressesList.map((addressesObj, index) => {
     return addressesObj.addresses.map((item, index) => {
       return (
@@ -214,15 +185,10 @@ export default function (props: AppProps, state: AppState) {
       <div className={classTheme.root}>
         <Grid container spacing={3} className={classTheme.grid}>
           <Grid item xs={12}>
-            {/* <Paper className={classTheme.paper}>My Addresses</Paper>   */}
             <Paper className={classTheme.paper}>
               <Breadcrumbs aria-label="breadcrumb" color="textPrimary">
                 <Typography color="textPrimary" className={classTheme.typography}>
-                  {/* {<NavigateBeforeIcon className={classTheme.icon}/>} */}
-                  {/* <Link color="inherit" href="/" onClick={handleClickBreadcrumbs}> */}
-                  {/* <NavigateBeforeIcon className={classTheme.icon} /> */}
                   My Addresses
-                  {/* </Link> */}
                 </Typography>
               </Breadcrumbs>
             </Paper>
@@ -232,7 +198,7 @@ export default function (props: AppProps, state: AppState) {
       <div className={classTheme.root}>
         <Grid container spacing={3} className={classTheme.grid}>
           <Grid item xs={12}>
-            <div className={classTheme.adressesElem}>{addressesElem}</div>
+            <div>{addressesElem}</div>
           </Grid>
 
           <Divider />
