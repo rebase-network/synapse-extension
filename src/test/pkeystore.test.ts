@@ -1,4 +1,4 @@
-import { encrypt, decrypt } from '../wallet/pkeystore';
+import { encrypt, decrypt } from '../wallet/keystore';
 import { mnemonicToEntropy, entropyToMnemonic } from '../wallet/mnemonic';
 
 // describe("keystore", () => {

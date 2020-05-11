@@ -1,4 +1,4 @@
-import Keystore from '../wallet/keystore';
+import Keystore from './keystore';
 import Keychain from '../wallet/keychain';
 import { ExtendedPrivateKey } from '../wallet/key';
 

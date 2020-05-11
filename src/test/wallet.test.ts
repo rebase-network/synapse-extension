@@ -1,7 +1,7 @@
 const CkbUtils = require('@nervosnetwork/ckb-sdk-utils');
 
 import { generateMnemonic, AccountExtendedPublicKey, ExtendedPrivateKey } from '../wallet/key';
-import Keystore from '../wallet/keystore';
+import Keystore from './keystore';
 import Keychain from '../wallet/keychain';
 import { entropyToMnemonic, mnemonicToSeedSync } from '../wallet/mnemonic';
 import Address, { AddressType, AddressPrefix } from '../wallet/address';

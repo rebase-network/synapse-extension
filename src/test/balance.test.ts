@@ -2,7 +2,7 @@ import Address, { AddressType, publicKeyToAddress, AddressPrefix } from '../wall
 import loadCells from '../wallet/balance/loadCells';
 import { getBalanceByPublicKey } from '../balance';
 import { mnemonicToSeedSync } from '../wallet/mnemonic';
-import Keystore from '../wallet/keystore';
+import Keystore from './keystore';
 import Keychain from '../wallet/keychain';
 import { AccountExtendedPublicKey, ExtendedPrivateKey } from '../wallet/key';
 import { privateKeyToPublicKey, pubkeyToAddress } from '@nervosnetwork/ckb-sdk-utils';

@@ -8,22 +8,14 @@ import {
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 
 import { generateMnemonic } from './wallet/key';
-import * as Keystore from './wallet/pkeystore';
+import * as Keystore from './wallet/keystore';
 import Keychain from './wallet/keychain';
 
-import { AccountExtendedPublicKey, ExtendedPrivateKey } from './wallet/key';
-import { AddressType, AddressPrefix } from './wallet/address';
-import { getBalanceByPublicKey, getBalanceByLockHash } from './balance';
+import { ExtendedPrivateKey } from './wallet/key';
 import { sendSimpleTransaction } from './sendSimpleTransaction';
 import {
-  getAmountByTxHash,
   getStatusByTxHash,
-  getFeeByTxHash,
-  getInputAddressByTxHash,
-  getOutputAddressByTxHash,
-  getOutputAddressByTxHashAndIndex,
 } from './transaction';
-import { getPrivateKeyByKeyStoreAndPassword } from './wallet/exportPrivateKey';
 import Address from './wallet/address';
 import { getBalanceByAddress } from './background/address';
 import { getTxHistoryByAddress } from './background/transaction';
@@ -37,8 +29,6 @@ import {
 /**
  * Listen messages from popup
  */
-
-//TODO ====
 let wallets = [];
 let currentWallet = {};
 let addressesList = [];

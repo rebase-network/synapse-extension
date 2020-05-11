@@ -1,5 +1,5 @@
 import { ExtendedPrivateKey } from '../wallet/key';
-import Keystore from '../wallet/keystore';
+import Keystore from './keystore';
 import Keychain from '../wallet/keychain';
 
 // const fixture = {
