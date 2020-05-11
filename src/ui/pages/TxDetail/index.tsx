@@ -68,7 +68,7 @@ export default function (props: AppProps, state: AppState) {
       {/* 001- */}
       <div className={classes.root}>
         <Paper className={classes.paper}>
-          <Grid container wrap="nowrap" spacing={2} alignContent="center" alignItems="center">
+          <Grid container wrap="nowrap" spacing={2} >
             {/* <Grid item>
               <Avatar>W</Avatar>
             </Grid> */}

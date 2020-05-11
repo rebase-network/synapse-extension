@@ -48,25 +48,9 @@ const useStyles = makeStyles({
   },
 });
 
-const useStylesTheme = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      '& > *': {
-        margin: theme.spacing(1),
-      },
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      color: theme.palette.text.primary,
-      fontSize: 18,
-      border: 0,
-    },
-  }),
-);
-
 const BootstrapButton = withStyles({
   root: {
+    // margin: theme.spacing(1),
     width: '88px',
     size: 'medium',
     boxShadow: 'none',
@@ -105,13 +89,7 @@ const BootstrapButton = withStyles({
   },
 })(Button);
 
-const useStylesButton = makeStyles((theme: Theme) =>
-  createStyles({
-    margin: {
-      margin: theme.spacing(1),
-    },
-  }),
-);
+
 
 interface AppProps {}
 
@@ -119,7 +97,6 @@ interface AppState {}
 
 export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
-  const classesButton = useStylesButton();
 
   const [loading, setLoading] = React.useState(true);
   const [address, setAddress] = React.useState('');
@@ -214,14 +191,12 @@ export default function (props: AppProps, state: AppState) {
     <div className={classes.container}>
       <div className="classesTheme.root">
         <Grid container spacing={2}>
-          <Grid item xs={12} alignContent="center" alignItems="center">
-            {/* <Paper className={classesTheme.paper}>Address</Paper> */}
+          <Grid item xs={12} >
             <Box textAlign="center" fontSize={22}>
               Address
             </Box>
           </Grid>
           <Grid item xs={12}>
-            {/* <Paper className={classesTheme.paper}>{addressShort}</Paper> */}
             <Box textAlign="center" fontSize={22}>
               {addressShort}
             </Box>
@@ -239,26 +214,24 @@ export default function (props: AppProps, state: AppState) {
               {balanceNode}
             </Box>
           </Grid>
-          <Grid item xs={6} sm={3} alignItems="center" alignContent="center">
+          <Grid item xs={6} sm={3} >
             <BootstrapButton
               type="button"
               id="receive-button"
               color="primary"
               variant="contained"
-              className={classesButton.margin}
               data-testid="receive"
               onClick={handleClickOpen}
             >
               Receive
             </BootstrapButton>
           </Grid>
-          <Grid item xs={6} sm={3} alignItems="center" alignContent="center">
+          <Grid item xs={6} sm={3} >
             <BootstrapButton
               id="send-button"
               color="primary"
               onClick={onSendtx}
               variant="contained"
-              className={classesButton.margin}
               data-testid="send"
             >
               Send
@@ -274,7 +247,6 @@ export default function (props: AppProps, state: AppState) {
           <div>
             <ListSubheader>Transactions</ListSubheader>
             <Divider />
-
             {txs.map((item) => (
               <List onClick={onTxDetail}>
                 <ListItem>
@@ -284,7 +256,6 @@ export default function (props: AppProps, state: AppState) {
                   <ListItemText secondary={`${item.amount / 10 ** 8} CKB`} />
                   <ListItemText secondary={item.income ? `Received` : `Send`} />
                 </ListItem>
-
                 <Divider />
               </List>
             ))}
@@ -293,7 +264,6 @@ export default function (props: AppProps, state: AppState) {
       </Grid>
 
       <Divider variant="middle" />
-
       <Dialog open={open}>
         <div className={classes.dialogTitle}>
           <IconButton onClick={handleClose}>

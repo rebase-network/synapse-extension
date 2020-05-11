@@ -68,7 +68,7 @@ export default function TxHistoryDetail(props: AppProps, state: AppState) {
     <div>
       <div className={classes.root}>
         <Paper className={classes.paper}>
-          <Grid container wrap="nowrap" spacing={2} alignContent="center" alignItems="center">
+          <Grid container wrap="nowrap" spacing={2} >
             <Grid item xs zeroMinWidth>
               <Avatar>R</Avatar>
               <Typography noWrap>{status}</Typography>

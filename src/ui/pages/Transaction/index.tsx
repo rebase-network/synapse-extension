@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Title from '../../Components/Title';
 import { Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
@@ -8,6 +7,7 @@ import * as Yup from 'yup';
 import { MESSAGE_TYPE } from '../../../utils/constants';
 import { useHistory } from 'react-router-dom';
 import { AppContext } from '../../App';
+import PageNav from '../../Components/PageNav';
 
 const useStyles = makeStyles({
   container: {
@@ -17,9 +17,9 @@ const useStyles = makeStyles({
   textField: {},
 });
 
-interface AppProps {}
+interface AppProps { }
 
-interface AppState {}
+interface AppState { }
 
 export const innerForm = (props) => {
   const classes = useStyles();
@@ -48,7 +48,6 @@ export const innerForm = (props) => {
         onChange={handleChange}
         onBlur={handleBlur}
         error={!!errors.address}
-        // helperText={(errors.password && touched.password) && errors.password}
         margin="normal"
         variant="outlined"
         data-testid="field-address"
@@ -64,7 +63,6 @@ export const innerForm = (props) => {
         onChange={handleChange}
         onBlur={handleBlur}
         error={!!errors.amount}
-        // helperText={(errors.confirmPassword && touched.confirmPassword) && errors.confirmPassword}
         margin="normal"
         variant="outlined"
         data-testid="field-amount"
@@ -76,10 +74,10 @@ export const innerForm = (props) => {
         fullWidth
         className={classes.textField}
         value={values.fee}
+        defaultValue="Default Value"
         onChange={handleChange}
         onBlur={handleBlur}
         error={!!errors.fee}
-        // helperText={(errors.confirmPassword && touched.confirmPassword) && errors.confirmPassword}
         margin="normal"
         variant="outlined"
         data-testid="field-amount"
@@ -94,7 +92,6 @@ export const innerForm = (props) => {
         onChange={handleChange}
         onBlur={handleBlur}
         error={!!errors.password}
-        // helperText={(errors.confirmPassword && touched.confirmPassword) && errors.confirmPassword}
         margin="normal"
         variant="outlined"
         data-testid="field-amount"
@@ -137,16 +134,11 @@ export default function (props: AppProps, state: AppState) {
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-      //跳转到交易详细信息的页面
       if (message.messageType === MESSAGE_TYPE.TO_TX_DETAIL) {
-        console.log('TO_TX_DETAIL message', JSON.stringify(message));
-
-        //001-传递交易信息
         chrome.runtime.sendMessage({
           message,
           messageType: MESSAGE_TYPE.REQUEST_TX_DETAIL,
         });
-        //002-跳转到页面
         history.push('/tx-detail');
       }
     });
@@ -154,15 +146,9 @@ export default function (props: AppProps, state: AppState) {
   }, []);
 
   const onSubmit = async (values) => {
-    console.log('onSubmit=>', values);
-    console.log('network =>', network);
-
-    //check the address
     const toAddress = values.address;
     validateAddress(toAddress, network);
 
-    // 消息发送到Background.ts
-    // network - TODO
     chrome.runtime.sendMessage({
       ...values,
       network,
@@ -194,22 +180,24 @@ export default function (props: AppProps, state: AppState) {
 
   const classes = useStyles();
   return (
-    <div className={classes.container}>
-      <Title title="Send CKB" testId="sendtx-form-title" />
-      {successNode}
-      {validateNode}
-      <Formik
-        initialValues={{ address: '', amount: '', fee: '', password: '' }}
-        onSubmit={onSubmit}
-        validationSchema={Yup.object().shape({
-          address: Yup.string().required('Required'),
-          amount: Yup.string().required('Required'),
-          fee: Yup.string().required('Required'),
-          password: Yup.string().required('Required'),
-        })}
-      >
-        {innerForm}
-      </Formik>
+    <div>
+      <PageNav to="/address" title="Send CKB" />
+      <div className={classes.container}>
+        {successNode}
+        {validateNode}
+        <Formik
+          initialValues={{ address: '', amount: '', fee: '', password: '' }}
+          onSubmit={onSubmit}
+          validationSchema={Yup.object().shape({
+            address: Yup.string().required('Required'),
+            amount: Yup.string().required('Required'),
+            fee: Yup.string().required('Required'),
+            password: Yup.string().required('Required'),
+          })}
+        >
+          {innerForm}
+        </Formik>
+      </div>
     </div>
   );
 }
