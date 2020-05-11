@@ -250,7 +250,7 @@ export default function (props: AppProps, state: AppState) {
             {txs.map((item) => (
               <List onClick={onTxDetail}>
                 <ListItem>
-                  <ListItemText primary={moment(item.timestamp).format('YYYY-MM-DD hh:mm:ss')} />
+                  <ListItemText primary={moment(item.timestamp).format('YYYY-MM-DD HH:mm:ss')} />
                 </ListItem>
                 <ListItem>
                   <ListItemText secondary={`${item.amount / 10 ** 8} CKB`} />

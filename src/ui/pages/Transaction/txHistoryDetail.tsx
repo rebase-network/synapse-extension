@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
+import PageNav from '../../Components/PageNav';
 
 import * as moment from 'moment';
 
@@ -66,6 +67,8 @@ export default function TxHistoryDetail(props: AppProps, state: AppState) {
 
   return (
     <div>
+      <PageNav to="/address" title="Address" />
+
       <div className={classes.root}>
         <Paper className={classes.paper}>
           <Grid container wrap="nowrap" spacing={2} >
@@ -73,13 +76,13 @@ export default function TxHistoryDetail(props: AppProps, state: AppState) {
               <Avatar>R</Avatar>
               <Typography noWrap>{status}</Typography>
               <Typography noWrap>
-                {moment(tx['timestamp']).format('YYYY-MM-DD hh:mm:ss')}
+                {moment(tx['timestamp']).format('YYYY-MM-DD HH:mm:ss')}
               </Typography>
             </Grid>
           </Grid>
         </Paper>
         <br />
-      </div>
+    </div>
 
       {/* 002 */}
       <div className={classes.root}>
