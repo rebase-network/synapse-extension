@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import * as React from "react";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -16,22 +16,24 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: theme.spacing(2),
     },
     select: {
-      color: 'white',
-    }
-  }),
+      color: "white",
+    },
+  })
 );
 
-interface AppProps { handleNetworkChange: Function }
+interface AppProps {
+  handleNetworkChange: Function;
+}
 
-interface AppState { }
+interface AppState {}
 
 export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
-  const [network, setNetwork] = React.useState('testnet');
+  const [network, setNetwork] = React.useState("testnet");
 
   const handleChange = (event: React.ChangeEvent<{ value: string }>) => {
     setNetwork(event.target.value);
-    props.handleNetworkChange(event.target.value)
+    props.handleNetworkChange(event.target.value);
   };
 
   return (
@@ -45,8 +47,8 @@ export default function (props: AppProps, state: AppState) {
           onChange={handleChange}
           className={classes.select}
         >
-          <MenuItem value={'testnet'}>Aggron Testnet</MenuItem>
-          <MenuItem value={'mainnet'}>Mainnet</MenuItem>
+          <MenuItem value={"testnet"}>Aggron Testnet</MenuItem>
+          {/* <MenuItem value={'mainnet'}>Mainnet</MenuItem> */}
         </Select>
       </FormControl>
     </div>
