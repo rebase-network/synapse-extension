@@ -201,8 +201,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   //REQUEST_ADDRESS_INFO
   if (request.messageType === MESSAGE_TYPE.REQUEST_ADDRESS_INFO) {
     chrome.storage.sync.get(["currentWallet"], function (wallet) {
-      if (!wallet) return;
-      const address = wallet.currentWallet.address;
+      const address = wallet ? wallet.currentWallet.address : undefined;
       const message: any = {
         messageType: MESSAGE_TYPE.ADDRESS_INFO,
         address: address,
@@ -211,7 +210,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       chrome.runtime.sendMessage(message);
     });
   }
-
   // get balance by address
   if (request.messageType === MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS) {
     chrome.storage.sync.get(["currentWallet"], async function (wallet) {
