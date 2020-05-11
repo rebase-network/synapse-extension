@@ -299,26 +299,28 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   //export-private-key check
   if (request.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK) {
     chrome.storage.sync.get(['currentWallet'], function (result) {
-      const password = request.password;
-      const publicKey = result.currentWallet.publicKey;
-      const wallet = findInWalletsByPublicKey(publicKey, wallets);
-      const keystore = wallet.keystore;
-      //TODO check the password
-      const privateKey = Keystore.decrypt(keystore, password);
+      chrome.storage.sync.get(['wallets'], function (resultWallets) {
+        const password = request.password;
+        const publicKey = result.currentWallet.publicKey;
+        const wallet = findInWalletsByPublicKey(publicKey, resultWallets.wallets);
+        const keystore = wallet.keystore;
+        //TODO check the password
+        const privateKey = '0x' + Keystore.decrypt(keystore, password);
 
-      //send the check result to the page
-      if (!privateKey) {
+        //send the check result to the page
+        if (!privateKey) {
+          chrome.runtime.sendMessage({
+            isValidatePassword: false,
+            messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
+          });
+        }
+
         chrome.runtime.sendMessage({
-          isValidatePassword: false,
+          isValidatePassword: true,
+          keystore,
+          privateKey,
           messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
         });
-      }
-
-      chrome.runtime.sendMessage({
-        isValidatePassword: true,
-        keystore,
-        privateKey,
-        messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
       });
     });
   }

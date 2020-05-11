@@ -1,14 +1,8 @@
 import * as React from 'react';
 import Title from '../../Components/Title';
-import { Button, TextField } from '@material-ui/core';
+import PageNav from '../../Components/PageNav';
 import { makeStyles } from '@material-ui/core/styles';
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
 import { MESSAGE_TYPE } from '../../../utils/constants';
-import { useHistory } from 'react-router-dom';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const useStyles = makeStyles({
   container: {
@@ -37,14 +31,15 @@ export default function (props: AppProps, state: AppState) {
   }, []);
 
   return (
-    <div className={classes.container}>
-      <Title title="Export Mneonic" testId="export-mneonic-title" />
-      <br />
-      <div className="mnemonic" data-testid="mnemonic-id">
-        {/* <span className="">JSON/Keystore  </span> */}
-        {mnemonic}
+    <div>
+      <PageNav to="/export-mnemonic" title="Export Mnemonic" />
+      <div className={classes.container}>
+        <div className="mnemonic" data-testid="mnemonic-id">
+          {/* <span className="">JSON/Keystore  </span> */}
+          {mnemonic}
+        </div>
+        <br />
       </div>
-      <br />
     </div>
   );
 }

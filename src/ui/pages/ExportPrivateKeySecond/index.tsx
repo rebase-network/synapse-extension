@@ -1,14 +1,11 @@
 import * as React from 'react';
 import Title from '../../Components/Title';
-import { Button, TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
-import { MESSAGE_TYPE } from '../../../utils/constants';
-import { useHistory } from 'react-router-dom';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { makeStyles } from '@material-ui/core/styles';
+import { MESSAGE_TYPE } from '../../../utils/constants';
+import PageNav from '../../Components/PageNav';
 
 const useStyles = makeStyles({
   container: {
@@ -16,11 +13,18 @@ const useStyles = makeStyles({
   },
   button: {},
   textField: {},
+  radioGroup: {
+    'justify-content': 'center',
+  },
+  divShow:{
+    'overflow-wrap': 'anywhere',
+    'margin-top': '20px',
+  },
 });
 
-interface AppProps {}
+interface AppProps { }
 
-interface AppState {}
+interface AppState { }
 
 export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
@@ -70,33 +74,31 @@ export default function (props: AppProps, state: AppState) {
   };
 
   return (
-    <div className={classes.container}>
-      <Title title="Export Private Key" testId="export-private-key-title" />
-      <RadioGroup aria-label="quiz" name="quiz" value={value} onChange={handleRadioChange}>
-        <FormControlLabel
-          value="1"
-          labelPlacement="bottom"
-          control={<Radio />}
-          label="PrivateKey"
-        />
-        <FormControlLabel
-          value="2"
-          labelPlacement="bottom"
-          control={<Radio />}
-          label="JSON/Keystore"
-        />
-      </RadioGroup>
-      <div className="privateKey" data-testid="privateKey" hidden={isPrivate}>
-        {/* <span className="">PrivateKey  </span> */}
-        {privateKey}
+    <div>
+      <PageNav to="/export-private-key" title="Export Private Key" />
+      <div className={classes.container}>
+        <RadioGroup row value={value} onChange={handleRadioChange} className={classes.radioGroup}>
+          <FormControlLabel
+            value="1"
+            labelPlacement="bottom"
+            control={<Radio />}
+            label="PrivateKey"
+          />
+          <FormControlLabel
+            value="2"
+            labelPlacement="bottom"
+            control={<Radio />}
+            label="Keystore"
+          />
+        </RadioGroup>
+        <div className={classes.divShow} data-testid="privateKey" hidden={isPrivate} >
+          {privateKey}
+        </div>
+        <div className={classes.divShow} data-testid="json-keystore" hidden={isJSON}>
+          {keystore}
+        </div>
+        <br />
       </div>
-      <br />
-      <br />
-      <div className="json-keystore" data-testid="json-keystore" hidden={isJSON}>
-        {/* <span className="">JSON/Keystore  </span> */}
-        {keystore}
-      </div>
-      <br />
     </div>
   );
 }
