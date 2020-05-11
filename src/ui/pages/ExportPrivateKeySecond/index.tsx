@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Title from '../../Components/Title';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -37,7 +36,6 @@ export default function (props: AppProps, state: AppState) {
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-      console.log('EXPORT_PRIVATE_KEY_SECOND_RESULT =>', request);
       if (request.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND_RESULT) {
         const privateKey = request.privateKey;
         const keystore = request.keystore;
@@ -47,23 +45,8 @@ export default function (props: AppProps, state: AppState) {
     });
   }, []);
 
-  const isPrivateKeyNode = (
-    <div className="privateKey" data-testid="privateKey">
-      <span className="">PrivateKey </span>
-      {privateKey}
-    </div>
-  );
-  const isKeystoreNode = (
-    <div className="json-keystore" data-testid="json-keystore">
-      <span className="">JSON/Keystore </span>
-      {keystore}
-    </div>
-  );
-  //初始化
-  let isVisableNode = isPrivateKeyNode;
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue((event.target as HTMLInputElement).value);
-    console.log('Value ==>', value);
     if (value === '1') {
       setIsPrivate(true);
       setIsJSON(false);

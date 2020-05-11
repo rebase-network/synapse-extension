@@ -364,28 +364,29 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   //export-mneonic check
   if (request.messageType === MESSAGE_TYPE.EXPORT_MNEONIC_CHECK) {
     chrome.storage.sync.get(['currentWallet'], function (result) {
-      const password = request.password;
-      const publicKey = result.currentWallet.publicKey;
-      const wallet = findInWalletsByPublicKey(publicKey, wallets);
-      const entropyKeystore = wallet.entropyKeystore;
+      chrome.storage.sync.get(['wallets'], function (resultWallets) {
+        const password = request.password;
+        const publicKey = result.currentWallet.publicKey;
+        const wallet = findInWalletsByPublicKey(publicKey, resultWallets.wallets);
+        const entropyKeystore = wallet.entropyKeystore;
 
-      //TODO check the password
-      const entropy = Keystore.decrypt(entropyKeystore, password);
+        //TODO check the password
+        const entropy = Keystore.decrypt(entropyKeystore, password);
 
-      console.log('entropy ===>', entropy);
-      // //send the check result to the page
-      if (entropy !== '') {
+        // //send the check result to the page
+        if (entropy !== '') {
+          chrome.runtime.sendMessage({
+            isValidatePassword: false,
+            messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
+          });
+        }
+
         chrome.runtime.sendMessage({
-          isValidatePassword: false,
-          messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
+          isValidatePassword: true,
+          password,
+          entropyKeystore,
+          messageType: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT,
         });
-      }
-
-      chrome.runtime.sendMessage({
-        isValidatePassword: true,
-        password,
-        entropyKeystore,
-        messageType: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT,
       });
     });
   }
@@ -408,50 +409,52 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   // import private key
   if (request.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY) {
     chrome.storage.sync.get(['currentWallet'], async function (result) {
-      //没有0x的privateKey
-      let privateKey: string = request.privateKey.trim();
-      if (privateKey.startsWith('0x')) {
-        privateKey = privateKey.substr(2);
-      }
+      chrome.storage.sync.get(['wallets'], async function (resultWallets) {
+        //没有0x的privateKey
+        let privateKey: string = request.privateKey.trim();
+        if (privateKey.startsWith('0x')) {
+          privateKey = privateKey.substr(2);
+        }
 
-      const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
-      const password = request.password.trim();
+        const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
+        const password = request.password.trim();
 
-      //check the keystore
-      const currentPublicKey = result.currentWallet.publicKey;
-      const wallet = findInWalletsByPublicKey(currentPublicKey, wallets);
-      const keystore = wallet.keystore;
-      if (keystore === undefined || keystore === '' || keystore === 'undefined') {
-        throw new Error('currentWallet keystore is null');
-      }
-      if (!Keystore.checkPasswd(keystore, password)) {
-        throw new Error('password incorrect');
-      }
+        //check the keystore
+        const currentPublicKey = result.currentWallet.publicKey;
+        const wallet = findInWalletsByPublicKey(currentPublicKey, resultWallets.wallets);
+        const keystore = wallet.keystore;
+        if (keystore === undefined || keystore === '' || keystore === 'undefined') {
+          throw new Error('currentWallet keystore is null');
+        }
+        if (!Keystore.checkPasswd(keystore, password)) {
+          throw new Error('password incorrect');
+        }
 
-      //check the keystore exist or not
-      const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
+        //check the keystore exist or not
+        const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
-      if (addressesObj != null && addressesObj != '') {
-        const addresses = addressesObj.addresses;
-        currentWallet = {
-          publicKey: publicKey,
-          address: addresses[0].address,
-          type: addresses[0].type,
-          lock: addresses[0].lock,
-        };
-      } else {
-        //Add Keyper to Synapse
-        await addKeyperWallet(privateKey, password, '', '');
-        wallets = getWallets();
-        addressesList = getAddressesList();
-        currentWallet = getCurrentWallet();
-      }
+        if (addressesObj != null && addressesObj != '') {
+          const addresses = addressesObj.addresses;
+          currentWallet = {
+            publicKey: publicKey,
+            address: addresses[0].address,
+            type: addresses[0].type,
+            lock: addresses[0].lock,
+          };
+        } else {
+          //Add Keyper to Synapse
+          await addKeyperWallet(privateKey, password, '', '');
+          wallets = getWallets();
+          addressesList = getAddressesList();
+          currentWallet = getCurrentWallet();
+        }
 
-      //002-
-      saveToStorage();
+        //002-
+        saveToStorage();
 
-      chrome.runtime.sendMessage({
-        messageType: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK,
+        chrome.runtime.sendMessage({
+          messageType: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK,
+        });
       });
     });
   }
