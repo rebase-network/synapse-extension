@@ -152,8 +152,6 @@ export default function (props: AppProps, state: AppState) {
             "..." +
             address.substr(address.length - 10, address.length);
           setAddressShort(addressShort);
-        } else {
-          history.push("./mnemonic-setting");
         }
         // get balance by address
       } else if (msg.messageType === MESSAGE_TYPE.BALANCE_BY_ADDRESS) {
@@ -199,9 +197,16 @@ export default function (props: AppProps, state: AppState) {
     })();
   }, [open, address]);
 
-  if (loading) return <div>loading</div>;
+  const isMnemonicImported =
+    localStorage.getItem("IS_MNEMONIC_IMPORTED") === "YES";
 
-  const balanceNode = (
+  if (!isMnemonicImported) {
+    history.push("./mnemonic-setting");
+  }
+
+  const balanceNode = loading ? (
+    <div>loading</div>
+  ) : (
     <div className="balance" data-testid="balance">
       {balance}
       <span className="">CKB</span>
