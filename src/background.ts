@@ -201,7 +201,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   //REQUEST_ADDRESS_INFO
   if (request.messageType === MESSAGE_TYPE.REQUEST_ADDRESS_INFO) {
     chrome.storage.sync.get(["currentWallet"], function (wallet) {
-      const address = wallet ? wallet.currentWallet.address : undefined;
+      const address = wallet.currentWallet
+        ? wallet.currentWallet.address
+        : undefined;
       const message: any = {
         messageType: MESSAGE_TYPE.ADDRESS_INFO,
         address: address,
@@ -213,9 +215,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   // get balance by address
   if (request.messageType === MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS) {
     chrome.storage.sync.get(["currentWallet"], async function (wallet) {
-      if (!wallet) return;
-      const address = wallet.currentWallet.address;
-      const balance = await getBalanceByAddress(address);
+      const address = wallet.currentWallet
+        ? wallet.currentWallet.address
+        : undefined;
+      const balance = address ? await getBalanceByAddress(address) : 0;
 
       chrome.runtime.sendMessage({
         balance,
@@ -227,10 +230,11 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   // get tx history by address
   if (request.messageType === MESSAGE_TYPE.GET_TX_HISTORY) {
     chrome.storage.sync.get(["currentWallet"], async function (wallet) {
-      if (!wallet) return;
-      const addr = wallet.currentWallet.address;
+      const address = wallet.currentWallet
+        ? wallet.currentWallet.address
+        : undefined;
 
-      const txs = await getTxHistoryByAddress(addr);
+      const txs = address ? await getTxHistoryByAddress(address) : [];
 
       chrome.runtime.sendMessage({
         txs,

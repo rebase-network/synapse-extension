@@ -153,13 +153,13 @@ export default function (props: AppProps, state: AppState) {
             address.substr(address.length - 10, address.length);
           setAddressShort(addressShort);
         } else {
-          history.push("./import-mnemonic");
+          history.push("./mnemonic-setting");
         }
         // get balance by address
       } else if (msg.messageType === MESSAGE_TYPE.BALANCE_BY_ADDRESS) {
         setBalance(msg.balance / 10 ** 8);
-        setLoading(false);
       }
+      setLoading(false);
     });
 
     chrome.runtime.sendMessage({
@@ -199,9 +199,9 @@ export default function (props: AppProps, state: AppState) {
     })();
   }, [open, address]);
 
-  const balanceNode = loading ? (
-    <div>loading</div>
-  ) : (
+  if (loading) return <div>loading</div>;
+
+  const balanceNode = (
     <div className="balance" data-testid="balance">
       {balance}
       <span className="">CKB</span>
