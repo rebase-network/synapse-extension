@@ -40,7 +40,7 @@ export const genForm = (props) => {
   return (
     <Form className="gen-mnemonic" id="gen-mnemonic" onSubmit={handleSubmit}>
       <TextField
-        label="Mnemonic"
+        label="Mnemonic | Only Support 12 Words"
         name="mnemonic"
         multiline
         rows="4"

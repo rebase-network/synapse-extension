@@ -50,7 +50,7 @@ export const innerForm = (props) => {
   return (
     <Form className="form-mnemonic" id="form-mnemonic" onSubmit={handleSubmit}>
       <TextField
-        label="Mnemonic"
+        label="Mnemonic | Only Support 12 Words"
         name="mnemonic"
         multiline
         rows="4"
