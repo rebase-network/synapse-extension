@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
-import { useHistory } from 'react-router-dom';
+import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import NetworkSelector from '../NetworkSelector';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -45,11 +44,8 @@ interface AppProps {
   handleNetworkChange: Function;
 }
 
-interface AppState {}
-
 export default function (props: AppProps) {
   const classes = useStyles();
-  const history = useHistory();
 
   const [state, setState] = React.useState({
     top: false,
@@ -70,11 +66,6 @@ export default function (props: AppProps) {
       return;
     }
     setState({ ...state, [anchor]: open });
-  };
-
-  const handleClickOpen = () => {
-    toggleDrawer('right', false);
-    history.push('/import-private-key');
   };
 
   return (
