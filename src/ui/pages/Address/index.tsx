@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 import {
   Grid,
   ListSubheader,
@@ -19,7 +20,7 @@ import { MESSAGE_TYPE } from '../../../utils/constants';
 import { AppContext } from '../../App';
 import { truncateAddress } from '../../../utils/formatters';
 import { getBalanceByAddress } from '../../../utils/apis';
-
+import * as queryString from 'query-string';
 const QrCode = require('qrcode.react');
 
 const useStyles = makeStyles({
@@ -95,30 +96,45 @@ interface AppProps {}
 
 interface AppState {}
 
+type searchObj = {
+  address: string;
+  type: string;
+};
+
 export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
+  const history = useHistory();
+  const addressFromUrl = _.get(props, 'match.params.address', '');
 
   const [loading, setLoading] = React.useState(true);
-  const [address, setAddress] = React.useState('');
-  const [addressShort, setAddressShort] = React.useState('');
+  const [address, setAddress] = React.useState(addressFromUrl);
   const [balance, setBalance] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [tooltip, setTooltip] = React.useState('');
   const [txs, setTxs] = React.useState([]);
   const { network } = React.useContext(AppContext);
-  const history = useHistory();
+
+  const updateBalance = async (address) => {
+    const balance = await getBalanceByAddress(address);
+    setBalance(balance / 10 ** 8);
+    setLoading(false);
+  };
+
+  if (addressFromUrl && addressFromUrl !== address) {
+    setAddress(addressFromUrl);
+  }
 
   React.useEffect(() => {
-    chrome.storage.sync.get(['currentWallet'], async ({ currentWallet }) => {
-      if (!currentWallet && !currentWallet.address) return;
-      const { address } = currentWallet;
-      const addressShort = truncateAddress(address);
-      setAddress(address);
-      setAddressShort(addressShort);
-      const balance = await getBalanceByAddress(address);
-      setBalance(balance / 10 ** 8);
-      setLoading(false);
-    });
+    if (!addressFromUrl) {
+      chrome.storage.sync.get(['currentWallet'], async ({ currentWallet }) => {
+        if (!currentWallet && !currentWallet.address) return;
+        const { address } = currentWallet;
+        setAddress(address);
+        updateBalance(address);
+      });
+    } else {
+      updateBalance(addressFromUrl);
+    }
 
     setLoading(true);
 
@@ -131,7 +147,7 @@ export default function (props: AppProps, state: AppState) {
         setTxs(msg.txs);
       }
     });
-  }, [balance]);
+  }, [address, balance]);
 
   const onSendtx = () => {
     history.push('/send-tx');
@@ -185,7 +201,7 @@ export default function (props: AppProps, state: AppState) {
           </Grid>
           <Grid item xs={12}>
             <Box textAlign="center" fontSize={22}>
-              {addressShort}
+              {truncateAddress(address)}
             </Box>
           </Grid>
         </Grid>

@@ -125,11 +125,11 @@ export default function (props: AppProps, state: AppState) {
       type: addressObj.type,
       lock: addressObj.lock,
     };
-    chrome.storage.sync.set({ currentWallet }, () => {
-      history.push('/address');
-    });
-
     props.onSelectAddress({ right: false });
+
+    chrome.storage.sync.set({ currentWallet });
+
+    history.push(`/address/${addressObj.address}?type=${addressObj.type}`);
   };
 
   const addressesElem = addressesList.map((addressesObj, index) => {

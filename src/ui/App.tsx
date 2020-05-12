@@ -41,9 +41,7 @@ export default function App() {
           {/* A <Switch> looks through its children <Route>s and
               renders the first one that matches the current URL. */}
           <Switch>
-            <Route path="/address">
-              <Address />
-            </Route>
+            <Route path="/address/:address" render={(routeProps) => <Address {...routeProps} />} />
             <Route path="/import-mnemonic">
               <ImportMnemonic />
             </Route>
