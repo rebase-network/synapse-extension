@@ -102,12 +102,13 @@ export default function (props: AppProps, state: AppState) {
       for (let index = 0; index < addressesList.length; index++) {
         const addresses = addressesList[index].addresses;
         for (let index2 = 0; index2 < addresses.length; index2++) {
+          // TODO: refactoring to make get capacity async
           const capacity = await getBalanceByAddress(addresses[index2].address);
           addresses[index2].amount = capacity;
-          const address = addresses[index2].address;
-          const addressBack =
+          const { address } = addresses[index2];
+          const shortAddress =
             address.substr(0, 16) + '...' + address.substr(address.length - 16, address.length);
-          addresses[index2].addressBack = addressBack;
+          addresses[index2].shortAddress = shortAddress;
         }
       }
       setAddressesList(addressesList);
@@ -156,7 +157,7 @@ export default function (props: AppProps, state: AppState) {
               onClick={(event) => handleListItemClick(event, item, addressesObj.publicKey)}
             >
               <ListItemText
-                primary={item.addressBack}
+                primary={item.shortAddress}
                 secondary={
                   <React.Fragment>
                     <Typography
