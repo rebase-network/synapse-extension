@@ -6,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Drawer from '@material-ui/core/Drawer';
 import { Link } from 'react-router-dom';
-import AddressesList from '../AddressesList';
+import AddressList from '../AddressList';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ImportExportIcon from '@material-ui/icons/ImportExport';
 import PageNav from '../PageNav';
@@ -15,6 +15,9 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
+    },
+    drawerInner: {
+      width: 320,
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -88,23 +91,25 @@ export default function (props: AppProps) {
             <MenuIcon />
           </IconButton>
           <Drawer anchor={'right'} open={state['right']} onClose={toggleDrawer('right', false)}>
-            <PageNav to="" position="right" onClickRight={setState} title="My Addresses" />
+            <div className={classes.drawerInner}>
+              <PageNav to="" position="right" onClickRight={setState} title="My Addresses" />
 
-            <AddressesList onSelectAddress={setState} />
+              <AddressList onSelectAddress={setState} />
 
-            <Link
-              to="/import-private-key"
-              onClick={toggleDrawer('right', false)}
-              className={classes.link}
-            >
-              <ImportExportIcon className={classes.icon} />
-              <span className={classes.linkText}>Import Wallet</span>
-            </Link>
+              <Link
+                to="/import-private-key"
+                onClick={toggleDrawer('right', false)}
+                className={classes.link}
+              >
+                <ImportExportIcon className={classes.icon} />
+                <span className={classes.linkText}>Import Wallet</span>
+              </Link>
 
-            <Link to="/setting" onClick={toggleDrawer('right', false)} className={classes.link}>
-              <SettingsIcon className={classes.icon} />
-              <span className={classes.linkText}>Setting</span>
-            </Link>
+              <Link to="/setting" onClick={toggleDrawer('right', false)} className={classes.link}>
+                <SettingsIcon className={classes.icon} />
+                <span className={classes.linkText}>Setting</span>
+              </Link>
+            </div>
           </Drawer>
         </Toolbar>
       </AppBar>
