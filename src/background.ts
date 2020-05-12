@@ -13,9 +13,7 @@ import Keychain from './wallet/keychain';
 
 import { ExtendedPrivateKey } from './wallet/key';
 import { sendSimpleTransaction } from './sendSimpleTransaction';
-import {
-  getStatusByTxHash,
-} from './transaction';
+import { getStatusByTxHash } from './transaction';
 import Address from './wallet/address';
 import { getBalanceByAddress } from './background/address';
 import { getTxHistoryByAddress } from './background/transaction';
@@ -86,7 +84,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       addressesList = getAddressesList();
       currentWallet = getCurrentWallet();
     }
-    //002-
     saveToStorage();
 
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
@@ -324,30 +321,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       privateKey,
       keystore: JSON.stringify(keystore),
       messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND_RESULT,
-    });
-  }
-
-  //my addressesList
-  if (request.messageType === MESSAGE_TYPE.REQUEST_MY_ADDRESSES) {
-    chrome.storage.sync.get(['addressesList'], async function (result) {
-      let addressesListObj = result.addressesList;
-      if (addressesListObj == null) return;
-      for (let index = 0; index < addressesListObj.length; index++) {
-        const addresses = addressesListObj[index].addresses;
-        for (let index2 = 0; index2 < addresses.length; index2++) {
-          const capacity = await getBalanceByAddress(addresses[index2].address);
-          addresses[index2].amount = capacity;
-          const address = addresses[index2].address;
-          const addressBack =
-            address.substr(0, 16) + '...' + address.substr(address.length - 16, address.length);
-          addresses[index2].addressBack = addressBack;
-        }
-      }
-
-      chrome.runtime.sendMessage({
-        addressesList: addressesListObj,
-        messageType: MESSAGE_TYPE.RESULT_MY_ADDRESSES,
-      });
     });
   }
 

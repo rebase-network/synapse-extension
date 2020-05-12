@@ -17,20 +17,18 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import { MESSAGE_TYPE } from '../../../utils/constants';
 import PageNav from '../PageNav';
-
-const useStyles = makeStyles({
-  container: {
-    margin: 30,
-  },
-  button: {
-    marginLeft: '10px',
-    marginTop: '5px',
-    marginBottom: '5px',
-  },
-});
+import { getBalanceByAddress } from '../../../utils/apis';
 
 const useStylesTheme = makeStyles((theme: Theme) =>
   createStyles({
+    container: {
+      margin: 30,
+    },
+    button: {
+      marginLeft: '10px',
+      marginTop: '5px',
+      marginBottom: '5px',
+    },
     root: {
       width: 320,
     },
@@ -90,15 +88,29 @@ interface AppProps {
 interface AppState {}
 
 export default function (props: AppProps, state: AppState) {
-  const classes = useStyles();
+  const classes = useStylesTheme();
   const [addressesList, setAddressesList] = React.useState([]);
   const history = useHistory();
 
   const classTheme = useStylesTheme();
 
   React.useEffect(() => {
-    chrome.runtime.sendMessage({
-      messageType: MESSAGE_TYPE.REQUEST_MY_ADDRESSES,
+    //my addressesList
+    chrome.storage.sync.get(['addressesList'], async function (result) {
+      const { addressesList } = result;
+      if (addressesList == null) return;
+      for (let index = 0; index < addressesList.length; index++) {
+        const addresses = addressesList[index].addresses;
+        for (let index2 = 0; index2 < addresses.length; index2++) {
+          const capacity = await getBalanceByAddress(addresses[index2].address);
+          addresses[index2].amount = capacity;
+          const address = addresses[index2].address;
+          const addressBack =
+            address.substr(0, 16) + '...' + address.substr(address.length - 16, address.length);
+          addresses[index2].addressBack = addressBack;
+        }
+      }
+      setAddressesList(addressesList);
     });
   }, []);
 
