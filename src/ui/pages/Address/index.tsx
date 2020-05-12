@@ -27,7 +27,9 @@ const useStyles = makeStyles({
   container: {
     margin: 30,
   },
-  button: {},
+  button: {
+    textAlign: 'center',
+  },
   dialogTitle: {
     textAlign: 'right',
   },
@@ -193,7 +195,7 @@ export default function (props: AppProps, state: AppState) {
 
   return (
     <div className={classes.container}>
-      <div className="classesTheme.root">
+      <div>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Box textAlign="center" fontSize={22}>
@@ -218,7 +220,7 @@ export default function (props: AppProps, state: AppState) {
               {balanceNode}
             </Box>
           </Grid>
-          <Grid item xs={6} sm={3}>
+          <Grid item xs={6} sm={6} className={classes.button}>
             <BootstrapButton
               type="button"
               id="receive-button"
@@ -230,7 +232,7 @@ export default function (props: AppProps, state: AppState) {
               Receive
             </BootstrapButton>
           </Grid>
-          <Grid item xs={6} sm={3}>
+          <Grid item xs={6} sm={6} className={classes.button}>
             <BootstrapButton
               id="send-button"
               color="primary"
