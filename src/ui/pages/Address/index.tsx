@@ -20,7 +20,6 @@ import { MESSAGE_TYPE } from '../../../utils/constants';
 import { AppContext } from '../../App';
 import { truncateAddress } from '../../../utils/formatters';
 import { getBalanceByAddress } from '../../../utils/apis';
-import * as queryString from 'query-string';
 const QrCode = require('qrcode.react');
 
 const useStyles = makeStyles({
@@ -176,7 +175,7 @@ export default function (props: AppProps, state: AppState) {
   ) : (
     <div className="balance" data-testid="balance">
       {balance}
-      <span className="">CKB</span>
+      <span> CKB</span>
     </div>
   );
 
