@@ -39,7 +39,8 @@ const useStyles = makeStyles({
   },
   address: {
     marginTop: 16,
-    fontSize: 8,
+    fontSize: 12,
+    'word-break': 'break-all',
   },
   loading: {
     width: 200,
