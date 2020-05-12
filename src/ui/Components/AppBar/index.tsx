@@ -6,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Drawer from '@material-ui/core/Drawer';
 import { Link } from 'react-router-dom';
-import MyAddresses from '../MyAddresses';
+import AddressesList from '../AddressesList';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ImportExportIcon from '@material-ui/icons/ImportExport';
 import PageNav from '../PageNav';
@@ -90,7 +90,7 @@ export default function (props: AppProps) {
           <Drawer anchor={'right'} open={state['right']} onClose={toggleDrawer('right', false)}>
             <PageNav to="" position="right" onClickRight={setState} title="My Addresses" />
 
-            <MyAddresses onSelectAddress={setState} />
+            <AddressesList onSelectAddress={setState} />
 
             <Link
               to="/import-private-key"
