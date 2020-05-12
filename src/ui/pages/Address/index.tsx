@@ -10,7 +10,10 @@ import {
   Button,
   Dialog,
   IconButton,
+  Link,
+  Tooltip,
 } from '@material-ui/core';
+import CallMadeIcon from '@material-ui/icons/CallMade';
 import CloseIcon from '@material-ui/icons/Close';
 import { useHistory } from 'react-router-dom';
 import { createStyles, withStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -112,7 +115,7 @@ export default function (props: AppProps, state: AppState) {
   const [address, setAddress] = React.useState(addressFromUrl);
   const [balance, setBalance] = React.useState(0);
   const [open, setOpen] = React.useState(false);
-  const [tooltip, setTooltip] = React.useState('');
+  const [tip, setTip] = React.useState('');
   const [txs, setTxs] = React.useState([]);
   const { network } = React.useContext(AppContext);
 
@@ -160,7 +163,7 @@ export default function (props: AppProps, state: AppState) {
     (async function copyAddress() {
       if (open && address) {
         await navigator.clipboard.writeText(address);
-        setTooltip('Address has been copied to clipboard');
+        setTip('Address has been copied to clipboard');
       }
     })();
   }, [open, address]);
@@ -190,7 +193,7 @@ export default function (props: AppProps, state: AppState) {
 
   const handleClose = () => {
     setOpen(false);
-    setTooltip('');
+    setTip('');
   };
 
   return (
@@ -257,6 +260,12 @@ export default function (props: AppProps, state: AppState) {
               <List onClick={onTxDetail}>
                 <ListItem>
                   <ListItemText primary={moment(item.timestamp).format('YYYY-MM-DD HH:mm:ss')} />
+
+                  <Link rel="noreferrer" target="_blank" href={"https://explorer.nervos.org/aggron/transaction/" + item.hash}>
+                    <Tooltip title="View on Explorer" placement="top">
+                      <CallMadeIcon/>
+                    </Tooltip>
+                  </Link>
                 </ListItem>
                 <ListItem>
                   <ListItemText secondary={`${item.amount / 10 ** 8} CKB`} />
@@ -278,7 +287,7 @@ export default function (props: AppProps, state: AppState) {
         </div>
 
         <div className={classes.dialogContent}>
-          <div className={classes.tip}>{tooltip}</div>
+          <div className={classes.tip}>{tip}</div>
           {address ? <QrCode value={address} size={200} /> : <div>loading</div>}
           <div className={classes.address}>{address}</div>
         </div>
