@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as moment from 'moment';
 import {
   Grid,
   ListSubheader,
@@ -16,7 +17,8 @@ import Divider from '@material-ui/core/Divider';
 import Box from '@material-ui/core/Box';
 import { MESSAGE_TYPE } from '../../../utils/constants';
 import { AppContext } from '../../App';
-import * as moment from 'moment';
+import { truncateAddress } from '../../../utils/formatters';
+import { getBalanceByAddress } from '../../../utils/apis';
 
 const QrCode = require('qrcode.react');
 
@@ -89,8 +91,6 @@ const BootstrapButton = withStyles({
   },
 })(Button);
 
-
-
 interface AppProps {}
 
 interface AppState {}
@@ -109,30 +109,17 @@ export default function (props: AppProps, state: AppState) {
   const history = useHistory();
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-      if (msg.messageType === MESSAGE_TYPE.ADDRESS_INFO) {
-        if (msg.address) {
-          setAddress(msg.address);
-          const address = msg.address;
-          const addressShort =
-            address.substr(0, 10) + '...' + address.substr(address.length - 10, address.length);
-          setAddressShort(addressShort);
-        }
-        // get balance by address
-      } else if (msg.messageType === MESSAGE_TYPE.BALANCE_BY_ADDRESS) {
-        setBalance(msg.balance / 10 ** 8);
-      }
+    chrome.storage.sync.get(['currentWallet'], async ({ currentWallet }) => {
+      if (!currentWallet && !currentWallet.address) return;
+      const { address } = currentWallet;
+      const addressShort = truncateAddress(address);
+      setAddress(address);
+      setAddressShort(addressShort);
+      const balance = await getBalanceByAddress(address);
+      setBalance(balance / 10 ** 8);
       setLoading(false);
     });
 
-    chrome.runtime.sendMessage({
-      messageType: MESSAGE_TYPE.REQUEST_ADDRESS_INFO,
-    });
-
-    chrome.runtime.sendMessage({
-      messageType: MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS,
-      network,
-    });
     setLoading(true);
 
     chrome.runtime.sendMessage({
@@ -144,7 +131,7 @@ export default function (props: AppProps, state: AppState) {
         setTxs(msg.txs);
       }
     });
-  }, []);
+  }, [balance]);
 
   const onSendtx = () => {
     history.push('/send-tx');
@@ -191,7 +178,7 @@ export default function (props: AppProps, state: AppState) {
     <div className={classes.container}>
       <div className="classesTheme.root">
         <Grid container spacing={2}>
-          <Grid item xs={12} >
+          <Grid item xs={12}>
             <Box textAlign="center" fontSize={22}>
               Address
             </Box>
@@ -214,7 +201,7 @@ export default function (props: AppProps, state: AppState) {
               {balanceNode}
             </Box>
           </Grid>
-          <Grid item xs={6} sm={3} >
+          <Grid item xs={6} sm={3}>
             <BootstrapButton
               type="button"
               id="receive-button"
@@ -226,7 +213,7 @@ export default function (props: AppProps, state: AppState) {
               Receive
             </BootstrapButton>
           </Grid>
-          <Grid item xs={6} sm={3} >
+          <Grid item xs={6} sm={3}>
             <BootstrapButton
               id="send-button"
               color="primary"

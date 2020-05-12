@@ -157,31 +157,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
   }
 
-  //REQUEST_ADDRESS_INFO
-  if (request.messageType === MESSAGE_TYPE.REQUEST_ADDRESS_INFO) {
-    chrome.storage.sync.get(['currentWallet'], function (wallet) {
-      const address = wallet.currentWallet ? wallet.currentWallet.address : undefined;
-      const message: any = {
-        messageType: MESSAGE_TYPE.ADDRESS_INFO,
-        address: address,
-      };
-
-      chrome.runtime.sendMessage(message);
-    });
-  }
-  // get balance by address
-  if (request.messageType === MESSAGE_TYPE.REQUEST_BALANCE_BY_ADDRESS) {
-    chrome.storage.sync.get(['currentWallet'], async function (wallet) {
-      const address = wallet.currentWallet ? wallet.currentWallet.address : undefined;
-      const balance = address ? await getBalanceByAddress(address) : 0;
-
-      chrome.runtime.sendMessage({
-        balance,
-        messageType: MESSAGE_TYPE.BALANCE_BY_ADDRESS,
-      });
-    });
-  }
-
   // get tx history by address
   if (request.messageType === MESSAGE_TYPE.GET_TX_HISTORY) {
     chrome.storage.sync.get(['currentWallet'], async function (wallet) {

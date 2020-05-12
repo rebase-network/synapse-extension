@@ -15,7 +15,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import { MESSAGE_TYPE } from '../../../utils/constants';
+import { truncateAddress } from '../../../utils/formatters';
 import PageNav from '../PageNav';
 import { getBalanceByAddress } from '../../../utils/apis';
 
@@ -106,8 +106,7 @@ export default function (props: AppProps, state: AppState) {
           const capacity = await getBalanceByAddress(addresses[index2].address);
           addresses[index2].amount = capacity;
           const { address } = addresses[index2];
-          const shortAddress =
-            address.substr(0, 16) + '...' + address.substr(address.length - 16, address.length);
+          const shortAddress = truncateAddress(address);
           addresses[index2].shortAddress = shortAddress;
         }
       }
