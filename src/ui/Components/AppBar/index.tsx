@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import MyAddresses from '../MyAddresses';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ImportExportIcon from '@material-ui/icons/ImportExport';
+import PageNav from '../PageNav';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -87,6 +88,8 @@ export default function (props: AppProps) {
             <MenuIcon />
           </IconButton>
           <Drawer anchor={'right'} open={state['right']} onClose={toggleDrawer('right', false)}>
+            <PageNav to="" position="right" onClickRight={setState} title="My Addresses" />
+
             <MyAddresses onSelectAddress={setState} />
 
             <Link

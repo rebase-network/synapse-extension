@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button } from '@material-ui/core';
 import {
   makeStyles,
   Theme,
@@ -9,14 +8,11 @@ import {
   createMuiTheme,
   ThemeProvider,
 } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 import { truncateAddress } from '../../../utils/formatters';
-import PageNav from '../PageNav';
 import { getBalanceByAddress } from '../../../utils/apis';
 
 const useStylesTheme = makeStyles((theme: Theme) =>
@@ -62,24 +58,6 @@ const listItemTheme = createMuiTheme({
     },
   },
 });
-
-const BootstrapButton = withStyles({
-  root: {
-    width: '208px',
-    size: 'medium',
-    marginTop: '25px',
-    marginLeft: '88px',
-    marginBottom: '25px',
-    boxShadow: 'none',
-    textTransform: 'none',
-    fontSize: 18,
-    padding: '8px 12px',
-    border: '1px solid',
-    lineHeight: 1.5,
-    backgroundColor: '#0063cc',
-    borderColor: '#0063cc',
-  },
-})(Button);
 
 interface AppProps {
   onSelectAddress: Function;
@@ -167,11 +145,5 @@ export default function (props: AppProps, state: AppState) {
     });
   });
 
-  return (
-    <div>
-      <PageNav to="" title="My Addresses" />
-
-      <div className={classTheme.root}>{addressesElem}</div>
-    </div>
-  );
+  return <div className={classTheme.root}>{addressesElem}</div>;
 }
