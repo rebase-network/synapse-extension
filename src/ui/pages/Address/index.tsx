@@ -120,6 +120,7 @@ export default function (props: AppProps, state: AppState) {
     setLoading(false);
   };
 
+  // FIXME: should not set state in this way
   if (addressFromUrl && addressFromUrl !== address) {
     setAddress(addressFromUrl);
   }
