@@ -115,29 +115,21 @@ export default function (props: AppProps, state: AppState) {
     });
   }, []);
 
-  React.useEffect(() => {
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      if (request.messageType == MESSAGE_TYPE.RESULT_MY_ADDRESSES) {
-        const addressesList = request.addressesList;
-        setAddressesList(addressesList);
-      }
-
-      if (request.messageType == MESSAGE_TYPE.RETURN_SELECTED_MY_ADDRESSES) {
-        history.push('/address');
-      }
-    });
-  }, []);
-
   const handleClickOpen = () => {
     history.push('/import-private-key');
   };
 
   const handleListItemClick = (event, addressObj, publicKey) => {
-    chrome.runtime.sendMessage({
-      addressObj,
-      publicKey,
-      messageType: MESSAGE_TYPE.SELECTED_MY_ADDRESSES,
+    const currentWallet = {
+      publicKey: publicKey,
+      address: addressObj.address,
+      type: addressObj.type,
+      lock: addressObj.lock,
+    };
+    chrome.storage.sync.set({ currentWallet }, () => {
+      history.push('/address');
     });
+
     props.onSelectAddress({ right: false });
   };
 

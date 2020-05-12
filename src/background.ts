@@ -481,32 +481,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       });
     });
   }
-
-  // selected my addresses
-  if (request.messageType == MESSAGE_TYPE.SELECTED_MY_ADDRESSES) {
-    //01- get the addressObj and publicKey
-    const addressObj = request.addressObj;
-    const publicKey = request.publicKey.trim();
-
-    currentWallet = {
-      publicKey: publicKey,
-      address: addressObj.address,
-      type: addressObj.type,
-      lock: addressObj.lock,
-    };
-    saveToCurrentWallet(currentWallet);
-
-    chrome.runtime.sendMessage({
-      messageType: MESSAGE_TYPE.RETURN_SELECTED_MY_ADDRESSES,
-    });
-  }
 });
-
-function saveToCurrentWallet(currentWallet) {
-  chrome.storage.sync.set({ currentWallet }, () => {
-    console.log('currentWallet is set to storage: ' + JSON.stringify(currentWallet));
-  });
-}
 
 function saveToStorage() {
   chrome.storage.sync.set({ wallets }, () => {
