@@ -114,10 +114,6 @@ export default function (props: AppProps, state: AppState) {
     });
   }, []);
 
-  const handleClickOpen = () => {
-    history.push('/import-private-key');
-  };
-
   const handleListItemClick = (event, addressObj, publicKey) => {
     const currentWallet = {
       publicKey: publicKey,
@@ -175,28 +171,7 @@ export default function (props: AppProps, state: AppState) {
     <div>
       <PageNav to="" title="My Addresses" />
 
-      <div className={classTheme.root}>
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <div>{addressesElem}</div>
-          </Grid>
-
-          <Divider />
-
-          <Grid item xs={12}>
-            <BootstrapButton
-              type="button"
-              id="import-button"
-              color="primary"
-              variant="contained"
-              data-testid="import"
-              onClick={handleClickOpen}
-            >
-              Import Wallet
-            </BootstrapButton>
-          </Grid>
-        </Grid>
-      </div>
+      <div className={classTheme.root}>{addressesElem}</div>
     </div>
   );
 }

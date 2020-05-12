@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 import NetworkSelector from '../NetworkSelector';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -8,6 +9,7 @@ import Drawer from '@material-ui/core/Drawer';
 import { Link } from 'react-router-dom';
 import MyAddresses from '../MyAddresses';
 import SettingsIcon from '@material-ui/icons/Settings';
+import ImportExportIcon from '@material-ui/icons/ImportExport';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,11 +23,20 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
     },
     link: {
-      marginLeft: '60px',
+      display: 'flex',
+      color: 'inherit',
+      padding: 16,
+      'font-size': 16,
+      'align-items': 'center',
+      'margin-top': 10,
+      'border-top': '1px solid #ccc',
+    },
+    linkText: {
+      marginLeft: 3,
     },
     icon: {
-      width: 30,
-      height: 30,
+      width: 20,
+      height: 20,
     },
   }),
 );
@@ -38,6 +49,7 @@ interface AppState {}
 
 export default function (props: AppProps) {
   const classes = useStyles();
+  const history = useHistory();
 
   const [state, setState] = React.useState({
     top: false,
@@ -60,6 +72,11 @@ export default function (props: AppProps) {
     setState({ ...state, [anchor]: open });
   };
 
+  const handleClickOpen = () => {
+    toggleDrawer('right', false);
+    history.push('/import-private-key');
+  };
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -80,11 +97,21 @@ export default function (props: AppProps) {
           </IconButton>
           <Drawer anchor={'right'} open={state['right']} onClose={toggleDrawer('right', false)}>
             <MyAddresses onSelectAddress={setState} />
+
+            <Link
+              to="/import-private-key"
+              onClick={toggleDrawer('right', false)}
+              className={classes.link}
+            >
+              <ImportExportIcon className={classes.icon} />
+              <span className={classes.linkText}>Import Wallet</span>
+            </Link>
+
             <Link to="/setting" onClick={toggleDrawer('right', false)} className={classes.link}>
               <SettingsIcon className={classes.icon} />
+              <span className={classes.linkText}>Setting</span>
             </Link>
           </Drawer>
-          {/* <Button color="inherit">Login</Button> */}
         </Toolbar>
       </AppBar>
     </div>
