@@ -1,4 +1,4 @@
-import { MESSAGE_TYPE, KEYSTORE_TYPE, Ckb } from './utils/constants';
+import { MESSAGE_TYPE } from './utils/constants';
 import {
   mnemonicToSeedSync,
   validateMnemonic,
@@ -6,16 +6,13 @@ import {
   entropyToMnemonic,
 } from './wallet/mnemonic';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
-
 import { generateMnemonic } from './wallet/key';
 import * as Keystore from './wallet/keystore';
 import Keychain from './wallet/keychain';
-
 import { ExtendedPrivateKey } from './wallet/key';
 import { sendSimpleTransaction } from './sendSimpleTransaction';
 import { getStatusByTxHash } from './transaction';
 import Address from './wallet/address';
-import { getBalanceByAddress } from './background/address';
 import { getTxHistoryByAddress } from './background/transaction';
 import {
   addKeyperWallet,
@@ -387,7 +384,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           currentWallet = getCurrentWallet();
         }
 
-        //002-
         saveToStorage();
 
         chrome.runtime.sendMessage({
