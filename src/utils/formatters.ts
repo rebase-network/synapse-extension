@@ -40,6 +40,10 @@ export const shannonToCKBFormatter = (
   return +unsignedCKB === 0 ? '0' : `${sign}${unsignedCKB}`;
 };
 
+export const truncateAddress = (address: string) =>
+  address.substr(0, 10) + '...' + address.substr(address.length - 10, address.length);
+
 export default {
   shannonToCKBFormatter,
+  truncateAddress,
 };
