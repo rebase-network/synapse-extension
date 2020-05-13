@@ -72,7 +72,7 @@ export default function (props: AppProps, state: AppState) {
     delete currentWallet.amount;
     props.onSelectAddress({ right: false });
 
-    chrome.storage.sync.set({ currentWallet });
+    chrome.storage.local.set({ currentWallet });
 
     history.push(`/address/${addressInfo.address}`);
   };

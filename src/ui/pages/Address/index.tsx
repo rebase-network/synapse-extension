@@ -132,7 +132,7 @@ export default function (props: AppProps, state: AppState) {
 
   React.useEffect(() => {
     if (!addressFromUrl) {
-      chrome.storage.sync.get(['currentWallet'], async ({ currentWallet }) => {
+      chrome.storage.local.get(['currentWallet'], async ({ currentWallet }) => {
         if (!currentWallet && !currentWallet.address) return;
         const { address } = currentWallet;
         setAddress(address);
