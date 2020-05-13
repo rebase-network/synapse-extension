@@ -94,7 +94,7 @@ export default function (props: AppProps, state: AppState) {
                 className={classes.inline}
                 color="textPrimary"
               >
-                {capacity + ' CKB'}
+                {capacity/(10 ** 8) + ' CKB'}
               </Typography>
               <br />
               {type}
