@@ -202,7 +202,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
   //send transactioin
   if (request.messageType === MESSAGE_TYPE.RESQUEST_SEND_TX) {
-    chrome.storage.sync.get(['currentWallet'], async function (result) {
+    chrome.storage.sync.get(['currentWallet', 'wallets'], async function (result) {
       const toAddress = request.address.trim();
       const amount = request.amount.trim();
       const fee = request.fee.trim();
@@ -210,7 +210,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
       const fromAddress = result.currentWallet.address;
       const publicKey = result.currentWallet.publicKey;
-      const wallet = findInWalletsByPublicKey(publicKey, wallets);
+      const wallet = findInWalletsByPublicKey(publicKey, result.wallets);
       const privateKey = '0x' + Keystore.decrypt(wallet.keystore, password);
 
       const sendTxHash = await sendSimpleTransaction(
