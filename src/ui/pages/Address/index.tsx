@@ -97,9 +97,9 @@ const BootstrapButton = withStyles({
   },
 })(Button);
 
-interface AppProps {}
+interface AppProps { }
 
-interface AppState {}
+interface AppState { }
 
 type searchObj = {
   address: string;
@@ -117,6 +117,8 @@ export default function (props: AppProps, state: AppState) {
   const [open, setOpen] = React.useState(false);
   const [tip, setTip] = React.useState('');
   const [txs, setTxs] = React.useState([]);
+  const [type, setType] = React.useState("");
+  const [disableFlg, setDisableFlg] = React.useState(false);
   const { network } = React.useContext(AppContext);
 
   const updateBalance = async (address) => {
@@ -131,16 +133,22 @@ export default function (props: AppProps, state: AppState) {
   }
 
   React.useEffect(() => {
-    if (!addressFromUrl) {
-      chrome.storage.local.get(['currentWallet'], async ({ currentWallet }) => {
-        if (!currentWallet || !currentWallet.address) return;
-        const { address } = currentWallet;
-        setAddress(address);
-        updateBalance(address);
-      });
-    } else {
-      updateBalance(addressFromUrl);
-    }
+    // if (!addressFromUrl) {
+    chrome.storage.local.get(['currentWallet'], async ({ currentWallet }) => {
+      if (!currentWallet && !currentWallet.address) return;
+      const { address, type } = currentWallet;
+      setAddress(address);
+      if (type == "Keccak256" || type == "AnyPay") {
+        setDisableFlg(true);
+      } else {
+        setDisableFlg(false);
+      }
+      setType(type);
+      updateBalance(address);
+    });
+    // } else {
+    //   updateBalance(addressFromUrl);
+    // }
 
     setLoading(true);
 
@@ -153,7 +161,7 @@ export default function (props: AppProps, state: AppState) {
         setTxs(msg.txs);
       }
     });
-  }, [address, balance]);
+  }, [address, balance, type]);
 
   const onSendtx = () => {
     history.push('/send-tx');
@@ -177,11 +185,11 @@ export default function (props: AppProps, state: AppState) {
   const balanceNode = loading ? (
     <div>loading</div>
   ) : (
-    <div className="balance" data-testid="balance">
-      {balance}
-      <span> CKB</span>
-    </div>
-  );
+      <div className="balance" data-testid="balance">
+        {balance}
+        <span> CKB</span>
+      </div>
+    );
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -208,6 +216,9 @@ export default function (props: AppProps, state: AppState) {
           <Grid item xs={12}>
             <Box textAlign="center" fontSize={22}>
               {truncateAddress(address)}
+            </Box>
+            <Box textAlign="center" fontSize={16}>
+              {type}
             </Box>
           </Grid>
         </Grid>
@@ -242,6 +253,7 @@ export default function (props: AppProps, state: AppState) {
               onClick={onSendtx}
               variant="contained"
               data-testid="send"
+              disabled={disableFlg}
             >
               Send
             </BootstrapButton>
