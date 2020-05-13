@@ -133,7 +133,7 @@ export default function (props: AppProps, state: AppState) {
   React.useEffect(() => {
     if (!addressFromUrl) {
       chrome.storage.local.get(['currentWallet'], async ({ currentWallet }) => {
-        if (!currentWallet && !currentWallet.address) return;
+        if (!currentWallet || !currentWallet.address) return;
         const { address } = currentWallet;
         setAddress(address);
         updateBalance(address);
@@ -261,9 +261,13 @@ export default function (props: AppProps, state: AppState) {
                 <ListItem>
                   <ListItemText primary={moment(item.timestamp).format('YYYY-MM-DD HH:mm:ss')} />
 
-                  <Link rel="noreferrer" target="_blank" href={"https://explorer.nervos.org/aggron/transaction/" + item.hash}>
+                  <Link
+                    rel="noreferrer"
+                    target="_blank"
+                    href={'https://explorer.nervos.org/aggron/transaction/' + item.hash}
+                  >
                     <Tooltip title="View on Explorer" placement="top">
-                      <CallMadeIcon/>
+                      <CallMadeIcon />
                     </Tooltip>
                   </Link>
                 </ListItem>
