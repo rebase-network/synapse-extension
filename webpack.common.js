@@ -1,9 +1,11 @@
 const path = require("path");
 const CopyPlugin = require('copy-webpack-plugin');
+const WorkerPlugin = require('worker-plugin');
 
 module.exports = {
   entry: {
     popup: path.join(__dirname, "src/ui/index.tsx"),
+    keystore: path.join(__dirname, "src/wallet/keystore.ts"),
     background: path.join(__dirname, "src/background.ts"),
   },
   output: {
@@ -11,10 +13,16 @@ module.exports = {
     filename: "[name].js",
   },
   plugins: [
+    // new WorkerPlugin(),
+
     new CopyPlugin([{
       from: "./src/manifest.json",
       to: path.join(__dirname, "dist"),
     },
+    // {
+    //   from: "./src/worker.js",
+    //   to: path.join(__dirname, "dist/js"),
+    // },    
     {
       from: "./src/popup.html",
       to: path.join(__dirname, "dist"),

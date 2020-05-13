@@ -20,8 +20,9 @@ import {
   getCurrentWallet,
   getWallets,
 } from './wallet/addKeyperWallet';
-import worker from './worker';
 import WebWorker from './workerSetup';
+import worker from './worker';
+
 /**
  * Listen messages from popup
  */
@@ -32,6 +33,18 @@ let addressesList = [];
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   //IMPORT_MNEMONIC
   if (request.messageType === MESSAGE_TYPE.IMPORT_MNEMONIC) {
+
+    // let a = 7
+    // let b = 3
+    // workerKeystore.postMessage({
+    //   a,
+    //   b,
+    // });
+
+    // workerKeystore.onmessage = (event) => {
+    //   console.log(`----> worker Result is: ${event.data}`);
+    // };
+
     console.time('total');
     // call import mnemonic method
     const mnemonic = request.mnemonic.trim();
@@ -59,6 +72,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       masterKeychain.privateKey.toString('hex'),
       masterKeychain.chainCode.toString('hex'),
     );
+
     let rootKeystore;
     console.time('<<<--- outside root private key');
     setTimeout(() => {
@@ -68,19 +82,27 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     }, 0);
     console.timeEnd('<<<--- outside root private key');
 
-    const workerKeystore = new WebWorker(worker);
+    console.log("----> worker --> ");
 
-    console.log('keystoreWorker created');
+ 
+    // const url = "chrome-extensions://"+chrome.runtime.id+'/js/worker.js'
+
+    // console.log("url ====> ", url)
+
+    const workerKeystore = new Worker(worker)
+
     console.time('web worker outside');
     workerKeystore.postMessage({
-      extendedKey,
+      extendedKeyBuffer: '123456', //Buffer.from(extendedKey.serialize(), 'hex'),
       password,
     });
+
     workerKeystore.onmessage = (event) => {
       // listen for events from the worker
       console.log(`----> worker Result is: ${event.data}`);
       console.timeEnd('web worker outside');
     };
+
 
     //No '0x' prefix
     const privateKey = masterKeychain
@@ -105,11 +127,11 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       setTimeout(async () => {
         console.time('===>>> addKeyperWallet inside');
         //Add Keyper to Synapse
-        await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
-        wallets = getWallets();
-        addressesList = getAddressesList();
-        currentWallet = getCurrentWallet();
-        saveToStorage();
+        // await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
+        // wallets = getWallets();
+        // addressesList = getAddressesList();
+        // currentWallet = getCurrentWallet();
+        // saveToStorage();
         console.timeEnd('===>>> addKeyperWallet inside');
       }, 0);
       console.timeEnd('<<<=== addKeyperWallet outside');
