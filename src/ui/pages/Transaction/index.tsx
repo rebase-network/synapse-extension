@@ -53,19 +53,19 @@ export const innerForm = (props) => {
         data-testid="field-address"
       />
       <TextField
-        label="Amount"
-        name="amount"
+        label="capacity"
+        name="capacity"
         type="text"
-        placeholder="必须大于6100000000"
+        placeholder="必须大于61"
         fullWidth
         className={classes.textField}
-        value={values.amount}
+        value={values.capacity}
         onChange={handleChange}
         onBlur={handleBlur}
-        error={!!errors.amount}
+        error={!!errors.capacity}
         margin="normal"
         variant="outlined"
-        data-testid="field-amount"
+        data-testid="field-capacity"
       />
       <TextField
         label="Fee"
@@ -74,7 +74,7 @@ export const innerForm = (props) => {
         type="text"
         fullWidth
         className={classes.textField}
-        value={values.fee ? values.fee : 1000}
+        value={values.fee ? values.fee : 0.0001}
         onChange={handleChange}
         onBlur={handleBlur}
         error={!!errors.fee}
@@ -127,9 +127,10 @@ export const innerForm = (props) => {
 };
 
 export default function (props: AppProps, state: AppState) {
-  const [success, setSuccess] = React.useState(false);
+
   const history = useHistory();
   const { network } = React.useContext(AppContext);
+  const [success, setSuccess] = React.useState(false);
   const [valAddress, setValAddress] = React.useState(true);
 
   React.useEffect(() => {
@@ -186,11 +187,11 @@ export default function (props: AppProps, state: AppState) {
         {successNode}
         {validateNode}
         <Formik
-          initialValues={{ address: '', amount: '', fee: '', password: '' }}
+          initialValues={{ address: '', capacity: '', fee: '0.0001', password: '' }}
           onSubmit={onSubmit}
           validationSchema={Yup.object().shape({
             address: Yup.string().required('Required'),
-            amount: Yup.string().required('Required'),
+            capacity: Yup.string().required('Required'),
             fee: Yup.string().required('Required'),
             password: Yup.string().required('Required'),
           })}

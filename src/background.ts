@@ -204,10 +204,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.messageType === MESSAGE_TYPE.RESQUEST_SEND_TX) {
     chrome.storage.sync.get(['currentWallet', 'wallets'], async function (result) {
       const toAddress = request.address.trim();
-      const amount = request.amount.trim();
-      const fee = request.fee.trim();
+      const capacity = request.capacity * (10 ** 8);
+      const fee = request.fee * (10 ** 8);
       const password = request.password.trim();
-
+      
       const fromAddress = result.currentWallet.address;
       const publicKey = result.currentWallet.publicKey;
       const wallet = findInWalletsByPublicKey(publicKey, result.wallets);
@@ -217,14 +217,14 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         privateKey,
         fromAddress,
         toAddress,
-        BigInt(amount),
+        BigInt(capacity),
         BigInt(fee),
       );
 
       chrome.runtime.sendMessage({
         fromAddress: fromAddress,
         toAddress: toAddress,
-        amount: amount.toString(),
+        capacity: capacity.toString(),
         fee: fee.toString(),
         txHash: sendTxHash,
         messageType: MESSAGE_TYPE.TO_TX_DETAIL,
