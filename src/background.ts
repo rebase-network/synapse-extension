@@ -267,8 +267,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         const wallet = findInWalletsByPublicKey(publicKey, result.wallets);
         const keystore = wallet.keystore;
         //TODO check the password
-        const privateKey = '0x' + await Keystore.decrypt(keystore, password);
-
+        const privateKeyBuffer = await Keystore.decrypt(wallet.keystore, password);
+        const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
+        const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
+  
         //send the check result to the page
         if (!privateKey) {
           chrome.runtime.sendMessage({
@@ -421,8 +423,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       // }
 
       //03 - get the private by keystore
-      const privateKey = await Keystore.decrypt(keystore, kPassword);
-      const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
+      const privateKeyBuffer = await Keystore.decrypt(keystore, kPassword);
+      const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
+      const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
+      const publicKey = ckbUtils.privateKeyToPublicKey(privateKey);
       //check the keystore exist or not
       const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
