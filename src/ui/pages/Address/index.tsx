@@ -97,9 +97,9 @@ const BootstrapButton = withStyles({
   },
 })(Button);
 
-interface AppProps { }
+interface AppProps {}
 
-interface AppState { }
+interface AppState {}
 
 type searchObj = {
   address: string;
@@ -117,7 +117,7 @@ export default function (props: AppProps, state: AppState) {
   const [open, setOpen] = React.useState(false);
   const [tip, setTip] = React.useState('');
   const [txs, setTxs] = React.useState([]);
-  const [type, setType] = React.useState("");
+  const [type, setType] = React.useState('');
   const [disableFlg, setDisableFlg] = React.useState(false);
   const { network } = React.useContext(AppContext);
 
@@ -138,7 +138,7 @@ export default function (props: AppProps, state: AppState) {
       if (!currentWallet && !currentWallet.address) return;
       const { address, type } = currentWallet;
       setAddress(address);
-      if (type == "Keccak256" || type == "AnyPay") {
+      if (type == 'Keccak256' || type == 'AnyPay') {
         setDisableFlg(true);
       } else {
         setDisableFlg(false);
@@ -185,11 +185,11 @@ export default function (props: AppProps, state: AppState) {
   const balanceNode = loading ? (
     <div>loading</div>
   ) : (
-      <div className="balance" data-testid="balance">
-        {balance}
-        <span> CKB</span>
-      </div>
-    );
+    <div className="balance" data-testid="balance">
+      {balance}
+      <span> CKB</span>
+    </div>
+  );
 
   const handleClickOpen = () => {
     setOpen(true);
