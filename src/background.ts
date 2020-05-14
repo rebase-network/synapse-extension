@@ -19,7 +19,7 @@ import {
   getCurrentWallet,
   getWallets,
 } from './wallet/addKeyperWallet';
-// import * as Keystore from './wallet/keystore';
+import * as WalletKeystore from './wallet/keystore';
 import * as Keystore from './wallet/passwordEncryptor';
 
 /**
@@ -48,7 +48,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     //store the mnemonic entropy
     const entropy = mnemonicToEntropy(mnemonic);
     const entropyKeystore = await Keystore.encrypt(Buffer.from(entropy, 'hex'), password);
-    console.log(' --- entropyKeystore ---',entropyKeystore);
 
     // words 是否在助记词表中
     const seed = mnemonicToSeedSync(mnemonic);
@@ -209,7 +208,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const capacity = request.capacity * (10 ** 8);
       const fee = request.fee * (10 ** 8);
       const password = request.password.trim();
-      
+
       const fromAddress = result.currentWallet.address;
       const publicKey = result.currentWallet.publicKey;
       const wallet = findInWalletsByPublicKey(publicKey, result.wallets);
@@ -265,12 +264,13 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         const password = request.password;
         const publicKey = result.currentWallet.publicKey;
         const wallet = findInWalletsByPublicKey(publicKey, result.wallets);
-        const keystore = wallet.keystore;
         //TODO check the password
         const privateKeyBuffer = await Keystore.decrypt(wallet.keystore, password);
         const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
         const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
-  
+
+        const keystore = WalletKeystore.encrypt(Buffer.from(privateKey, 'hex'), password)
+
         //send the check result to the page
         if (!privateKey) {
           chrome.runtime.sendMessage({
