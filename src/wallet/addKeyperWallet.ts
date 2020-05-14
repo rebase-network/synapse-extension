@@ -13,7 +13,7 @@ let addressesList = [];
 export async function addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore) {
   await KeyperWallet.init();
 
-  const keystore = KeyperWallet.generateKeystore(privateKey, password);
+  const keystore = await KeyperWallet.generateKeystore(privateKey, password);
   //prefix '0x'
   const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
   //params publicKey No '0x'

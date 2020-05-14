@@ -1,8 +1,10 @@
 import * as scrypt from 'scrypt.js';
 import { SignatureAlgorithm } from '@keyper/specs/lib';
-import { scriptToHash, hexToBytes } from '@nervosnetwork/ckb-sdk-utils/lib';
+import { scriptToHash, hexToBytes, bytesToHex } from '@nervosnetwork/ckb-sdk-utils/lib';
 import { scriptToAddress } from '@keyper/specs/lib/address';
-import * as keystore from '@keyper/specs/lib/keystore';
+// import * as Keystore from '@keyper/specs/lib/Keystore';
+import * as Keystore from '../wallet/passwordEncryptor';
+
 import { getKeystoreFromWallets } from '../wallet/addKeyperWallet';
 
 const { Container } = require('@keyper/container/lib');
@@ -36,7 +38,7 @@ const init = () => {
           if (!key) {
             throw new Error(`no key for address: ${context.address}`);
           }
-          const privateKey = keystore.decrypt(key, context.password); //
+          const privateKey = await Keystore.decrypt(key, context.password); //
 
           const ec = new EC('secp256k1');
           const keypair = ec.keyFromPrivate(privateKey);
@@ -98,9 +100,11 @@ const reloadKeys = () => {
 //   }
 // };
 
-const generateKeystore = (privateKey, password) => {
+const generateKeystore = async (privateKey, password) => {
   const privateKeyBuffer = Buffer.from(privateKey, 'hex');
-  const ks = keystore.encrypt(privateKeyBuffer, password);
+  console.log(' --- privateKeyBuffer ---',privateKeyBuffer);
+  console.log(' --- bytesToHex ---',bytesToHex(privateKeyBuffer))
+  const ks = await Keystore.encrypt(privateKeyBuffer, password);
   return ks;
 };
 
@@ -121,7 +125,7 @@ const saveKeystore = (ks, publicKey) => {
 };
 
 // const saveKeystoreToWallet = (ks, wallet) => {
-//     wallet.keystore = ks;
+//     wallet.Keystore = ks;
 // }
 
 const setUpContainer = (publicKey) => {
@@ -155,7 +159,7 @@ const generateByPrivateKey = async (privateKey, password) => {
   const key = ec.keyFromPrivate(privateKey);
   const publicKey = Buffer.from(key.getPublic().encodeCompressed()).toString('hex');
   // const privateKeyBuffer = Buffer.from(privateKey, "hex")
-  // const ks = keystore.encrypt(privateKeyBuffer, password);
+  // const ks = Keystore.encrypt(privateKeyBuffer, password);
   const ks = generateKeystore(privateKey, password);
   // ks.publicKey = publicKey;
 
