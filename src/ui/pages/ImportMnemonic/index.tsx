@@ -133,16 +133,20 @@ export default function ImportMnemonic(props: AppProps, state: AppState) {
   };
 
   React.useEffect(() => {
+    console.time('***** import mnemonic');
+    console.time('-------import mnemonic: useEffect');
     chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
       if (msg === MESSAGE_TYPE.IS_NOT_VALIDATE_MNEMONIC) {
         console.log('index.tsx => message', msg);
         setValidate(false); //false验证未通过
         return;
       } else if (msg === MESSAGE_TYPE.VALIDATE_PASS) {
+        console.timeEnd('***** import mnemonic');
         setValidate(true);
         history.push('/address');
       }
     });
+    console.timeEnd('-------import mnemonic: useEffect');
   }, []);
 
   let successNode = null;

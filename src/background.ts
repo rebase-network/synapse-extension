@@ -31,6 +31,7 @@ let addressesList = [];
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   //IMPORT_MNEMONIC
   if (request.messageType === MESSAGE_TYPE.IMPORT_MNEMONIC) {
+    console.time('total');
     // call import mnemonic method
     const mnemonic = request.mnemonic.trim();
     const password = request.password.trim();
@@ -44,10 +45,12 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       return;
     }
 
+    console.log(' ======> mnemonic to keystore ');
+    console.time('mnemonic');
     //store the mnemonic entropy
     const entropy = mnemonicToEntropy(mnemonic);
     const entropyKeystore = Keystore.encrypt(Buffer.from(entropy, 'hex'), password);
-
+    console.timeEnd('mnemonic');
     // words 是否在助记词表中
     const seed = mnemonicToSeedSync(mnemonic);
     const masterKeychain = Keychain.fromSeed(seed);
@@ -55,7 +58,15 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       masterKeychain.privateKey.toString('hex'),
       masterKeychain.chainCode.toString('hex'),
     );
-    const rootKeystore = Keystore.encrypt(Buffer.from(extendedKey.serialize(), 'hex'), password);
+    let rootKeystore;
+    console.time('<<<--- outside root private key');
+    setTimeout(() => {
+      console.time('--->>> inside root private key');
+      rootKeystore = Keystore.encrypt(Buffer.from(extendedKey.serialize(), 'hex'), password);
+      console.timeEnd('--->>> inside root private key');
+    }, 0);
+    console.timeEnd('<<<--- outside root private key');
+
 
     //No '0x' prefix
     const privateKey = masterKeychain
@@ -66,7 +77,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     //check the keystore exist or not
     const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
-    if (addressesObj != null && addressesObj != '') {
+    if (addressesObj) {
       const addresses = addressesObj.addresses;
       currentWallet = {
         publicKey: publicKey,
@@ -74,16 +85,24 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         type: addresses[0].type,
         lock: addresses[0].lock,
       };
+      saveToStorage();
     } else {
-      //Add Keyper to Synapse
-      await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
-      wallets = getWallets();
-      addressesList = getAddressesList();
-      currentWallet = getCurrentWallet();
+      console.time('<<<=== addKeyperWallet outside');
+      setTimeout(async () => {
+        console.time('===>>> addKeyperWallet inside');
+        //Add Keyper to Synapse
+        await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
+        wallets = getWallets();
+        addressesList = getAddressesList();
+        currentWallet = getCurrentWallet();
+        saveToStorage();
+        console.timeEnd('===>>> addKeyperWallet inside');
+      }, 0);
+      console.timeEnd('<<<=== addKeyperWallet outside');
     }
-    saveToStorage();
 
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
+    console.timeEnd('total');
   }
 
   //GEN_MNEMONIC
