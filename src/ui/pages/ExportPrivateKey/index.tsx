@@ -90,7 +90,7 @@ export default function (props: AppProps, state: AppState) {
 
   return (
     <div>
-      <PageNav to="/setting" title="Export Private Key" />
+      <PageNav to="/setting" title="Export Private Key / Keystore" />
       <div className={classes.container}>
         <Formik
           initialValues={{ password: '' }}

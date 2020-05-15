@@ -77,14 +77,14 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
 
   let errowShowNode = null;
   if (!success) {
-    errowShowNode = <div >Incorrect password</div>;
-  } 
+    errowShowNode = <div>Incorrect password</div>;
+  }
   if (!isValidateKPassword) {
-    errowShowNode = <div >Incorrect keystorePassword</div>;
-  }  
+    errowShowNode = <div>Incorrect keystorePassword</div>;
+  }
   if (!isValidateUPassword) {
-    errowShowNode = <div >Incorrect userPassword</div>;
-  } 
+    errowShowNode = <div>Incorrect userPassword</div>;
+  }
   const classes = useStyles();
 
   const innerForm = (props) => {
@@ -151,7 +151,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
     const keystoreForm = (
       <Form className="form-keystore" id="form-keystore" onSubmit={handleSubmit}>
         <TextField
-          label="keystore"
+          label="Keystore"
           name="keystore"
           multiline
           rows="4"
@@ -167,7 +167,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           data-testid="field-keystore"
         />
         <TextField
-          label="keystore password"
+          label="Keystore Password"
           name="keystorePassword"
           type="password"
           fullWidth
@@ -184,7 +184,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           data-testid="field-keystore-password"
         />
         <TextField
-          label="user password"
+          label="Wallet Password"
           name="userPassword"
           type="password"
           fullWidth
@@ -248,7 +248,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
 
   return (
     <div>
-      <PageNav to="/setting" title="Import Private Key" />
+      <PageNav to="/setting" title="Import Private Key / Keystore" />
       <div className={classes.container}>
         {errowShowNode}
         <RadioGroup row value={value} onChange={handleRadioChange} className={classes.radioGroup}>

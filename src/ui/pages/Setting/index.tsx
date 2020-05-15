@@ -32,12 +32,12 @@ const settingItems = [
   },
   {
     link: '/export-private-key',
-    text: 'Export Private Key',
+    text: 'Export Private Key / Keystore',
     testId: 'exportPrivateKey',
   },
   {
     link: '/import-private-key',
-    text: 'Import Private Key',
+    text: 'Import Private Key / Keystore',
     testId: 'importPrivateKey',
   },
 ];

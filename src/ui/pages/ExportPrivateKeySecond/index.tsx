@@ -15,15 +15,15 @@ const useStyles = makeStyles({
   radioGroup: {
     'justify-content': 'center',
   },
-  divShow:{
+  divShow: {
     'overflow-wrap': 'anywhere',
     'margin-top': '20px',
   },
 });
 
-interface AppProps { }
+interface AppProps {}
 
-interface AppState { }
+interface AppState {}
 
 export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
@@ -58,7 +58,7 @@ export default function (props: AppProps, state: AppState) {
 
   return (
     <div>
-      <PageNav to="/export-private-key" title="Export Private Key" />
+      <PageNav to="/export-private-key" title="Export Private Key / Keystore" />
       <div className={classes.container}>
         <RadioGroup row value={value} onChange={handleRadioChange} className={classes.radioGroup}>
           <FormControlLabel
@@ -74,7 +74,7 @@ export default function (props: AppProps, state: AppState) {
             label="Keystore"
           />
         </RadioGroup>
-        <div className={classes.divShow} data-testid="privateKey" hidden={isPrivate} >
+        <div className={classes.divShow} data-testid="privateKey" hidden={isPrivate}>
           {privateKey}
         </div>
         <div className={classes.divShow} data-testid="json-keystore" hidden={isJSON}>

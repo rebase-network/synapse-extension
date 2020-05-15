@@ -34,7 +34,7 @@ describe('import mnemonic page', () => {
 
     const txDetailTitle = getByTestId('export-private-key-title');
     expect(container).toContainElement(txDetailTitle);
-    expect(txDetailTitle).toHaveTextContent('Export Private Key');
+    expect(txDetailTitle).toHaveTextContent('Export Private Key / Keystore');
   });
 
   it('should render form fields: Password', async () => {

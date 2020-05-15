@@ -36,11 +36,11 @@ describe('setting page', () => {
 
   it('should render item: Export Private Key', async () => {
     const mnemonic = getByTestId('exportPrivateKey');
-    expect(mnemonic).toHaveTextContent('Export Private Key');
+    expect(mnemonic).toHaveTextContent('Export Private Key / Keystore');
   });
 
   it('should render item: Import Private Key', async () => {
     const mnemonic = getByTestId('importPrivateKey');
-    expect(mnemonic).toHaveTextContent('Import Private Key');
+    expect(mnemonic).toHaveTextContent('Import Private Key / Keystore');
   });
 });
