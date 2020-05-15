@@ -1,18 +1,17 @@
 import * as React from 'react';
-import Title from '../../Components/Title';
-import { Button, TextField } from '@material-ui/core';
 
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
+import { Link } from '@material-ui/core';
 import { MESSAGE_TYPE } from '../../../utils/constants';
-import { useHistory } from 'react-router-dom';
-
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
+
+import Box from '@material-ui/core/Box';
+import SyncIcon from '@material-ui/icons/Sync';
 import Grid from '@material-ui/core/Grid';
-import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import Typography from '@material-ui/core/Typography';
+
+import PageNav from '../../Components/PageNav';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -24,176 +23,138 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     overflow: 'hidden',
     margin: `${theme.spacing(1)}px auto`,
+    marginTop: '20',
+    marginBottom: '20',
     // padding: theme.spacing(0, 3),
   },
-  paper: {
-    maxWidth: 400,
-    marginLeft: '5px',
-    // margin: `${theme.spacing(1)}px auto`,
-    // padding: theme.spacing(2),
+  divider: {
+    marginTop: '20',
+    marginBottom: '20',
   },
+  typography: {
+    overflowWrap: "anywhere",
+  }
 }));
 
-interface AppProps {}
+interface AppProps { }
 
-interface AppState {}
+interface AppState { }
 
 export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
 
   const [status, setStatus] = React.useState('');
-  const [amount, setAmount] = React.useState(0);
+  const [capacity, setCapacity] = React.useState(0);
   const [fee, setFee] = React.useState(0);
   const [inputs, setInputs] = React.useState('');
   const [outputs, setOutputs] = React.useState('');
   const [txHash, setTxHash] = React.useState('');
   const [block, setBlock] = React.useState('');
+  const [txDateTime, setTxDateTime] = React.useState("");
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       if (message.messageType === MESSAGE_TYPE.TX_DETAIL) {
-        setAmount(message.tradeAmount);
-        setStatus(message.status);
-        setFee(message.fee);
+        setCapacity(message.capacity / (10 ** 8));
+        setFee(message.fee / (10 ** 8));
         setInputs(message.inputs);
         setOutputs(message.outputs);
         setTxHash(message.txHash);
-        setBlock(message.block);
+        setStatus(message.status);
+        setBlock(message.blockNumber);
+        const dateTimeStr = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString();
+        setTxDateTime(dateTimeStr);
       }
     });
   }, []);
 
+  let statusIconNode = <Box textAlign="center" fontSize={40}>
+    <SyncIcon />
+  </Box>;
+  if (status == "finished") {
+    statusIconNode = <Box textAlign="center" fontSize={40}>
+      <CheckCircleIcon />
+    </Box>
+  }
   return (
     <div>
-      {/* 001- */}
+      <PageNav to="/address" title="Address" />
       <div className={classes.root}>
-        <Paper className={classes.paper}>
-          <Grid container wrap="nowrap" spacing={2} >
-            {/* <Grid item>
-              <Avatar>W</Avatar>
-            </Grid> */}
-            <Grid item xs zeroMinWidth>
-              <Avatar>W</Avatar>
-              <Typography noWrap>{status}</Typography>
-              <Typography noWrap>03/03/2020 12:30</Typography>
-            </Grid>
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            {/* <Box textAlign="center" fontSize={40}>
+                  <SyncIcon/>
+              </Box> */}
+            {statusIconNode}
+            <Box textAlign="center" fontSize={22}>
+              {status}
+            </Box>
+            <Box textAlign="center" fontSize={16}>
+              {txDateTime}
+            </Box>
           </Grid>
-        </Paper>
+        </Grid>
         <br />
-      </div>
-
-      {/* 002 */}
-      <div className={classes.root}>
-        <Paper className={classes.paper}>
-          <Grid container wrap="nowrap" spacing={2}>
-            <Grid item>
-              {/* <Avatar>W</Avatar> */}
-              <Typography noWrap>Amount </Typography>
-            </Grid>
-            <Grid item xs>
-              <Typography>{amount}</Typography>
-            </Grid>
-          </Grid>
-          <Grid container wrap="nowrap" spacing={2}>
-            <Grid item>
-              {/* <Avatar>W</Avatar> */}
-              <Typography noWrap>Fee&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Typography>
-            </Grid>
-            <Grid item xs>
-              <Typography>{fee}</Typography>
-            </Grid>
-          </Grid>
-          <Grid container wrap="nowrap" spacing={2}>
-            <Grid item>
-              {/* <Avatar>W</Avatar> */}
-              <Typography noWrap>Inputs &nbsp;&nbsp;</Typography>
-            </Grid>
-            <Grid item xs>
-              <Typography>{inputs}</Typography>
-            </Grid>
-          </Grid>
-          <Grid container wrap="nowrap" spacing={2}>
-            <Grid item>
-              {/* <Avatar>W</Avatar> */}
-              <Typography noWrap>Outputs&nbsp; </Typography>
-            </Grid>
-            <Grid item xs>
-              <Typography>{outputs}</Typography>
-            </Grid>
-          </Grid>
-        </Paper>
+        <Divider variant="middle" className={classes.divider} />
         <br />
-      </div>
-      {/* 003 */}
-      <div className={classes.root}>
-        <Paper className={classes.paper}>
-          <Grid container wrap="nowrap" spacing={2}>
-            <Grid item>
-              {/* <Avatar>W</Avatar> */}
-              <Typography noWrap>Tx Hash</Typography>
-            </Grid>
-            <Grid item xs>
-              <Typography>{txHash}</Typography>
-            </Grid>
+        <Grid container wrap="nowrap" spacing={2}>
+          <Grid item>
+            <Typography noWrap>&nbsp;&nbsp;Capacity&nbsp;&nbsp;</Typography>
           </Grid>
-          <Grid container wrap="nowrap" spacing={2}>
-            <Grid item>
-              {/* <Avatar>W</Avatar> */}
-              <Typography noWrap>Block&nbsp;&nbsp;&nbsp;&nbsp; </Typography>
-            </Grid>
-            <Grid item xs>
-              <Typography>{block}</Typography>
-            </Grid>
+          <Grid item xs>
+            <Typography>{capacity} CKB</Typography>
           </Grid>
-        </Paper>
+        </Grid>
+        <Grid container wrap="nowrap" spacing={2}>
+          <Grid item>
+            <Typography noWrap>&nbsp;&nbsp;Fee&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Typography>
+          </Grid>
+          <Grid item xs>
+            <Typography>{fee} CKB </Typography>
+          </Grid>
+        </Grid>
+        <Grid container wrap="nowrap" spacing={2}>
+          <Grid item>
+            <Typography noWrap>&nbsp;&nbsp;Inputs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Typography>
+          </Grid>
+          <Grid item xs>
+            <Typography className={classes.typography}>{inputs}</Typography>
+          </Grid>
+        </Grid>
+        <Grid container wrap="nowrap" spacing={2}>
+          <Grid item>
+            <Typography noWrap>&nbsp;Outputs &nbsp;&nbsp;&nbsp;</Typography>
+          </Grid>
+          <Grid item xs>
+            <Typography className={classes.typography}>{outputs}</Typography>
+          </Grid>
+        </Grid>
         <br />
+        <Divider variant="middle" className={classes.divider} />
+        <br />
+        <Grid container wrap="nowrap" spacing={2} >
+          <Grid item>
+            <Typography noWrap>&nbsp;&nbsp;Tx Hash&nbsp;&nbsp;</Typography>
+          </Grid>
+          <Grid item xs >
+            <Link
+              rel="noreferrer"
+              target="_blank"
+              href={'https://explorer.nervos.org/aggron/transaction/' + txHash}
+            >
+              <Typography className={classes.typography}>{txHash}</Typography>
+            </Link>
+          </Grid>
+        </Grid>
+        {/* <Grid container wrap="nowrap" spacing={2}>
+          <Grid item>
+            <Typography noWrap>&nbsp;&nbsp;Block&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Typography>
+          </Grid>
+          <Grid item xs>
+            <Typography>{block}</Typography>
+          </Grid>
+        </Grid> */}
       </div>
     </div>
-
-    // <div className={classes.container}>
-    //   <Title title="Transaction Detail" testId="tx-detail-title" />
-    //   <div className="status" data-testid="status">
-    //       <span className="">status  </span>
-    //       {status}
-    //   </div>
-    //   <br/>
-    //   <br/>
-    //   <div className="amount" data-testid="amount">
-    //       <span className="">Amount  </span>
-    //       {amount}
-    //       <span className="">  CKB</span>
-    //   </div>
-    //   <br/>
-
-    //   <div className="fee" data-testid="fee">
-    //       <span className="">Fee  </span>
-    //       {fee}
-    //       <span className="">  CKB</span>
-    //   </div>
-    //   <br/>
-
-    //   <div className="inputs" data-testid="inputs">
-    //       <span className="">inputs  </span>
-    //       {inputs}
-    //   </div>
-    //   <br/>
-
-    //   <div className="outputs" data-testid="outputs">
-    //       <span className="">outputs  </span>
-    //       {outputs}
-    //   </div>
-    //   <br/>
-
-    //   <div className="" data-testid="">
-    //       <span className=""> ------------ </span>
-    //   </div>
-    //   <br/>
-
-    //   <div className="txHash" data-testid="txHash">
-    //       <span className=""> TxHash </span>
-    //       {txHash}
-    //   </div>
-    //   <br/>
-    // </div>
   );
 }
