@@ -55,6 +55,7 @@ export const innerForm = (props) => {
         id="submit-button"
         disabled={isSubmitting}
         color="primary"
+        variant="contained"
         data-testid="submit-button"
       >
         Confirm
