@@ -21,6 +21,7 @@ import {
 } from './wallet/addKeyperWallet';
 import * as WalletKeystore from './wallet/keystore';
 import * as Keystore from './wallet/passwordEncryptor';
+import * as _ from 'lodash';
 
 /**
  * Listen messages from popup
@@ -311,8 +312,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         //TODO check the password
         const entropy = await Keystore.decrypt(entropyKeystore, password);
 
-        // //send the check result to the page
-        if (entropy !== null) {
+        //send the check result to the page
+        if (_.isEmpty(entropy)) {
           chrome.runtime.sendMessage({
             isValidatePassword: false,
             messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
@@ -334,7 +335,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const entropyKeystore = request.message.entropyKeystore;
 
     const entropy = await Keystore.decrypt(entropyKeystore, password);
-    const mnemonic = entropyToMnemonic(entropy.toString('hex'));
+    const mnemonic = entropyToMnemonic(entropy);
 
     chrome.runtime.sendMessage({
       // mnemonic: JSON.stringify(mnemonic),
