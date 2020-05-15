@@ -1,13 +1,13 @@
 import Axios, { AxiosRequestConfig } from 'axios';
+import { Ckb } from './constants';
 
-export const getBalanceByAddress = async (address: string): Promise<number> => {
+export const getAddressInfo = async (address: string): Promise<{ capacity: string }> => {
   // call api
-  let url = 'http://101.200.147.143:2333/cell/getBalanceByAddress';
-  const result = await Axios.get(url + `/${address}`);
-  console.log('result: ', result);
+  const result = await Axios.get(`${Ckb.testnetApiUrl}/address/${address}`);
+  console.log('getAddressInfo result: ', result);
   return result.data;
 };
 
 export default {
-  getBalanceByAddress,
+  getAddressInfo,
 };

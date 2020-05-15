@@ -68,6 +68,8 @@ export const Ckb = {
   TestNetCodeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
   rpcUrl: 'http://127.0.0.1:8114',
   remoteRpcUrl: 'http://106.13.40.34:8114/',
+  // testnetApiUrl: 'http://101.200.147.143:2333',
+  testnetApiUrl: 'http://localhost:3000',
 };
 
 export const KEYSTORE_TYPE = {
