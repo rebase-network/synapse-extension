@@ -10,8 +10,8 @@ import {
   ThemeProvider,
 } from '@material-ui/core/styles';
 import { ListItem, ListItemText, Typography } from '@material-ui/core';
-import { truncateAddress } from '../../../utils/formatters';
-import { getBalanceByAddress } from '../../../utils/apis';
+import { truncateAddress, shannonToCKBFormatter } from '../../../utils/formatters';
+import { getAddressInfo } from '../../../utils/apis';
 
 const useStylesTheme = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,12 +57,12 @@ export default function (props: AppProps, state: AppState) {
   const history = useHistory();
   const { addressInfo } = props;
   const { address, type } = addressInfo;
-  const [capacity, setCapacity] = React.useState(0);
+  const [capacity, setCapacity] = React.useState('0');
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const result = await getBalanceByAddress(address);
-      setCapacity(result);
+      const { capacity } = await getAddressInfo(address);
+      setCapacity(shannonToCKBFormatter(capacity));
     };
     fetchData();
   }, [capacity]);
@@ -94,7 +94,7 @@ export default function (props: AppProps, state: AppState) {
                 className={classes.inline}
                 color="textPrimary"
               >
-                {capacity/(10 ** 8) + ' CKB'}
+                {capacity + ' CKB'}
               </Typography>
               <br />
               {type}

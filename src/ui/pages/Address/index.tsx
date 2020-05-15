@@ -21,9 +21,10 @@ import Divider from '@material-ui/core/Divider';
 import Box from '@material-ui/core/Box';
 import { MESSAGE_TYPE } from '../../../utils/constants';
 import { AppContext } from '../../App';
-import { truncateAddress } from '../../../utils/formatters';
-import { getBalanceByAddress } from '../../../utils/apis';
+import { truncateAddress, shannonToCKBFormatter } from '../../../utils/formatters';
+import { getAddressInfo } from '../../../utils/apis';
 const QrCode = require('qrcode.react');
+import { EXPLORER_URL } from '../../../utils/constants';
 
 const useStyles = makeStyles({
   container: {
@@ -113,7 +114,7 @@ export default function (props: AppProps, state: AppState) {
 
   const [loading, setLoading] = React.useState(true);
   const [address, setAddress] = React.useState(addressFromUrl);
-  const [balance, setBalance] = React.useState(0);
+  const [capacity, setCapacity] = React.useState('0');
   const [open, setOpen] = React.useState(false);
   const [tip, setTip] = React.useState('');
   const [txs, setTxs] = React.useState([]);
@@ -121,9 +122,9 @@ export default function (props: AppProps, state: AppState) {
   const [disableFlg, setDisableFlg] = React.useState(false);
   const { network } = React.useContext(AppContext);
 
-  const updateBalance = async (address) => {
-    const balance = await getBalanceByAddress(address);
-    setBalance(balance / 10 ** 8);
+  const updateCapacity = async (address: string) => {
+    const { capacity } = await getAddressInfo(address);
+    setCapacity(shannonToCKBFormatter(capacity));
     setLoading(false);
   };
 
@@ -144,11 +145,8 @@ export default function (props: AppProps, state: AppState) {
         setDisableFlg(false);
       }
       setType(type);
-      updateBalance(address);
+      updateCapacity(address);
     });
-    // } else {
-    //   updateBalance(addressFromUrl);
-    // }
 
     setLoading(true);
 
@@ -161,7 +159,7 @@ export default function (props: AppProps, state: AppState) {
         setTxs(msg.txs);
       }
     });
-  }, [address, balance, type]);
+  }, [address, capacity, type]);
 
   const onSendtx = () => {
     history.push('/send-tx');
@@ -182,11 +180,11 @@ export default function (props: AppProps, state: AppState) {
     history.push('./mnemonic-setting');
   }
 
-  const balanceNode = loading ? (
-    <div>loading</div>
+  const capacityNode = loading ? (
+    <div>Loading...</div>
   ) : (
-    <div className="balance" data-testid="balance">
-      {balance}
+    <div className="capacity" data-testid="capacity">
+      {capacity}
       <span> CKB</span>
     </div>
   );
@@ -230,9 +228,8 @@ export default function (props: AppProps, state: AppState) {
         <br />
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            {/* <Paper className={classesTheme.paper}>{balanceNode}</Paper> */}
             <Box textAlign="center" fontSize={22}>
-              {balanceNode}
+              {capacityNode}
             </Box>
           </Grid>
           <Grid item xs={6} sm={6} className={classes.button}>
@@ -274,11 +271,7 @@ export default function (props: AppProps, state: AppState) {
                 <ListItem>
                   <ListItemText primary={moment(item.timestamp).format('YYYY-MM-DD HH:mm:ss')} />
 
-                  <Link
-                    rel="noreferrer"
-                    target="_blank"
-                    href={'https://explorer.nervos.org/aggron/transaction/' + item.hash}
-                  >
+                  <Link rel="noreferrer" target="_blank" href={EXPLORER_URL + item.hash}>
                     <Tooltip title="View on Explorer" placement="top">
                       <CallMadeIcon />
                     </Tooltip>
