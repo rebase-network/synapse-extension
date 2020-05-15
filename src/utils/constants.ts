@@ -77,3 +77,5 @@ export const KEYSTORE_TYPE = {
   KEYSTORE_TO_KEYSTORE: '2',
   PRIVATEKEY_TO_KEYSTORE: '3',
 };
+
+export const EXPLORER_URL = 'https://explorer.nervos.org/aggron/transaction/';
