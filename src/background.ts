@@ -10,7 +10,7 @@ import { generateMnemonic } from './wallet/key';
 import Keychain from './wallet/keychain';
 import { ExtendedPrivateKey } from './wallet/key';
 import { sendSimpleTransaction } from './sendSimpleTransaction';
-import { getStatusByTxHash } from './transaction';
+import { getStatusByTxHash,getBlockNumberByTxHash } from './transaction';
 import Address from './wallet/address';
 import { getTxHistoryByAddress } from './background/transaction';
 import {
@@ -238,25 +238,24 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
   //transactioin detail
   if (request.messageType === MESSAGE_TYPE.REQUEST_TX_DETAIL) {
-    // chrome.storage.local.get(['wallet'], async function( {wallet} ) {
 
     const txHash = request.message.txHash;
-    const amount = request.message.amount;
+    const capacity = request.message.capacity;
     const fee = request.message.fee;
     const inputs = request.message.fromAddress;
     const outputs = request.message.toAddress;
     const status = await getStatusByTxHash(txHash);
-
+    let blockNumber = await getBlockNumberByTxHash(txHash);
     chrome.runtime.sendMessage({
       status,
-      tradeAmount: amount,
+      capacity,
       fee,
       inputs,
       outputs,
       txHash,
+      blockNumber: blockNumber.toString(),
       messageType: MESSAGE_TYPE.TX_DETAIL,
     });
-    // });
   }
 
   //export-private-key check
