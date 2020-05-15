@@ -1,1 +1,1 @@
-export { getBalanceByAddress } from '../utils/apis';
+export { getAddressInfo } from '../utils/apis';
