@@ -150,7 +150,7 @@ export default function TxHistoryDetail(props: AppProps, state: AppState) {
               <Typography noWrap>Block Number&nbsp;&nbsp;&nbsp;&nbsp;</Typography>
             </Grid>
             <Grid item xs>
-              <Typography>{tx['block_num']}</Typography>
+              <Typography>{tx['blockNum']}</Typography>
             </Grid>
           </Grid>
         </Paper>

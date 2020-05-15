@@ -173,7 +173,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.messageType === 'xxxx') {
     const tx = {
       hash: '0x670133ec69d03de5f76f320b38c434cb474620d961c0dcecc5b73f64c3755947',
-      block_num: 190532,
+      blockNum: 190532,
       timestamp: 1588864031062,
       inputs: [
         {

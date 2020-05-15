@@ -196,7 +196,8 @@ export default function (props: AppProps, state: AppState) {
   };
 
   const onTxDetail = () => {
-    history.push('/tx-history-detail');
+    return
+    // history.push('/tx-history-detail');
   };
 
   const handleClose = () => {
