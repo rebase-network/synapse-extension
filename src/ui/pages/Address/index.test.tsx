@@ -44,9 +44,9 @@ describe('Address page', () => {
     expect(address).toHaveTextContent(/ck|loading|null|undefined|/);
   });
 
-  it('should render balance', () => {
-    const balance = screen.queryByTestId('balance');
-    expect(balance).toBeNull();
+  it('should render capacity', () => {
+    const capacity = screen.queryByTestId('capacity');
+    expect(capacity).toBeNull();
   });
 
   it('should render receive / send btn', () => {
