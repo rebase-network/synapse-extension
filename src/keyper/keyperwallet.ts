@@ -102,8 +102,6 @@ const reloadKeys = () => {
 
 const generateKeystore = async (privateKey, password) => {
   const privateKeyBuffer = Buffer.from(privateKey, 'hex');
-  console.log(' --- privateKeyBuffer ---',privateKeyBuffer);
-  console.log(' --- bytesToHex ---',bytesToHex(privateKeyBuffer))
   const ks = await Keystore.encrypt(privateKeyBuffer, password);
   return ks;
 };
@@ -155,11 +153,15 @@ const setUpContainer = (publicKey) => {
 };
 
 const generateByPrivateKey = async (privateKey, password) => {
+  
+  console.log(privateKey);
+
   const ec = new EC('secp256k1');
   const key = ec.keyFromPrivate(privateKey);
   const publicKey = Buffer.from(key.getPublic().encodeCompressed()).toString('hex');
   // const privateKeyBuffer = Buffer.from(privateKey, "hex")
   // const ks = Keystore.encrypt(privateKeyBuffer, password);
+  console.log(privateKey);
   const ks = generateKeystore(privateKey, password);
   // ks.publicKey = publicKey;
 

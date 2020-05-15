@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: sueRimn
+ * @Date: 2020-05-14 11:24:35
+ * @LastEditors: sueRimn
+ * @LastEditTime: 2020-05-15 17:10:28
+ */ 
 export const MESSAGE_TYPE = {
   IMPORT_MNEMONIC: 'IMPORT_MNEMONIC',
   GEN_MNEMONIC: 'GEN_MNEMONIC',
@@ -26,7 +34,7 @@ export const MESSAGE_TYPE = {
   // import-keystore
   IMPORT_KEYSTORE: 'IMPORT_KEYSTORE',
   IMPORT_KEYSTORE_OK: 'IMPORT_KEYSTORE_OK',
-
+  
   //export-private-key
   EXPORT_PRIVATE_KEY_CHECK: 'EXPORT_PRIVATE_KEY_CHECK',
   EXPORT_PRIVATE_KEY_CHECK_RESULT: 'EXPORT_PRIVATE_KEY_CHECK_RESULT',

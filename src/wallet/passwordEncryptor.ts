@@ -10,3 +10,15 @@ export async function decrypt(
 ) {
   return await passworder.decrypt(password, input);
 }
+
+export async function checkPassword(
+  input: string,
+  password: string,
+) {
+  try {
+    return await passworder.decrypt(password, input);
+  } catch (error) {
+    console.log('error',error);
+    return null;
+  }
+}

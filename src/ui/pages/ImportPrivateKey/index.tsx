@@ -29,9 +29,9 @@ interface AppProps {}
 interface AppState {}
 
 export default function ImportPrivateKey(props: AppProps, state: AppState) {
-  const [success, setSuccess] = React.useState(false);
-  const history = useHistory();
   const { network } = React.useContext(AppContext);
+  const [success, setSuccess] = React.useState(true);
+  const history = useHistory();
   const [isHidePrivate, setIsHidePrivate] = React.useState(false);
   const [value, setValue] = React.useState('1');
 
@@ -42,6 +42,9 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
         msg.messageType === MESSAGE_TYPE.IMPORT_KEYSTORE_OK
       ) {
         history.push('/address');
+        // setSuccess(true);
+      } else if (msg.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR) {
+        setSuccess(false);
       }
     });
   }, []);
@@ -49,10 +52,8 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
   const onSubmit = async (values) => {
     if (!isHidePrivate) {
       chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_PRIVATE_KEY });
-      setSuccess(true);
     } else {
       chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_KEYSTORE });
-      setSuccess(true);
     }
   };
 
@@ -65,8 +66,10 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
     }
   };
 
-  let successNode = null;
-  if (success) successNode = <div className="success">Import Successfully</div>;
+  let errowShowNode = null;
+  if (!success) {
+    errowShowNode = <div >Incorrect password</div>;
+  }
 
   const classes = useStyles();
 
@@ -90,7 +93,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           label="PrivateKey"
           name="privateKey"
           type="text"
-          placeholder="私钥"
+          placeholder="privateKey"
           fullWidth
           className={classes.textField}
           value={values.privateKey}
@@ -105,7 +108,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           label="Password"
           name="password"
           type="password"
-          placeholder="原密码"
+          placeholder="synapse password"
           fullWidth
           className={classes.textField}
           value={values.password}
@@ -233,7 +236,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
     <div>
       <PageNav to="/setting" title="Import Private Key" />
       <div className={classes.container}>
-        {successNode}
+        {errowShowNode}
         <RadioGroup row value={value} onChange={handleRadioChange} className={classes.radioGroup}>
           <FormControlLabel
             value="1"
