@@ -20,7 +20,7 @@ import {
   getWallets,
 } from './wallet/addKeyperWallet';
 import * as WalletKeystore from './wallet/keystore';
-import * as Keystore from './wallet/passwordEncryptor';
+import * as PasswordKeystore from './wallet/passwordEncryptor';
 import * as _ from 'lodash';
 
 /**
@@ -48,7 +48,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     //store the mnemonic entropy
     const entropy = mnemonicToEntropy(mnemonic);
-    const entropyKeystore = await Keystore.encrypt(Buffer.from(entropy, 'hex'), password);
+    const entropyKeystore = await PasswordKeystore.encrypt(Buffer.from(entropy, 'hex'), password);
 
     // words 是否在助记词表中
     const seed = mnemonicToSeedSync(mnemonic);
@@ -57,7 +57,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       masterKeychain.privateKey.toString('hex'),
       masterKeychain.chainCode.toString('hex'),
     );
-    const rootKeystore = await Keystore.encrypt(Buffer.from(extendedKey.serialize(), 'hex'), password);
+    const rootKeystore = await PasswordKeystore.encrypt(Buffer.from(extendedKey.serialize(), 'hex'), password);
 
     //No '0x' prefix
     const privateKey = masterKeychain
@@ -115,7 +115,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     //store the mnemonic entropy
     const entropy = mnemonicToEntropy(mnemonic);
-    const entropyKeystore = Keystore.encrypt(Buffer.from(entropy, 'hex'), password);
+    const entropyKeystore = PasswordKeystore.encrypt(Buffer.from(entropy, 'hex'), password);
 
     const seed = mnemonicToSeedSync(mnemonic);
     const masterKeychain = Keychain.fromSeed(seed);
@@ -123,7 +123,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       masterKeychain.privateKey.toString('hex'),
       masterKeychain.chainCode.toString('hex'),
     );
-    const rootKeystore = Keystore.encrypt(Buffer.from(extendedKey.serialize(), 'hex'), password);
+    const rootKeystore = PasswordKeystore.encrypt(Buffer.from(extendedKey.serialize(), 'hex'), password);
 
     //No '0x' prefix
     const privateKey = masterKeychain
@@ -213,7 +213,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const fromAddress = result.currentWallet.address;
       const publicKey = result.currentWallet.publicKey;
       const wallet = findInWalletsByPublicKey(publicKey, result.wallets);
-      const privateKeyBuffer = await Keystore.decrypt(wallet.keystore, password);
+      const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
       const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
       const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
 
@@ -265,7 +265,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const publicKey = result.currentWallet.publicKey;
       const wallet = findInWalletsByPublicKey(publicKey, result.wallets);
 
-      const privateKeyBuffer = await Keystore.decrypt(wallet.keystore, password);
+      const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
       const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
       const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
 
@@ -308,7 +308,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const entropyKeystore = wallet.entropyKeystore;
 
       //check the password
-      const entropy = await Keystore.decrypt(entropyKeystore, password);
+      const entropy = await PasswordKeystore.decrypt(entropyKeystore, password);
 
       //send the check result to the page
       if (_.isEmpty(entropy)) {
@@ -332,7 +332,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const password = request.message.password;
     const entropyKeystore = request.message.entropyKeystore;
 
-    const entropy = await Keystore.decrypt(entropyKeystore, password);
+    const entropy = await PasswordKeystore.decrypt(entropyKeystore, password);
     const mnemonic = entropyToMnemonic(entropy);
 
     chrome.runtime.sendMessage({
@@ -350,23 +350,19 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       privateKey = privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`;
       const publicKey = ckbUtils.privateKeyToPublicKey(privateKey);
       const password = request.password.trim();
-      console.log('--- password ---', password);
 
       //get the current keystore and check the password
       const currentPublicKey = result.currentWallet.publicKey;
-      const wallet = findInWalletsByPublicKey(currentPublicKey, result.wallets);
-      const keystore = wallet.keystore;
-      if (keystore === undefined || keystore === '' || keystore === 'undefined') {
-        throw new Error('currentWallet keystore is null');
-      }
-      const privateKeyObj = await Keystore.checkPassword(keystore, password);
+      const currWallet = findInWalletsByPublicKey(currentPublicKey, result.wallets);
+      const currKeystore = currWallet.keystore;
+      const privateKeyObj = await PasswordKeystore.checkByPassword(currKeystore, password);
       if (privateKeyObj == null) {
         chrome.runtime.sendMessage({
           //'password incorrect',
           messageType: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR,
         });
         return;
-      } 
+      }
 
       //check the keystore exist or not by publicKey
       const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
@@ -398,7 +394,13 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     });
   }
 
-  // import keystore
+  /**
+   * import keystore
+   * 1- check the kPassword(keystore password) by the keystore
+   * 2- check the uPassword(synpase) by the currentWallet
+   * 3- get the privateKey by the keystore
+   * 4- create the keystore(passworder) by the privatekey
+   */
   if (request.messageType === MESSAGE_TYPE.IMPORT_KEYSTORE) {
     chrome.storage.local.get(['currentWallet', 'wallets'], async function (result) {
       //01- get the params from request
@@ -407,30 +409,30 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const uPassword = request.userPassword.trim();
 
       //02- check the keystore by the keystorePassword
-      if (!Keystore.decrypt(keystore, kPassword)) {
-        throw new Error('password incorrect');
+      if (!WalletKeystore.checkPasswd(keystore, kPassword)) {
+        chrome.runtime.sendMessage({
+          //'password incorrect',
+          messageType: MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_KPASSWORD,
+        });
+        return;
       }
 
       //021- check the synapse password by the currentWallet Keystore
       const currentPublicKey = result.currentWallet.publicKey;
       const currWallet = findInWalletsByPublicKey(currentPublicKey, result.wallets);
-      const currentKeystore = currWallet.keystore;
-      if (
-        currentKeystore === undefined ||
-        currentKeystore === '' ||
-        currentKeystore === 'undefined'
-      ) {
-        throw new Error('currentWallet keystore is null');
-      }
-      if (!Keystore.decrypt(currentKeystore, uPassword)) {
-        throw new Error('password incorrect');
+      const currKeystore = currWallet.keystore;
+      const privateKeyObj = await PasswordKeystore.checkByPassword(currKeystore, uPassword);
+      if (privateKeyObj == null) {
+        chrome.runtime.sendMessage({
+          //'password incorrect',
+          messageType: MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_UPASSWORD,
+        });
+        return;
       }
 
-      //03 - get the private by keystore
-      const privateKeyBuffer = await Keystore.decrypt(keystore, kPassword);
-      const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
-      const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
-      const publicKey = ckbUtils.privateKeyToPublicKey(privateKey);
+      //03 - get the private by input keystore
+      const privateKey = await WalletKeystore.decrypt(keystore, kPassword);
+      const publicKey = ckbUtils.privateKeyToPublicKey('0x' + privateKey);
       //check the keystore exist or not by the publicKey
       const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 

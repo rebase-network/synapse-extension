@@ -11,7 +11,7 @@ export async function decrypt(
   return await passworder.decrypt(password, input);
 }
 
-export async function checkPassword(
+export async function checkByPassword(
   input: string,
   password: string,
 ) {

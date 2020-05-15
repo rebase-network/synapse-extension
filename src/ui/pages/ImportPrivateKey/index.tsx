@@ -31,6 +31,8 @@ interface AppState {}
 export default function ImportPrivateKey(props: AppProps, state: AppState) {
   const { network } = React.useContext(AppContext);
   const [success, setSuccess] = React.useState(true);
+  const [isValidateKPassword, setIsValidateKPassword] = React.useState(true);
+  const [isValidateUPassword, setIsValidateUPassword] = React.useState(true);
   const history = useHistory();
   const [isHidePrivate, setIsHidePrivate] = React.useState(false);
   const [value, setValue] = React.useState('1');
@@ -42,9 +44,13 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
         msg.messageType === MESSAGE_TYPE.IMPORT_KEYSTORE_OK
       ) {
         history.push('/address');
-        // setSuccess(true);
+        setSuccess(true);
       } else if (msg.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR) {
         setSuccess(false);
+      } else if (msg.messageType === MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_KPASSWORD) {
+        setIsValidateKPassword(false);
+      } else if (msg.messageType === MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_UPASSWORD) {
+        setIsValidateUPassword(false);
       }
     });
   }, []);
@@ -64,13 +70,21 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
     } else {
       setIsHidePrivate(false);
     }
+    setSuccess(true);
+    setIsValidateKPassword(true);
+    setIsValidateUPassword(true);
   };
 
   let errowShowNode = null;
   if (!success) {
     errowShowNode = <div >Incorrect password</div>;
-  }
-
+  } 
+  if (!isValidateKPassword) {
+    errowShowNode = <div >Incorrect keystorePassword</div>;
+  }  
+  if (!isValidateUPassword) {
+    errowShowNode = <div >Incorrect userPassword</div>;
+  } 
   const classes = useStyles();
 
   const innerForm = (props) => {
