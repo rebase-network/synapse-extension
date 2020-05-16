@@ -4,7 +4,7 @@ import { Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { MESSAGE_TYPE } from '../../../utils/constants';
+import { MESSAGE_TYPE, MIN_CELL_CAPACITY } from '../../../utils/constants';
 import { useHistory } from 'react-router-dom';
 import { AppContext } from '../../App';
 import PageNav from '../../Components/PageNav';
@@ -13,13 +13,15 @@ const useStyles = makeStyles({
   container: {
     margin: 30,
   },
-  button: {},
+  button: {
+    'margin-right': 10,
+  },
   textField: {},
 });
 
-interface AppProps { }
+interface AppProps {}
 
-interface AppState { }
+interface AppState {}
 
 export const innerForm = (props) => {
   const classes = useStyles();
@@ -39,7 +41,7 @@ export const innerForm = (props) => {
   return (
     <Form className="form-mnemonic" id="form-mnemonic" onSubmit={handleSubmit}>
       <TextField
-        label="ToAddress"
+        label="To"
         name="address"
         type="text"
         fullWidth
@@ -48,21 +50,23 @@ export const innerForm = (props) => {
         onChange={handleChange}
         onBlur={handleBlur}
         error={!!errors.address}
+        helperText={errors.address && touched.address && errors.address}
         margin="normal"
         variant="outlined"
         data-testid="field-address"
       />
       <TextField
-        label="capacity"
+        label="Capacity"
         name="capacity"
         type="text"
-        placeholder="必须大于61"
+        placeholder={`Should be >= ${MIN_CELL_CAPACITY}`}
         fullWidth
         className={classes.textField}
         value={values.capacity}
         onChange={handleChange}
         onBlur={handleBlur}
         error={!!errors.capacity}
+        helperText={errors.capacity && touched.capacity && errors.capacity}
         margin="normal"
         variant="outlined"
         data-testid="field-capacity"
@@ -78,6 +82,7 @@ export const innerForm = (props) => {
         onChange={handleChange}
         onBlur={handleBlur}
         error={!!errors.fee}
+        helperText={errors.fee && touched.fee && errors.fee}
         margin="normal"
         variant="outlined"
         data-testid="field-fee"
@@ -92,6 +97,7 @@ export const innerForm = (props) => {
         onChange={handleChange}
         onBlur={handleBlur}
         error={!!errors.password}
+        helperText={errors.password && touched.password && errors.password}
         margin="normal"
         variant="outlined"
         data-testid="field-amount"
@@ -127,7 +133,6 @@ export const innerForm = (props) => {
 };
 
 export default function (props: AppProps, state: AppState) {
-
   const history = useHistory();
   const { network } = React.useContext(AppContext);
   const [success, setSuccess] = React.useState(false);
@@ -191,7 +196,9 @@ export default function (props: AppProps, state: AppState) {
           onSubmit={onSubmit}
           validationSchema={Yup.object().shape({
             address: Yup.string().required('Required'),
-            capacity: Yup.string().required('Required'),
+            capacity: Yup.number()
+              .required('Required')
+              .min(MIN_CELL_CAPACITY, `Should be greater than ${MIN_CELL_CAPACITY}`),
             fee: Yup.string().required('Required'),
             password: Yup.string().required('Required'),
           })}
