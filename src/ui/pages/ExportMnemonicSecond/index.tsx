@@ -8,8 +8,12 @@ const useStyles = makeStyles({
   container: {
     margin: 30,
   },
-  button: {},
-  textField: {},
+  mnemonic: {
+    border: '1px solid #eee',
+    padding: '.8em',
+    'font-size': '1.3em',
+    background: '#fff',
+  },
 });
 
 interface AppProps {}
@@ -34,8 +38,7 @@ export default function (props: AppProps, state: AppState) {
     <div>
       <PageNav to="/export-mnemonic" title="Export Mnemonic" />
       <div className={classes.container}>
-        <div className="mnemonic" data-testid="mnemonic-id">
-          {/* <span className="">JSON/Keystore  </span> */}
+        <div className={classes.mnemonic} data-testid="mnemonic-id">
           {mnemonic}
         </div>
         <br />

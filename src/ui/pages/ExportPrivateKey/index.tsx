@@ -92,6 +92,7 @@ export default function (props: AppProps, state: AppState) {
     <div>
       <PageNav to="/setting" title="Export Private Key / Keystore" />
       <div className={classes.container}>
+        <div>It may take 1 minute for the generation of keystore</div>
         <Formik
           initialValues={{ password: '' }}
           onSubmit={onSubmit}

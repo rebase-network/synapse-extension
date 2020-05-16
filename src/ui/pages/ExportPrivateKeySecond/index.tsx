@@ -18,6 +18,10 @@ const useStyles = makeStyles({
   divShow: {
     'overflow-wrap': 'anywhere',
     'margin-top': '20px',
+    border: '1px solid #eee',
+    padding: '.8em',
+    'font-size': '1.3em',
+    background: '#fff',
   },
 });
 
@@ -39,6 +43,7 @@ export default function (props: AppProps, state: AppState) {
       if (request.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND_RESULT) {
         const privateKey = request.privateKey;
         const keystore = request.keystore;
+        // keystore.substr(1, keystore.length-2)
         setPrivateKey(privateKey);
         setKeystore(keystore);
       }
