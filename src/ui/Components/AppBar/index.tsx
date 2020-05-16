@@ -8,7 +8,6 @@ import Drawer from '@material-ui/core/Drawer';
 import { Link } from 'react-router-dom';
 import AddressList from '../AddressList';
 import SettingsIcon from '@material-ui/icons/Settings';
-import ImportExportIcon from '@material-ui/icons/ImportExport';
 import PageNav from '../PageNav';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -92,18 +91,9 @@ export default function (props: AppProps) {
           </IconButton>
           <Drawer anchor={'right'} open={state['right']} onClose={toggleDrawer('right', false)}>
             <div className={classes.drawerInner}>
-              <PageNav to="" position="right" onClickRight={setState} title="My Addresses" />
+              <PageNav to="#" position="right" onClickRight={setState} title="My Addresses" />
 
               <AddressList onSelectAddress={setState} />
-
-              <Link
-                to="/import-private-key"
-                onClick={toggleDrawer('right', false)}
-                className={classes.link}
-              >
-                <ImportExportIcon className={classes.icon} />
-                <span className={classes.linkText}>Import Wallet</span>
-              </Link>
 
               <Link to="/setting" onClick={toggleDrawer('right', false)} className={classes.link}>
                 <SettingsIcon className={classes.icon} />

@@ -34,7 +34,7 @@ export default function PageNav(props: AppProps) {
   const classes = useStyles();
   let navButtonBefore;
   let navButtonNext;
-  if (props.to && props.position !== 'right') {
+  if (props.position !== 'right') {
     navButtonBefore = (
       <IconButton edge="start" className={classes.menuButton} aria-label="nav">
         <Link to={props.to}>
@@ -42,7 +42,7 @@ export default function PageNav(props: AppProps) {
         </Link>
       </IconButton>
     );
-  } else if (props.position === 'right') {
+  } else {
     navButtonNext = (
       <IconButton
         edge="start"
