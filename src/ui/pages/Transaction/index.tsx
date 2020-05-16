@@ -15,6 +15,7 @@ const useStyles = makeStyles({
   },
   button: {
     'margin-right': 10,
+    textTransform: 'none',
   },
   textField: {},
 });
