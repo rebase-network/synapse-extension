@@ -13,8 +13,9 @@ export const getStatusByTxHash = async (txHash) => {
 };
 
 export const getTxHistoryByAddress = async (address) => {
-  let url = 'http://101.200.147.143:2333/cell/getTxHistoryByAddress';
-  const result = await Axios.get(url + `/${address}`);
+  let url = 'http://101.200.147.143:2333/cell/getTxs';
+
+  const result = await Axios.post(url + `/${address}`);
   console.log('result: ', result);
   return result.data;
 };

@@ -1,4 +1,4 @@
-import { MESSAGE_TYPE } from './utils/constants';
+import { MESSAGE_TYPE, ADDRESS_TYPE_CODEHASH } from './utils/constants';
 import {
   mnemonicToSeedSync,
   validateMnemonic,
@@ -10,9 +10,9 @@ import { generateMnemonic } from './wallet/key';
 import Keychain from './wallet/keychain';
 import { ExtendedPrivateKey } from './wallet/key';
 import { sendSimpleTransaction } from './sendSimpleTransaction';
-import { getStatusByTxHash, getBlockNumberByTxHash } from './transaction';
+import { getStatusByTxHash, getBlockNumberByTxHash } from './transaction_del';
 import Address from './wallet/address';
-import { getTxHistoryByAddress } from './background/transaction';
+import { getTxHistorys,createScriptObj } from './background/transaction';
 import {
   addKeyperWallet,
   getAddressesList,
@@ -22,6 +22,7 @@ import {
 import * as WalletKeystore from './wallet/keystore';
 import * as PasswordKeystore from './wallet/passwordEncryptor';
 import * as _ from 'lodash';
+
 
 /**
  * Listen messages from popup
@@ -160,8 +161,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.messageType === MESSAGE_TYPE.GET_TX_HISTORY) {
     chrome.storage.local.get(['currentWallet'], async function (wallet) {
       const address = wallet.currentWallet ? wallet.currentWallet.address : undefined;
-
-      const txs = address ? await getTxHistoryByAddress(address) : [];
+      const publicKey = wallet.currentWallet.publicKey;
+      const type =  wallet.currentWallet.type;
+      const typeScript = createScriptObj(publicKey,type,address);
+      const txs = address ? await getTxHistorys(typeScript) : [];
 
       chrome.runtime.sendMessage({
         txs,

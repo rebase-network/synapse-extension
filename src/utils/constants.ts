@@ -4,7 +4,7 @@
  * @Author: sueRimn
  * @Date: 2020-05-14 11:24:35
  * @LastEditors: sueRimn
- * @LastEditTime: 2020-05-15 19:11:54
+ * @LastEditTime: 2020-05-17 18:32:14
  */
 
 export const MESSAGE_TYPE = {
@@ -82,3 +82,9 @@ export const KEYSTORE_TYPE = {
 export const EXPLORER_URL = 'https://explorer.nervos.org/aggron/transaction/';
 
 export const MIN_CELL_CAPACITY = 61;
+
+export const ADDRESS_TYPE_CODEHASH = {
+  "Secp256k1": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+  "AnyPay": "0x6a3982f9d018be7e7228f9e0b765f28ceff6d36e634490856d2b186acf78e79b",
+  "Keccak256": "0xa5b896894539829f5e7c5902f0027511f94c70fa2406d509e7c6d1df76b06f08",
+}

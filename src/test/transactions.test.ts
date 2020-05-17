@@ -10,8 +10,8 @@ import {
   getInputCapacityByTxHash,
   getFeeByTxHash,
   getAmountByTxHash,
-} from '../Transaction';
-import { getTxHistoryByAddress } from '../Transaction';
+} from '../transaction_del';
+import { getTxHistoryByAddress } from '../transaction_del';
 import { config } from 'process';
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default;
