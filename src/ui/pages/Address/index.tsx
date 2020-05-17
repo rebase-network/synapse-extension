@@ -134,6 +134,9 @@ export default function (props: AppProps, state: AppState) {
   }
 
   React.useEffect(() => {
+
+    setTxs([]); // clean tx data
+
     // if (!addressFromUrl) {
     chrome.storage.local.get(['currentWallet'], async ({ currentWallet }) => {
       if (_.isEmpty(currentWallet)) return;
