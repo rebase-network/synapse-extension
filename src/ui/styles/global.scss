@@ -1,4 +1,5 @@
-$font-family-base: "Nunito Sans", sans-serif;
+$font-family-base: "Nunito Sans",
+sans-serif;
 $body-color: black;
 
 @import "palette";
@@ -28,4 +29,5 @@ body {
 #popup {
   width: $popup-size-width;
   height: $popup-size-height;
+  overflow: scroll;
 }
