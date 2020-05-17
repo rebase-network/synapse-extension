@@ -12,7 +12,7 @@ import { ExtendedPrivateKey } from './wallet/key';
 import { sendSimpleTransaction } from './sendSimpleTransaction';
 import { getStatusByTxHash, getBlockNumberByTxHash } from './transaction_del';
 import Address from './wallet/address';
-import { getTxHistorys,createScriptObj } from './background/transaction';
+import { getTxHistories, createScriptObj } from './background/transaction';
 import {
   addKeyperWallet,
   getAddressesList,
@@ -22,7 +22,6 @@ import {
 import * as WalletKeystore from './wallet/keystore';
 import * as PasswordKeystore from './wallet/passwordEncryptor';
 import * as _ from 'lodash';
-
 
 /**
  * Listen messages from popup
@@ -58,7 +57,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       masterKeychain.privateKey.toString('hex'),
       masterKeychain.chainCode.toString('hex'),
     );
-    const rootKeystore = await PasswordKeystore.encrypt(Buffer.from(extendedKey.serialize(), 'hex'), password);
+    const rootKeystore = await PasswordKeystore.encrypt(
+      Buffer.from(extendedKey.serialize(), 'hex'),
+      password,
+    );
 
     //No '0x' prefix
     const privateKey = masterKeychain
@@ -124,7 +126,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       masterKeychain.privateKey.toString('hex'),
       masterKeychain.chainCode.toString('hex'),
     );
-    const rootKeystore = PasswordKeystore.encrypt(Buffer.from(extendedKey.serialize(), 'hex'), password);
+    const rootKeystore = PasswordKeystore.encrypt(
+      Buffer.from(extendedKey.serialize(), 'hex'),
+      password,
+    );
 
     //No '0x' prefix
     const privateKey = masterKeychain
@@ -159,12 +164,13 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
   // get tx history by address
   if (request.messageType === MESSAGE_TYPE.GET_TX_HISTORY) {
+    ///
     chrome.storage.local.get(['currentWallet'], async function (wallet) {
       const address = wallet.currentWallet ? wallet.currentWallet.address : undefined;
       const publicKey = wallet.currentWallet.publicKey;
-      const type =  wallet.currentWallet.type;
-      const typeScript = createScriptObj(publicKey,type,address);
-      const txs = address ? await getTxHistorys(typeScript) : [];
+      const type = wallet.currentWallet.type;
+      const typeScript = createScriptObj(publicKey, type, address);
+      const txs = address ? await getTxHistories(typeScript) : [];
 
       chrome.runtime.sendMessage({
         txs,
@@ -209,8 +215,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.messageType === MESSAGE_TYPE.RESQUEST_SEND_TX) {
     chrome.storage.local.get(['currentWallet', 'wallets'], async function (result) {
       const toAddress = request.address.trim();
-      const capacity = request.capacity * (10 ** 8);
-      const fee = request.fee * (10 ** 8);
+      const capacity = request.capacity * 10 ** 8;
+      const fee = request.fee * 10 ** 8;
       const password = request.password.trim();
 
       const fromAddress = result.currentWallet.address;
@@ -241,7 +247,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
   //transactioin detail
   if (request.messageType === MESSAGE_TYPE.REQUEST_TX_DETAIL) {
-
     const txHash = request.message.txHash;
     const capacity = request.message.capacity;
     const fee = request.message.fee;
@@ -348,7 +353,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   // import private key
   if (request.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY) {
     chrome.storage.local.get(['currentWallet', 'wallets'], async function (result) {
-
       let privateKey: string = request.privateKey.trim();
       privateKey = privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`;
       const publicKey = ckbUtils.privateKeyToPublicKey(privateKey);

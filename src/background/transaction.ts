@@ -5,8 +5,8 @@ const { Secp256k1LockScript } = require('@keyper/container/lib/locks/secp256k1')
 const Keccak256LockScript = require('../keyper/locks/keccak256');
 const AnyPayLockScript = require('../keyper/locks/anypay');
 
-export const getTxHistorys = async (scriptObj): Promise<any> => {
-  const url = `${Ckb.testnetApiUrl}/cell/getTxs`;
+export const getTxHistories = async (scriptObj): Promise<any> => {
+  const url = `${Ckb.testnetApiUrl}/cell/getTxHistories`;
   const result = await Axios.post(url, scriptObj);
   return result.data;
 };
