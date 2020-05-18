@@ -8,6 +8,13 @@ export const getAddressInfo = async (address: string): Promise<{ capacity: strin
   return result.data;
 };
 
+export const getUnspentCells = async (lockArgs: string)=> {
+  const result = await Axios.get(`${Ckb.testnetApiUrl}/cell/getUnspentCells/${lockArgs}`);
+  console.log('getUnspentCells result: ', result.data);
+  return result.data;
+}
+
 export default {
   getAddressInfo,
+  getUnspentCells,
 };
