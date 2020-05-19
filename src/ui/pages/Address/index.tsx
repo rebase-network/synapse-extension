@@ -122,8 +122,8 @@ export default function (props: AppProps, state: AppState) {
   const [disableFlg, setDisableFlg] = React.useState(false);
   const { network } = React.useContext(AppContext);
 
-  const updateCapacity = async (address: string) => {
-    const { capacity } = await getAddressInfo(address);
+  const updateCapacity = async (lockHash: string) => {
+    const { capacity } = await getAddressInfo(lockHash);
     setCapacity(shannonToCKBFormatter(capacity));
     setLoading(false);
   };
@@ -140,7 +140,7 @@ export default function (props: AppProps, state: AppState) {
     // if (!addressFromUrl) {
     chrome.storage.local.get(['currentWallet'], async ({ currentWallet }) => {
       if (_.isEmpty(currentWallet)) return;
-      const { address, type } = currentWallet;
+      const { address, type, lock } = currentWallet;
       setAddress(address);
       if (type == 'Keccak256' || type == 'AnyPay') {
         setDisableFlg(true);
@@ -148,12 +148,12 @@ export default function (props: AppProps, state: AppState) {
         setDisableFlg(false);
       }
       setType(type);
-      updateCapacity(address);
+      updateCapacity(lock);
 
       chrome.runtime.sendMessage({
         messageType: MESSAGE_TYPE.GET_TX_HISTORY,
       });
-      
+
     });
 
     setLoading(true);
