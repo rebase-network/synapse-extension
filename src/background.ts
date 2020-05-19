@@ -218,9 +218,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const capacity = request.capacity * 10 ** 8;
       const fee = request.fee * 10 ** 8;
       const password = request.password.trim();
-
-      const fromAddress = result.currentWallet.address;
-      const publicKey = result.currentWallet.publicKey;
+      const { address: fromAddress, publicKey, lock: lockHash } = result.currentWallet;
       const wallet = findInWalletsByPublicKey(publicKey, result.wallets);
       const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
       const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
@@ -232,6 +230,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         toAddress,
         BigInt(capacity),
         BigInt(fee),
+        lockHash,
       );
 
       chrome.runtime.sendMessage({
@@ -284,7 +283,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
         });
       }
-      const keystore = WalletKeystore.encrypt(Buffer.from(privateKey, 'hex'), password)
+      const keystore = WalletKeystore.encrypt(Buffer.from(privateKey, 'hex'), password);
 
       chrome.runtime.sendMessage({
         isValidatePassword: true,

@@ -1,5 +1,5 @@
 import { Ckb } from './utils/constants';
-import {getUnspentCells} from './utils/apis'
+import { getUnspentCells } from './utils/apis';
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default;
 
@@ -11,13 +11,9 @@ export const sendSimpleTransaction = async (
   toAddress,
   sendCapacity,
   sendFee,
+  lockHash,
 ) => {
-
-  const secp256k1Dep = await ckb.loadSecp256k1Dep(); // Can not delete, will effect ckb.config.secp256k1Dep
-  const publicKey = ckb.utils.privateKeyToPublicKey(privateKey);
-  const publicKeyHash = `0x${ckb.utils.blake160(publicKey, 'hex')}`;
-
-  const unspentCells = await getUnspentCells(publicKeyHash)
+  const unspentCells = await getUnspentCells(lockHash);
 
   const rawTransaction = ckb.generateRawTransaction({
     fromAddress: fromAddress,

@@ -8,11 +8,11 @@ export const getAddressInfo = async (lockHash: string): Promise<{ capacity: stri
   return result.data;
 };
 
-export const getUnspentCells = async (lockArgs: string)=> {
-  const result = await Axios.get(`${Ckb.testnetApiUrl}/cell/getUnspentCells/${lockArgs}`);
+export const getUnspentCells = async (lockHash: string) => {
+  const result = await Axios.get(`${Ckb.testnetApiUrl}/cell/getUnspentCells/${lockHash}`);
   console.log('getUnspentCells result: ', result.data);
   return result.data;
-}
+};
 
 export default {
   getAddressInfo,
