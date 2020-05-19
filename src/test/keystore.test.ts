@@ -1,50 +1,48 @@
-import { ExtendedPrivateKey } from '../wallet/key';
-import Keystore from './keystore';
-import Keychain from '../wallet/keychain';
+import * as Keystore from '../wallet/keystore';
+import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 
-// const fixture = {
-//   privateKey: 'e8f32e723decf4051aefac8e2c93c9c5b214313817cdb01a1494b917c8436b35',
-//   publicKey: '0339a36013301597daef41fbe593a02cc513d0b55527ec2df1050e2e8ff49c85c2',
-//   chainCode: '873dff81c02f525623fd1fe5167eac3a55a049de3d314bb42ee227ffed37d508',
-// }
-
-const keystoreString =
-  '{"crypto":{"cipher":"aes-128-ctr","cipherparams":{"iv":"e840e0b45f43f17b819078f5728773cb"},"ciphertext":"9bb7ae63b5dab2afabccec3ea0779e11ccd6b3325b57f7242757d5e53ab81c6cf3cd593047d38004a9d523954e78663dbf7e277c035c5cc2cde4946e8313eede","kdf":"scrypt","kdfparams":{"dklen":32,"n":262144,"p":1,"r":8,"salt":"b3d734f2458f2dfc32ea05c2a50bbefa98e04238767f50b96a6ed406006754ab"},"mac":"1102b5ca13cd4c70bec722ca4a48b286915e5a66e886e3630dc1cbdf408503e3"},"id":"7f4e7ff6-3e76-47e5-a631-45b25cf3a5a5","version":3}';
-
-describe('load ckb cli light keystore', () => {
+describe('encrypt checkpassword decrypt test', () => {
+  const privateKey = 'e8f32e723decf4051aefac8e2c93c9c5b214313817cdb01a1494b917c8436b35';
   const password = '123456';
-  const keystore = Keystore.fromJson(keystoreString);
+  const keystoreString = {
+    version: 3,
+    id: 'a3f4bc4a-d1d7-4ed0-92a5-85263b2337c1',
+    crypto: {
+      ciphertext: '49c079d4c276f80d68bc265e726307f464d61b53ed55908e8d10e1e570801e34',
+      cipherparams: { iv: 'ff16916f29bdcedc5348c539fec9f7b1' },
+      cipher: 'aes-128-ctr',
+      kdf: 'scrypt',
+      kdfparams: {
+        dklen: 32,
+        salt: 'd28aef7e0b59c2e7c10650c274bf67f3b5c548f3b9507b4892a072138434a407',
+        n: 262144,
+        r: 8,
+        p: 1
+      },
+      mac: 'ac1d1c0b7039e6efa3cc0066ecaf43d10a4c0a2c7755c63b048a5576b53cc0ce'
+    }
+  }
 
-  console.log('keystore =>', keystore);
-  const extendedPrivateKey = keystore.extendedPrivateKey(password);
-  console.log('extendedPrivateKey =>', extendedPrivateKey);
-
-  it('checks correct password', () => {
-    expect(keystore.checkPassword(password)).toBe(true);
+  it('encrypt', async () => {
+    const keystore = Keystore.encrypt(Buffer.from(privateKey, 'hex'), password);
+    console.log('keystore ===> ', keystore);
   });
-});
 
-describe('load ckb cli standard keystore', () => {
-  const password = '123456';
-  const keystore = Keystore.fromJson(keystoreString);
-
-  it('checks correct password', () => {
-    expect(keystore.checkPassword(password)).toBe(true);
+  it('decrypt', async () => {
+    const privateKeyDecrypt = await Keystore.decrypt(keystoreString, password);
+    expect(privateKeyDecrypt).toEqual(privateKey);
   });
 
-  it('loads private key', () => {
-    const extendedPrivateKey = keystore.extendedPrivateKey(password);
-    expect(extendedPrivateKey.privateKey).toEqual(
-      '8af124598932440269a81771ad662642e83a38b323b2f70223b8ae0b6c5e0779',
-    );
-    expect(extendedPrivateKey.chainCode).toEqual(
-      '615302e2c93151a55c29121dd02ad554e47908a6df6d7374f357092cec11675b',
-    );
+  it('checks correct password', async () => {
+    const keystore = Keystore.encrypt(Buffer.from(privateKey, 'hex'), password);
+    expect(Keystore.checkPasswd(keystore, password)).toBe(true);
   });
-});
 
-describe('load ckb cli origin keystore', () => {
-  it('does not load', () => {
-    expect(() => Keystore.fromJson(keystoreString)).toThrowError();
+  it('encrypt decrypt', async () => {
+    const keystore = await Keystore.encrypt(Buffer.from(privateKey, 'hex'), password);
+    console.log('--- keystore ---', JSON.stringify(keystore));
+
+    const privateKeyDecrypt = await Keystore.decrypt(keystore, password);
+    expect(privateKeyDecrypt).toEqual(privateKey);
   });
 });
