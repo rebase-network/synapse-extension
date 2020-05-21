@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: sueRimn
+ * @Date: 2020-05-21 14:54:37
+ * @LastEditors: sueRimn
+ * @LastEditTime: 2020-05-21 15:34:53
+ */ 
 import { Ckb } from './utils/constants';
 import { getUnspentCells } from './utils/apis';
 
@@ -12,19 +20,11 @@ export const sendSimpleTransaction = async (
   sendCapacity,
   sendFee,
   lockHash,
-  publicKey,
 ) => {
-  const secp256k1Dep = await ckb.loadSecp256k1Dep();
-  const { hashType, codeHash } = secp256k1Dep;
-  const args = ckb.utils.blake160(publicKey);
-  const lockScript = {
-    hashType,
-    codeHash,
-    args: `0x${Buffer.from(args).toString('hex')}`,
-  };
-  console.log('lockScript: ', lockScript);
+    
+  await ckb.loadSecp256k1Dep();//can't delete
 
-  const unspentCells = await getUnspentCells(lockHash, lockScript);
+  const unspentCells = await getUnspentCells(lockHash);
 
   const rawTransaction = ckb.generateRawTransaction({
     fromAddress: fromAddress,

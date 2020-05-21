@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: sueRimn
+ * @Date: 2020-05-20 13:18:20
+ * @LastEditors: sueRimn
+ * @LastEditTime: 2020-05-21 14:57:01
+ */ 
 import Axios, { AxiosRequestConfig } from 'axios';
 import { Ckb } from './constants';
 
@@ -8,10 +16,9 @@ export const getAddressInfo = async (lockHash: string): Promise<{ capacity: stri
   return result.data;
 };
 
-export const getUnspentCells = async (lockHash: string, lockScript) => {
-  const searchParams = `lockArgs=${lockScript.args}&lockCodeHash=${lockScript.codeHash}&lockHashType=${lockScript.hashType}`;
+export const getUnspentCells = async (lockHash: string) => {
   const result = await Axios.get(
-    `${Ckb.testnetApiUrl}/cell/getUnspentCells/${lockHash}?${searchParams}`,
+    `${Ckb.testnetApiUrl}/cell/getUnspentCells/${lockHash}`,
   );
   console.log('getUnspentCells result: ', result.data);
   return result.data;
