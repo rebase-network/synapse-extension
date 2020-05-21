@@ -120,7 +120,6 @@ export default function GenerateMnemonic(props: AppProps, state: AppState) {
     chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
       if (msg.messageType === MESSAGE_TYPE.RECE_MNEMONIC) {
         if (msg.mnemonic) {
-          console.log(msg.mnemonic);
           setMnemonic(msg.mnemonic);
         } else {
           // history.push('/')

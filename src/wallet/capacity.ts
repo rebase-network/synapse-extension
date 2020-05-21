@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: sueRimn
+ * @Date: 2020-05-14 11:24:35
+ * @LastEditors: sueRimn
+ * @LastEditTime: 2020-05-21 21:23:36
+ */ 
 import {Ckb} from "../utils/constants";
 // const AnyPayLockScript = require("../keyper/locks/anypay");
 
@@ -24,6 +32,5 @@ export const getCapacityByLockHash = async (lock) => {
 //   console.log("--- CKB ---",JSON.stringify(ckb));
 
   const capacity = await ckb.rpc.getCapacityByLockHash(lock);
-  console.log("--- capacity ---",JSON.stringify(capacity));
   return capacity;
 }

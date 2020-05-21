@@ -26,7 +26,6 @@ export default function (props: AppProps, state: AppState) {
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-      console.log('request ===>', request);
       if (request.messageType === MESSAGE_TYPE.EXPORT_MNEONIC_SECOND_RESULT) {
         const mnemonic = request.mnemonic;
         setMnemonic(mnemonic);

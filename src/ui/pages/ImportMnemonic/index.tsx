@@ -124,7 +124,6 @@ export default function ImportMnemonic(props: AppProps, state: AppState) {
       ...values,
       messageType: MESSAGE_TYPE.IMPORT_MNEMONIC,
     });
-    console.log(values);
     if (vaildate) {
       setSuccess(true);
       // go to address page
@@ -135,7 +134,6 @@ export default function ImportMnemonic(props: AppProps, state: AppState) {
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
       if (msg === MESSAGE_TYPE.IS_NOT_VALIDATE_MNEMONIC) {
-        console.log('index.tsx => message', msg);
         setValidate(false); //false验证未通过
         return;
       } else if (msg === MESSAGE_TYPE.VALIDATE_PASS) {

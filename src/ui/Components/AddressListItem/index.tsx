@@ -56,12 +56,12 @@ export default function (props: AppProps, state: AppState) {
   const classes = useStylesTheme();
   const history = useHistory();
   const { addressInfo } = props;
-  const { address, type } = addressInfo;
-  const [capacity, setCapacity] = React.useState('0');
+  const { address, type, lock } = addressInfo;
+  const [ capacity, setCapacity] = React.useState('0');
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const { capacity } = await getAddressInfo(address);
+      const { capacity } = await getAddressInfo(lock);
       setCapacity(shannonToCKBFormatter(capacity));
     };
     fetchData();
