@@ -1,28 +1,22 @@
-// const EC = require("elliptic").ec;
-// import "./elliptic-types";
-// import * as eccrypto from "eccrypto";
+const keyperwalletTest = require('../keyper/keyperwallet');
 
-// const wallet = require('../keyper/wallet.js'); OK
+describe('keyper test', () => {
+//   const privateKey = '448ff179b923f0602a00f68f23cb8425d30198446a1b5aa2a016deea2762b1f8';
+//   const password = '123456';
 
-// import { ec as EC } from 'elliptic'
-
-describe('Keyper genKeyPair test', () => {
-  it('01- genKeyPair', async () => {
-    // const ec = new EC('secp256k1');
-    // const privateKey = ec.genKeyPair();
-    // console.log("key ===>",privateKey) ;
-    // await wallet.generateKey("123456"); OK
-    console.log('OK');
+  it('keyper OK ',() => {
+   console.log('OK');
   });
 
-  // it('02- genKeyPair', async () => {
-  //   console.log(eccrypto);
-  //   // A new random 32-byte private key.
-  //   var privateKey = eccrypto.generatePrivate();
-  //   console.log(privateKey);
-  //   // Corresponding uncompressed (65-byte) public key.
-  //   var publicKey = eccrypto.getPublic(privateKey);
-  //   console.log(privateKey);
+//   it('keyper ', async () => {
+//     jest.setTimeout(150000);
 
-  // })
+//     await keyperwalletTest.init();
+//     const ks = await keyperwalletTest.generateByPrivateKey(privateKey, password);
+//     console.log('=== ks ==', ks);
+//   });
+
 });
+//Can not test because of the passworder
+//passworder.encrypt(password, privKey);
+//TypeError: Cannot read property 'getRandomValues' of undefined
