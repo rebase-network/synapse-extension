@@ -42,9 +42,8 @@ export default function (props: AppProps) {
     <List onClick={() => onSelectTx(item.hash)} key={item.hash} className={classes.list}>
       <Divider />
       <ListItem>
-
         <ListItemText primary={`${shannonToCKBFormatter(item.amount.toString())} CKB`} />
-        <Link rel="noreferrer" target="_blank" href={EXPLORER_URL + item.hash}>
+        <Link rel="noreferrer" target="_blank" href={`${EXPLORER_URL}/transaction/${item.hash}`}>
           <Tooltip title="View on Explorer" placement="top">
             <CallMadeIcon />
           </Tooltip>
