@@ -134,7 +134,6 @@ export default function (props: AppProps, state: AppState) {
   }
 
   React.useEffect(() => {
-
     setTxs([]); // clean tx data
 
     // if (!addressFromUrl) {
@@ -153,7 +152,6 @@ export default function (props: AppProps, state: AppState) {
       chrome.runtime.sendMessage({
         messageType: MESSAGE_TYPE.GET_TX_HISTORY,
       });
-
     });
 
     setLoading(true);
@@ -198,7 +196,7 @@ export default function (props: AppProps, state: AppState) {
   };
 
   const onTxDetail = () => {
-    return
+    return;
     // history.push('/tx-history-detail');
   };
 
@@ -206,6 +204,30 @@ export default function (props: AppProps, state: AppState) {
     setOpen(false);
     setTip('');
   };
+
+  const txsList =
+    txs.length === 0 ? (
+      <div>Go ahead to send your first transaction</div>
+    ) : (
+      txs.map((item) => (
+        <List onClick={onTxDetail}>
+          <Divider />
+          <ListItem>
+            <ListItemText primary={moment(item.timestamp).format('YYYY-MM-DD HH:mm:ss')} />
+
+            <Link rel="noreferrer" target="_blank" href={EXPLORER_URL + item.hash}>
+              <Tooltip title="View on Explorer" placement="top">
+                <CallMadeIcon />
+              </Tooltip>
+            </Link>
+          </ListItem>
+          <ListItem>
+            <ListItemText secondary={`${item.amount / 10 ** 8} CKB`} />
+            <ListItemText secondary={item.income ? `Received` : `Send`} />
+          </ListItem>
+        </List>
+      ))
+    );
 
   return (
     <div className={classes.container}>
@@ -265,34 +287,11 @@ export default function (props: AppProps, state: AppState) {
       <br />
       <br />
 
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
-          <div>
-            <ListSubheader>Transactions</ListSubheader>
-            <Divider />
-            {txs.map((item) => (
-              <List onClick={onTxDetail}>
-                <ListItem>
-                  <ListItemText primary={moment(item.timestamp).format('YYYY-MM-DD HH:mm:ss')} />
+      <div>
+        <h4>Transactions</h4>
+        {txsList}
+      </div>
 
-                  <Link rel="noreferrer" target="_blank" href={EXPLORER_URL + item.hash}>
-                    <Tooltip title="View on Explorer" placement="top">
-                      <CallMadeIcon />
-                    </Tooltip>
-                  </Link>
-                </ListItem>
-                <ListItem>
-                  <ListItemText secondary={`${item.amount / 10 ** 8} CKB`} />
-                  <ListItemText secondary={item.income ? `Received` : `Send`} />
-                </ListItem>
-                <Divider />
-              </List>
-            ))}
-          </div>
-        </Grid>
-      </Grid>
-
-      <Divider variant="middle" />
       <Dialog open={open}>
         <div className={classes.dialogTitle}>
           <IconButton onClick={handleClose}>
