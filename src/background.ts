@@ -234,11 +234,15 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       );
 
       chrome.runtime.sendMessage({
-        fromAddress: fromAddress,
-        toAddress: toAddress,
-        capacity: capacity.toString(),
-        fee: fee.toString(),
-        txHash: sendTxHash,
+        tx: {
+          fromAddress: fromAddress,
+          toAddress: toAddress,
+          amount: capacity.toString(),
+          fee: fee.toString(),
+          hash: sendTxHash,
+          status: 'Pending',
+          blockNum: 'Pending',
+        },
         messageType: MESSAGE_TYPE.TO_TX_DETAIL,
       });
     });
