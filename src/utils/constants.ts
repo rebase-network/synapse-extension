@@ -67,10 +67,8 @@ export const MESSAGE_TYPE = {
 export const Ckb = {
   MainNetCodeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
   TestNetCodeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-//   rpcUrl: 'http://127.0.0.1:8114',
-  remoteRpcUrl: 'http://106.13.40.34:8117/rpc',
-  testnetApiUrl: 'http://106.13.40.34:3000',
-  // testnetApiUrl: 'http://localhost:3000',
+  remoteRpcUrl: 'http://101.200.147.143:8117/rpc',
+  testnetApiUrl: 'http://101.200.147.143:2333',
 };
 
 export const KEYSTORE_TYPE = {
