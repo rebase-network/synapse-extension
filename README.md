@@ -1,3 +1,11 @@
+<!--
+ * @Descripttion:
+ * @version:
+ * @Author: shooter
+ * @Date: 2020-05-22 23:56:00
+ * @LastEditors: shooter
+ * @LastEditTime: 2020-05-23 00:04:49
+-->
 # Synapse Extension
 
 A extension wallet and Keyper agency for Nervos CKB
@@ -26,7 +34,14 @@ Use [arianacosta/poetic](https://github.com/arianacosta/poetic) to do the lint. 
 - Prettier
 - EditorConfig
 
-## how to install
+## How to install
 
-TODO
+1. Download the zip file: https://github.com/rebase-network/synapse-extension/releases/download/v0.0.1/synapse-extension.zip
 
+2. Uncompress synapse-extension.zip, you will get a folder named `synapse-extension`
+
+3. Open Chrome `chrome://extensions/`, enable `Developer mode`
+
+4. Click `Load unpacked` button, select `synapse-extension` folder
+
+5. You will see synapse extension icon on you tool bar
