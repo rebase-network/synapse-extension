@@ -1,7 +1,7 @@
 {
   "name": "Synapse extension",
   "description": "Synapse extension is a wallet for Nervos CKB",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "options_page": "",
   "background": {
     "page": "background.html",
