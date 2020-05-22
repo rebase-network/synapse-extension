@@ -249,7 +249,7 @@ export default function (props: AppProps, state: AppState) {
       <br />
 
       <div>
-        <h4>Transactions</h4>
+        <h3>Transactions</h3>
         {txListElem}
       </div>
 
