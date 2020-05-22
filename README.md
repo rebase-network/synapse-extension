@@ -4,7 +4,7 @@
  * @Author: shooter
  * @Date: 2020-05-22 23:56:00
  * @LastEditors: shooter
- * @LastEditTime: 2020-05-23 00:04:49
+ * @LastEditTime: 2020-05-23 00:09:12
 -->
 # Synapse Extension
 
@@ -20,12 +20,6 @@ A extension wallet and Keyper agency for Nervos CKB
 4. `yarn build` to build a production (minified) version
 5. `yarn test` to run test
 
-## Installation
-
-1. Complete the steps to build the project above
-2. Go to [_chrome://extensions_](chrome://extensions) in Google Chrome
-3. With the developer mode checkbox ticked, click **Load unpacked extension...** and select the _dist_ folder from this repo
-
 ## Lint
 
 Use [arianacosta/poetic](https://github.com/arianacosta/poetic) to do the lint. Please install the following extensions in your vscode:
@@ -35,6 +29,14 @@ Use [arianacosta/poetic](https://github.com/arianacosta/poetic) to do the lint. 
 - EditorConfig
 
 ## How to install
+
+### Installation for developer
+
+1. Complete the steps to build the project above
+2. Go to [_chrome://extensions_](chrome://extensions) in Google Chrome
+3. With the developer mode checkbox ticked, click **Load unpacked extension...** and select the _dist_ folder from this repo
+
+### Installation for non-developer
 
 1. Download the zip file: https://github.com/rebase-network/synapse-extension/releases/download/v0.0.1/synapse-extension.zip
 
