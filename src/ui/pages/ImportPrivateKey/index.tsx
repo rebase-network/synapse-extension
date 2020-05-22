@@ -122,7 +122,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           label="Password"
           name="password"
           type="password"
-          placeholder="synapse password"
+          placeholder="Wallet Password"
           fullWidth
           className={classes.textField}
           value={values.password}
