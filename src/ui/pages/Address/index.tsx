@@ -1,12 +1,11 @@
 import * as React from 'react';
 import * as _ from 'lodash';
-import { Grid, Button, Dialog, IconButton, Link, Tooltip } from '@material-ui/core';
+import { Grid, Button, Dialog, IconButton, Link, Tooltip, Divider, Box } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import CallMadeIcon from '@material-ui/icons/CallMade';
 import { useHistory } from 'react-router-dom';
 import { createStyles, withStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Divider from '@material-ui/core/Divider';
-import Box from '@material-ui/core/Box';
-import { MESSAGE_TYPE } from '../../../utils/constants';
+import { MESSAGE_TYPE, EXPLORER_URL } from '../../../utils/constants';
 import { AppContext } from '../../App';
 import { truncateAddress, shannonToCKBFormatter } from '../../../utils/formatters';
 import { getAddressInfo } from '../../../utils/apis';
@@ -41,6 +40,10 @@ const useStyles = makeStyles({
   tip: {
     marginBottom: 24,
     color: 'green',
+  },
+  txHeader: {
+    display: 'flex',
+    'align-items': 'center',
   },
 });
 
@@ -249,7 +252,14 @@ export default function (props: AppProps, state: AppState) {
       <br />
 
       <div>
-        <h3>Transactions</h3>
+        <div className={classes.txHeader}>
+          <h3>Latest 20 Transactions</h3>
+          <Link rel="noreferrer" target="_blank" href={`${EXPLORER_URL}/address/${address}`}>
+            <Tooltip title="View on Explorer" placement="top">
+              <CallMadeIcon />
+            </Tooltip>
+          </Link>
+        </div>
         {txListElem}
       </div>
 
