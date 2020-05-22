@@ -178,7 +178,7 @@ export default function (props: AppProps, state: AppState) {
     })();
   }, [open, address]);
 
-  const isMnemonicImported = localStorage.getItem('IS_MNEMONIC_IMPORTED') === 'YES';
+  const isMnemonicImported = localStorage.getItem('IS_MNEMONIC_SET') === 'YES';
 
   if (!isMnemonicImported) {
     history.push('./mnemonic-setting');

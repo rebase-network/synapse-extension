@@ -112,21 +112,20 @@ export default function GenerateMnemonic(props: AppProps, state: AppState) {
     if (vaildate) {
       setSuccess(true);
       chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.SAVE_MNEMONIC });
-      history.push('/address');
     }
   };
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
-      if (msg.messageType === MESSAGE_TYPE.RECE_MNEMONIC) {
-        if (msg.mnemonic) {
-          setMnemonic(msg.mnemonic);
-        } else {
-          // history.push('/')
-        }
+      if (msg.messageType === MESSAGE_TYPE.RECE_MNEMONIC && msg.mnemonic) {
+        setMnemonic(msg.mnemonic);
+      } else if (msg === MESSAGE_TYPE.VALIDATE_PASS) {
+        setValidate(true);
+        localStorage.setItem('IS_MNEMONIC_SET', 'YES');
+        history.push('/address');
       }
     });
-  }, []);
+  });
 
   let successNode = null;
   if (success) successNode = <div className="success">Successfully</div>;

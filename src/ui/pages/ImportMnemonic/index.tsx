@@ -128,7 +128,7 @@ export default function ImportMnemonic(props: AppProps, state: AppState) {
       setSuccess(true);
       // go to address page
     }
-    localStorage.setItem('IS_MNEMONIC_IMPORTED', 'YES');
+    localStorage.setItem('IS_MNEMONIC_SET', 'YES');
   };
 
   React.useEffect(() => {
