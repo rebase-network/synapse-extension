@@ -25,3 +25,8 @@ Use [arianacosta/poetic](https://github.com/arianacosta/poetic) to do the lint. 
 - ESLint
 - Prettier
 - EditorConfig
+
+## how to install
+
+TODO
+
