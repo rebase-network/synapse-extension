@@ -5,9 +5,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { MESSAGE_TYPE, MIN_CELL_CAPACITY } from '../../../utils/constants';
-import { useHistory } from 'react-router-dom';
 import { AppContext } from '../../App';
 import PageNav from '../../Components/PageNav';
+import Modal from '../../Components/Modal';
+import TxDetail from '../../Components/TxDetail';
 
 const useStyles = makeStyles({
   container: {
@@ -18,6 +19,13 @@ const useStyles = makeStyles({
     textTransform: 'none',
   },
   textField: {},
+  alert: {
+    color: '#fff',
+    padding: '6px 16px',
+    'font-weight': '500',
+    'background-color': '#4caf50',
+    'border-radius': '4px',
+  },
 });
 
 interface AppProps {}
@@ -134,25 +142,42 @@ export const innerForm = (props) => {
 };
 
 export default function (props: AppProps, state: AppState) {
-  const history = useHistory();
+  const classes = useStyles();
   const { network } = React.useContext(AppContext);
-  const [success, setSuccess] = React.useState(false);
+  const [sending, setSending] = React.useState(false);
   const [valAddress, setValAddress] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
+  const [selectedTx, setSelectedTx] = React.useState('');
+
+  const toggleModal = () => {
+    setOpen(!open);
+  };
+
+  const openModal = () => {
+    setOpen(true);
+  };
+
+  const closeModal = () => {
+    setOpen(false);
+  };
+
+  const onSelectTx = (tx) => {
+    setSelectedTx(tx);
+    openModal();
+  };
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       if (message.messageType === MESSAGE_TYPE.TO_TX_DETAIL) {
-        chrome.runtime.sendMessage({
-          message,
-          messageType: MESSAGE_TYPE.REQUEST_TX_DETAIL,
-        });
-        history.push('/tx-detail');
+        setSending(false);
+        onSelectTx(message.tx);
       }
     });
     // setLoading(true);
-  }, []);
+  });
 
   const onSubmit = async (values) => {
+    setSending(true);
     const toAddress = values.address;
     validateAddress(toAddress, network);
 
@@ -161,7 +186,6 @@ export default function (props: AppProps, state: AppState) {
       network,
       messageType: MESSAGE_TYPE.RESQUEST_SEND_TX,
     });
-    setSuccess(true);
   };
 
   //check the current network and address
@@ -180,17 +204,28 @@ export default function (props: AppProps, state: AppState) {
     }
   };
 
-  let successNode = null;
-  if (success) successNode = <div className="success">Successfully</div>;
-  let validateNode = null;
-  if (!valAddress) validateNode = <div className="success">Invalid Address</div>;
+  let sendingNode = null;
+  if (sending)
+    sendingNode = (
+      <div className={classes.alert}>The transaction is sending, please wait for seconds...</div>
+    );
 
-  const classes = useStyles();
+  let validateNode = null;
+  if (!valAddress) validateNode = <div>Invalid Address</div>;
+
+  const txModal = !selectedTx ? (
+    ''
+  ) : (
+    <Modal open={open} onClose={closeModal}>
+      <TxDetail data={selectedTx} />
+    </Modal>
+  );
+
   return (
     <div>
       <PageNav to="/address" title="Send CKB" />
       <div className={classes.container}>
-        {successNode}
+        {sendingNode}
         {validateNode}
         <Formik
           initialValues={{ address: '', capacity: '', fee: '0.0001', password: '' }}
@@ -207,6 +242,7 @@ export default function (props: AppProps, state: AppState) {
           {innerForm}
         </Formik>
       </div>
+      {txModal}
     </div>
   );
 }
