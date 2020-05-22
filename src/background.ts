@@ -118,7 +118,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     //store the mnemonic entropy
     const entropy = mnemonicToEntropy(mnemonic);
-    const entropyKeystore = PasswordKeystore.encrypt(Buffer.from(entropy, 'hex'), password);
+    const entropyKeystore = await PasswordKeystore.encrypt(Buffer.from(entropy, 'hex'), password);
 
     const seed = mnemonicToSeedSync(mnemonic);
     const masterKeychain = Keychain.fromSeed(seed);
@@ -126,7 +126,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       masterKeychain.privateKey.toString('hex'),
       masterKeychain.chainCode.toString('hex'),
     );
-    const rootKeystore = PasswordKeystore.encrypt(
+    const rootKeystore = await PasswordKeystore.encrypt(
       Buffer.from(extendedKey.serialize(), 'hex'),
       password,
     );
