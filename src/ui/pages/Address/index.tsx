@@ -11,7 +11,6 @@ import { AppContext } from '../../App';
 import { truncateAddress, shannonToCKBFormatter } from '../../../utils/formatters';
 import { getAddressInfo } from '../../../utils/apis';
 const QrCode = require('qrcode.react');
-import { EXPLORER_URL } from '../../../utils/constants';
 import TxList from '../../Components/TxList';
 
 const useStyles = makeStyles({

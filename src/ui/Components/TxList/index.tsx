@@ -8,6 +8,7 @@ import Divider from '@material-ui/core/Divider';
 import { EXPLORER_URL } from '../../../utils/constants';
 import Modal from '../Modal';
 import TxDetail from '../TxDetail';
+import { shannonToCKBFormatter } from '../../../utils/formatters';
 
 const useStyles = makeStyles({
   list: {
@@ -41,7 +42,8 @@ export default function (props: AppProps) {
     <List onClick={() => onSelectTx(item.hash)} key={item.hash} className={classes.list}>
       <Divider />
       <ListItem>
-        <ListItemText primary={`${item.amount / 10 ** 8} CKB`} />
+
+        <ListItemText primary={`${shannonToCKBFormatter(item.amount.toString())} CKB`} />
         <Link rel="noreferrer" target="_blank" href={EXPLORER_URL + item.hash}>
           <Tooltip title="View on Explorer" placement="top">
             <CallMadeIcon />
