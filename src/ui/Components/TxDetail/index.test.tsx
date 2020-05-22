@@ -21,7 +21,7 @@ jest.mock('react-router-dom', () => {
 describe('txDetail page', () => {
   let tree, container, getByTestId;
   beforeEach(() => {
-    tree = render(<TxDetail />);
+    tree = render(<TxDetail data={null} />);
     container = tree.container;
     getByTestId = tree.getByTestId;
   });
