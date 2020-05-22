@@ -80,7 +80,7 @@ export default function (props: AppProps, state: AppState) {
         <br />
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
-            <Typography noWrap>&nbsp;&nbsp;Capacity&nbsp;&nbsp;</Typography>
+            <Typography noWrap>Capacity</Typography>
           </Grid>
           <Grid item xs>
             <Typography>{capacity / 10 ** 8} CKB</Typography>
@@ -88,9 +88,7 @@ export default function (props: AppProps, state: AppState) {
         </Grid>
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
-            <Typography noWrap>
-              &nbsp;&nbsp;Fee&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </Typography>
+            <Typography noWrap>Fee</Typography>
           </Grid>
           <Grid item xs>
             <Typography>{fee / 10 ** 8} CKB </Typography>
@@ -98,7 +96,7 @@ export default function (props: AppProps, state: AppState) {
         </Grid>
         {/* <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
-            <Typography noWrap>&nbsp;&nbsp;Inputs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Typography>
+            <Typography noWrap>Inputs</Typography>
           </Grid>
           <Grid item xs>
             <Typography className={classes.typography}>{inputs}</Typography>
@@ -106,7 +104,7 @@ export default function (props: AppProps, state: AppState) {
         </Grid>
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
-            <Typography noWrap>&nbsp;Outputs &nbsp;&nbsp;&nbsp;</Typography>
+            <Typography noWrap>Outputs </Typography>
           </Grid>
           <Grid item xs>
             <Typography className={classes.typography}>{outputs}</Typography>
@@ -117,7 +115,7 @@ export default function (props: AppProps, state: AppState) {
         <br />
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
-            <Typography noWrap>&nbsp;&nbsp;Tx Hash&nbsp;&nbsp;</Typography>
+            <Typography noWrap>Tx Hash</Typography>
           </Grid>
           <Grid item xs>
             <Link
@@ -131,7 +129,7 @@ export default function (props: AppProps, state: AppState) {
         </Grid>
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
-            <Typography noWrap>&nbsp;&nbsp;Block&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Typography>
+            <Typography noWrap>Block</Typography>
           </Grid>
           <Grid item xs>
             <Typography>{blockNum}</Typography>
