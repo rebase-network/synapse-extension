@@ -1,19 +1,6 @@
 import * as React from 'react';
-import * as moment from 'moment';
 import * as _ from 'lodash';
-import {
-  Grid,
-  ListSubheader,
-  ListItem,
-  ListItemText,
-  List,
-  Button,
-  Dialog,
-  IconButton,
-  Link,
-  Tooltip,
-} from '@material-ui/core';
-import CallMadeIcon from '@material-ui/icons/CallMade';
+import { Grid, Button, Dialog, IconButton, Link, Tooltip } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { useHistory } from 'react-router-dom';
 import { createStyles, withStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -25,6 +12,7 @@ import { truncateAddress, shannonToCKBFormatter } from '../../../utils/formatter
 import { getAddressInfo } from '../../../utils/apis';
 const QrCode = require('qrcode.react');
 import { EXPLORER_URL } from '../../../utils/constants';
+import TxList from '../../Components/TxList';
 
 const useStyles = makeStyles({
   container: {
@@ -195,39 +183,13 @@ export default function (props: AppProps, state: AppState) {
     setOpen(true);
   };
 
-  const onTxDetail = () => {
-    return;
-    // history.push('/tx-history-detail');
-  };
-
   const handleClose = () => {
     setOpen(false);
     setTip('');
   };
 
-  const txsList =
-    txs.length === 0 ? (
-      <div>Go ahead to send your first transaction</div>
-    ) : (
-      txs.map((item) => (
-        <List onClick={onTxDetail}>
-          <Divider />
-          <ListItem>
-            <ListItemText primary={moment(item.timestamp).format('YYYY-MM-DD HH:mm:ss')} />
-
-            <Link rel="noreferrer" target="_blank" href={EXPLORER_URL + item.hash}>
-              <Tooltip title="View on Explorer" placement="top">
-                <CallMadeIcon />
-              </Tooltip>
-            </Link>
-          </ListItem>
-          <ListItem>
-            <ListItemText secondary={`${item.amount / 10 ** 8} CKB`} />
-            <ListItemText secondary={item.income ? `Received` : `Send`} />
-          </ListItem>
-        </List>
-      ))
-    );
+  const txListElem =
+    txs.length === 0 ? <div>Go ahead to send your first transaction</div> : <TxList txList={txs} />;
 
   return (
     <div className={classes.container}>
@@ -289,7 +251,7 @@ export default function (props: AppProps, state: AppState) {
 
       <div>
         <h4>Transactions</h4>
-        {txsList}
+        {txListElem}
       </div>
 
       <Dialog open={open}>
