@@ -5,7 +5,6 @@ import Address from './pages/Address';
 import ImportMnemonic from './pages/ImportMnemonic/index';
 import GenerateMnemonic from './pages/ImportMnemonic/generate';
 import Transaction from './pages/Transaction';
-import TxDetail from './pages/TxDetail';
 import TxHistoryDetail from './pages/Transaction/txHistoryDetail';
 import MnemonicSetting from './pages/MnemonicSetting';
 import ImportPrivateKey from './pages/ImportPrivateKey';
@@ -53,9 +52,6 @@ export default function App() {
             </Route>
             <Route path="/tx-history-detail">
               <TxHistoryDetail />
-            </Route>
-            <Route path="/tx-detail">
-              <TxDetail />
             </Route>
             <Route path="/import-private-key">
               <ImportPrivateKey />
