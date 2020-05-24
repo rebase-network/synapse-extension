@@ -1,14 +1,6 @@
-<!--
- * @Descripttion:
- * @version:
- * @Author: shooter
- * @Date: 2020-05-22 23:56:00
- * @LastEditors: shooter
- * @LastEditTime: 2020-05-23 00:09:12
--->
 # Synapse Extension
 
-A extension wallet and Keyper agency for Nervos CKB
+An extension wallet and Keyper agency for Nervos CKB
 
 ## Building
 
