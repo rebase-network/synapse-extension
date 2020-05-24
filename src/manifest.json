@@ -15,7 +15,6 @@
     "128": "logo-128.png"
   },
   "permissions": [
-    "background",
     "storage",
     "http://106.13.40.34:8114/",
     "http://101.200.147.143:8117/",
