@@ -1,10 +1,7 @@
-require('dotenv').config();
 
 class ConfigService {
-  constructor(private env: { [k: string]: string | undefined }) {}
-
   private getValue(key: string, throwOnMissing = true): string {
-    const value = this.env[key];
+    const value = process.env[key];
     if (!value && throwOnMissing) {
       throw new Error(`config error - missing env.${key}`);
     }
@@ -17,11 +14,11 @@ class ConfigService {
   }
 
   get CKB_RPC_ENDPOINT(): string {
-    return this.env.CKB_RPC_ENDPOINT || 'http://127.0.0.1:8117/rpc';
+    return process.env.CKB_RPC_ENDPOINT || 'http://127.0.0.1:8117/rpc';
   }
 
   get CKB_INDEXER_ENDPOINT(): string {
-    return this.env.CKB_INDEXER_ENDPOINT || 'http://127.0.0.1:8117/indexer';
+    return process.env.CKB_INDEXER_ENDPOINT || 'http://127.0.0.1:8117/indexer';
   }
 
   public ensureValues(keys: string[]) {
@@ -39,6 +36,6 @@ class ConfigService {
   }
 }
 
-const configService = new ConfigService(process.env);
+const configService = new ConfigService();
 
 export { configService };
