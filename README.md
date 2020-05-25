@@ -7,6 +7,8 @@ An extension wallet and Keyper agency for Nervos CKB
 | Travis   | [![Build Status](https://travis-ci.com/rebase-network/synapse-extension.svg?branch=master)](https://travis-ci.com/rebase-network/synapse-extension)  |
 | Coverage | [![codecov](https://codecov.io/gh/rebase-network/synapse-extension/branch/master/graph/badge.svg)](https://codecov.io/gh/rebase-network/synapse-extension)|
 
+[![License](https://img.shields.io/github/license/rebase-network/synapse-extension)](./LICENSE)
+
 ## Building
 
 1. `git clone git@github.com:rebase-network/synapse-extension.git`
