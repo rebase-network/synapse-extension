@@ -3,7 +3,7 @@ import App from '../../App';
 import { render, fireEvent, waitFor, cleanup, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import * as chrome from 'sinon-chrome';
-import ImportPrivateKey from '.';
+import ImportPrivateKey from './index';
 
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
