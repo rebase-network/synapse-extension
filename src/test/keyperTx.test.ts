@@ -6,7 +6,7 @@ const { addressToScript } = require('@keyper/specs');
 const keyperwalletTest = require('../keyper/keyperwallet');
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default;
-const nodeUrl = 'http://106.13.40.34:8114/';
+const nodeUrl = 'http://101.200.147.143:8117/';
 const ckb = new CKB(nodeUrl);
 
 const sendCapacity = BigInt(11100000000);

@@ -1,11 +1,10 @@
-
 import { addKeyperWallet } from '../wallet/addKeyperWallet';
 
 const AnyPayLockScript = require('../keyper/locks/anypay');
 const keyper = require('../keyper/keyperwallet');
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default;
-const nodeUrl = 'http://106.13.40.34:8114/';
+const nodeUrl = 'http://101.200.147.143:8117/';
 const ckb = new CKB(nodeUrl);
 
 const sendCapacity = BigInt(11100000000);
@@ -17,7 +16,6 @@ const anypayAddress =
   'ckt1q34rnqhe6qvtulnj9ru7pdm972xwlaknde35fyy9d543s6k00rnehvh9kh80qc389hmm94a586mrw8v6zvhm77g4par';
 
 describe('anypay transaction', () => {
-
   it('send anypay transaction', async () => {
     jest.setTimeout(150000);
 

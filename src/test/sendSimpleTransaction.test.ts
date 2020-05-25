@@ -1,7 +1,7 @@
 import { publicKeyToAddress } from '../wallet/address';
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default;
-const nodeUrl = 'http://106.13.40.34:8114/';
+const nodeUrl = 'http://101.200.147.143:8117/';
 const ckb = new CKB(nodeUrl);
 
 // privateKey =>  448ff179b923f0602a00f68f23cb8425d30198446a1b5aa2a016deea2762b1f8

@@ -15,7 +15,7 @@ import { getTxHistoryByAddress } from '../transaction_del';
 import { config } from 'process';
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default;
-const nodeUrl = 'http://106.13.40.34:8114/';
+const nodeUrl = 'http://101.200.147.143:8117/';
 const ckb = new CKB(nodeUrl);
 
 const transaction_hash = '0xb95121d9e0947cdabfd63025c00a285657fd40e6bc69215c63f723a5247c8ead';
