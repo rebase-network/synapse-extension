@@ -8,8 +8,8 @@
     "watch": "webpack -w --config webpack.dev.js",
     "lint": "tslint 'src/**/*.{ts, tsx}'",
     "code:format": "prettier './src/**/**.{js,jsx,ts,tsx}' --write",
-    "test:watch": "jest --env=node --watch",
-    "test": "jest --env=node"
+    "test:watch": "jest --watch",
+    "test": "jest"
   },
   "author": "Rebase Team",
   "license": "BSD-3-Clause",
