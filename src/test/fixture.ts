@@ -1,4 +1,4 @@
-export default {
+const fixture = {
   transactionHash: '0xb95121d9e0947cdabfd63025c00a285657fd40e6bc69215c63f723a5247c8ead',
   previousOutputHash: '0x596272422eea6328082a319ca7d9f4502f7ce5f6d34ea8bbb977f8c1bbca83b2',
   expectTransaction: {
@@ -101,4 +101,6 @@ export default {
   expectBlockHash: '0x6335afbe6394a38a61f6f8b9a93067b06e25aa2dd5e8f02c9f3431b9209b971f',
   expectStatus: 'committed',
   expectlockHash: '0x9cb0bfa5cc9d53775c677c6e4f35e90bd8a65923fb691f1895455cb48f0241f1',
-}
+};
+
+export default fixture;

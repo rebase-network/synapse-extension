@@ -12,8 +12,10 @@ const CKB = require('@nervosnetwork/ckb-sdk-core').default;
 const nodeUrl = 'http://101.200.147.143:8117/';
 const ckb = new CKB(nodeUrl);
 
-import {
+import fixture from './fixture';
 import { configService } from '../config';
+
+const {
   transactionHash,
   previousOutputHash,
   expectTransaction,
@@ -21,7 +23,8 @@ import { configService } from '../config';
   expectBlockHash,
   expectStatus,
   expectlockHash,
-} from './fixture';
+} = fixture;
+
 
 describe('transaction test', () => {
   it('1- get transaction by Hash of a transaction', async () => {
