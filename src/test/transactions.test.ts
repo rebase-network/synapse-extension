@@ -13,6 +13,7 @@ const nodeUrl = 'http://101.200.147.143:8117/';
 const ckb = new CKB(nodeUrl);
 
 import {
+import { configService } from '../config';
   transactionHash,
   previousOutputHash,
   expectTransaction,
