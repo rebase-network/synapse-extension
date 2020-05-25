@@ -15,10 +15,11 @@ jest.mock('react-router-dom', () => {
     // add your noops here
     useParams: jest.fn(),
     useHistory: jest.fn(),
+    Link: 'a',
   };
 });
 
-describe('import mnemonic page', () => {
+describe('export privatekey second page', () => {
   let tree, container, getByTestId;
   beforeEach(() => {
     tree = render(<ExportPrivateKey />);
@@ -32,24 +33,16 @@ describe('import mnemonic page', () => {
   it('should render title', async () => {
     const { getByTestId, container } = tree;
 
-    const txDetailTitle = getByTestId('export-private-key-title');
-    expect(container).toContainElement(txDetailTitle);
-    expect(txDetailTitle).toHaveTextContent('Export Private Key / Keystore');
+    const elemContainer = getByTestId('container');
+    expect(container).toContainElement(elemContainer);
+    expect(elemContainer).toHaveTextContent('PrivateKey');
   });
 
   it('should render title', async () => {
     const { getByTestId, container } = tree;
 
-    const privateKey = getByTestId('privateKey');
-    expect(container).toContainElement(privateKey);
-    expect(privateKey).toHaveTextContent('PrivateKey');
-  });
-
-  it('should render title', async () => {
-    const { getByTestId, container } = tree;
-
-    const json_keystore = getByTestId('json-keystore');
-    expect(container).toContainElement(json_keystore);
-    expect(json_keystore).toHaveTextContent('JSON/Keystore');
+    const elemContainer = getByTestId('container');
+    expect(container).toContainElement(elemContainer);
+    expect(elemContainer).toHaveTextContent('Keystore');
   });
 });

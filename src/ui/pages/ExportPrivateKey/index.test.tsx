@@ -15,10 +15,11 @@ jest.mock('react-router-dom', () => {
     // add your noops here
     useParams: jest.fn(),
     useHistory: jest.fn(),
+    Link: 'a',
   };
 });
 
-describe('import mnemonic page', () => {
+describe('export privatekey page', () => {
   let tree, container, getByTestId;
   beforeEach(() => {
     tree = render(<ExportPrivateKey />);
@@ -27,14 +28,6 @@ describe('import mnemonic page', () => {
   });
   beforeAll(() => {
     window.chrome = chrome;
-  });
-
-  it('should render title', async () => {
-    const { getByTestId, container } = tree;
-
-    const txDetailTitle = getByTestId('export-private-key-title');
-    expect(container).toContainElement(txDetailTitle);
-    expect(txDetailTitle).toHaveTextContent('Export Private Key / Keystore');
   });
 
   it('should render form fields: Password', async () => {

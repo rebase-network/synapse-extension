@@ -64,7 +64,7 @@ export default function (props: AppProps, state: AppState) {
   return (
     <div>
       <PageNav to="/export-private-key" title="Export Private Key / Keystore" />
-      <div className={classes.container}>
+      <div className={classes.container} data-testid="container">
         <RadioGroup row value={value} onChange={handleRadioChange} className={classes.radioGroup}>
           <FormControlLabel
             value="1"
@@ -72,6 +72,7 @@ export default function (props: AppProps, state: AppState) {
             control={<Radio />}
             label="PrivateKey"
           />
+
           <FormControlLabel
             value="2"
             labelPlacement="bottom"
@@ -79,6 +80,7 @@ export default function (props: AppProps, state: AppState) {
             label="Keystore"
           />
         </RadioGroup>
+
         <div className={classes.divShow} data-testid="privateKey" hidden={isPrivate}>
           {privateKey}
         </div>

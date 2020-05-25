@@ -36,7 +36,7 @@ export default function (props: AppProps, state: AppState) {
   return (
     <div>
       <PageNav to="/export-mnemonic" title="Export Mnemonic" />
-      <div className={classes.container}>
+      <div className={classes.container} data-testid="container">
         <div className={classes.mnemonic} data-testid="mnemonic-id">
           {mnemonic}
         </div>
