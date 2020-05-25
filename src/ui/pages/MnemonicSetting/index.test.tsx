@@ -20,14 +20,6 @@ describe('Home testing', () => {
     window.chrome = chrome;
   });
 
-  it('should render home title', async () => {
-    const { getByTestId, container } = tree;
-
-    const title = getByTestId('home-title');
-    expect(container).toContainElement(title);
-    expect(title).toHaveTextContent('Home');
-  });
-
   it('should render Import / Generate btn', () => {
     const { getByTestId, container } = tree;
 
