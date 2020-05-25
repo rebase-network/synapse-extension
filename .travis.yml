@@ -7,6 +7,6 @@ before_install:
   - yarn install
 
 script:
-  - yarn lint
+  # - yarn lint
   - yarn test
   - yarn build
