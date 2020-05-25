@@ -12,9 +12,7 @@ import ExportPrivateKey from './pages/ExportPrivateKey';
 import ExportMnemonic from './pages/ExportMnemonic';
 import ExportPrivateKeySecond from './pages/ExportPrivateKeySecond';
 import Setting from './pages/Setting';
-
 import ExportMnemonicSecond from './pages/ExportMnemonicSecond';
-
 import AppBar from './Components/AppBar/';
 
 import './styles/global.scss';

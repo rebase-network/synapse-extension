@@ -15,7 +15,6 @@ export const sendAnyOnePayTransaction = async (
   lockHash,
   password,
 ) => {
-
   const anypay = new AnyPayLockScript();
   const deps = anypay.deps();
   const anypayDep = {
@@ -23,9 +22,9 @@ export const sendAnyOnePayTransaction = async (
     codeHash: anypay.codeHash,
     outPoint: deps[0].outPoint,
   };
-//   const publicKey = ckb.utils.privateKeyToPublicKey('0x' + privateKey);
-//   const publicKeyHash = `0x${ckb.utils.blake160(publicKey, 'hex')}`;
-//   const lockHash = ckb.generateLockHash(publicKeyHash, anypayDep);
+  //   const publicKey = ckb.utils.privateKeyToPublicKey('0x' + privateKey);
+  //   const publicKeyHash = `0x${ckb.utils.blake160(publicKey, 'hex')}`;
+  //   const lockHash = ckb.generateLockHash(publicKeyHash, anypayDep);
 
   // method to fetch all unspent cells by lock hash
   const unspentCells = await ckb.loadCells({
@@ -73,5 +72,4 @@ export const sendAnyOnePayTransaction = async (
   const signedTx = await keyperWallet.signTx(signObj.target, password, signObj.tx);
   const realTxHash = await ckb.rpc.sendTransaction(signedTx);
   console.log('=== realTxHash ===', realTxHash);
-  
 };
