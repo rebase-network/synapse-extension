@@ -15,6 +15,7 @@ jest.mock('react-router-dom', () => {
     // add your noops here
     useParams: jest.fn(),
     useHistory: jest.fn(),
+    Link: 'a',
   };
 });
 
