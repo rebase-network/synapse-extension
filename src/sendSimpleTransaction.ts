@@ -1,17 +1,11 @@
-/*
- * @Descripttion: 
- * @version: 
- * @Author: sueRimn
- * @Date: 2020-05-21 14:54:37
- * @LastEditors: sueRimn
- * @LastEditTime: 2020-05-21 15:34:53
- */ 
 import { Ckb } from './utils/constants';
 import { getUnspentCells } from './utils/apis';
+import newCKB from './wallet/transaction';
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default;
 
 const ckb = new CKB(Ckb.remoteRpcUrl);
+const newckb = new newCKB(Ckb.remoteRpcUrl);
 
 export const sendSimpleTransaction = async (
   privateKey,
@@ -21,12 +15,11 @@ export const sendSimpleTransaction = async (
   sendFee,
   lockHash,
 ) => {
-    
-  await ckb.loadSecp256k1Dep();//can't delete
+  await ckb.loadSecp256k1Dep(); //can't delete
 
   const unspentCells = await getUnspentCells(lockHash);
 
-  const rawTransaction = ckb.generateRawTransaction({
+  const rawTransaction = newckb.generateRawTransaction({
     fromAddress: fromAddress,
     toAddress: toAddress,
     capacity: sendCapacity,
