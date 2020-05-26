@@ -473,15 +473,12 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
 function saveToStorage() {
   chrome.storage.local.set({ wallets }, () => {
-    console.log('wallets is set to storage: ' + JSON.stringify(wallets));
   });
 
   chrome.storage.local.set({ currentWallet }, () => {
-    console.log('currentWallet is set to storage: ' + JSON.stringify(currentWallet));
   });
 
   chrome.storage.local.set({ addressesList }, () => {
-    console.log('addressesList is set to storage: ' + JSON.stringify(addressesList));
   });
 }
 
