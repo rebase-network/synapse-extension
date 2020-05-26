@@ -3,21 +3,26 @@ const fixture = {
   previousOutputHash: '0x596272422eea6328082a319ca7d9f4502f7ce5f6d34ea8bbb977f8c1bbca83b2',
   expectTransaction: {
     transaction: {
-      cellDeps: [{
-        outPoint: {
-          txHash: '0x6495cede8d500e4309218ae50bbcadb8f722f24cc7572dd2274f5876cb603e4e',
-          index: '0x0',
+      cellDeps: [
+        {
+          outPoint: {
+            txHash: '0x6495cede8d500e4309218ae50bbcadb8f722f24cc7572dd2274f5876cb603e4e',
+            index: '0x0',
+          },
+          depType: 'depGroup',
         },
-        depType: 'depGroup',
-      }, ],
-      inputs: [{
-        previousOutput: {
-          txHash: '0x596272422eea6328082a319ca7d9f4502f7ce5f6d34ea8bbb977f8c1bbca83b2',
-          index: '0x1',
+      ],
+      inputs: [
+        {
+          previousOutput: {
+            txHash: '0x596272422eea6328082a319ca7d9f4502f7ce5f6d34ea8bbb977f8c1bbca83b2',
+            index: '0x1',
+          },
+          since: '0x0',
         },
-        since: '0x0',
-      }, ],
-      outputs: [{
+      ],
+      outputs: [
+        {
           lock: {
             codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
             hashType: 'type',
@@ -51,21 +56,26 @@ const fixture = {
   },
   previousOutputTX: {
     transaction: {
-      cellDeps: [{
-        outPoint: {
-          txHash: '0x6495cede8d500e4309218ae50bbcadb8f722f24cc7572dd2274f5876cb603e4e',
-          index: '0x0',
+      cellDeps: [
+        {
+          outPoint: {
+            txHash: '0x6495cede8d500e4309218ae50bbcadb8f722f24cc7572dd2274f5876cb603e4e',
+            index: '0x0',
+          },
+          depType: 'depGroup',
         },
-        depType: 'depGroup',
-      }, ],
-      inputs: [{
-        previousOutput: {
-          txHash: '0xaf63a8d26cb30f7645181bdcb3e8e370616e810f57817aa03da70240c07199f8',
-          index: '0x1',
+      ],
+      inputs: [
+        {
+          previousOutput: {
+            txHash: '0xaf63a8d26cb30f7645181bdcb3e8e370616e810f57817aa03da70240c07199f8',
+            index: '0x1',
+          },
+          since: '0x0',
         },
-        since: '0x0',
-      }, ],
-      outputs: [{
+      ],
+      outputs: [
+        {
           lock: {
             codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
             hashType: 'type',
@@ -103,4 +113,41 @@ const fixture = {
   expectlockHash: '0x9cb0bfa5cc9d53775c677c6e4f35e90bd8a65923fb691f1895455cb48f0241f1',
 };
 
+export const secp256k1 = {
+  address: 'ckt1qyqfhpyg02ew59cfnr8lnz2kwhwd98xjd4xsscxlae',
+  type: 'Secp256k1',
+  lock: '0x5d67b4eeb98698535f76f1b34a77d852112a35072eb6b834cb4cc8868ac02fb2',
+  amount: 0,
+  lockScript: {
+    hashType: 'type',
+    codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+    args: '0x9b84887ab2ea170998cff9895675dcd29cd26d4d',
+  },
+};
+
+export const anyonepay = {
+  address:
+    'ckt1q3mc8ccr5x29h2wlsmctctxp2saqnyn5092085chpnkq3cdueekchxuy3pat96shpxvvl7vf2e6ae55u6fk56v6kmuj',
+  type: 'AnyPay',
+  lock: '0xe3e51277b980c363749d7ebd5289ee6a0db13fff92a0b6bc538628b214a048ba',
+  amount: 0,
+  lockScript: {
+    hashType: 'type',
+    codeHash: '0x7783e303a1945ba9df86f0bc2cc1543a0992747954f3d3170cec08e1bcce6d8b',
+    args: '0x9b84887ab2ea170998cff9895675dcd29cd26d4d',
+  },
+};
+
+export const keccak256 = {
+  address:
+    'ckt1qjjm395fg5uc986703vs9uqzw5gljnrslgjqd4gfulrdrhmkkphs3s7nwu6x3pnl82rz3xmqypfhcway723ngkutufp',
+  type: 'Keccak256',
+  lock: '0x588ab92ffb902db6b79a764eeff08ce100641a5d4bea3cfabca28d714f473f5c',
+  amount: 0,
+  lockScript: {
+    hashType: 'type',
+    codeHash: '0x7783e303a1945ba9df86f0bc2cc1543a0992747954f3d3170cec08e1bcce6d8b',
+    args: '0x9b84887ab2ea170998cff9895675dcd29cd26d4d',
+  },
+};
 export default fixture;
