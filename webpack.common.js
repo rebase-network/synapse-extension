@@ -6,6 +6,8 @@ module.exports = {
   entry: {
     popup: path.join(__dirname, "src/ui/index.tsx"),
     background: path.join(__dirname, "src/background.ts"),
+    contentScript: path.join(__dirname, "src/contentScript/contentScript.ts"),
+    injectedScript: path.join(__dirname, "src/contentScript/inject/injectedScript.ts"),
   },
   output: {
     path: path.join(__dirname, "dist/js"),
