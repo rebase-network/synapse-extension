@@ -7,7 +7,7 @@ window.ckb = {
   rpc: new CKB(configService.CKB_RPC_ENDPOINT),
   getAddressInfo,
   getNetworkInfo: () => ({
-    network: 'testnet',
+    network: 'testnetormainnet',
   }),
   sign: () => {},
   send: () => {},
