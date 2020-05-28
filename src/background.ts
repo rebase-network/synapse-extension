@@ -9,7 +9,8 @@ import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 import { generateMnemonic } from './wallet/key';
 import Keychain from './wallet/keychain';
 import { ExtendedPrivateKey } from './wallet/key';
-import { sendSimpleTransaction } from './sendSimpleTransaction';
+import { sendTransaction } from './wallet/transaction/sendTransaction';
+
 import { getStatusByTxHash, getBlockNumberByTxHash } from './transaction_del';
 import Address from './wallet/address';
 import { getTxHistories, createScriptObj } from './background/transaction';
@@ -218,19 +219,19 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const capacity = request.capacity * 10 ** 8;
       const fee = request.fee * 10 ** 8;
       const password = request.password.trim();
-      const { address: fromAddress, publicKey, lock: lockHash } = result.currentWallet;
+      const { address: fromAddress, publicKey, lock: lockHash, type:lockType } = result.currentWallet;
       const wallet = findInWalletsByPublicKey(publicKey, result.wallets);
       const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
       const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
       const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
-
-      const sendTxHash = await sendSimpleTransaction(
+      const sendTxHash = await sendTransaction(
         privateKey,
         fromAddress,
         toAddress,
         BigInt(capacity),
         BigInt(fee),
         lockHash,
+        lockType
       );
 
       chrome.runtime.sendMessage({

@@ -131,7 +131,7 @@ export default function (props: AppProps, state: AppState) {
       if (_.isEmpty(currentWallet)) return;
       const { address, type, lock } = currentWallet;
       setAddress(address);
-      if (type == 'Keccak256' || type == 'AnyPay') {
+      if (type == 'Keccak256') {
         setDisableFlg(true);
       } else {
         setDisableFlg(false);

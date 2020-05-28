@@ -1,5 +1,3 @@
-/// <reference types="@nervosnetwork/ckb-types" />
-
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils/lib';
 const BN = require('bn.js');
 
