@@ -7049,6 +7049,11 @@ wide-align@^1.1.0:
   dependencies:
     string-width "^1.0.2 || 2"
 
+window-crypto@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/window-crypto/download/window-crypto-1.1.0.tgz#1f4acfe4ddacabfb5b4bd6eda7d2fe63e4e0b288"
+  integrity sha1-H0rP5N2sq/tbS9btp9L+Y+Tgsog=
+
 word-wrap@~1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/word-wrap/-/word-wrap-1.2.3.tgz#610636f6b1f703891bd34771ccb17fb93b47079c"
