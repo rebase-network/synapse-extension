@@ -114,6 +114,7 @@ const fixture = {
 };
 
 export const secp256k1 = {
+  privateKey: '0x6e678246998b426db75c83c8be213b4ceeb8ae1ff10fcd2f8169e1dc3ca04df1',
   address: 'ckt1qyqfhpyg02ew59cfnr8lnz2kwhwd98xjd4xsscxlae',
   type: 'Secp256k1',
   lock: '0x5d67b4eeb98698535f76f1b34a77d852112a35072eb6b834cb4cc8868ac02fb2',
@@ -126,6 +127,7 @@ export const secp256k1 = {
 };
 
 export const anyonepay = {
+  privateKey: '0x6e678246998b426db75c83c8be213b4ceeb8ae1ff10fcd2f8169e1dc3ca04df1',
   address:
     'ckt1qjr2r35c0f9vhcdgslx2fjwa9tylevr5qka7mfgmscd33wlhfykyhxuy3pat96shpxvvl7vf2e6ae55u6fk564sc527',
   type: 'AnyPay',
@@ -150,4 +152,6 @@ export const keccak256 = {
     args: '0x9b84887ab2ea170998cff9895675dcd29cd26d4d',
   },
 };
+
+
 export default fixture;
