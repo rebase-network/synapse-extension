@@ -1,4 +1,4 @@
 export default {
-  "MnemonicSetting.Import": "Import Mnemonic",
-  "MnemonicSetting.Generate": "Generate Mnemonic",
+  "Import Mnemonic": "Import Mnemonic",
+  "Generate Mnemonic": "Generate Mnemonic",
 }
