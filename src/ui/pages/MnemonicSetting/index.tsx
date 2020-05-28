@@ -4,7 +4,8 @@ import { useHistory } from 'react-router-dom';
 import { makeStyles, Theme, createStyles, withStyles } from '@material-ui/core/styles';
 import { MESSAGE_TYPE } from '../../../utils/constants';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+
+import { FormattedMessage  } from 'react-intl';
 
 const useStylesPopper = makeStyles((theme: Theme) =>
   createStyles({
@@ -112,6 +113,7 @@ export default function (props: AppProps, state: AppState) {
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
+
         <Grid item xs={12}>
           <BootstrapButton
             type="button"
@@ -122,7 +124,7 @@ export default function (props: AppProps, state: AppState) {
             className={classes.button}
             data-testid="import-button"
           >
-            Import Mnemonic
+            <FormattedMessage id="Import Mnemonic" />
           </BootstrapButton>
         </Grid>
         <Grid item xs={12}>
@@ -135,7 +137,7 @@ export default function (props: AppProps, state: AppState) {
             className={classes.button}
             data-testid="generate-button"
           >
-            Generate Mnemonic
+            <FormattedMessage id="Generate Mnemonic" />
           </BootstrapButton>
         </Grid>
       </Grid>

@@ -4,6 +4,8 @@ import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import { Link } from 'react-router-dom';
 import PageNav from '../../Components/PageNav';
 
+import LanguageSelector from '../../Components/LanguageSelector'
+
 const useStyles = makeStyles({
   container: {
     margin: 30,
@@ -59,7 +61,11 @@ export default function (props: AppProps, state: AppState) {
   return (
     <div>
       <PageNav to="/" title="Home" />
-      <div className={classes.container}>{settingElem}</div>
+      <div className={classes.container}>
+        {settingElem}
+
+        <LanguageSelector />
+      </div>
     </div>
   );
 }
