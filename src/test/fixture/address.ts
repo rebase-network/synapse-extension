@@ -20,6 +20,7 @@ export const bobAddresses = {
       type: 'AnyPay',
     },
     publicKey: '0x03d3319a7a7b8b88747664ca9559ab21e746452e8ed5eddc2f4365a1a9157e9ca2',
+    args:'0x9b84887ab2ea170998cff9895675dcd29cd26d4d',
     privateKey: '0x6e678246998b426db75c83c8be213b4ceeb8ae1ff10fcd2f8169e1dc3ca04df1',
   };
   
@@ -45,5 +46,6 @@ export const bobAddresses = {
       type: 'AnyPay',
     },
     publicKey: '0x0390518e809be027269b464734ed7315959729b3f9dd6bc06572745c6d65182623',
+    args:"0x5c0eaae525d4fc2e04b162c84f286dfd51af4002",
     privateKey: '0x14cfae84c716f895952634c240db80ba00b11032e5ac9fd1663e3a7233c7d80e',
   };
