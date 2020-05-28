@@ -127,13 +127,13 @@ export const secp256k1 = {
 
 export const anyonepay = {
   address:
-    'ckt1q3mc8ccr5x29h2wlsmctctxp2saqnyn5092085chpnkq3cdueekchxuy3pat96shpxvvl7vf2e6ae55u6fk56v6kmuj',
+    'ckt1qjr2r35c0f9vhcdgslx2fjwa9tylevr5qka7mfgmscd33wlhfykyhxuy3pat96shpxvvl7vf2e6ae55u6fk564sc527',
   type: 'AnyPay',
-  lock: '0xe3e51277b980c363749d7ebd5289ee6a0db13fff92a0b6bc538628b214a048ba',
+  lock: '0x6af8c2199802665ea2a8ed85b087b1ac26b47b332dfe7322c6b34e38f1a2f129',
   amount: 0,
   lockScript: {
     hashType: 'type',
-    codeHash: '0x7783e303a1945ba9df86f0bc2cc1543a0992747954f3d3170cec08e1bcce6d8b',
+    codeHash: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
     args: '0x9b84887ab2ea170998cff9895675dcd29cd26d4d',
   },
 };

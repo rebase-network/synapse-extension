@@ -7,7 +7,7 @@ import { addressToScript } from '@keyper/specs';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils/lib';
 const BN = require('bn.js');
 
-import generateRawTransaction, { Cell, RawTransactionParamsBase, generateRawTransactionByLockScript } from './generateRawTransaction';
+import generateRawTransaction, { Cell, RawTransactionParamsBase } from './generateRawTransaction';
 
 type Key = string;
 type Address = string;
