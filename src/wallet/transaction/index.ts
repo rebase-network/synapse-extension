@@ -3,7 +3,11 @@ import { assertToBeHexString } from '@nervosnetwork/ckb-sdk-utils/lib/validators
 import { ArgumentRequired } from '@nervosnetwork/ckb-sdk-utils/lib/exceptions';
 import * as utils from '@nervosnetwork/ckb-sdk-utils';
 
-import generateRawTransaction, { Cell, RawTransactionParamsBase } from './generateRawTransaction';
+import { addressToScript } from '@keyper/specs';
+import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils/lib';
+const BN = require('bn.js');
+
+import generateRawTransaction, { Cell, RawTransactionParamsBase, generateRawTransactionByLockScript } from './generateRawTransaction';
 
 type Key = string;
 type Address = string;
@@ -90,4 +94,51 @@ export const generateRawTransactionWrapper = ({
     });
   }
   throw new Error('Parameters of generateRawTransaction are invalid');
+};  
+
+export function createRawTx(toAmount, toLock, cells, lock, deps, totalConsumed, fee) {
+    const rawTx = {
+        version: "0x0",
+        cellDeps: deps,
+        headerDeps: [],
+        inputs: [],
+        outputs: [],
+        witnesses: [],
+        outputsData: []
+      };
+
+      for (let i = 0; i < cells.cells.length; i++) {
+        const element = cells.cells[i];
+        rawTx.inputs.push({
+          previousOutput: element.outPoint,
+          since: "0x0",
+        });
+        rawTx.witnesses.push("0x");
+      }
+      rawTx.witnesses[0] = {
+        lock: "",
+        inputType: "",
+        outputType: "",
+      };
+
+      rawTx.outputs.push({
+        capacity: `0x${new BN(toAmount).toString(16)}`,
+        lock: toLock,
+      });
+      rawTx.outputsData.push("0x");
+
+      if (cells.total.gt(totalConsumed) && cells.total.sub(totalConsumed).gt(new BN("6100000000"))) {
+        rawTx.outputs.push({
+          capacity: `0x${cells.total.sub(totalConsumed).toString(16)}`,
+          lock: lock
+        });
+        rawTx.outputsData.push("0x");
+      }
+    
+      const signObj = {
+        target: scriptToHash(lock),
+        tx: rawTx,
+      }
+
+      return signObj;
 };
