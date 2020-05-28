@@ -3,12 +3,21 @@ import * as ReactDOM from 'react-dom';
 import { IntlProvider } from 'react-intl';
 import zh from './pages/locales/zh'
 import en from './pages/locales/en'
+import App from './App';
 
 let messages = {}
-messages['en'] = en;
-messages['zh'] = zh;
+messages['en'] = en
+messages['zh'] = zh
 
-import App from './App';
+function initLanguage(): string {
+  const language = localStorage.getItem("language") || navigator.language.split(/[-_]/)[0]
+
+  if (!messages[language]) {
+    return "zh" // default chinese
+  }
+
+  return language;
+}
 
 import { configService } from '../config';
 import CKB from '@nervosnetwork/ckb-sdk-core';
@@ -24,5 +33,5 @@ window.ckb = {
 };
 
 chrome.tabs.query({ active: true, currentWindow: true }, (tab) => {
-  ReactDOM.render(<IntlProvider locale={'zh'} messages={messages['zh']} ><App /> </IntlProvider>, document.getElementById('popup'));
+  ReactDOM.render(<IntlProvider locale={'zh'} messages={messages[initLanguage()]} ><App /> </IntlProvider>, document.getElementById('popup'));
 });
