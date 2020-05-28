@@ -1,9 +1,13 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { IntlProvider } from 'react-intl';
-import zh from './pages/locales/zh'
-import en from './pages/locales/en'
+
 import App from './App';
+import { configService } from '../config';
+import CKB from '@nervosnetwork/ckb-sdk-core';
+
+import zh from './pages/locales/zh';
+import en from './pages/locales/en';
 
 let messages = {}
 messages['en'] = en
@@ -19,8 +23,6 @@ function initLanguage(): string {
   return language;
 }
 
-import { configService } from '../config';
-import CKB from '@nervosnetwork/ckb-sdk-core';
 
 declare global {
   interface Window {

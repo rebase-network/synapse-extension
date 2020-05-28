@@ -124,7 +124,7 @@ export default function (props: AppProps, state: AppState) {
             className={classes.button}
             data-testid="import-button"
           >
-            <FormattedMessage id="MnemonicSetting.Import" />
+            <FormattedMessage id="Import Mnemonic" />
           </BootstrapButton>
         </Grid>
         <Grid item xs={12}>
@@ -137,7 +137,7 @@ export default function (props: AppProps, state: AppState) {
             className={classes.button}
             data-testid="generate-button"
           >
-            <FormattedMessage id="MnemonicSetting.Generate" />
+            <FormattedMessage id="Generate Mnemonic" />
           </BootstrapButton>
         </Grid>
       </Grid>
