@@ -1,5 +1,5 @@
 import { BN } from 'bn.js';
-import { createRawTx } from '../index';
+import { createRawTx } from '../txGenerator';
 import { addressToScript } from '@keyper/specs';
 import { getUnspentCells } from '../../../utils/apis';
 import { configService } from '../../../config';
@@ -36,7 +36,7 @@ describe('Transaction test', () => {
       total: new BN(totalCapity),
     };
 
-    const signObj = createRawTx(toAmount, toLock, cells, lock, deps, totalConsumed, fee);
+    const signObj = createRawTx(toAmount, toLock, cells, lock, deps, fee);
     console.log('--- rawTx ---', JSON.stringify(signObj));
 
     const signedTx = ckb.signTransaction(privateKey)(signObj.tx);

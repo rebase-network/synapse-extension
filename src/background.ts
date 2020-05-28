@@ -10,8 +10,7 @@ import { generateMnemonic } from './wallet/key';
 import Keychain from './wallet/keychain';
 import { ExtendedPrivateKey } from './wallet/key';
 import { sendTransaction } from './wallet/transaction/sendTransaction';
-
-import { getStatusByTxHash, getBlockNumberByTxHash } from './transaction_del';
+import { getStatusByTxHash, getBlockNumberByTxHash } from './utils/transaction';
 import Address from './wallet/address';
 import { getTxHistories, createScriptObj } from './background/transaction';
 import {
