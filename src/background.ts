@@ -39,9 +39,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     // 验证助记词有效性
     const isValidateMnemonic = validateMnemonic(mnemonic);
-    console.log(isValidateMnemonic);
     if (!isValidateMnemonic) {
-      console.log('isValidateMnemonic: ', 'Not a ValidateMnemonic');
       chrome.runtime.sendMessage(MESSAGE_TYPE.IS_NOT_VALIDATE_MNEMONIC);
       return;
     }
@@ -111,7 +109,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const isValidateMnemonic = validateMnemonic(mnemonic);
 
     if (!isValidateMnemonic) {
-      console.log('isValidateMnemonic: ', 'Not a ValidateMnemonic');
       chrome.runtime.sendMessage(MESSAGE_TYPE.IS_NOT_VALIDATE_MNEMONIC);
       return;
     }
@@ -218,7 +215,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const capacity = request.capacity * 10 ** 8;
       const fee = request.fee * 10 ** 8;
       const password = request.password.trim();
-      const { address: fromAddress, publicKey, lock: lockHash, type:lockType } = result.currentWallet;
+      const { address: fromAddress, publicKey, lock: lockHash, type: lockType } = result.currentWallet;
       const wallet = findInWalletsByPublicKey(publicKey, result.wallets);
       const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
       const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
