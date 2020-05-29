@@ -4,28 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { makeStyles, Theme, createStyles, withStyles } from '@material-ui/core/styles';
 import { MESSAGE_TYPE } from '../../../utils/constants';
 import Grid from '@material-ui/core/Grid';
-
-import { FormattedMessage  } from 'react-intl';
-
-const useStylesPopper = makeStyles((theme: Theme) =>
-  createStyles({
-    paper: {
-      border: '1px solid',
-      padding: theme.spacing(1),
-      backgroundColor: theme.palette.background.paper,
-    },
-  }),
-);
-
-const useStyles = makeStyles({
-  container: {
-    margin: 30,
-  },
-  home: {},
-  button: {
-    'margin-bottom': '20px',
-  },
-});
+import { FormattedMessage } from 'react-intl';
 
 const useStylesTheme = makeStyles((theme: Theme) =>
   createStyles({
@@ -55,7 +34,6 @@ const BootstrapButton = withStyles({
   root: {
     width: '208px',
     size: 'medium',
-    // marginTop: '225px',
     marginBottom: '25px',
     boxShadow: 'none',
     textTransform: 'none',
@@ -65,31 +43,6 @@ const BootstrapButton = withStyles({
     lineHeight: 1.5,
     backgroundColor: '#0063cc',
     borderColor: '#0063cc',
-    // fontFamily: [
-    //   '-apple-system',
-    //   'BlinkMacSystemFont',
-    //   '"Segoe UI"',
-    //   'Roboto',
-    //   '"Helvetica Neue"',
-    //   'Arial',
-    //   'sans-serif',
-    //   '"Apple Color Emoji"',
-    //   '"Segoe UI Emoji"',
-    //   '"Segoe UI Symbol"',
-    // ].join(','),
-    // '&:hover': {
-    //   backgroundColor: '#0069d9',
-    //   borderColor: '#0062cc',
-    //   boxShadow: 'none',
-    // },
-    // '&:active': {
-    //   boxShadow: 'none',
-    //   backgroundColor: '#0062cc',
-    //   borderColor: '#005cbf',
-    // },
-    // '&:focus': {
-    //   boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
-    // },
   },
 })(Button);
 
@@ -113,7 +66,6 @@ export default function (props: AppProps, state: AppState) {
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
-
         <Grid item xs={12}>
           <BootstrapButton
             type="button"

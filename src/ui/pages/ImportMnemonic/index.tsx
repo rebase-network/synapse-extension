@@ -1,24 +1,11 @@
 import * as React from 'react';
-// import './Popup.scss';
-import Title from '../../Components/Title';
-import { Button, TextField } from '@material-ui/core';
-// import { makeStyles } from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { MESSAGE_TYPE } from '../../../utils/constants';
-import { useHistory } from 'react-router-dom';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import Popper from '@material-ui/core/Popper';
-
-const useStylesPopper = makeStyles((theme: Theme) =>
-  createStyles({
-    paper: {
-      border: '1px solid',
-      padding: theme.spacing(1),
-      backgroundColor: theme.palette.background.paper,
-    },
-  }),
-);
+import { Button, TextField } from '@material-ui/core';
+import Title from '../../Components/Title';
+import { MESSAGE_TYPE } from '../../../utils/constants';
 
 const useStyles = makeStyles({
   container: {
@@ -65,9 +52,6 @@ export const innerForm = (props) => {
         variant="outlined"
         data-testid="field-mnemonic"
       />
-      {/* <Popper id={'simple-popper'} open={true} >
-        <div className={classesPopper.paper}>Invalid mnemonic</div>
-      </Popper> */}
       <TextField
         label="Password"
         name="password"
@@ -126,7 +110,6 @@ export default function ImportMnemonic(props: AppProps, state: AppState) {
     });
     if (vaildate) {
       setSuccess(true);
-      // go to address page
     }
     localStorage.setItem('IS_MNEMONIC_SET', 'YES');
   };

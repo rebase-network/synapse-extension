@@ -2,9 +2,9 @@ import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import { Link } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 import PageNav from '../../Components/PageNav';
-
-import LanguageSelector from '../../Components/LanguageSelector'
+import LanguageSelector from '../../Components/LanguageSelector';
 
 const useStyles = makeStyles({
   container: {
@@ -30,17 +30,17 @@ interface AppState {}
 const settingItems = [
   {
     link: '/export-mnemonic',
-    text: 'Export Mnemonic',
+    text: <FormattedMessage id="Export Mnemonic" />,
     testId: 'exportMnemonic',
   },
   {
     link: '/export-private-key',
-    text: 'Export Private Key / Keystore',
+    text: <FormattedMessage id="Export Private Key / Keystore" />,
     testId: 'exportPrivateKey',
   },
   {
     link: '/import-private-key',
-    text: 'Import Private Key / Keystore',
+    text: <FormattedMessage id="Import Private Key / Keystore" />,
     testId: 'importPrivateKey',
   },
 ];

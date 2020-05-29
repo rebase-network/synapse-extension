@@ -6,6 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Drawer from '@material-ui/core/Drawer';
 import { Link } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 import AddressList from '../AddressList';
 import SettingsIcon from '@material-ui/icons/Settings';
 import PageNav from '../PageNav';
@@ -97,7 +98,9 @@ export default function (props: AppProps) {
 
               <Link to="/setting" onClick={toggleDrawer('right', false)} className={classes.link}>
                 <SettingsIcon className={classes.icon} />
-                <span className={classes.linkText}>Setting</span>
+                <span className={classes.linkText}>
+                  <FormattedMessage id="Setting" />
+                </span>
               </Link>
             </div>
           </Drawer>

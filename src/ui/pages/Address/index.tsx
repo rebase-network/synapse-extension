@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as _ from 'lodash';
+import { FormattedMessage } from 'react-intl';
 import { Grid, Button, Dialog, IconButton, Link, Tooltip, Divider, Box } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import CallMadeIcon from '@material-ui/icons/CallMade';
@@ -173,7 +174,9 @@ export default function (props: AppProps, state: AppState) {
   }
 
   const capacityNode = loading ? (
-    <div>Loading...</div>
+    <div>
+      <FormattedMessage id="Loading..." />
+    </div>
   ) : (
     <div className="capacity" data-testid="capacity">
       {capacity}
@@ -191,17 +194,18 @@ export default function (props: AppProps, state: AppState) {
   };
 
   const txListElem =
-    txs.length === 0 ? <div>Go ahead to send your first transaction</div> : <TxList txList={txs} />;
+    txs.length === 0 ? (
+      <div>
+        <FormattedMessage id="Go ahead to send your first transaction" />
+      </div>
+    ) : (
+      <TxList txList={txs} />
+    );
 
   return (
     <div className={classes.container}>
       <div>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Box textAlign="center" fontSize={22}>
-              Address
-            </Box>
-          </Grid>
           <Grid item xs={12}>
             <Box textAlign="center" fontSize={22}>
               {truncateAddress(address)}
@@ -231,7 +235,7 @@ export default function (props: AppProps, state: AppState) {
               data-testid="receive"
               onClick={handleClickOpen}
             >
-              Receive
+              <FormattedMessage id="Receive" />
             </BootstrapButton>
           </Grid>
           <Grid item xs={6} sm={6} className={classes.button}>
@@ -243,7 +247,7 @@ export default function (props: AppProps, state: AppState) {
               data-testid="send"
               disabled={disableFlg}
             >
-              Send
+              <FormattedMessage id="Send" />
             </BootstrapButton>
           </Grid>
         </Grid>
@@ -253,7 +257,9 @@ export default function (props: AppProps, state: AppState) {
 
       <div>
         <div className={classes.txHeader}>
-          <h3>Latest 20 Transactions</h3>
+          <h3>
+            <FormattedMessage id="Latest 20 Transactions" />
+          </h3>
           <Link rel="noreferrer" target="_blank" href={`${EXPLORER_URL}/address/${address}`}>
             <Tooltip title="View on Explorer" placement="top">
               <CallMadeIcon />
@@ -272,7 +278,13 @@ export default function (props: AppProps, state: AppState) {
 
         <div className={classes.dialogContent}>
           <div className={classes.tip}>{tip}</div>
-          {address ? <QrCode value={address} size={200} /> : <div>loading</div>}
+          {address ? (
+            <QrCode value={address} size={200} />
+          ) : (
+            <div>
+              <FormattedMessage id="Loading..." />
+            </div>
+          )}
           <div className={classes.address}>{address}</div>
         </div>
       </Dialog>

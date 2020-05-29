@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface AppProps {
   to: string;
-  title: string;
+  title: React.ReactNode;
   position?: string;
   onClickRight?: Function;
 }

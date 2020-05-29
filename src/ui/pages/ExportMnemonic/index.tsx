@@ -1,12 +1,11 @@
 import * as React from 'react';
-// import './Popup.scss';
-import Title from '../../Components/Title';
+import { FormattedMessage } from 'react-intl';
+import { useHistory } from 'react-router-dom';
 import { Button, TextField } from '@material-ui/core';
-// import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { MESSAGE_TYPE } from '../../../utils/constants';
-import { useHistory } from 'react-router-dom';
+import Title from '../../Components/Title';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import PageNav from '../../Components/PageNav';
 
@@ -52,7 +51,11 @@ export const innerForm = (props) => {
         data-testid="field-password"
       />
 
-      {isSubmitting && <div id="submitting">Submitting</div>}
+      {isSubmitting && (
+        <div id="submitting">
+          <FormattedMessage id="Submitting" />
+        </div>
+      )}
       <Button
         type="submit"
         id="submit-button"
@@ -61,7 +64,7 @@ export const innerForm = (props) => {
         variant="contained"
         data-testid="submit-button"
       >
-        Confirm
+        <FormattedMessage id="Confirm" />
       </Button>
     </Form>
   );
@@ -92,7 +95,7 @@ export default function (props: AppProps, state: AppState) {
 
   return (
     <div>
-      <PageNav to="/setting" title="Export Mnemonic" />
+      <PageNav to="/setting" title={<FormattedMessage id="Export Mnemonic" />} />
       <div className={classes.container}>
         <Formik
           initialValues={{ password: '' }}

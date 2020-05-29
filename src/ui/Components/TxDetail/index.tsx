@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Typography from '@material-ui/core/Typography';
+import { FormattedMessage } from 'react-intl';
 import PageNav from '../PageNav';
 
 const useStyles = makeStyles((theme) => ({
@@ -88,7 +89,9 @@ export default function (props: AppProps, state: AppState) {
         </Grid>
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
-            <Typography noWrap>Fee</Typography>
+            <Typography noWrap>
+              <FormattedMessage id="Fee" />
+            </Typography>
           </Grid>
           <Grid item xs>
             <Typography>{fee / 10 ** 8} CKB </Typography>
@@ -115,7 +118,9 @@ export default function (props: AppProps, state: AppState) {
         <br />
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
-            <Typography noWrap>Tx Hash</Typography>
+            <Typography noWrap>
+              <FormattedMessage id="Tx Hash" />
+            </Typography>
           </Grid>
           <Grid item xs>
             <Link
@@ -129,7 +134,9 @@ export default function (props: AppProps, state: AppState) {
         </Grid>
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
-            <Typography noWrap>Block</Typography>
+            <Typography noWrap>
+              <FormattedMessage id="Block" />
+            </Typography>
           </Grid>
           <Grid item xs>
             <Typography>{blockNum}</Typography>
