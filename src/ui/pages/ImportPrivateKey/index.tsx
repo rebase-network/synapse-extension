@@ -258,7 +258,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
             value="1"
             labelPlacement="bottom"
             control={<Radio />}
-            label="PrivateKey"
+            label={intl.formatMessage({ id: 'PrivateKey' })}
           />
           <FormControlLabel
             value="2"
