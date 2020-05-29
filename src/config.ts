@@ -14,15 +14,15 @@ class ConfigService {
   }
 
   get CKB_RPC_ENDPOINT(): string {
-    return process.env.CKB_RPC_ENDPOINT || 'http://127.0.0.1:8117/rpc';
+    return process.env.CKB_RPC_ENDPOINT;
   }
 
   get CKB_INDEXER_ENDPOINT(): string {
-    return process.env.CKB_INDEXER_ENDPOINT || 'http://127.0.0.1:8117/indexer';
+    return process.env.CKB_INDEXER_ENDPOINT;
   }
 
   get CACHE_LAYER_ENDPOINT(): string {
-    return process.env.CACHE_LAYER_ENDPOINT || 'http://127.0.0.1:3000';
+    return process.env.CACHE_LAYER_ENDPOINT;
   }
 
   public ensureValues(keys: string[]) {
@@ -40,6 +40,11 @@ class ConfigService {
   }
 }
 
-const configService = new ConfigService();
+const configService = new ConfigService()
+  .ensureValues([
+    'CKB_RPC_ENDPOINT',
+    'CKB_INDEXER_ENDPOINT',
+    'CACHE_LAYER_ENDPOINT',
+  ])
 
 export { configService };
