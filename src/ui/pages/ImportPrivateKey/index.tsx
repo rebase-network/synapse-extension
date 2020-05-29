@@ -12,6 +12,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import PageNav from '../../Components/PageNav';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 const useStyles = makeStyles({
   container: {
@@ -86,6 +87,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
     errowShowNode = <div>Incorrect userPassword</div>;
   }
   const classes = useStyles();
+  const intl = useIntl();
 
   const innerForm = (props) => {
     const classes = useStyles();
@@ -104,10 +106,10 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
     const privateKeyForm = (
       <Form className="form-privateKey" id="form-privateKey" onSubmit={handleSubmit}>
         <TextField
-          label="PrivateKey"
+          label={intl.formatMessage({ id: 'PrivateKey' })}
           name="privateKey"
           type="text"
-          placeholder="privateKey"
+          placeholder= {intl.formatMessage({ id: 'PrivateKey' })}
           fullWidth
           className={classes.textField}
           value={values.privateKey}
@@ -119,10 +121,10 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           data-testid="testid-form-privateKey"
         />
         <TextField
-          label="Password"
+          label={intl.formatMessage({ id: 'Password' })}
           name="password"
           type="password"
-          placeholder="Wallet Password"
+          placeholder={intl.formatMessage({ id: "Wallet Password" })}
           fullWidth
           className={classes.textField}
           value={values.password}
@@ -143,7 +145,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           className={classes.button}
           data-testid="import-privateKey-submit"
         >
-          Import
+          <FormattedMessage id="Import" />
         </Button>
       </Form>
     );
@@ -151,7 +153,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
     const keystoreForm = (
       <Form className="form-keystore" id="form-keystore" onSubmit={handleSubmit}>
         <TextField
-          label="Keystore"
+          label={intl.formatMessage({ id: 'Keystore' })}
           name="keystore"
           multiline
           rows="4"
@@ -167,7 +169,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           data-testid="field-keystore"
         />
         <TextField
-          label="Keystore Password"
+          label={intl.formatMessage({ id: 'Keystore Password' })}
           name="keystorePassword"
           type="password"
           fullWidth
@@ -184,7 +186,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           data-testid="field-keystore-password"
         />
         <TextField
-          label="Wallet Password"
+          label={intl.formatMessage({ id: 'Wallet Password' })}
           name="userPassword"
           type="password"
           fullWidth
@@ -208,7 +210,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           className={classes.button}
           data-testid="import-keystore-submit"
         >
-          Import
+          <FormattedMessage id="Import" />
         </Button>
       </Form>
     );
@@ -237,18 +239,18 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
 
   const validateObj: validateObjType = !isHidePrivate
     ? {
-        password: Yup.string().required('Required').min(6),
-        privateKey: Yup.string().required('Required'), //TODO
+        password: Yup.string().required(intl.formatMessage({ id: 'Required' })).min(6),
+        privateKey: Yup.string().required(intl.formatMessage({ id: 'Required' })), //TODO
       }
     : {
-        keystore: Yup.string().required('Required'),
-        keystorePassword: Yup.string().required('Required').min(6),
-        userPassword: Yup.string().required('Required').min(6),
+        keystore: Yup.string().required(intl.formatMessage({ id: 'Required' })),
+        keystorePassword: Yup.string().required(intl.formatMessage({ id: 'Required' })).min(6),
+        userPassword: Yup.string().required(intl.formatMessage({ id: 'Required' })).min(6),
       };
 
   return (
     <div>
-      <PageNav to="/setting" title="Import Private Key / Keystore" />
+      <PageNav to="/setting" title={<FormattedMessage id="Import Private Key / Keystore" />} />
       <div className={classes.container}>
         {errowShowNode}
         <RadioGroup row value={value} onChange={handleRadioChange} className={classes.radioGroup}>

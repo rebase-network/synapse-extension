@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import PageNav from '../../Components/PageNav';
 import LanguageSelector from '../../Components/LanguageSelector';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 const useStyles = makeStyles({
   container: {
@@ -47,6 +48,8 @@ const settingItems = [
 
 export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
+  const intl = useIntl();
+  
   const settingElem = settingItems.map((item, index) => {
     return (
       <Link to={item.link} className={classes.link} key={index}>
@@ -60,7 +63,7 @@ export default function (props: AppProps, state: AppState) {
 
   return (
     <div>
-      <PageNav to="/" title="Home" />
+      <PageNav to="/" title={intl.formatMessage({ id: "Home"  })}  />
       <div className={classes.container}>
         {settingElem}
 
