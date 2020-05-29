@@ -110,3 +110,5 @@ temp/
     
 .vscode
 .jsbeautifyrc
+
+synapse-extension*
