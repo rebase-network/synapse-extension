@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -32,6 +33,7 @@ interface AppState {}
 export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
   const [value, setValue] = React.useState('1');
+  const intl = useIntl();
 
   const [privateKey, setPrivateKey] = React.useState('');
   const [keystore, setKeystore] = React.useState('');
@@ -63,21 +65,24 @@ export default function (props: AppProps, state: AppState) {
 
   return (
     <div>
-      <PageNav to="/export-private-key" title="Export Private Key / Keystore" />
+      <PageNav
+        to="/export-private-key"
+        title={<FormattedMessage id="Export Private Key / Keystore" />}
+      />
       <div className={classes.container} data-testid="container">
         <RadioGroup row value={value} onChange={handleRadioChange} className={classes.radioGroup}>
           <FormControlLabel
             value="1"
             labelPlacement="bottom"
             control={<Radio />}
-            label="PrivateKey"
+            label={intl.formatMessage({ id: 'Private Key' })}
           />
 
           <FormControlLabel
             value="2"
             labelPlacement="bottom"
             control={<Radio />}
-            label="Keystore"
+            label={intl.formatMessage({ id: 'Keystore' })}
           />
         </RadioGroup>
 

@@ -16,4 +16,9 @@ export default {
   "Send": "发送",
   "Confirm": "确认",
   "Required": "必填项",
+  "Password": "密码",
+  "Submitting": "提交中",
+  "It may take 1 minute for the generation of keystore": "生成 keystore 可能需要 1 分钟",
+  "Keystore": "Keystore",
+  "Private Key": "私钥",
 }

@@ -1,8 +1,7 @@
 import * as React from 'react';
-import Title from '../../Components/Title';
-import PageNav from '../../Components/PageNav';
 import { makeStyles } from '@material-ui/core/styles';
 import { MESSAGE_TYPE } from '../../../utils/constants';
+import PageNav from '../../Components/PageNav';
 
 const useStyles = makeStyles({
   container: {

@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 import { Button, TextField } from '@material-ui/core';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { MESSAGE_TYPE } from '../../../utils/constants';
-import Title from '../../Components/Title';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import PageNav from '../../Components/PageNav';
 
@@ -21,6 +20,7 @@ interface AppState {}
 
 export const innerForm = (props) => {
   const classes = useStyles();
+  const intl = useIntl();
 
   const {
     values,
@@ -37,7 +37,7 @@ export const innerForm = (props) => {
   return (
     <Form className="export-mnemonic-key" id="export-mnemonic-key" onSubmit={handleSubmit}>
       <TextField
-        label="Password"
+        label={intl.formatMessage({ id: 'Password' })}
         name="password"
         type="password"
         fullWidth
@@ -73,6 +73,7 @@ export const innerForm = (props) => {
 export default function (props: AppProps, state: AppState) {
   const history = useHistory();
   const classes = useStyles();
+  const intl = useIntl();
 
   const onSubmit = async (values) => {
     //background.ts check the password
@@ -101,7 +102,9 @@ export default function (props: AppProps, state: AppState) {
           initialValues={{ password: '' }}
           onSubmit={onSubmit}
           validationSchema={Yup.object().shape({
-            password: Yup.string().min(6).required('Required'),
+            password: Yup.string()
+              .min(6)
+              .required(intl.formatMessage({ id: 'Required' })),
           })}
         >
           {innerForm}

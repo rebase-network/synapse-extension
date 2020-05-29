@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -31,11 +32,12 @@ export const innerForm = (props) => {
     handleSubmit,
     handleReset,
   } = props;
+  const intl = useIntl();
 
   return (
     <Form className="export-private-key" id="export-private-key" onSubmit={handleSubmit}>
       <TextField
-        label="Password"
+        label={intl.formatMessage({ id: 'Password' })}
         name="password"
         type="password"
         fullWidth
@@ -49,7 +51,7 @@ export const innerForm = (props) => {
         data-testid="field-password"
       />
 
-      {isSubmitting && <div id="submitting">Submitting</div>}
+      {isSubmitting && <div id="submitting">{intl.formatMessage({ id: 'Submitting' })}</div>}
       <Button
         type="submit"
         id="submit-button"
@@ -58,7 +60,7 @@ export const innerForm = (props) => {
         variant="contained"
         data-testid="submit-button"
       >
-        Confirm
+        {intl.formatMessage({ id: 'Confirm' })}
       </Button>
     </Form>
   );
@@ -67,6 +69,7 @@ export const innerForm = (props) => {
 export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
   const history = useHistory();
+  const intl = useIntl();
 
   const onSubmit = async (values) => {
     //background.ts check the password
@@ -90,14 +93,18 @@ export default function (props: AppProps, state: AppState) {
 
   return (
     <div>
-      <PageNav to="/setting" title="Export Private Key / Keystore" />
+      <PageNav to="/setting" title={<FormattedMessage id="Export Private Key / Keystore" />} />
       <div className={classes.container}>
-        <div>It may take 1 minute for the generation of keystore</div>
+        <div>
+          {intl.formatMessage({ id: 'It may take 1 minute for the generation of keystore' })}
+        </div>
         <Formik
           initialValues={{ password: '' }}
           onSubmit={onSubmit}
           validationSchema={Yup.object().shape({
-            password: Yup.string().min(6).required('Required'),
+            password: Yup.string()
+              .min(6)
+              .required(intl.formatMessage({ id: 'Required' })),
           })}
         >
           {innerForm}

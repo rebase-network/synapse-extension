@@ -16,4 +16,9 @@ export default {
   "Send": "Send",
   "Confirm": "Confirm",
   "Required": "Required",
+  "Password": "Password",
+  "Submitting": "Submitting",
+  "It may take 1 minute for the generation of keystore": "It may take 1 minute for the generation of keystore",
+  "Keystore": "Keystore",
+  "Private Key": "Private Key",
 }
