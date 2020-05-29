@@ -2,7 +2,6 @@ import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import { Link } from 'react-router-dom';
-import { FormattedMessage } from 'react-intl';
 import PageNav from '../../Components/PageNav';
 import LanguageSelector from '../../Components/LanguageSelector';
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -49,7 +48,7 @@ const settingItems = [
 export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
   const intl = useIntl();
-  
+
   const settingElem = settingItems.map((item, index) => {
     return (
       <Link to={item.link} className={classes.link} key={index}>
