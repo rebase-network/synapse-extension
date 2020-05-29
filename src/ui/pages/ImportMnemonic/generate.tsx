@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import { MESSAGE_TYPE } from '../../../utils/constants';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,6 +24,7 @@ interface AppState {}
 
 export const genForm = (props) => {
   const classes = useStyles();
+  const intl = useIntl();
 
   const {
     values,
@@ -40,7 +42,7 @@ export const genForm = (props) => {
   return (
     <Form className="gen-mnemonic" id="gen-mnemonic" onSubmit={handleSubmit}>
       <TextField
-        label="Mnemonic | Only Support 12 Words"
+        label={intl.formatMessage({ id: 'Mnemonic | Only Support 12 Words' })}
         name="mnemonic"
         multiline
         rows="4"
@@ -56,7 +58,7 @@ export const genForm = (props) => {
       />
 
       <TextField
-        label="Password (min 6 chars)"
+        label={intl.formatMessage({ id: 'Password (min 6 chars)' })}
         name="password"
         type="password"
         fullWidth
@@ -71,7 +73,7 @@ export const genForm = (props) => {
       />
 
       <TextField
-        label="Confirm Password"
+        label={intl.formatMessage({ id: 'Confirm Password' })}
         name="confirmPassword"
         type="password"
         fullWidth
@@ -95,7 +97,7 @@ export const genForm = (props) => {
         color="primary"
         data-testid=""
       >
-        Create
+        <FormattedMessage id="Create" />
       </Button>
     </Form>
   );
@@ -107,7 +109,8 @@ export default function GenerateMnemonic(props: AppProps, state: AppState) {
   const [mnemonic, setMnemonic] = React.useState('');
 
   const history = useHistory();
-
+  const intl = useIntl();
+  
   const onSubmit = async (values) => {
     if (vaildate) {
       setSuccess(true);
@@ -134,7 +137,7 @@ export default function GenerateMnemonic(props: AppProps, state: AppState) {
 
   return (
     <div className={classes.container}>
-      <Title title="Generate Mnemonic" testId="" />
+      <Title title={intl.formatMessage({ id: "Generate Mnemonic" })} testId="" />
       {successNode}
       <Formik
         enableReinitialize={true}

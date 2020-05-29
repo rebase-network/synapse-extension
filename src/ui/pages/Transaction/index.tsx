@@ -9,6 +9,7 @@ import { AppContext } from '../../App';
 import PageNav from '../../Components/PageNav';
 import Modal from '../../Components/Modal';
 import TxDetail from '../../Components/TxDetail';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 const useStyles = makeStyles({
   container: {
@@ -34,6 +35,8 @@ interface AppState {}
 
 export const innerForm = (props) => {
   const classes = useStyles();
+  const intl = useIntl();
+
   const {
     values,
     placeholder,
@@ -50,7 +53,7 @@ export const innerForm = (props) => {
   return (
     <Form className="form-mnemonic" id="form-mnemonic" onSubmit={handleSubmit}>
       <TextField
-        label="To"
+        label={intl.formatMessage({ id: 'To' })}
         name="address"
         type="text"
         fullWidth
@@ -65,7 +68,7 @@ export const innerForm = (props) => {
         data-testid="field-address"
       />
       <TextField
-        label="Capacity"
+        label={intl.formatMessage({ id: 'Capacity' })}
         name="capacity"
         type="text"
         placeholder={`Should be >= ${MIN_CELL_CAPACITY}`}
@@ -81,7 +84,7 @@ export const innerForm = (props) => {
         data-testid="field-capacity"
       />
       <TextField
-        label="Fee"
+        label={intl.formatMessage({ id: 'Fee' })}
         id="fee"
         name="fee"
         type="text"
@@ -97,7 +100,7 @@ export const innerForm = (props) => {
         data-testid="field-fee"
       />
       <TextField
-        label="Password"
+        label={intl.formatMessage({ id: 'Password' })}
         name="password"
         type="password"
         fullWidth
@@ -121,7 +124,7 @@ export const innerForm = (props) => {
         className={classes.button}
         data-testid="submit-button"
       >
-        Send
+        <FormattedMessage id="Send" />
       </Button>
 
       <Button
@@ -135,7 +138,7 @@ export const innerForm = (props) => {
         component={Link}
         to={'/address'}
       >
-        Cancel
+        <FormattedMessage id="Cancel" />
       </Button>
     </Form>
   );
@@ -143,6 +146,8 @@ export const innerForm = (props) => {
 
 export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
+  const intl = useIntl();
+
   const { network } = React.useContext(AppContext);
   const [sending, setSending] = React.useState(false);
   const [valAddress, setValAddress] = React.useState(true);
@@ -207,7 +212,7 @@ export default function (props: AppProps, state: AppState) {
   let sendingNode = null;
   if (sending)
     sendingNode = (
-      <div className={classes.alert}>The transaction is sending, please wait for seconds...</div>
+      <div className={classes.alert}>{intl.formatMessage({ id: "The transaction is sending, please wait for seconds..." })} </div>
     );
 
   let validateNode = null;
@@ -223,7 +228,7 @@ export default function (props: AppProps, state: AppState) {
 
   return (
     <div>
-      <PageNav to="/address" title="Send CKB" />
+      <PageNav to="/address" title={intl.formatMessage({ id: "Send CKB" })} />
       <div className={classes.container}>
         {sendingNode}
         {validateNode}
@@ -231,12 +236,12 @@ export default function (props: AppProps, state: AppState) {
           initialValues={{ address: '', capacity: '', fee: '0.0001', password: '' }}
           onSubmit={onSubmit}
           validationSchema={Yup.object().shape({
-            address: Yup.string().required('Required'),
+            address: Yup.string().required(intl.formatMessage({ id: 'Required' })),
             capacity: Yup.number()
-              .required('Required')
-              .min(MIN_CELL_CAPACITY, `Should be greater than ${MIN_CELL_CAPACITY}`),
-            fee: Yup.string().required('Required'),
-            password: Yup.string().required('Required'),
+              .required(intl.formatMessage({ id: 'Required' }))
+              .min(MIN_CELL_CAPACITY, intl.formatMessage({ id: 'Should be greater than ' }) + `${MIN_CELL_CAPACITY}`),
+            fee: Yup.string().required(intl.formatMessage({ id: 'Required' })),
+            password: Yup.string().required(intl.formatMessage({ id: 'Required' })),
           })}
         >
           {innerForm}

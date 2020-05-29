@@ -81,7 +81,9 @@ export default function (props: AppProps, state: AppState) {
         <br />
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
-            <Typography noWrap>Capacity</Typography>
+            <Typography noWrap>
+            <FormattedMessage id="Capacity" />
+            </Typography>
           </Grid>
           <Grid item xs>
             <Typography>{capacity / 10 ** 8} CKB</Typography>

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { MESSAGE_TYPE } from '../../../utils/constants';
 import PageNav from '../../Components/PageNav';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 const useStyles = makeStyles({
   container: {
@@ -34,7 +35,7 @@ export default function (props: AppProps, state: AppState) {
 
   return (
     <div>
-      <PageNav to="/export-mnemonic" title="Export Mnemonic" />
+      <PageNav to="/export-mnemonic" title={<FormattedMessage id="Export Mnemonic" />} />
       <div className={classes.container} data-testid="container">
         <div className={classes.mnemonic} data-testid="mnemonic-id">
           {mnemonic}
