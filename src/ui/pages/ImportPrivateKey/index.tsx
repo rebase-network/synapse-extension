@@ -106,10 +106,10 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
     const privateKeyForm = (
       <Form className="form-privateKey" id="form-privateKey" onSubmit={handleSubmit}>
         <TextField
-          label={intl.formatMessage({ id: 'PrivateKey' })}
+          label={intl.formatMessage({ id: 'Private Key' })}
           name="privateKey"
           type="text"
-          placeholder= {intl.formatMessage({ id: 'PrivateKey' })}
+          placeholder={intl.formatMessage({ id: 'Private Key' })}
           fullWidth
           className={classes.textField}
           value={values.privateKey}
@@ -124,7 +124,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           label={intl.formatMessage({ id: 'Password' })}
           name="password"
           type="password"
-          placeholder={intl.formatMessage({ id: "Wallet Password" })}
+          placeholder={intl.formatMessage({ id: 'Wallet Password' })}
           fullWidth
           className={classes.textField}
           value={values.password}
@@ -239,13 +239,19 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
 
   const validateObj: validateObjType = !isHidePrivate
     ? {
-        password: Yup.string().required(intl.formatMessage({ id: 'Required' })).min(6),
+        password: Yup.string()
+          .required(intl.formatMessage({ id: 'Required' }))
+          .min(6),
         privateKey: Yup.string().required(intl.formatMessage({ id: 'Required' })), //TODO
       }
     : {
         keystore: Yup.string().required(intl.formatMessage({ id: 'Required' })),
-        keystorePassword: Yup.string().required(intl.formatMessage({ id: 'Required' })).min(6),
-        userPassword: Yup.string().required(intl.formatMessage({ id: 'Required' })).min(6),
+        keystorePassword: Yup.string()
+          .required(intl.formatMessage({ id: 'Required' }))
+          .min(6),
+        userPassword: Yup.string()
+          .required(intl.formatMessage({ id: 'Required' }))
+          .min(6),
       };
 
   return (
@@ -258,7 +264,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
             value="1"
             labelPlacement="bottom"
             control={<Radio />}
-            label={intl.formatMessage({ id: 'PrivateKey' })}
+            label={intl.formatMessage({ id: 'Private Key' })}
           />
           <FormControlLabel
             value="2"

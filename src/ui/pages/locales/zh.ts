@@ -28,7 +28,6 @@ export default {
   Import: '导入',
   Create: '创建',
   'Wallet Password': '钱包密码',
-  PrivateKey: '私钥',
   'Keystore Password': 'Keystore密码',
   'Send CKB': '发送CKB',
   'The transaction is sending, please wait for seconds...': '交易正在确认中, 请等待...',

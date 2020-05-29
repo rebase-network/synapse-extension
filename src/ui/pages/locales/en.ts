@@ -29,7 +29,6 @@ export default {
   Import: 'Import',
   Create: 'Create',
   'Wallet Password': 'Wallet Password',
-  PrivateKey: 'PrivateKey',
   'Keystore Password': 'Keystore Password',
   'Send CKB': 'Send CKB',
   'The transaction is sending, please wait for seconds...':
@@ -39,5 +38,5 @@ export default {
   Capacity: 'Capacity',
   To: 'To',
   "Home": "Home",
-  
+
 };
