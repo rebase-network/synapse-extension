@@ -21,6 +21,10 @@ class ConfigService {
     return process.env.CKB_INDEXER_ENDPOINT || 'http://127.0.0.1:8117/indexer';
   }
 
+  get CACHE_LAYER_ENDPOINT(): string {
+    return process.env.CACHE_LAYER_ENDPOINT || 'http://127.0.0.1:3000';
+  }
+
   public ensureValues(keys: string[]) {
     keys.forEach((k) => this.getValue(k, true));
     return this;
