@@ -13,16 +13,17 @@ class ConfigService {
     return this.getValue(key, true);
   }
 
+  // FIXME: cannot get process.env values
   get CKB_RPC_ENDPOINT(): string {
-    return process.env.CKB_RPC_ENDPOINT;
+    return process.env.CKB_RPC_ENDPOINT || 'http://101.200.147.143:8117/rpc';
   }
 
   get CKB_INDEXER_ENDPOINT(): string {
-    return process.env.CKB_INDEXER_ENDPOINT;
+    return process.env.CKB_INDEXER_ENDPOINT || 'http://101.200.147.143:8117/indexer';
   }
 
   get CACHE_LAYER_ENDPOINT(): string {
-    return process.env.CACHE_LAYER_ENDPOINT;
+    return process.env.CACHE_LAYER_ENDPOINT || 'http://101.200.147.143:2333';
   }
 
   public ensureValues(keys: string[]) {
@@ -41,10 +42,10 @@ class ConfigService {
 }
 
 const configService = new ConfigService()
-  .ensureValues([
-    'CKB_RPC_ENDPOINT',
-    'CKB_INDEXER_ENDPOINT',
-    'CACHE_LAYER_ENDPOINT',
-  ])
+// .ensureValues([
+//   'CKB_RPC_ENDPOINT',
+//   'CKB_INDEXER_ENDPOINT',
+//   'CACHE_LAYER_ENDPOINT',
+// ])
 
 export { configService };
