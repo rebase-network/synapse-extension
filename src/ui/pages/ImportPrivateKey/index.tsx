@@ -108,7 +108,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
         <TextField
           label={intl.formatMessage({ id: 'Private Key' })}
           name="privateKey"
-          type="text"
+          type="password"
           placeholder={intl.formatMessage({ id: 'Private Key' })}
           fullWidth
           className={classes.textField}
