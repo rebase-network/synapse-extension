@@ -37,7 +37,7 @@ Use [arianacosta/poetic](https://github.com/arianacosta/poetic) to do the lint. 
 
 ### Installation for non-developer
 
-1. Download the zip file: https://github.com/rebase-network/synapse-extension/releases/download/v0.0.1/synapse-extension.zip
+1. Download the latest released zip file: https://github.com/rebase-network/synapse-extension/releases
 
 2. Uncompress synapse-extension.zip, you will get a folder named `synapse-extension`
 
