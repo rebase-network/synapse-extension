@@ -110,7 +110,7 @@ export default function GenerateMnemonic(props: AppProps, state: AppState) {
 
   const history = useHistory();
   const intl = useIntl();
-  
+
   const onSubmit = async (values) => {
     if (vaildate) {
       setSuccess(true);
@@ -132,7 +132,7 @@ export default function GenerateMnemonic(props: AppProps, state: AppState) {
 
   let successNode = null;
   if (success) successNode = <div className="success">Successfully</div>;
-  if (!vaildate) successNode = <div className="success">Invalid xxxx</div>;
+  if (!vaildate) successNode = <div className="success">Invalid</div>;
   const classes = useStyles();
 
   return (

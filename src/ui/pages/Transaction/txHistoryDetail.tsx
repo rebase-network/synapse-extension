@@ -49,18 +49,6 @@ export default function TxHistoryDetail(props: AppProps, state: AppState) {
     return viewTxInputs(outputs);
   };
 
-  React.useEffect(() => {
-    chrome.runtime.sendMessage({
-      messageType: 'xxxx',
-    });
-
-    chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
-      if (msg.messageType === 'yyyy' && Object.keys(msg.tx).length !== 0) {
-        setTx(msg.tx);
-      }
-    });
-  });
-
   if (Object.keys(tx).length === 0) {
     return <div>loading</div>;
   }
