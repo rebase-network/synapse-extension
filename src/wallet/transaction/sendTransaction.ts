@@ -5,7 +5,8 @@ import { createRawTx } from './txGenerator';
 import { addressToScript } from '@keyper/specs';
 import { getDepFromLockType } from '../../utils/deps';
 import { configService } from '../../config';
-
+import  { signTx } from '../addKeyperWallet';
+ 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default;
 const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
 
@@ -17,9 +18,13 @@ export const sendTransaction = async (
   fee,
   lockHash,
   lockType,
+  password,
 ) => {
   const rawTransaction = await generateTx(fromAddress, toAddress, toAmount, fee, lockHash, lockType);
-  const signedTx = ckb.signTransaction(privateKey)(rawTransaction);
+
+  let config = {index: 0, length: -1};
+  const signedTx = await signTx(lockHash, password, rawTransaction, config);
+
   const realTxHash = await ckb.rpc.sendTransaction(signedTx);
   return realTxHash;
 };

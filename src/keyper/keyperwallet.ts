@@ -4,14 +4,19 @@ import { scriptToHash, hexToBytes, bytesToHex } from '@nervosnetwork/ckb-sdk-uti
 import { scriptToAddress } from '@keyper/specs/lib/address';
 // import * as Keystore from '@keyper/specs/lib/Keystore';
 import * as Keystore from '../wallet/passwordEncryptor';
+import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 
 import { getKeystoreFromWallets } from '../wallet/addKeyperWallet';
+import { secp256k1Dep, getDepFromLockType } from '../utils/deps';
+import { ADDRESS_TYPE_CODEHASH } from '../utils/constants';
 
 const { Container } = require('@keyper/container/lib');
 const { Secp256k1LockScript } = require('@keyper/container/lib/locks/secp256k1');
+const { AnyPayLockScript } = require('@keyper/container/lib/locks/anyone-can-pay');
 const Keccak256LockScript = require('./locks/keccak256');
-const AnyPayLockScript = require('./locks/anypay');
 const storage = require('./storage');
+
+
 const EC = require('elliptic').ec;
 
 let seed, container;
@@ -38,10 +43,13 @@ const init = () => {
           if (!key) {
             throw new Error(`no key for address: ${context.address}`);
           }
-          const privateKey = await Keystore.decrypt(key, context.password); //
+          const privateKeyBuffer = await Keystore.decrypt(key, context.password); //
+          const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
+          const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
 
           const ec = new EC('secp256k1');
-          const keypair = ec.keyFromPrivate(privateKey);
+          const keypair = ec.keyFromPrivate(privateKey.replace("0x",""));
+
           const msg = typeof message === 'string' ? hexToBytes(message) : message;
           let { r, s, recoveryParam } = keypair.sign(msg, {
             canonical: true,
@@ -57,9 +65,17 @@ const init = () => {
       },
     },
   ]);
-  container.addLockScript(new Secp256k1LockScript());
+  container.addLockScript(
+    new Secp256k1LockScript(
+      ADDRESS_TYPE_CODEHASH.Secp256k1,
+      'type',
+      getDepFromLockType('Secp256k1'),
+    ),
+  );
   container.addLockScript(new Keccak256LockScript());
-  container.addLockScript(new AnyPayLockScript());
+  container.addLockScript(
+    new AnyPayLockScript(ADDRESS_TYPE_CODEHASH.AnyPay, 'type', getDepFromLockType('AnyPay')),
+  );
   // keys = {};
   reloadKeys();
 };
@@ -146,14 +162,11 @@ const setUpContainer = (publicKey) => {
       name: 'LockHash',
       data: scriptToHash(script),
     };
-    // console.log(" === script === ",script)
-    // console.log(" === LockHash === ",scriptToHash(script));
     addRules.push(addRule);
   });
 };
 
 const generateByPrivateKey = async (privateKey, password) => {
-
   const ec = new EC('secp256k1');
   const key = ec.keyFromPrivate(privateKey);
   const publicKey = Buffer.from(key.getPublic().encodeCompressed()).toString('hex');
@@ -204,6 +217,7 @@ const generateByPrivateKey = async (privateKey, password) => {
 };
 
 const accounts = async () => {
+
   const scripts = await container.getAllLockHashesAndMeta();
   const result = [];
   for (let i = 0; i < scripts.length; i++) {

@@ -195,7 +195,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         BigInt(capacity),
         BigInt(fee),
         lockHash,
-        lockType
+        lockType,
+        password
       );
 
       chrome.runtime.sendMessage({
