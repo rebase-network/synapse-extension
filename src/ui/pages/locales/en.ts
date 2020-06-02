@@ -37,6 +37,6 @@ export default {
   Cancel: 'Cancel',
   Capacity: 'Capacity',
   To: 'To',
-  "Home": "Home",
-
+  Home: 'Home',
+  'Copy to clipboard': 'Copy to clipboard',
 };

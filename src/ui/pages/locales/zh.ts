@@ -35,5 +35,6 @@ export default {
   Cancel: '取消',
   Capacity: '数量',
   To: '发送给',
-  "Home": "首页",
+  Home: '首页',
+  'Copy to clipboard': '复制地址',
 };

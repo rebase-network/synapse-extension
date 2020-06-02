@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as moment from 'moment';
 import * as _ from 'lodash';
+import { FormattedMessage } from 'react-intl';
 import { ListItem, ListItemText, List, Link, Tooltip } from '@material-ui/core';
 import CallMadeIcon from '@material-ui/icons/CallMade';
 import { createStyles, withStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -44,7 +45,7 @@ export default function (props: AppProps) {
       <ListItem>
         <ListItemText primary={`${shannonToCKBFormatter(item.amount.toString())} CKB`} />
         <Link rel="noreferrer" target="_blank" href={`${EXPLORER_URL}/transaction/${item.hash}`}>
-          <Tooltip title="View on Explorer" placement="top">
+          <Tooltip title={<FormattedMessage id="View on Explorer" />}   placement="top">
             <CallMadeIcon />
           </Tooltip>
         </Link>
