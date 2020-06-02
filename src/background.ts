@@ -31,6 +31,25 @@ let currentWallet = {};
 let addressesList = [];
 
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+  if (request.messageType === MESSAGE_TYPE.EXTERNAL_SEND) {
+    chrome.windows.create({
+      url: 'notification.html',
+      type: 'popup',
+      width: 360,
+      height: 560,
+      top: 100,
+      left: 100,
+    }, () => {
+      // WORKAROUND: improve me
+      setTimeout(() => {
+        chrome.runtime.sendMessage({
+          messageType: MESSAGE_TYPE.GOTO_SEND_PAGE,
+          payload: request.payload
+        });
+
+      }, 5000)
+    })
+  }
   //IMPORT_MNEMONIC
   if (request.messageType === MESSAGE_TYPE.IMPORT_MNEMONIC) {
     // call import mnemonic method

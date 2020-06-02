@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import * as queryString from 'query-string';
 import { Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
@@ -147,6 +148,8 @@ export const innerForm = (props) => {
 export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
   const intl = useIntl();
+  const searchParams = queryString.parse(location.search);
+  console.log(searchParams);
 
   const { network } = React.useContext(AppContext);
   const [sending, setSending] = React.useState(false);
@@ -212,7 +215,9 @@ export default function (props: AppProps, state: AppState) {
   let sendingNode = null;
   if (sending)
     sendingNode = (
-      <div className={classes.alert}>{intl.formatMessage({ id: "The transaction is sending, please wait for seconds..." })} </div>
+      <div className={classes.alert}>
+        {intl.formatMessage({ id: 'The transaction is sending, please wait for seconds...' })}{' '}
+      </div>
     );
 
   let validateNode = null;
@@ -226,20 +231,28 @@ export default function (props: AppProps, state: AppState) {
     </Modal>
   );
 
+  const initialValues = { address: '', capacity: '', fee: '0.0001', password: '', ...searchParams };
+  if (searchParams.to) {
+    initialValues.address = searchParams.to as string;
+  }
+
   return (
     <div>
-      <PageNav to="/address" title={intl.formatMessage({ id: "Send CKB" })} />
+      <PageNav to="/address" title={intl.formatMessage({ id: 'Send CKB' })} />
       <div className={classes.container}>
         {sendingNode}
         {validateNode}
         <Formik
-          initialValues={{ address: '', capacity: '', fee: '0.0001', password: '' }}
+          initialValues={initialValues}
           onSubmit={onSubmit}
           validationSchema={Yup.object().shape({
             address: Yup.string().required(intl.formatMessage({ id: 'Required' })),
             capacity: Yup.number()
               .required(intl.formatMessage({ id: 'Required' }))
-              .min(MIN_CELL_CAPACITY, intl.formatMessage({ id: 'Should be greater than ' }) + `${MIN_CELL_CAPACITY}`),
+              .min(
+                MIN_CELL_CAPACITY,
+                intl.formatMessage({ id: 'Should be greater than ' }) + `${MIN_CELL_CAPACITY}`,
+              ),
             fee: Yup.string().required(intl.formatMessage({ id: 'Required' })),
             password: Yup.string().required(intl.formatMessage({ id: 'Required' })),
           })}

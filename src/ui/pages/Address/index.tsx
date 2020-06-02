@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
+import * as queryString from 'query-string';
 import { Grid, Button, Dialog, IconButton, Link, Tooltip, Divider, Box } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import CallMadeIcon from '@material-ui/icons/CallMade';
@@ -10,8 +11,8 @@ import { MESSAGE_TYPE, EXPLORER_URL } from '../../../utils/constants';
 import { AppContext } from '../../App';
 import { truncateAddress, shannonToCKBFormatter } from '../../../utils/formatters';
 import { getAddressInfo } from '../../../utils/apis';
-const QrCode = require('qrcode.react');
 import TxList from '../../Components/TxList';
+const QrCode = require('qrcode.react');
 
 const useStyles = makeStyles({
   container: {
@@ -150,6 +151,15 @@ export default function (props: AppProps, state: AppState) {
     chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.messageType === MESSAGE_TYPE.SEND_TX_HISTORY && msg.txs) {
         setTxs(msg.txs);
+      }
+    });
+
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+      console.log('app 收到来自content-script的消息：');
+
+      if (request.messageType === MESSAGE_TYPE.GOTO_SEND_PAGE) {
+        const searchString = queryString.stringify(request.payload);
+        history.push(`/send-tx?${searchString}`);
       }
     });
   }, [address, capacity, type]);
