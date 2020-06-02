@@ -25,6 +25,7 @@
   "web_accessible_resources": ["js/injectedScript.js"],
   "permissions": [
     "storage",
+    "notifications",
     "http://106.13.40.34:8114/",
     "http://101.200.147.143:8117/",
     "http://101.200.147.143:2333/",

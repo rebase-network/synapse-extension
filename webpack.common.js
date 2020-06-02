@@ -23,6 +23,10 @@ module.exports = {
         to: path.join(__dirname, "dist"),
       },
       {
+        from: "./src/notification.html",
+        to: path.join(__dirname, "dist"),
+      },
+      {
         from: "./src/background.html",
         to: path.join(__dirname, "dist"),
       },
