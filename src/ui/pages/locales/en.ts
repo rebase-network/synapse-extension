@@ -39,4 +39,5 @@ export default {
   To: 'To',
   Home: 'Home',
   'Copy to clipboard': 'Copy to clipboard',
+  'Copied': 'Copied',
 };

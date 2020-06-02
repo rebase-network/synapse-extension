@@ -37,4 +37,6 @@ export default {
   To: '发送给',
   Home: '首页',
   'Copy to clipboard': '复制地址',
+  'Copied': '复制成功',
+
 };

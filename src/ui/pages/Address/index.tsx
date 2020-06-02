@@ -112,6 +112,7 @@ export default function (props: AppProps, state: AppState) {
   const [txs, setTxs] = React.useState([]);
   const [type, setType] = React.useState('');
   const [disableFlg, setDisableFlg] = React.useState(false);
+  const [tooltipMsg, setTooltipMsg] = React.useState("Copy to clipboard");
   const { network } = React.useContext(AppContext);
 
   const updateCapacity = async (lockHash: string) => {
@@ -169,6 +170,7 @@ export default function (props: AppProps, state: AppState) {
   };
 
   const copyAddress = async () => {
+    setTooltipMsg("Copied")
     await navigator.clipboard.writeText(address);
   }
 
@@ -222,8 +224,8 @@ export default function (props: AppProps, state: AppState) {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Box textAlign="center" fontSize={22}>
-              <Tooltip title={<FormattedMessage id="Copy to clipboard" />} arrow placement="bottom">
-                <div onClick={copyAddress}>{truncateAddress(address)}</div>
+              <Tooltip title={<FormattedMessage id={tooltipMsg} />} arrow placement="bottom">
+                <Button onClick={copyAddress}>{truncateAddress(address)}</Button>
               </Tooltip>
             </Box>
             <Box textAlign="center" fontSize={16}>
