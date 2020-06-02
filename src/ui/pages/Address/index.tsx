@@ -47,6 +47,9 @@ const useStyles = makeStyles({
     display: 'flex',
     'align-items': 'center',
   },
+  addressText: {
+    "text-transform": "none"
+   },
 });
 
 const BootstrapButton = withStyles({
@@ -170,8 +173,12 @@ export default function (props: AppProps, state: AppState) {
   };
 
   const copyAddress = async () => {
-    setTooltipMsg("Copied")
     await navigator.clipboard.writeText(address);
+  }
+
+  const handleClickCopyAddress = async () => {
+    setTooltipMsg("Copied")
+    copyAddress()
   }
 
   React.useEffect(() => {
@@ -225,7 +232,7 @@ export default function (props: AppProps, state: AppState) {
           <Grid item xs={12}>
             <Box textAlign="center" fontSize={22}>
               <Tooltip title={<FormattedMessage id={tooltipMsg} />} arrow placement="bottom">
-                <Button onClick={copyAddress}>{truncateAddress(address)}</Button>
+                <Button size="large" className={classes.addressText} onClick={handleClickCopyAddress}>{truncateAddress(address)}</Button>
               </Tooltip>
             </Box>
             <Box textAlign="center" fontSize={16}>
