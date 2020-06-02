@@ -158,10 +158,14 @@ export default function (props: AppProps, state: AppState) {
     history.push('/send-tx');
   };
 
+  const copyAddress = async () => {
+    await navigator.clipboard.writeText(address);
+  }
+
   React.useEffect(() => {
-    (async function copyAddress() {
+    (async () => {
       if (open && address) {
-        await navigator.clipboard.writeText(address);
+        copyAddress()
         setTip('Address has been copied to clipboard');
       }
     })();
@@ -208,7 +212,9 @@ export default function (props: AppProps, state: AppState) {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Box textAlign="center" fontSize={22}>
-              {truncateAddress(address)}
+              <Tooltip title={<FormattedMessage id="Copy to clipboard" />} arrow placement="bottom">
+                <div onClick={copyAddress}>{truncateAddress(address)}</div>
+              </Tooltip>
             </Box>
             <Box textAlign="center" fontSize={16}>
               {type}
@@ -261,7 +267,7 @@ export default function (props: AppProps, state: AppState) {
             <FormattedMessage id="Latest 20 Transactions" />
           </h3>
           <Link rel="noreferrer" target="_blank" href={`${EXPLORER_URL}/address/${address}`}>
-            <Tooltip title="View on Explorer" placement="top">
+            <Tooltip title={<FormattedMessage id="View on Explorer" />} placement="top">
               <CallMadeIcon />
             </Tooltip>
           </Link>
