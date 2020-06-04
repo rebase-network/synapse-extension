@@ -1,3 +1,5 @@
+// require('expect-puppeteer')
+
 const windowCrypto = require("window-crypto");
 const crypto = require('crypto');
 

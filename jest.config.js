@@ -6,5 +6,10 @@ module.exports = {
     '^.+\\.scss$': '<rootDir>/config/jest/cssTransform.js'
   },
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$',
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node']
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  preset: "jest-puppeteer",
+  globals: {
+    window: {},
+    global:{},
+  }
 };
