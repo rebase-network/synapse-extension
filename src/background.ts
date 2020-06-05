@@ -272,7 +272,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
           messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
         });
       }
-      const keystore = WalletKeystore.encrypt(Buffer.from(privateKey, 'hex'), password);
+      const keystore = WalletKeystore.encrypt(privateKeyBuffer.data, password);
 
       chrome.runtime.sendMessage({
         isValidatePassword: true,
