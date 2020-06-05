@@ -4,7 +4,8 @@ import { IntlProvider } from 'react-intl';
 
 import App from './App';
 import { configService } from '../config';
-import {getDefaultLanguage} from '../utils/locale'
+import {getDefaultLanguage} from '../utils/locale';
+import Container from '@material-ui/core/Container';
 import CKB from '@nervosnetwork/ckb-sdk-core';
 
 import zh from './pages/locales/zh';
@@ -25,5 +26,8 @@ window.ckb = {
 };
 
 chrome.tabs.query({ active: true, currentWindow: true }, (tab) => {
-  ReactDOM.render(<IntlProvider locale={getDefaultLanguage()} messages={messages[getDefaultLanguage()]} ><App /> </IntlProvider>, document.getElementById('popup'));
+  ReactDOM.render(
+  <IntlProvider locale={getDefaultLanguage()} messages={messages[getDefaultLanguage()]} >
+    <Container maxWidth="lg"><App /></Container>
+  </IntlProvider>, document.getElementById('popup'));
 });

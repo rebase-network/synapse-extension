@@ -9,7 +9,8 @@ import { FormattedMessage } from 'react-intl';
 const useStylesTheme = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      flexGrow: 1,
+      width: '100%',
+      flexGrow: 0,
       marginTop: '120px',
     },
     paper: {
@@ -20,6 +21,8 @@ const useStylesTheme = makeStyles((theme: Theme) =>
     button: {
       'margin-left': '60px',
       'margin-bottom': '20px',
+      'align-items': 'center',  // 垂直居中
+      'justify-content': 'center', // 水平居中
       padding: theme.spacing(3),
     },
     title: {
