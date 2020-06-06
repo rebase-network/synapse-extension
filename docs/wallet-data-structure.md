@@ -1,33 +1,8 @@
-## How dapp sends tx with Synapse
-
-Your can call window.ckb.send function from web page:
-```js
-window.ckb.send(params);
-```
-
-params has the following structure：
-```js
-{
-  from?: string;
-  to: string;
-  capacity: number;
-  fee?: number;
-}
-```
-
-Example:
-```js
-window.ckb.send({
-  from: 'ckt1qyqgadxhtq27ygrm62dqkdj32gl95j8gl56qum0yyn',
-  to: 'ckt1qyqfhpyg02ew59cfnr8lnz2kwhwd98xjd4xsscxlae',
-  capacity: 1000,
-  fee: 0.001
-})
-```
+# Data structure in browser storage
 
 ## wallets data structure
 
-```javascript
+```js
 const walletCommon = {
   publicKey: 'addressObj.path',
   blake160: 'blake160',
@@ -35,7 +10,7 @@ const walletCommon = {
   rootKeystore: 'rootKeystore',
   keystore: '_obj',
   keystoreType: 'KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE',
-}
+};
 
 const addressesObj = {
   publicKey: 'publicKey',
@@ -54,9 +29,9 @@ const addressesObj = {
       lockScriptType: 'lockScriptType',
       address: 'address',
       lockHash: 'lockHash',
-    }
-  ]
-}
+    },
+  ],
+};
 
 const addressesList = [
   {
@@ -76,8 +51,8 @@ const addressesList = [
         lockScriptType: 'anypay',
         address: 'address_anypay',
         lockHash: 'lockHash_anypay',
-      }
-    ]
+      },
+    ],
   },
   {
     publicKey: 'publicKey_2222',
@@ -96,15 +71,15 @@ const addressesList = [
         lockScriptType: 'anypay',
         address: 'address_anypay',
         lockHash: 'lockHash_anypay',
-      }
-    ]
-  }
-]
+      },
+    ],
+  },
+];
 ```
 
 ## currWallet data structure
 
-```javascript
+```js
 {
     "currWallet":{
       "index":1,
@@ -121,7 +96,7 @@ const addressesList = [
 
 ## keystore data structure
 
-```javascript
+```js
     "keystore":{
         "crypto":{
             "cipher":"aes-128-ctr",
