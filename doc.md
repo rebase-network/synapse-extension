@@ -1,6 +1,33 @@
-### wallets数据结构
+## How dapp sends tx with Synapse
 
-```json
+Your can call window.ckb.send function from web page:
+```js
+window.ckb.send(params);
+```
+
+params has the following structure：
+```js
+{
+  from?: string;
+  to: string;
+  capacity: number;
+  fee?: number;
+}
+```
+
+Example:
+```js
+window.ckb.send({
+  from: 'ckt1qyqgadxhtq27ygrm62dqkdj32gl95j8gl56qum0yyn',
+  to: 'ckt1qyqfhpyg02ew59cfnr8lnz2kwhwd98xjd4xsscxlae',
+  capacity: 1000,
+  fee: 0.001
+})
+```
+
+## wallets data structure
+
+```javascript
 const walletCommon = {
   publicKey: 'addressObj.path',
   blake160: 'blake160',
@@ -75,9 +102,9 @@ const addressesList = [
 ]
 ```
 
-### currWallet数据结构
+## currWallet data structure
 
-```json
+```javascript
 {
     "currWallet":{
       "index":1,
@@ -92,9 +119,9 @@ const addressesList = [
 }
 ```
 
-### keystore 数据结构
+## keystore data structure
 
-```json
+```javascript
     "keystore":{
         "crypto":{
             "cipher":"aes-128-ctr",
