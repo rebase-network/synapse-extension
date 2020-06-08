@@ -1,9 +1,11 @@
 import * as React from 'react';
-import App from '../../App';
 import { render, fireEvent, waitFor, cleanup, screen } from '@testing-library/react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import '@testing-library/jest-dom/extend-expect';
 import * as chrome from 'sinon-chrome';
-import ImportPrivateKey from './index';
+import App from './index';
+import { IntlProvider } from 'react-intl';
+import en from '../locales/en';
 
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
@@ -22,7 +24,13 @@ jest.mock('react-router-dom', () => {
 describe('import privateKey page', () => {
   let tree, container, getByTestId;
   beforeEach(() => {
-    tree = render(<ImportPrivateKey />);
+    tree = render(
+      <IntlProvider locale="en" messages={en}>
+        <Router>
+          <App />
+        </Router>
+      </IntlProvider>,
+    );
     container = tree.container;
     getByTestId = tree.getByTestId;
   });
