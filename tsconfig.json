@@ -5,6 +5,13 @@
         "moduleResolution": "node",
         "rootDir": "src",
         "outDir": "dist/js",
+        "baseUrl": ".",
+        "paths": {
+            "@src/*": ["./src/*"],
+            "@ui/*": ["./src/ui/*"],
+            "@background/*": ["./src/background/*"],
+            "@contentScript/*": ["./src/contentScript/*"],
+        },
         "sourceMap": true,
         "jsx": "react",
         "lib": ["es2015", "dom"],
