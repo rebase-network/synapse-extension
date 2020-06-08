@@ -4,23 +4,23 @@ import {
   validateMnemonic,
   mnemonicToEntropy,
   entropyToMnemonic,
-} from './wallet/mnemonic';
+} from '@src/wallet/mnemonic';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
-import { generateMnemonic } from './wallet/key';
-import Keychain from './wallet/keychain';
-import { ExtendedPrivateKey } from './wallet/key';
-import { sendTransaction } from './wallet/transaction/sendTransaction';
+import { generateMnemonic } from '@src/wallet/key';
+import Keychain from '@src/wallet/keychain';
+import { ExtendedPrivateKey } from '@src/wallet/key';
+import { sendTransaction } from '@src/wallet/transaction/sendTransaction';
 import { getStatusByTxHash, getBlockNumberByTxHash } from './utils/transaction';
-import Address from './wallet/address';
-import { getTxHistories, createScriptObj } from './background/transaction';
+import Address from '@src/wallet/address';
+import { getTxHistories, createScriptObj } from '@background/transaction';
 import {
   addKeyperWallet,
   getAddressesList,
   getCurrentWallet,
   getWallets,
-} from './wallet/addKeyperWallet';
-import * as WalletKeystore from './wallet/keystore';
-import * as PasswordKeystore from './wallet/passwordEncryptor';
+} from '@src/wallet/addKeyperWallet';
+import * as WalletKeystore from '@src/wallet/keystore';
+import * as PasswordKeystore from '@src/wallet/passwordEncryptor';
 import * as _ from 'lodash';
 
 /**

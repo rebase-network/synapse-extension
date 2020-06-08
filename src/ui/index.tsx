@@ -7,8 +7,8 @@ import { configService } from '../config';
 import { getDefaultLanguage } from '../utils/locale';
 import CKB from '@nervosnetwork/ckb-sdk-core';
 
-import zh from './pages/locales/zh';
-import en from './pages/locales/en';
+import zh from '@src/ui/pages/locales/zh';
+import en from '@src/ui//pages/locales/en';
 
 const messages = {
   en,
