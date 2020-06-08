@@ -82,10 +82,10 @@ export default function (props: AppProps, state: AppState) {
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
             <Typography noWrap>
-            <FormattedMessage id="Capacity" />
+              <FormattedMessage id="Capacity" />
             </Typography>
           </Grid>
-          <Grid item xs>
+          <Grid item xs data-testid="amount">
             <Typography>{capacity / 10 ** 8} CKB</Typography>
           </Grid>
         </Grid>
@@ -119,11 +119,11 @@ export default function (props: AppProps, state: AppState) {
         <Divider variant="middle" className={classes.divider} />
         <br />
         <Grid container wrap="nowrap" spacing={2}>
-          <Grid item>
+          <div data-testid="txHash">
             <Typography noWrap>
               <FormattedMessage id="Tx Hash" />
             </Typography>
-          </Grid>
+          </div>
           <Grid item xs>
             <Link
               rel="noreferrer"
