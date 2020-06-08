@@ -1,5 +1,4 @@
 import * as Keystore from '../wallet/keystore';
-import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 
 describe('encrypt checkpassword decrypt test', () => {
   const privateKey = 'e8f32e723decf4051aefac8e2c93c9c5b214313817cdb01a1494b917c8436b35';
@@ -22,27 +21,27 @@ describe('encrypt checkpassword decrypt test', () => {
       mac: 'ac1d1c0b7039e6efa3cc0066ecaf43d10a4c0a2c7755c63b048a5576b53cc0ce'
     }
   }
+  let keystore
+  let privateKeyDecrypt
+  beforeAll(() => {
+    keystore = Keystore.encrypt(Buffer.from(privateKey, 'hex'), password);
+    privateKeyDecrypt = Keystore.decrypt(keystoreString, password);
+  });
+
 
   it('encrypt', async () => {
-    const keystore = Keystore.encrypt(Buffer.from(privateKey, 'hex'), password);
     console.log('keystore ===> ', keystore);
   });
 
-  it('decrypt', async () => {
-    const privateKeyDecrypt = await Keystore.decrypt(keystoreString, password);
+  it('decrypt', () => {
     expect(privateKeyDecrypt).toEqual(privateKey);
   });
 
   it('checks correct password', async () => {
-    const keystore = Keystore.encrypt(Buffer.from(privateKey, 'hex'), password);
     expect(Keystore.checkPasswd(keystore, password)).toBe(true);
   });
 
-  it('encrypt decrypt', async () => {
-    const keystore = await Keystore.encrypt(Buffer.from(privateKey, 'hex'), password);
-    console.log('--- keystore ---', JSON.stringify(keystore));
-
-    const privateKeyDecrypt = await Keystore.decrypt(keystore, password);
+  it('encrypt decrypt', () => {
     expect(privateKeyDecrypt).toEqual(privateKey);
   });
 });
