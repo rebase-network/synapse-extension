@@ -62,7 +62,7 @@ export default function (props: AppProps, state: AppState) {
 
   return (
     <div>
-      <PageNav to="/" title={intl.formatMessage({ id: "Home"  })}  />
+      <PageNav to="/" title={intl.formatMessage({ id: "Home" })}  />
       <div className={classes.container}>
         {settingElem}
 

@@ -3,6 +3,9 @@ import App from './index';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { IntlProvider } from 'react-intl';
+import en from '../locales/en';
+
 
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
@@ -21,9 +24,12 @@ describe('setting page', () => {
   let tree, container, getByTestId;
   beforeEach(() => {
     tree = render(
-      <Router>
-        <App />
-      </Router>,
+      <IntlProvider locale='en' messages={en}>
+        <Router>
+          <App />
+        </Router>
+      </IntlProvider>
+      ,
     );
     container = tree.container;
     getByTestId = tree.getByTestId;
