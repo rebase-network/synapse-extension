@@ -4,15 +4,16 @@ import { IntlProvider } from 'react-intl';
 
 import App from './App';
 import { configService } from '../config';
-import {getDefaultLanguage} from '../utils/locale'
+import { getDefaultLanguage } from '../utils/locale';
 import CKB from '@nervosnetwork/ckb-sdk-core';
 
-import zh from './pages/locales/zh';
+import zh from 'src/pages/locales/zh';
 import en from './pages/locales/en';
 
-let messages = {}
-messages['en'] = en
-messages['zh'] = zh
+const messages = {
+  en,
+  zh,
+};
 
 declare global {
   interface Window {
@@ -25,5 +26,10 @@ window.ckb = {
 };
 
 chrome.tabs.query({ active: true, currentWindow: true }, (tab) => {
-  ReactDOM.render(<IntlProvider locale={getDefaultLanguage()} messages={messages[getDefaultLanguage()]} ><App /> </IntlProvider>, document.getElementById('popup'));
+  ReactDOM.render(
+    <IntlProvider locale={getDefaultLanguage()} messages={messages[getDefaultLanguage()]}>
+      <App />
+    </IntlProvider>,
+    document.getElementById('popup'),
+  );
 });
