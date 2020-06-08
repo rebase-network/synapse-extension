@@ -3,8 +3,9 @@ import App from './index';
 import { render, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import * as chrome from 'sinon-chrome';
-import ExportPrivateKey from './index';
-import ExportMnemonic from './index';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { IntlProvider } from 'react-intl';
+import en from '../locales/en';
 
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
@@ -22,20 +23,18 @@ jest.mock('react-router-dom', () => {
 describe('export mnemonic page', () => {
   let tree, container, getByTestId;
   beforeEach(() => {
-    tree = render(<ExportMnemonic />);
+    tree = render(
+      <IntlProvider locale="en" messages={en}>
+        <Router>
+          <App />
+        </Router>
+      </IntlProvider>,
+    );
     container = tree.container;
     getByTestId = tree.getByTestId;
   });
   beforeAll(() => {
     window.chrome = chrome;
-  });
-
-  it('should render title', async () => {
-    const { getByTestId, container } = tree;
-
-    const txDetailTitle = getByTestId('export-mnemonic-key-title');
-    expect(container).toContainElement(txDetailTitle);
-    expect(txDetailTitle).toHaveTextContent('Export Mnemonic');
   });
 
   it('should render form fields: Password', async () => {
