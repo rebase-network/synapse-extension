@@ -23,7 +23,7 @@ interface AppState {}
 export const innerForm = (props) => {
   const classes = useStyles();
   const intl = useIntl();
-  
+
   const {
     values,
     touched,
@@ -136,16 +136,18 @@ export default function ImportMnemonic(props: AppProps, state: AppState) {
 
   return (
     <div className={classes.container}>
-      <Title title={intl.formatMessage({ id: "Import Mnemonic"})} testId="mnemonic-form-title" />
+      <Title title={intl.formatMessage({ id: 'Import Mnemonic' })} testId="mnemonic-form-title" />
       {successNode}
       <Formik
         initialValues={{ mnemonic: '', password: '', confirmPassword: '' }}
         onSubmit={onSubmit}
         validationSchema={Yup.object().shape({
           mnemonic: Yup.string().required(intl.formatMessage({ id: 'Required' })),
-          password: Yup.string().min(6).required(intl.formatMessage({ id: 'Required' })),
+          password: Yup.string()
+            .min(6)
+            .required(intl.formatMessage({ id: 'Required' })),
           confirmPassword: Yup.string()
-            .oneOf([Yup.ref('password')], intl.formatMessage({ id: "Passwords don't match!"}))
+            .oneOf([Yup.ref('password')], intl.formatMessage({ id: "Passwords don't match!" }))
             .required(intl.formatMessage({ id: 'Required' })),
         })}
       >
