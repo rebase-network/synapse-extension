@@ -1,4 +1,4 @@
-const fixture = [
+export const txList = [
   {
     hash: '0xac6f9210adb303473133050b61630ea25604da7c8a7a1c036084939370b9664e',
     blockNum: 237044,
@@ -100,5 +100,3 @@ const fixture = [
     income: true,
   },
 ];
-
-export default fixture;

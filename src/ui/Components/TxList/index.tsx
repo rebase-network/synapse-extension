@@ -45,7 +45,7 @@ export default function (props: AppProps) {
       <ListItem>
         <ListItemText primary={`${shannonToCKBFormatter(item.amount.toString())} CKB`} />
         <Link rel="noreferrer" target="_blank" href={`${EXPLORER_URL}/transaction/${item.hash}`}>
-          <Tooltip title={<FormattedMessage id="View on Explorer" />}   placement="top">
+          <Tooltip title={<FormattedMessage id="View on Explorer" />} placement="top">
             <CallMadeIcon />
           </Tooltip>
         </Link>
@@ -60,5 +60,5 @@ export default function (props: AppProps) {
     </List>
   ));
 
-  return <div>{txListElem}</div>;
+  return <div data-testid="container">{txListElem}</div>;
 }

@@ -1,26 +1,26 @@
 import * as React from 'react';
 import TxList from './index';
-import fixture from './fixture';
+import { txList } from './fixture';
 import { render, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
+import { IntlProvider } from 'react-intl';
+import en from '../../pages/locales/en';
 
 describe('TxList', () => {
   let tree, container, getByTestId;
-  beforeEach(() => {
-    tree = render(<TxList txList={fixture} />);
+  beforeAll(() => {
+    tree = render(
+      <IntlProvider locale="en" messages={en}>
+        <TxList txList={txList} />
+      </IntlProvider>,
+    );
     container = tree.container;
     getByTestId = tree.getByTestId;
   });
   afterEach(cleanup);
 
-  it('should render title', () => {
-    const elem = container.querySelector('h4');
+  it('should render tx list', () => {
+    const elem = getByTestId('container');
     expect(container).toContainElement(elem);
-    expect(elem).toHaveTextContent('Transactions');
   });
-
-  // it('should render setting icon on left side', () => {
-  //   const elem = getByTestId('setting-icon');
-  //   expect(elem).not.toBeNull();
-  // });
 });
