@@ -123,42 +123,6 @@ describe('load and check password', () => {
   });
 });
 
-describe('save keystore to chrome plugin', () => {
-  afterAll(() => {
-    chrome.flush();
-    browser.flush();
-  });
-
-  it('should save 1 file to chrome plugin', () => {
-    // https://github.com/acvetkov/sinon-chrome/issues/82#issuecomment-467036622
-
-    const passwd = '123456';
-
-    const seed = mnemonicToSeedSync(mnenonics);
-    const masterKeychain = Keychain.fromSeed(seed);
-
-    const extendedPrivateKey = new ExtendedPrivateKey(
-      masterKeychain.privateKey.toString('hex'),
-      masterKeychain.chainCode.toString('hex'),
-    );
-
-    const keystore = Keystore.create(extendedPrivateKey, passwd);
-
-    chrome.storage.sync.set(
-      {
-        key: keystore,
-      },
-      () => {
-        console.log('Value is set to ' + keystore);
-      },
-    );
-
-    chrome.storage.sync.get(['key'], (result) => {
-      expect(result.key).toEqual(keystore);
-    });
-  });
-});
-
 describe('ckb address', () => {
   it('from mnenonics get ckb address', () => {
     const seed = mnemonicToSeedSync(mnenonics);

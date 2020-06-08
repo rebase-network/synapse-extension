@@ -1,9 +1,11 @@
 import * as React from 'react';
 import App from './index';
-import { render, fireEvent, waitFor, cleanup } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import * as chrome from 'sinon-chrome';
-import ExportPrivateKey from './index';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { IntlProvider } from 'react-intl';
+import en from '../locales/en';
 
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
@@ -21,21 +23,21 @@ jest.mock('react-router-dom', () => {
 
 describe('export privatekey second page', () => {
   let tree, container, getByTestId;
-  beforeEach(() => {
-    tree = render(<ExportPrivateKey />);
-    container = tree.container;
-    getByTestId = tree.getByTestId;
-  });
+
   beforeAll(() => {
     window.chrome = chrome;
   });
 
-  it('should render title', async () => {
-    const { getByTestId, container } = tree;
-
-    const elemContainer = getByTestId('container');
-    expect(container).toContainElement(elemContainer);
-    expect(elemContainer).toHaveTextContent('PrivateKey');
+  beforeEach(() => {
+    tree = render(
+      <IntlProvider locale="en" messages={en}>
+        <Router>
+          <App />
+        </Router>
+      </IntlProvider>,
+    );
+    container = tree.container;
+    getByTestId = tree.getByTestId;
   });
 
   it('should render title', async () => {
@@ -43,6 +45,12 @@ describe('export privatekey second page', () => {
 
     const elemContainer = getByTestId('container');
     expect(container).toContainElement(elemContainer);
-    expect(elemContainer).toHaveTextContent('Keystore');
+  });
+
+  it('should render title', async () => {
+    const { getByTestId, container } = tree;
+
+    const elemContainer = getByTestId('container');
+    expect(container).toContainElement(elemContainer);
   });
 });

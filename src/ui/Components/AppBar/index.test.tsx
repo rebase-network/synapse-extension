@@ -1,16 +1,27 @@
 import * as React from 'react';
-import AppBar from './index';
-import { render, fireEvent, waitFor, cleanup } from '@testing-library/react';
+import App from './index';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
+import * as chrome from 'sinon-chrome';
+import { IntlProvider } from 'react-intl';
+import en from '../../pages/locales/en';
 
 describe('React testing library', () => {
   let tree, container, getByTestId;
+
+  beforeAll(() => {
+    window.chrome = chrome;
+  });
+
   beforeEach(() => {
-    tree = render(<AppBar handleNetworkChange={null} />);
+    tree = render(
+      <IntlProvider locale="en" messages={en}>
+        <App handleNetworkChange={null} />
+      </IntlProvider>,
+    );
     container = tree.container;
     getByTestId = tree.getByTestId;
   });
-  afterEach(cleanup);
 
   it('should render title', () => {
     const elem = container.querySelector('h6');

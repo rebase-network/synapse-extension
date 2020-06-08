@@ -1,6 +1,6 @@
 import * as React from 'react';
 import App from './index';
-import { render, fireEvent, waitFor, cleanup } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import * as chrome from 'sinon-chrome';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -22,6 +22,11 @@ jest.mock('react-router-dom', () => {
 
 describe('export mnemonic page', () => {
   let tree, container, getByTestId;
+
+  beforeAll(() => {
+    window.chrome = chrome;
+  });
+
   beforeEach(() => {
     tree = render(
       <IntlProvider locale="en" messages={en}>
@@ -32,9 +37,6 @@ describe('export mnemonic page', () => {
     );
     container = tree.container;
     getByTestId = tree.getByTestId;
-  });
-  beforeAll(() => {
-    window.chrome = chrome;
   });
 
   it('should render form fields: Password', async () => {

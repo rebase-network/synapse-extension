@@ -1,6 +1,6 @@
 import * as React from 'react';
 import NetworkSelector from './index';
-import { render, fireEvent, waitFor, cleanup } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 
 describe('React testing library', () => {
@@ -10,7 +10,6 @@ describe('React testing library', () => {
     container = tree.container;
     getByTestId = tree.getByTestId;
   });
-  afterEach(cleanup);
 
   it('should render title', async () => {
     const elem = container.querySelector('#network-select');

@@ -1,8 +1,11 @@
 import * as React from 'react';
 import App from './index';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import * as chrome from 'sinon-chrome';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { IntlProvider } from 'react-intl';
+import en from '../locales/en';
 
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
@@ -13,27 +16,31 @@ jest.mock('react-router-dom', () => {
     ...originalModule,
     // add your noops here
     useParams: jest.fn(),
-    useHistory: jest.fn(),
+    useHistory: () => ({
+      push: jest.fn(),
+    }),
   };
 });
 
 describe('Address page', () => {
   let tree, container, getByTestId;
-  beforeEach(() => {
-    tree = render(<App />);
-    container = tree.container;
-    getByTestId = tree.getByTestId;
-  });
   beforeAll(() => {
     window.chrome = chrome;
   });
 
-  it('should render title', async () => {
-    const { getByTestId, container } = tree;
+  beforeEach(() => {
+    tree = render(
+      <IntlProvider locale="en" messages={en}>
+        <Router>
+          <App />
+        </Router>
+      </IntlProvider>,
+    );
 
-    const title = getByTestId('address-title');
-    expect(container).toContainElement(title);
-    expect(title).toHaveTextContent('Address');
+    container = tree.container;
+    getByTestId = tree.getByTestId;
+
+    window.chrome = chrome;
   });
 
   it('should render address', async () => {
@@ -45,8 +52,8 @@ describe('Address page', () => {
   });
 
   it('should render capacity', () => {
-    const capacity = screen.queryByTestId('capacity');
-    expect(capacity).toBeNull();
+    const capacity = getByTestId('capacity');
+    expect(capacity).toHaveTextContent('Loading...');
   });
 
   it('should render receive / send btn', () => {

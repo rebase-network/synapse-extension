@@ -1,7 +1,7 @@
 import * as React from 'react';
 import TxList from './index';
 import { txList } from './fixture';
-import { render, fireEvent, waitFor, cleanup } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { IntlProvider } from 'react-intl';
 import en from '../../pages/locales/en';
@@ -17,7 +17,6 @@ describe('TxList', () => {
     container = tree.container;
     getByTestId = tree.getByTestId;
   });
-  afterEach(cleanup);
 
   it('should render tx list', () => {
     const elem = getByTestId('container');

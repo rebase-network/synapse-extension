@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Title from './index';
-import { render, fireEvent, waitFor, cleanup } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 
 describe('Title component', () => {
@@ -8,7 +8,6 @@ describe('Title component', () => {
   beforeEach(() => {
     tree = render(<Title title="test title" testId="test-title" />);
   });
-  afterEach(cleanup);
 
   it('should render title', async () => {
     const { getByTestId, container } = tree;

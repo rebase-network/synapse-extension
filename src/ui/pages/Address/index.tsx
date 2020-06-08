@@ -48,8 +48,8 @@ const useStyles = makeStyles({
     'align-items': 'center',
   },
   addressText: {
-    "text-transform": "none"
-   },
+    'text-transform': 'none',
+  },
 });
 
 const BootstrapButton = withStyles({
@@ -115,7 +115,7 @@ export default function (props: AppProps, state: AppState) {
   const [txs, setTxs] = React.useState([]);
   const [type, setType] = React.useState('');
   const [disableFlg, setDisableFlg] = React.useState(false);
-  const [tooltipMsg, setTooltipMsg] = React.useState("Copy to clipboard");
+  const [tooltipMsg, setTooltipMsg] = React.useState('Copy to clipboard');
   const { network } = React.useContext(AppContext);
 
   const updateCapacity = async (lockHash: string) => {
@@ -159,8 +159,6 @@ export default function (props: AppProps, state: AppState) {
     });
 
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      console.log('app 收到来自content-script的消息：');
-
       if (request.messageType === MESSAGE_TYPE.GOTO_SEND_PAGE) {
         const searchString = queryString.stringify(request.payload);
         history.push(`/send-tx?${searchString}`);
@@ -174,17 +172,17 @@ export default function (props: AppProps, state: AppState) {
 
   const copyAddress = async () => {
     await navigator.clipboard.writeText(address);
-  }
+  };
 
   const handleClickCopyAddress = async () => {
-    setTooltipMsg("Copied")
-    copyAddress()
-  }
+    setTooltipMsg('Copied');
+    copyAddress();
+  };
 
   React.useEffect(() => {
     (async () => {
       if (open && address) {
-        copyAddress()
+        copyAddress();
         setTip('Address has been copied to clipboard');
       }
     })();
@@ -197,7 +195,7 @@ export default function (props: AppProps, state: AppState) {
   }
 
   const capacityNode = loading ? (
-    <div>
+    <div data-testid="capacity">
       <FormattedMessage id="Loading..." />
     </div>
   ) : (
@@ -230,9 +228,15 @@ export default function (props: AppProps, state: AppState) {
       <div>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Box textAlign="center" fontSize={22}>
+            <Box textAlign="center" fontSize={22} data-testid="address-info">
               <Tooltip title={<FormattedMessage id={tooltipMsg} />} arrow placement="bottom">
-                <Button size="large" className={classes.addressText} onClick={handleClickCopyAddress}>{truncateAddress(address)}</Button>
+                <Button
+                  size="large"
+                  className={classes.addressText}
+                  onClick={handleClickCopyAddress}
+                >
+                  {truncateAddress(address)}
+                </Button>
               </Tooltip>
             </Box>
             <Box textAlign="center" fontSize={16}>
