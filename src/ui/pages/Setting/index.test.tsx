@@ -6,7 +6,6 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import en from '../locales/en';
 
-
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
   const originalModule = jest.requireActual('react-router-dom');
@@ -24,12 +23,11 @@ describe('setting page', () => {
   let tree, container, getByTestId;
   beforeEach(() => {
     tree = render(
-      <IntlProvider locale='en' messages={en}>
+      <IntlProvider locale="en" messages={en}>
         <Router>
           <App />
         </Router>
-      </IntlProvider>
-      ,
+      </IntlProvider>,
     );
     container = tree.container;
     getByTestId = tree.getByTestId;
