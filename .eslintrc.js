@@ -1,7 +1,8 @@
 // Refer to: https://github.com/iamturns/eslint-config-airbnb-typescript#i-use-eslint-config-airbnb-with-react-support
 
 module.exports = {
-  extends: ['airbnb-typescript'],
+  plugins: ["prettier"],
+  extends: ['airbnb-typescript', "plugin:prettier/recommended"],
   parserOptions: {
     project: './tsconfig.json',
   },
