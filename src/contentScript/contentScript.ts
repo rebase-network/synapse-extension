@@ -1,4 +1,4 @@
-import { MESSAGE_TYPE } from '../utils/constants'
+import { MESSAGE_TYPE } from '../utils/constants';
 
 function injectCustomJs(jsPath) {
   jsPath = jsPath || 'js/injectedScript.js';
@@ -16,14 +16,20 @@ function injectCustomJs(jsPath) {
 
 injectCustomJs('js/injectedScript.js');
 
-window.addEventListener("message", function (e) {
-  if (e.data.messageType === MESSAGE_TYPE.EXTERNAL_SEND) {
-    chrome.runtime.sendMessage({
-      messageType: MESSAGE_TYPE.EXTERNAL_SEND,
-      payload: e.data.payload
-    }, function (response) {
-      console.log('from bg' + response);
-    });
-  }
-
-}, false);
+window.addEventListener(
+  'message',
+  function (e) {
+    if (e.data.messageType === MESSAGE_TYPE.EXTERNAL_SEND) {
+      chrome.runtime.sendMessage(
+        {
+          messageType: MESSAGE_TYPE.EXTERNAL_SEND,
+          payload: e.data.payload,
+        },
+        function (response) {
+          console.log('from bg' + response);
+        },
+      );
+    }
+  },
+  false,
+);

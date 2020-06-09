@@ -57,7 +57,7 @@ export default function (props: AppProps, state: AppState) {
   const history = useHistory();
   const { addressInfo } = props;
   const { address, type, lock } = addressInfo;
-  const [ capacity, setCapacity] = React.useState('0');
+  const [capacity, setCapacity] = React.useState('0');
 
   React.useEffect(() => {
     const fetchData = async () => {

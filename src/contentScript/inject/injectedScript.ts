@@ -1,4 +1,4 @@
-import { MESSAGE_TYPE } from '../../utils/constants'
+import { MESSAGE_TYPE } from '../../utils/constants';
 import { getAddressInfo } from '../../utils/apis';
 import { configService } from '../../config';
 import CKB from '@nervosnetwork/ckb-sdk-core';
@@ -23,12 +23,14 @@ window.ckb = {
   //   }, '*');
   // },
   send: (payload: SendPayload) => {
-    window.postMessage({
-      messageType: MESSAGE_TYPE.EXTERNAL_SEND,
-      payload
-    }, '*');
+    window.postMessage(
+      {
+        messageType: MESSAGE_TYPE.EXTERNAL_SEND,
+        payload,
+      },
+      '*',
+    );
   },
 };
 
 console.log('ckb is injected successfully');
-

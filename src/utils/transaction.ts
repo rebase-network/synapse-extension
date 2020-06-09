@@ -1,4 +1,3 @@
-
 import { Ckb } from './constants';
 import { configService } from '../config';
 
@@ -13,7 +12,7 @@ export const getStatusByTxHash = async (txHash) => {
 
 export const getBlockNumberByTxHash = async (txHash) => {
   const result = await ckb.rpc.getTransaction(txHash);
-  if(result.txStatus.blockHash == null){
+  if (result.txStatus.blockHash == null) {
     return BigInt(0);
   }
   const depositBlockHeader = await ckb.rpc

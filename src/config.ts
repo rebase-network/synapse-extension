@@ -1,4 +1,3 @@
-
 class ConfigService {
   private getValue(key: string, throwOnMissing = true): string {
     const value = process.env[key];
@@ -41,7 +40,7 @@ class ConfigService {
   }
 }
 
-const configService = new ConfigService()
+const configService = new ConfigService();
 // .ensureValues([
 //   'CKB_RPC_ENDPOINT',
 //   'CKB_INDEXER_ENDPOINT',

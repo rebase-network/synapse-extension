@@ -137,7 +137,7 @@ export default function GenerateMnemonic(props: AppProps, state: AppState) {
 
   return (
     <div className={classes.container}>
-      <Title title={intl.formatMessage({ id: "Generate Mnemonic" })} testId="" />
+      <Title title={intl.formatMessage({ id: 'Generate Mnemonic' })} testId="" />
       {successNode}
       <Formik
         enableReinitialize={true}

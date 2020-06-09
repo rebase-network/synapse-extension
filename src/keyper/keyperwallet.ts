@@ -16,7 +16,6 @@ const { AnyPayLockScript } = require('@keyper/container/lib/locks/anyone-can-pay
 const Keccak256LockScript = require('./locks/keccak256');
 const storage = require('./storage');
 
-
 const EC = require('elliptic').ec;
 
 let seed, container;
@@ -48,7 +47,7 @@ const init = () => {
           const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
 
           const ec = new EC('secp256k1');
-          const keypair = ec.keyFromPrivate(privateKey.replace("0x",""));
+          const keypair = ec.keyFromPrivate(privateKey.replace('0x', ''));
 
           const msg = typeof message === 'string' ? hexToBytes(message) : message;
           let { r, s, recoveryParam } = keypair.sign(msg, {
@@ -217,7 +216,6 @@ const generateByPrivateKey = async (privateKey, password) => {
 };
 
 const accounts = async () => {
-
   const scripts = await container.getAllLockHashesAndMeta();
   const result = [];
   for (let i = 0; i < scripts.length; i++) {

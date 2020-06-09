@@ -16,18 +16,17 @@ describe('encrypt checkpassword decrypt test', () => {
         salt: 'd28aef7e0b59c2e7c10650c274bf67f3b5c548f3b9507b4892a072138434a407',
         n: 262144,
         r: 8,
-        p: 1
+        p: 1,
       },
-      mac: 'ac1d1c0b7039e6efa3cc0066ecaf43d10a4c0a2c7755c63b048a5576b53cc0ce'
-    }
-  }
-  let keystore
-  let privateKeyDecrypt
+      mac: 'ac1d1c0b7039e6efa3cc0066ecaf43d10a4c0a2c7755c63b048a5576b53cc0ce',
+    },
+  };
+  let keystore;
+  let privateKeyDecrypt;
   beforeAll(() => {
     keystore = Keystore.encrypt(Buffer.from(privateKey, 'hex'), password);
     privateKeyDecrypt = Keystore.decrypt(keystoreString, password);
   });
-
 
   it('encrypt', async () => {
     console.log('keystore ===> ', keystore);

@@ -19,12 +19,12 @@ export const anypayDep = {
 export const keccak256Dep = {};
 
 const depsObj = {
-    Secp256k1: secp256k1Dep,
-    AnyPay: anypayDep,
-    Keccak256: keccak256Dep,
+  Secp256k1: secp256k1Dep,
+  AnyPay: anypayDep,
+  Keccak256: keccak256Dep,
 };
 
 // Secp256k1 Keccak256 AnyPay
 export const getDepFromLockType = (lockType: LockType) => {
-    return depsObj[lockType];
+  return depsObj[lockType];
 };

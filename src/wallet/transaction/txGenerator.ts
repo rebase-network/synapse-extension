@@ -1,8 +1,14 @@
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils/lib';
 const BN = require('bn.js');
 
-export function createRawTx(toAmount, toLockScript:CKBComponents.Script, inputCells, 
-                        fromLockScript:CKBComponents.Script, deps, fee) {
+export function createRawTx(
+  toAmount,
+  toLockScript: CKBComponents.Script,
+  inputCells,
+  fromLockScript: CKBComponents.Script,
+  deps,
+  fee,
+) {
   const rawTx = {
     version: '0x0',
     cellDeps: deps,
@@ -34,7 +40,10 @@ export function createRawTx(toAmount, toLockScript:CKBComponents.Script, inputCe
   rawTx.outputsData.push('0x');
 
   const totalConsumed = toAmount.add(fee);
-  if (inputCells.total.gt(totalConsumed) && inputCells.total.sub(totalConsumed).gt(new BN('6100000000'))) {
+  if (
+    inputCells.total.gt(totalConsumed) &&
+    inputCells.total.sub(totalConsumed).gt(new BN('6100000000'))
+  ) {
     rawTx.outputs.push({
       capacity: `0x${inputCells.total.sub(totalConsumed).toString(16)}`,
       lock: fromLockScript,

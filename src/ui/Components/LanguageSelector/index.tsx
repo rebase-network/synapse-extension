@@ -3,7 +3,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import {getDefaultLanguage} from '../../../utils/locale'
+import { getDefaultLanguage } from '../../../utils/locale';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,14 +20,13 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface AppProps {
-}
+interface AppProps {}
 
 interface AppState {}
 
 export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
-  const defaultLanguage = getDefaultLanguage()
+  const defaultLanguage = getDefaultLanguage();
   const [language, setLanguage] = React.useState(defaultLanguage);
 
   const handleChange = (event: React.ChangeEvent<{ value: string }>) => {

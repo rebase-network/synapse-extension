@@ -153,5 +153,4 @@ export const keccak256 = {
   },
 };
 
-
 export default fixture;
