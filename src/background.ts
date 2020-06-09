@@ -32,22 +32,25 @@ let addressesList = [];
 
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.messageType === MESSAGE_TYPE.EXTERNAL_SEND) {
-    chrome.windows.create({
-      url: 'notification.html',
-      type: 'popup',
-      width: 360,
-      height: 560,
-      top: 100,
-      left: 100,
-    }, () => {
-      // WORKAROUND: improve me
-      setTimeout(() => {
-        chrome.runtime.sendMessage({
-          messageType: MESSAGE_TYPE.GOTO_SEND_PAGE,
-          payload: request.payload,
-        });
-      }, 5000);
-    });
+    chrome.windows.create(
+      {
+        url: 'notification.html',
+        type: 'popup',
+        width: 360,
+        height: 560,
+        top: 100,
+        left: 100,
+      },
+      () => {
+        // WORKAROUND: improve me
+        setTimeout(() => {
+          chrome.runtime.sendMessage({
+            messageType: MESSAGE_TYPE.GOTO_SEND_PAGE,
+            payload: request.payload,
+          });
+        }, 5000);
+      },
+    );
   }
   // IMPORT_MNEMONIC
   if (request.messageType === MESSAGE_TYPE.IMPORT_MNEMONIC) {
@@ -202,7 +205,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const fee = request.fee * 10 ** 8;
       const password = request.password.trim();
       const {
-        address: fromAddress, publicKey, lock: lockHash, type: lockType,
+        address: fromAddress,
+        publicKey,
+        lock: lockHash,
+        type: lockType,
       } = result.currentWallet;
       const wallet = findInWalletsByPublicKey(publicKey, result.wallets);
       const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
@@ -458,14 +464,11 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 });
 
 function saveToStorage() {
-  chrome.storage.local.set({ wallets }, () => {
-  });
+  chrome.storage.local.set({ wallets }, () => {});
 
-  chrome.storage.local.set({ currentWallet }, () => {
-  });
+  chrome.storage.local.set({ currentWallet }, () => {});
 
-  chrome.storage.local.set({ addressesList }, () => {
-  });
+  chrome.storage.local.set({ addressesList }, () => {});
 }
 
 function findInWalletsByPublicKey(publicKey, wallets) {
