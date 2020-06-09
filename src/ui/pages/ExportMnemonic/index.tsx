@@ -35,11 +35,17 @@ export const innerForm = (props) => {
   } = props;
 
   return (
-    <Form className="export-mnemonic-key" id="export-mnemonic-key" onSubmit={handleSubmit}>
+    <Form
+      className="export-mnemonic-key"
+      id="export-mnemonic-key"
+      onSubmit={handleSubmit}
+      aria-label="form"
+    >
       <TextField
         label={intl.formatMessage({ id: 'Password' })}
         name="password"
         type="password"
+        id="password"
         fullWidth
         value={values.password}
         onChange={handleChange}
