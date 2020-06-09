@@ -2,13 +2,12 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { IntlProvider } from 'react-intl';
 
+import CKB from '@nervosnetwork/ckb-sdk-core';
+import zh from '@src/ui/pages/locales/zh';
+import en from '@src/ui//pages/locales/en';
 import App from './App';
 import { configService } from '../config';
 import { getDefaultLanguage } from '../utils/locale';
-import CKB from '@nervosnetwork/ckb-sdk-core';
-
-import zh from '@src/ui/pages/locales/zh';
-import en from '@src/ui//pages/locales/en';
 
 const messages = {
   en,
