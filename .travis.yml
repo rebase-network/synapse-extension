@@ -1,9 +1,5 @@
 language: node_js
-
-branches:
-  only:
-  - master
-
+dist: xenial # 操作系统是 ubuntu xenial
 node_js:
   - 12.16.2
 
@@ -29,3 +25,17 @@ notifications:
     on_success: never # default: change
     on_failure: always # default: always
 
+before_deploy:
+  - mv dist synapse-extension
+  - zip -q -r synapse-extension.zip synapse-extension  # 打包压缩
+  - sha256sum synapse-extension.zip > synapse-extension.asc # 校验值
+
+deploy:
+  provider: releases # 这个阶段要操作 repo 的 releases 页面
+  token: $GITHUB_TOKEN
+  file:
+    - synapse-extension.zip
+    - synapse-extension.asc
+  skip_cleanup: true
+  on: #  只有打 tag 时才运行 deploy 阶段
+    tags: true
