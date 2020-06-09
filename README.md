@@ -21,7 +21,7 @@ An extension wallet and Keyper agency for Nervos CKB
 
 ## Lint
 
-Use [arianacosta/poetic](https://github.com/arianacosta/poetic) to do the lint. Please install the following extensions in your vscode:
+We use eslint, Please install the following extensions in your vscode:
 
 - ESLint
 - Prettier
