@@ -1,6 +1,7 @@
 import * as React from 'react';
 import App from './index';
 import { render, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect';
 import * as chrome from 'sinon-chrome';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -53,9 +54,7 @@ describe('export mnemonic page', () => {
     const password = container.querySelector('[name="password"]');
     expect(password).toBeEmpty();
 
-    await waitFor(() => {
-      fireEvent.change(password, { target: { value: 'test password' } });
-    });
+    await userEvent.type(password, 'test password');
 
     expect(container.querySelector('#export-mnemonic-key')).toHaveFormValues({
       password: 'test password',
