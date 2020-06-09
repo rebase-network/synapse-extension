@@ -15,15 +15,15 @@ class ConfigService {
 
   // FIXME: cannot get process.env values
   get CKB_RPC_ENDPOINT(): string {
-    return process.env.CKB_RPC_ENDPOINT || 'http://101.200.147.143:8117/rpc';
+    return process.env.CKB_RPC_ENDPOINT || 'http://106.13.40.34:8117/rpc';
   }
 
   get CKB_INDEXER_ENDPOINT(): string {
-    return process.env.CKB_INDEXER_ENDPOINT || 'http://101.200.147.143:8117/indexer';
+    return process.env.CKB_INDEXER_ENDPOINT || 'http://106.13.40.34:8117/indexer';
   }
 
   get CACHE_LAYER_ENDPOINT(): string {
-    return process.env.CACHE_LAYER_ENDPOINT || 'http://101.200.147.143:2333';
+    return process.env.CACHE_LAYER_ENDPOINT || 'http://106.13.40.34:2333';
   }
 
   public ensureValues(keys: string[]) {
