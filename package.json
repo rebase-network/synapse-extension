@@ -6,7 +6,7 @@
     "build": "webpack --config webpack.prod.js",
     "dev": "webpack --config webpack.dev.js",
     "watch": "webpack -w --config webpack.dev.js",
-    "lint": "tslint 'src/**/*.{ts, tsx}'",
+    "lint": "eslint 'src/**/*.{ts, tsx}'",
     "code:format": "prettier './src/**/**.{js,jsx,ts,tsx}' --write",
     "test:watch": "jest --watch",
     "test": "jest"
