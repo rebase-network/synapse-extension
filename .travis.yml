@@ -20,3 +20,12 @@ script:
   - yarn test
   - yarn build
 
+notifications:
+  email:
+    recipients:
+      - 2411mail@gmail.com
+      - shooter.hero@gmail.com
+      - syuukawa@hotmail.com
+    on_success: never # default: change
+    on_failure: always # default: always
+
