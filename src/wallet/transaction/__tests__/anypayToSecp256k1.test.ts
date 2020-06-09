@@ -9,7 +9,7 @@ import { bobAddresses, aliceAddresses } from '../../../test/fixture/address';
 import { anypayDep } from '../../../test/fixture/deps';
 
 describe('Transaction test', () => {
-  const ckb = new CKB('http://101.200.147.143:8117/rpc');
+  const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
 
   it('send transaction from anypay to secp256k1', async () => {
     const privateKey = bobAddresses.privateKey;
