@@ -1,11 +1,11 @@
 import * as React from 'react';
-import App from './index';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import * as chrome from 'sinon-chrome';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import en from '../locales/en';
+import App from './index';
 
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
@@ -23,7 +23,9 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('Address page', () => {
-  let tree, container, getByTestId;
+  let tree;
+  let container;
+  let getByTestId;
   beforeAll(() => {
     window.chrome = chrome;
   });
@@ -44,8 +46,6 @@ describe('Address page', () => {
   });
 
   it('should render address', async () => {
-    const { getByTestId, container } = tree;
-
     const address = getByTestId('address-info');
     expect(container).toContainElement(address);
     expect(address).toHaveTextContent(/ck|loading|null|undefined|/);
@@ -57,8 +57,6 @@ describe('Address page', () => {
   });
 
   it('should render receive / send btn', () => {
-    const { getByTestId, container } = tree;
-
     const receiveBtn = getByTestId('receive');
     const sendBtn = getByTestId('send');
     expect(container).toContainElement(receiveBtn);
