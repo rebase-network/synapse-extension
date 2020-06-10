@@ -6,12 +6,13 @@ import { Grid, Button, Dialog, IconButton, Link, Tooltip, Divider, Box } from '@
 import CloseIcon from '@material-ui/icons/Close';
 import CallMadeIcon from '@material-ui/icons/CallMade';
 import { useHistory } from 'react-router-dom';
-import { createStyles, withStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { AppContext } from '@ui/utils/context';
 import { MESSAGE_TYPE, EXPLORER_URL } from '../../../utils/constants';
-import { AppContext } from '../../App';
 import { truncateAddress, shannonToCKBFormatter } from '../../../utils/formatters';
 import { getAddressInfo } from '../../../utils/apis';
 import TxList from '../../Components/TxList';
+
 const QrCode = require('qrcode.react');
 
 const useStyles = makeStyles({

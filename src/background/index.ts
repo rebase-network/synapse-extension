@@ -21,10 +21,21 @@ import {
 import * as WalletKeystore from '@src/wallet/keystore';
 import * as PasswordKeystore from '@src/wallet/passwordEncryptor';
 import * as _ from 'lodash';
+<<<<<<< HEAD:src/background.ts
 import { addressToScript } from '@keyper/specs/lib/address';
 import { getStatusByTxHash, getBlockNumberByTxHash } from './utils/transaction';
 import { MESSAGE_TYPE, ADDRESS_TYPE_CODEHASH } from './utils/constants';
 
+=======
+import {
+  saveToStorage,
+  findInWalletsByPublicKey,
+  findInAddressesListByPublicKey,
+} from '@utils/wallet';
+import { getStatusByTxHash, getBlockNumberByTxHash } from '@utils/transaction';
+import { MESSAGE_TYPE } from '@utils/constants';
+import externalMessageHandler from '@background/messageHandlers';
+>>>>>>> 67e4facf1040514bebc4d50ec56178e2fd91d4d7:src/background/index.ts
 /**
  * Listen messages from popup
  */
@@ -34,27 +45,8 @@ let addressesList = [];
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-  if (request.messageType === MESSAGE_TYPE.EXTERNAL_SEND) {
-    chrome.windows.create(
-      {
-        url: 'notification.html',
-        type: 'popup',
-        width: 360,
-        height: 560,
-        top: 100,
-        left: 100,
-      },
-      () => {
-        // WORKAROUND: improve me
-        setTimeout(() => {
-          chrome.runtime.sendMessage({
-            messageType: MESSAGE_TYPE.GOTO_SEND_PAGE,
-            payload: request.payload,
-          });
-        }, 5000);
-      },
-    );
-  }
+  externalMessageHandler(request, sender, sendResponse);
+
   // IMPORT_MNEMONIC
   if (request.messageType === MESSAGE_TYPE.IMPORT_MNEMONIC) {
     // call import mnemonic method
@@ -109,8 +101,12 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       addressesList = getAddressesList();
       currentWallet = getCurrentWallet();
     }
+<<<<<<< HEAD:src/background.ts
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     saveToStorage();
+=======
+    saveToStorage(wallets, currentWallet, addressesList);
+>>>>>>> 67e4facf1040514bebc4d50ec56178e2fd91d4d7:src/background/index.ts
 
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
   }
@@ -164,7 +160,11 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
+<<<<<<< HEAD:src/background.ts
     if (!_.isEmpty(addressesObj)) {
+=======
+    if (addressesObj !== null && addressesObj !== '') {
+>>>>>>> 67e4facf1040514bebc4d50ec56178e2fd91d4d7:src/background/index.ts
       const { addresses } = addressesObj;
       currentWallet = {
         publicKey,
@@ -181,8 +181,12 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     }
 
     // 002-saveToStorage
+<<<<<<< HEAD:src/background.ts
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     saveToStorage();
+=======
+    saveToStorage(wallets, currentWallet, addressesList);
+>>>>>>> 67e4facf1040514bebc4d50ec56178e2fd91d4d7:src/background/index.ts
 
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
   }
@@ -388,7 +392,11 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       // check the keystore exist or not by publicKey
       const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
+<<<<<<< HEAD:src/background.ts
       if (!_.isEmpty(addressesObj)) {
+=======
+      if (addressesObj !== null && addressesObj !== '') {
+>>>>>>> 67e4facf1040514bebc4d50ec56178e2fd91d4d7:src/background/index.ts
         const { addresses } = addressesObj;
         currentWallet = {
           publicKey,
@@ -407,7 +415,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         currentWallet = getCurrentWallet();
       }
 
-      saveToStorage();
+      saveToStorage(wallets, currentWallet, addressesList);
 
       chrome.runtime.sendMessage({
         messageType: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK,
@@ -457,7 +465,11 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       // check the keystore exist or not by the publicKey
       const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
+<<<<<<< HEAD:src/background.ts
       if (!_.isEmpty(addressesObj)) {
+=======
+      if (addressesObj !== null && addressesObj !== '') {
+>>>>>>> 67e4facf1040514bebc4d50ec56178e2fd91d4d7:src/background/index.ts
         const { addresses } = addressesObj;
         currentWallet = {
           publicKey,
@@ -473,7 +485,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       }
 
       // 002-
-      saveToStorage();
+      saveToStorage(wallets, currentWallet, addressesList);
 
       chrome.runtime.sendMessage({
         messageType: MESSAGE_TYPE.IMPORT_KEYSTORE_OK,
@@ -481,6 +493,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     });
   }
 });
+<<<<<<< HEAD:src/background.ts
 
 function saveToStorage() {
   chrome.storage.local.set({ wallets }, () => {});
@@ -507,3 +520,5 @@ function findInAddressesListByPublicKey(publicKey, addressesList) {
   const addresses = addressesList.find(findAddresses);
   return addresses;
 }
+=======
+>>>>>>> 67e4facf1040514bebc4d50ec56178e2fd91d4d7:src/background/index.ts

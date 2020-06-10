@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { AppContext } from '@ui/utils/context';
 import Address from './pages/Address';
 
 import ImportMnemonic from './pages/ImportMnemonic/index';
@@ -13,11 +14,9 @@ import ExportMnemonic from './pages/ExportMnemonic';
 import ExportPrivateKeySecond from './pages/ExportPrivateKeySecond';
 import Setting from './pages/Setting';
 import ExportMnemonicSecond from './pages/ExportMnemonicSecond';
-import AppBar from './Components/AppBar/';
+import AppBar from './Components/AppBar';
 
 import './styles/global.scss';
-
-export const AppContext = React.createContext({ network: 'testnet' });
 
 export default function App() {
   const [network, setNetwork] = React.useState('testnet');

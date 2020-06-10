@@ -1,18 +1,17 @@
 import * as React from 'react';
-import Title from '../../Components/Title';
 import { Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { MESSAGE_TYPE } from '../../../utils/constants';
 import { useHistory } from 'react-router-dom';
-import { AppContext } from '../../App';
+import { AppContext } from '@ui/utils/context';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
-import PageNav from '../../Components/PageNav';
 import { FormattedMessage, useIntl } from 'react-intl';
+import PageNav from '../../Components/PageNav';
+import { MESSAGE_TYPE } from '../../../utils/constants';
 
 const useStyles = makeStyles({
   container: {
@@ -242,7 +241,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
         password: Yup.string()
           .required(intl.formatMessage({ id: 'Required' }))
           .min(6),
-        privateKey: Yup.string().required(intl.formatMessage({ id: 'Required' })), //TODO
+        privateKey: Yup.string().required(intl.formatMessage({ id: 'Required' })), // TODO
       }
     : {
         keystore: Yup.string().required(intl.formatMessage({ id: 'Required' })),
