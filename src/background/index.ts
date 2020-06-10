@@ -20,9 +20,13 @@ import {
 import * as WalletKeystore from '@src/wallet/keystore';
 import * as PasswordKeystore from '@src/wallet/passwordEncryptor';
 import * as _ from 'lodash';
-import { getStatusByTxHash, getBlockNumberByTxHash } from './utils/transaction';
-import { MESSAGE_TYPE, ADDRESS_TYPE_CODEHASH } from './utils/constants';
-
+import {
+  saveToStorage,
+  findInWalletsByPublicKey,
+  findInAddressesListByPublicKey,
+} from '@utils/wallet';
+import { getStatusByTxHash, getBlockNumberByTxHash } from '@utils/transaction';
+import { MESSAGE_TYPE } from '@utils/constants';
 /**
  * Listen messages from popup
  */
@@ -90,7 +94,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     // check the keystore exist or not
     const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
-    if (addressesObj != null && addressesObj != '') {
+    if (addressesObj != null && addressesObj !== '') {
       const { addresses } = addressesObj;
       currentWallet = {
         publicKey,
@@ -105,7 +109,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       addressesList = getAddressesList();
       currentWallet = getCurrentWallet();
     }
-    saveToStorage();
+    saveToStorage(wallets, currentWallet, addressesList);
 
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
   }
@@ -158,7 +162,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     // check the keystore exist or not
     const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
-    if (addressesObj != null && addressesObj != '') {
+    if (addressesObj !== null && addressesObj !== '') {
       const { addresses } = addressesObj;
       currentWallet = {
         publicKey,
@@ -175,7 +179,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     }
 
     // 002-saveToStorage
-    saveToStorage();
+    saveToStorage(wallets, currentWallet, addressesList);
 
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
   }
@@ -369,7 +373,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       // check the keystore exist or not by publicKey
       const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
-      if (addressesObj != null && addressesObj != '') {
+      if (addressesObj !== null && addressesObj !== '') {
         const { addresses } = addressesObj;
         currentWallet = {
           publicKey,
@@ -388,7 +392,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         currentWallet = getCurrentWallet();
       }
 
-      saveToStorage();
+      saveToStorage(wallets, currentWallet, addressesList);
 
       chrome.runtime.sendMessage({
         messageType: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK,
@@ -438,7 +442,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       // check the keystore exist or not by the publicKey
       const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
-      if (addressesObj != null && addressesObj != '') {
+      if (addressesObj !== null && addressesObj !== '') {
         const { addresses } = addressesObj;
         currentWallet = {
           publicKey,
@@ -454,7 +458,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       }
 
       // 002-
-      saveToStorage();
+      saveToStorage(wallets, currentWallet, addressesList);
 
       chrome.runtime.sendMessage({
         messageType: MESSAGE_TYPE.IMPORT_KEYSTORE_OK,
@@ -462,27 +466,3 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     });
   }
 });
-
-function saveToStorage() {
-  chrome.storage.local.set({ wallets }, () => {});
-
-  chrome.storage.local.set({ currentWallet }, () => {});
-
-  chrome.storage.local.set({ addressesList }, () => {});
-}
-
-function findInWalletsByPublicKey(publicKey, wallets) {
-  function findKeystore(wallet) {
-    return wallet.publicKey === publicKey;
-  }
-  const wallet = wallets.find(findKeystore);
-  return wallet;
-}
-
-function findInAddressesListByPublicKey(publicKey, addressesList) {
-  function findAddresses(addresses) {
-    return addresses.publicKey === publicKey;
-  }
-  const addresses = addressesList.find(findAddresses);
-  return addresses;
-}
