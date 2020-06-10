@@ -1,7 +1,7 @@
+import CKB from '@nervosnetwork/ckb-sdk-core';
 import { MESSAGE_TYPE } from '../../utils/constants';
 import { getAddressInfo } from '../../utils/apis';
 import { configService } from '../../config';
-import CKB from '@nervosnetwork/ckb-sdk-core';
 
 interface SignPayload {
   message: string;
