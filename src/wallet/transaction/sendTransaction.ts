@@ -33,6 +33,7 @@ export const sendTransaction = async (
 
     const config = { index: 0, length: -1 };
     const signedTx = await signTx(lockHash, password, rawTransaction, config);
+
     const realTxHash = await ckb.rpc.sendTransaction(signedTx);
     return realTxHash;
   }
@@ -42,6 +43,7 @@ export const sendTransaction = async (
     rawTransaction = await generateTx(fromAddress, toAddress, toAmount, fee, lockHash, lockType);
     const config = { index: 0, length: -1 };
     const signedTx = await signTx(lockHash, password, rawTransaction, config);
+
     const realTxHash = await ckb.rpc.sendTransaction(signedTx);
     return realTxHash;
   }
@@ -58,6 +60,7 @@ export const sendTransaction = async (
     );
     const config = { index: 1, length: 1 };
     const signedTx = await signTx(lockHash, password, rawTransaction, config);
+
     const realTxHash = await ckb.rpc.sendTransaction(signedTx);
     return realTxHash;
   }
