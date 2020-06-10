@@ -19,6 +19,7 @@ export function createRawTx(
     outputsData: [],
   };
 
+  //inputs
   for (let i = 0; i < inputCells.cells.length; i++) {
     const element = inputCells.cells[i];
     rawTx.inputs.push({
@@ -33,6 +34,7 @@ export function createRawTx(
     outputType: '',
   };
 
+  //outputs
   rawTx.outputs.push({
     capacity: `0x${new BN(toAmount).toString(16)}`,
     lock: toLockScript,
@@ -46,6 +48,75 @@ export function createRawTx(
   ) {
     rawTx.outputs.push({
       capacity: `0x${inputCells.total.sub(totalConsumed).toString(16)}`,
+      lock: fromLockScript,
+    });
+    rawTx.outputsData.push('0x');
+  }
+
+  const signObj = {
+    target: scriptToHash(fromLockScript),
+    tx: rawTx,
+  };
+
+  return signObj;
+}
+
+export function createAnyPayRawTx(
+  toAmount,
+  toLockScript: CKBComponents.Script,
+  inputCells,
+  fromLockScript: CKBComponents.Script,
+  deps,
+  fee,
+  walletCells,
+  walletTotalCapity,
+) {
+  const rawTx = {
+    version: '0x0',
+    cellDeps: deps,
+    headerDeps: [],
+    inputs: [],
+    outputs: [],
+    witnesses: [],
+    outputsData: [],
+  };
+
+  //inputs-wallet
+  for (let i = 0; i < walletCells.length; i++) {
+    rawTx.inputs.push({
+      previousOutput: walletCells[i].outPoint,
+      since: '0x0',
+    });
+    rawTx.witnesses.push('0x');
+  }
+
+  for (let i = 0; i < inputCells.cells.length; i++) {
+    const element = inputCells.cells[i];
+    rawTx.inputs.push({
+      previousOutput: element.outPoint,
+      since: '0x0',
+    });
+    rawTx.witnesses.push('0x');
+  }
+  rawTx.witnesses[1] = {
+    lock: '',
+    inputType: '',
+    outputType: '',
+  };
+
+  //outputs-wallet
+  const walletNewCapacity = new BN(walletTotalCapity).add(toAmount);
+  rawTx.outputs.push({
+    capacity: `0x${new BN(walletNewCapacity).toString(16)}`,
+    lock: toLockScript,
+  });
+  rawTx.outputsData.push('0x');
+
+  //outpus-charge
+  const totalCost = toAmount.add(fee);
+  if (inputCells.total.gt(totalCost) && inputCells.total.sub(totalCost).gt(new BN('6100000000'))) {
+    rawTx.outputs.push({
+      capacity: `0x${inputCells.total.sub(totalCost).toString(16)}`,
       lock: fromLockScript,
     });
     rawTx.outputsData.push('0x');

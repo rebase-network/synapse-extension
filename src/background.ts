@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import {
   mnemonicToSeedSync,
   validateMnemonic,
@@ -20,6 +21,7 @@ import {
 import * as WalletKeystore from '@src/wallet/keystore';
 import * as PasswordKeystore from '@src/wallet/passwordEncryptor';
 import * as _ from 'lodash';
+import { addressToScript } from '@keyper/specs/lib/address';
 import { getStatusByTxHash, getBlockNumberByTxHash } from './utils/transaction';
 import { MESSAGE_TYPE, ADDRESS_TYPE_CODEHASH } from './utils/constants';
 
@@ -30,6 +32,7 @@ let wallets = [];
 let currentWallet = {};
 let addressesList = [];
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.messageType === MESSAGE_TYPE.EXTERNAL_SEND) {
     chrome.windows.create(
@@ -88,9 +91,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
 
     // check the keystore exist or not
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
-    if (addressesObj != null && addressesObj != '') {
+    if (addressesObj != null && addressesObj !== '') {
       const { addresses } = addressesObj;
       currentWallet = {
         publicKey,
@@ -105,6 +109,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       addressesList = getAddressesList();
       currentWallet = getCurrentWallet();
     }
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     saveToStorage();
 
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
@@ -156,9 +161,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
 
     // check the keystore exist or not
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
-    if (addressesObj != null && addressesObj != '') {
+    if (!_.isEmpty(addressesObj)) {
       const { addresses } = addressesObj;
       currentWallet = {
         publicKey,
@@ -175,6 +181,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     }
 
     // 002-saveToStorage
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     saveToStorage();
 
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
@@ -210,10 +217,21 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         lock: lockHash,
         type: lockType,
       } = result.currentWallet;
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       const wallet = findInWalletsByPublicKey(publicKey, result.wallets);
       const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
       const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
       const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
+      //
+      const toAddressScript = addressToScript(toAddress);
+      let toLockType = '';
+      if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
+        toLockType = 'Secp256k1';
+      } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Keccak256) {
+        toLockType = 'Keccak256';
+      } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.AnyPay) {
+        toLockType = 'AnyPay';
+      }
       const sendTxHash = await sendTransaction(
         privateKey,
         fromAddress,
@@ -223,6 +241,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         lockHash,
         lockType,
         password,
+        toLockType,
       );
 
       chrome.runtime.sendMessage({
@@ -273,7 +292,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
 
       // check the password
-      if (!(privateKey.startsWith('0x') && privateKey.length == 64)) {
+      if (!(privateKey.startsWith('0x') && privateKey.length === 64)) {
         chrome.runtime.sendMessage({
           isValidatePassword: false,
           messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
@@ -369,7 +388,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       // check the keystore exist or not by publicKey
       const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
-      if (addressesObj != null && addressesObj != '') {
+      if (!_.isEmpty(addressesObj)) {
         const { addresses } = addressesObj;
         currentWallet = {
           publicKey,
@@ -438,7 +457,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       // check the keystore exist or not by the publicKey
       const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
-      if (addressesObj != null && addressesObj != '') {
+      if (!_.isEmpty(addressesObj)) {
         const { addresses } = addressesObj;
         currentWallet = {
           publicKey,
@@ -471,6 +490,7 @@ function saveToStorage() {
   chrome.storage.local.set({ addressesList }, () => {});
 }
 
+// eslint-disable-next-line no-shadow
 function findInWalletsByPublicKey(publicKey, wallets) {
   function findKeystore(wallet) {
     return wallet.publicKey === publicKey;
@@ -479,6 +499,7 @@ function findInWalletsByPublicKey(publicKey, wallets) {
   return wallet;
 }
 
+// eslint-disable-next-line no-shadow
 function findInAddressesListByPublicKey(publicKey, addressesList) {
   function findAddresses(addresses) {
     return addresses.publicKey === publicKey;

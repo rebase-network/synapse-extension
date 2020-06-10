@@ -5,12 +5,12 @@ import { Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { MESSAGE_TYPE, MIN_CELL_CAPACITY } from '../../../utils/constants';
 import { AppContext } from '../../App';
 import PageNav from '../../Components/PageNav';
 import Modal from '../../Components/Modal';
 import TxDetail from '../../Components/TxDetail';
-import { FormattedMessage, useIntl } from 'react-intl';
 
 const useStyles = makeStyles({
   container: {
@@ -137,7 +137,7 @@ export const innerForm = (props) => {
         className={classes.button}
         data-testid="cancel-button"
         component={Link}
-        to={'/address'}
+        to="/address"
       >
         <FormattedMessage id="Cancel" />
       </Button>
@@ -196,7 +196,7 @@ export default function (props: AppProps, state: AppState) {
     });
   };
 
-  //check the current network and address
+  // check the current network and address
   const validateAddress = (address, network) => {
     if (address.length !== 46) {
       setValAddress(false);
@@ -208,7 +208,6 @@ export default function (props: AppProps, state: AppState) {
     }
     if (network == 'mainnet' && !address.startsWith('ckb')) {
       setValAddress(false);
-      return;
     }
   };
 
@@ -247,12 +246,11 @@ export default function (props: AppProps, state: AppState) {
           onSubmit={onSubmit}
           validationSchema={Yup.object().shape({
             address: Yup.string().required(intl.formatMessage({ id: 'Required' })),
-            capacity: Yup.number()
-              .required(intl.formatMessage({ id: 'Required' }))
-              .min(
-                MIN_CELL_CAPACITY,
-                intl.formatMessage({ id: 'Should be greater than ' }) + `${MIN_CELL_CAPACITY}`,
-              ),
+            capacity: Yup.number().required(intl.formatMessage({ id: 'Required' })),
+            //   .min(
+            //     MIN_CELL_CAPACITY,
+            //     intl.formatMessage({ id: 'Should be greater than ' }) + `${MIN_CELL_CAPACITY}`,
+            //   ),
             fee: Yup.string().required(intl.formatMessage({ id: 'Required' })),
             password: Yup.string().required(intl.formatMessage({ id: 'Required' })),
           })}
