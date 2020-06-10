@@ -277,7 +277,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
 
       // check the password
-      if (!(privateKey.startsWith('0x') && privateKey.length == 64)) {
+      if (!(privateKey.startsWith('0x') && privateKey.length === 64)) {
         chrome.runtime.sendMessage({
           isValidatePassword: false,
           messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
