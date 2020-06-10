@@ -38,8 +38,6 @@ const init = () => {
           return a;
         },
         async sign(context, message) {
-          console.log('init sign context--- ', context);
-          console.log('init sign message--- ', message);
           // const key = keys[context.publicKey];
           const key = getKeystoreFromWallets(context.publicKey);
           if (!key) {
@@ -239,26 +237,6 @@ const accounts = async () => {
 };
 
 const signTx = async (lockHash, password, rawTx, config) => {
-  console.log(' --- signTx container ---', JSON.stringify(container));
-  //   chrome.storage.local.get('keys', async function (result) {
-
-  //     await storage.keyperStorage().set('keys', JSON.stringify(result.keys));
-
-  //     chrome.storage.local.get('container', async function (result) {
-  //         const containerLocal = result.container;
-  //         console.log(JSON.stringify(containerLocal));
-  //         const tx = await containerLocal.sign(
-  //           {
-  //             lockHash,
-  //             password,
-  //           },
-  //           rawTx,
-  //           config,
-  //         );
-  //         console.log(' --- signTx tx ---', JSON.stringify(tx));
-  //         return tx;
-  //       });
-  //   }
   const tx = await container.sign(
     {
       lockHash,
@@ -267,7 +245,6 @@ const signTx = async (lockHash, password, rawTx, config) => {
     rawTx,
     config,
   );
-  console.log(' --- signTx tx ---', JSON.stringify(tx));
   return tx;
 };
 

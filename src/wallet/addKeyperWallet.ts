@@ -22,6 +22,7 @@ export async function addKeyperWallet(privateKey, password, entropyKeystore, roo
   // Keyper accounts
   const accounts = await KeyperWallet.accounts();
 
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   saveWallets(privateKey, keystore, accounts, entropyKeystore, rootKeystore);
 }
 

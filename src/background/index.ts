@@ -79,7 +79,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
-    if (addressesObj != null && addressesObj !== '') {
+    if (!_.isEmpty(addressesObj)) {
       const { addresses } = addressesObj;
       currentWallet = {
         publicKey,
