@@ -1,5 +1,6 @@
 import { BN } from 'bn.js';
 import { addressToScript } from '@keyper/specs';
+import { ADDRESS_TYPE_CODEHASH } from '@utils/constants';
 import { getUnspentCells } from '../../utils/apis';
 import { createRawTx, createAnyPayRawTx } from './txGenerator';
 import { getDepFromLockType } from '../../utils/deps';
@@ -19,8 +20,16 @@ export const sendTransaction = async (
   lockHash,
   lockType,
   password,
-  toLockType,
 ) => {
+  const toAddressScript = addressToScript(toAddress);
+  let toLockType = '';
+  if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
+    toLockType = 'Secp256k1';
+  } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Keccak256) {
+    toLockType = 'Keccak256';
+  } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.AnyPay) {
+    toLockType = 'AnyPay';
+  }
   let rawTransaction = {};
 
   // wallet cells check

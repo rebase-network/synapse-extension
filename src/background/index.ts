@@ -21,12 +21,6 @@ import {
 import * as WalletKeystore from '@src/wallet/keystore';
 import * as PasswordKeystore from '@src/wallet/passwordEncryptor';
 import * as _ from 'lodash';
-<<<<<<< HEAD:src/background.ts
-import { addressToScript } from '@keyper/specs/lib/address';
-import { getStatusByTxHash, getBlockNumberByTxHash } from './utils/transaction';
-import { MESSAGE_TYPE, ADDRESS_TYPE_CODEHASH } from './utils/constants';
-
-=======
 import {
   saveToStorage,
   findInWalletsByPublicKey,
@@ -35,7 +29,6 @@ import {
 import { getStatusByTxHash, getBlockNumberByTxHash } from '@utils/transaction';
 import { MESSAGE_TYPE } from '@utils/constants';
 import externalMessageHandler from '@background/messageHandlers';
->>>>>>> 67e4facf1040514bebc4d50ec56178e2fd91d4d7:src/background/index.ts
 /**
  * Listen messages from popup
  */
@@ -101,12 +94,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       addressesList = getAddressesList();
       currentWallet = getCurrentWallet();
     }
-<<<<<<< HEAD:src/background.ts
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    saveToStorage();
-=======
     saveToStorage(wallets, currentWallet, addressesList);
->>>>>>> 67e4facf1040514bebc4d50ec56178e2fd91d4d7:src/background/index.ts
 
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
   }
@@ -160,11 +149,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
-<<<<<<< HEAD:src/background.ts
     if (!_.isEmpty(addressesObj)) {
-=======
-    if (addressesObj !== null && addressesObj !== '') {
->>>>>>> 67e4facf1040514bebc4d50ec56178e2fd91d4d7:src/background/index.ts
       const { addresses } = addressesObj;
       currentWallet = {
         publicKey,
@@ -181,12 +166,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     }
 
     // 002-saveToStorage
-<<<<<<< HEAD:src/background.ts
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    saveToStorage();
-=======
     saveToStorage(wallets, currentWallet, addressesList);
->>>>>>> 67e4facf1040514bebc4d50ec56178e2fd91d4d7:src/background/index.ts
 
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
   }
@@ -227,15 +208,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
       const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
       //
-      const toAddressScript = addressToScript(toAddress);
-      let toLockType = '';
-      if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
-        toLockType = 'Secp256k1';
-      } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Keccak256) {
-        toLockType = 'Keccak256';
-      } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.AnyPay) {
-        toLockType = 'AnyPay';
-      }
+
       const sendTxHash = await sendTransaction(
         privateKey,
         fromAddress,
@@ -245,7 +218,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         lockHash,
         lockType,
         password,
-        toLockType,
       );
 
       chrome.runtime.sendMessage({
@@ -392,11 +364,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       // check the keystore exist or not by publicKey
       const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
-<<<<<<< HEAD:src/background.ts
       if (!_.isEmpty(addressesObj)) {
-=======
-      if (addressesObj !== null && addressesObj !== '') {
->>>>>>> 67e4facf1040514bebc4d50ec56178e2fd91d4d7:src/background/index.ts
         const { addresses } = addressesObj;
         currentWallet = {
           publicKey,
@@ -465,11 +433,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       // check the keystore exist or not by the publicKey
       const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
-<<<<<<< HEAD:src/background.ts
       if (!_.isEmpty(addressesObj)) {
-=======
-      if (addressesObj !== null && addressesObj !== '') {
->>>>>>> 67e4facf1040514bebc4d50ec56178e2fd91d4d7:src/background/index.ts
         const { addresses } = addressesObj;
         currentWallet = {
           publicKey,
@@ -493,32 +457,3 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     });
   }
 });
-<<<<<<< HEAD:src/background.ts
-
-function saveToStorage() {
-  chrome.storage.local.set({ wallets }, () => {});
-
-  chrome.storage.local.set({ currentWallet }, () => {});
-
-  chrome.storage.local.set({ addressesList }, () => {});
-}
-
-// eslint-disable-next-line no-shadow
-function findInWalletsByPublicKey(publicKey, wallets) {
-  function findKeystore(wallet) {
-    return wallet.publicKey === publicKey;
-  }
-  const wallet = wallets.find(findKeystore);
-  return wallet;
-}
-
-// eslint-disable-next-line no-shadow
-function findInAddressesListByPublicKey(publicKey, addressesList) {
-  function findAddresses(addresses) {
-    return addresses.publicKey === publicKey;
-  }
-  const addresses = addressesList.find(findAddresses);
-  return addresses;
-}
-=======
->>>>>>> 67e4facf1040514bebc4d50ec56178e2fd91d4d7:src/background/index.ts

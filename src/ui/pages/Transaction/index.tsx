@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import * as queryString from 'query-string';
 import { Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { AppContext } from '@ui/utils/context';
 import { MESSAGE_TYPE, MIN_CELL_CAPACITY } from '../../../utils/constants';
-import { AppContext } from '../../App';
 import PageNav from '../../Components/PageNav';
 import Modal from '../../Components/Modal';
 import TxDetail from '../../Components/TxDetail';
@@ -246,11 +246,12 @@ export default function (props: AppProps, state: AppState) {
           onSubmit={onSubmit}
           validationSchema={Yup.object().shape({
             address: Yup.string().required(intl.formatMessage({ id: 'Required' })),
-            capacity: Yup.number().required(intl.formatMessage({ id: 'Required' })),
-            //   .min(
-            //     MIN_CELL_CAPACITY,
-            //     intl.formatMessage({ id: 'Should be greater than ' }) + `${MIN_CELL_CAPACITY}`,
-            //   ),
+            capacity: Yup.number()
+              .required(intl.formatMessage({ id: 'Required' }))
+              .min(
+                MIN_CELL_CAPACITY,
+                `${intl.formatMessage({ id: 'Should be greater than ' })}${MIN_CELL_CAPACITY}`,
+              ),
             fee: Yup.string().required(intl.formatMessage({ id: 'Required' })),
             password: Yup.string().required(intl.formatMessage({ id: 'Required' })),
           })}
