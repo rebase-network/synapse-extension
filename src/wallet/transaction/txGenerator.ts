@@ -1,5 +1,5 @@
+import { BN } from 'bn.js';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils/lib';
-const BN = require('bn.js');
 
 export function createRawTx(
   toAmount,
@@ -19,8 +19,8 @@ export function createRawTx(
     outputsData: [],
   };
 
-  //inputs
-  for (let i = 0; i < inputCells.cells.length; i++) {
+  // inputs
+  for (let i = 0; i < inputCells.cells.length; i += 1) {
     const element = inputCells.cells[i];
     rawTx.inputs.push({
       previousOutput: element.outPoint,
@@ -34,7 +34,7 @@ export function createRawTx(
     outputType: '',
   };
 
-  //outputs
+  // outputs
   rawTx.outputs.push({
     capacity: `0x${new BN(toAmount).toString(16)}`,
     lock: toLockScript,
@@ -81,8 +81,8 @@ export function createAnyPayRawTx(
     outputsData: [],
   };
 
-  //inputs-wallet
-  for (let i = 0; i < walletCells.length; i++) {
+  // inputs-wallet
+  for (let i = 0; i < walletCells.length; i += 1) {
     rawTx.inputs.push({
       previousOutput: walletCells[i].outPoint,
       since: '0x0',
@@ -90,7 +90,7 @@ export function createAnyPayRawTx(
     rawTx.witnesses.push('0x');
   }
 
-  for (let i = 0; i < inputCells.cells.length; i++) {
+  for (let i = 0; i < inputCells.cells.length; i += 1) {
     const element = inputCells.cells[i];
     rawTx.inputs.push({
       previousOutput: element.outPoint,
@@ -104,7 +104,7 @@ export function createAnyPayRawTx(
     outputType: '',
   };
 
-  //outputs-wallet
+  // outputs-wallet
   const walletNewCapacity = new BN(walletTotalCapity).add(toAmount);
   rawTx.outputs.push({
     capacity: `0x${new BN(walletNewCapacity).toString(16)}`,
@@ -112,7 +112,7 @@ export function createAnyPayRawTx(
   });
   rawTx.outputsData.push('0x');
 
-  //outpus-charge
+  // outpus-charge
   const totalCost = toAmount.add(fee);
   if (inputCells.total.gt(totalCost) && inputCells.total.sub(totalCost).gt(new BN('6100000000'))) {
     rawTx.outputs.push({
