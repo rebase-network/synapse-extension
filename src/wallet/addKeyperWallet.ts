@@ -1,10 +1,11 @@
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
+import * as _ from 'lodash';
 import { KEYSTORE_TYPE } from '../utils/constants';
 import Address, { AddressPrefix } from './address';
 
 const KeyperWallet = require('../keyper/keyperwallet');
 
-const wallets = [];
+let wallets = [];
 let currentWallet = {};
 const addressesList = [];
 
@@ -22,12 +23,29 @@ export async function addKeyperWallet(privateKey, password, entropyKeystore, roo
   const accounts = await KeyperWallet.accounts();
 
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  saveWallets(privateKey, keystore, accounts, entropyKeystore, rootKeystore);
+  await saveWallets(privateKey, keystore, accounts, entropyKeystore, rootKeystore);
+}
+
+function loadWalletsInStorage() {
+  return new Promise((resolve) => {
+    // eslint-disable-next-line func-names
+    chrome.storage.local.get('wallets', function (items) {
+      resolve(items.wallets);
+    });
+  });
+}
+
+export async function getWalletsInStorage() {
+  const walletsObj = await loadWalletsInStorage();
+  if (Array.isArray(walletsObj)) {
+    wallets = walletsObj;
+  }
+  return wallets;
 }
 
 // 3- Type
 // privateKey Not contain '0x'prefix
-export function saveWallets(
+export async function saveWallets(
   privateKey,
   keystore,
   accounts,
@@ -39,6 +57,10 @@ export function saveWallets(
   const blake160 = addressObj.getBlake160(); // publicKeyHash
   const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
 
+  wallets = await getWalletsInStorage();
+  if (_.isEmpty(wallets)) {
+    wallets = [];
+  }
   const walletCommon = {
     publicKey,
     blake160,
@@ -77,17 +99,6 @@ export function getCurrentWallet() {
   return currentWallet;
 }
 
-export function getKeystoreFromWallets(publicKey) {
-  let nPublicKey = publicKey;
-  if (!publicKey.startsWith('0x')) {
-    nPublicKey = `0x${publicKey}`;
-  }
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  const ks = findKeystoreInWallets(wallets, nPublicKey);
-  // keys[nPublicKey]
-  return ks;
-}
-
 // eslint-disable-next-line no-shadow
 function findKeystoreInWallets(wallets, publicKey) {
   function findKeystore(wallet) {
@@ -95,6 +106,17 @@ function findKeystoreInWallets(wallets, publicKey) {
   }
   const wallet = wallets.find(findKeystore);
   return wallet.keystore;
+}
+
+export async function getKeystoreFromWallets(publicKey) {
+  let nPublicKey = publicKey;
+  if (!publicKey.startsWith('0x')) {
+    nPublicKey = `0x${publicKey}`;
+  }
+  wallets = await getWalletsInStorage();
+  const ks = findKeystoreInWallets(wallets, nPublicKey);
+  // keys[nPublicKey]
+  return ks;
 }
 
 export async function signTx(lockHash, password, rawTransaction, config, publicKey) {

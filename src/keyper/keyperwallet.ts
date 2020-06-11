@@ -40,7 +40,7 @@ const init = () => {
         },
         async sign(context, message) {
           // const key = keys[context.publicKey];
-          const key = getKeystoreFromWallets(context.publicKey);
+          const key = await getKeystoreFromWallets(context.publicKey);
           if (!key) {
             throw new Error(`no key for address: ${context.address}`);
           }
