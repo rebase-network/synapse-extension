@@ -73,7 +73,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
 
     // check the keystore exist or not
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
     if (!_.isEmpty(addressesObj)) {
@@ -91,7 +90,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       addressesList = getAddressesList();
       currentWallet = getCurrentWallet();
     }
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+
     saveToStorage(wallets, currentWallet, addressesList);
 
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
@@ -143,7 +142,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
 
     // check the keystore exist or not
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
     if (!_.isEmpty(addressesObj)) {
@@ -163,7 +161,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
     }
 
     // 002-saveToStorage
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     saveToStorage(wallets, currentWallet, addressesList);
 
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
@@ -199,12 +196,10 @@ chrome.runtime.onMessage.addListener(async (request) => {
         lock: lockHash,
         type: lockType,
       } = result.currentWallet;
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       const wallet = findInWalletsByPublicKey(publicKey, result.wallets);
       const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
       const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
       const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
-      //
 
       const sendTxHash = await sendTransaction(
         privateKey,
