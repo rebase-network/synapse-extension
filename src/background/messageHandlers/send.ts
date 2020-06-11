@@ -1,7 +1,7 @@
 import { MESSAGE_TYPE } from '@utils/constants';
 
-export default (request) => {
-  if (request.messageType === MESSAGE_TYPE.EXTERNAL_SEND) {
+export default (port, message) => {
+  if (message.type === MESSAGE_TYPE.EXTERNAL_SEND) {
     chrome.windows.create(
       {
         url: 'notification.html',
@@ -15,8 +15,8 @@ export default (request) => {
         // WORKAROUND: improve me
         setTimeout(() => {
           chrome.runtime.sendMessage({
-            messageType: MESSAGE_TYPE.GOTO_SEND_PAGE,
-            payload: request.payload,
+            type: MESSAGE_TYPE.GOTO_SEND_PAGE,
+            payload: message.payload,
           });
         }, 3000);
       },

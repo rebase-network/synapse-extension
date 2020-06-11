@@ -153,15 +153,13 @@ export default function (props: AppProps, state: AppState) {
 
     setLoading(true);
 
-    chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-      if (msg.messageType === MESSAGE_TYPE.SEND_TX_HISTORY && msg.txs) {
-        setTxs(msg.txs);
+    chrome.runtime.onMessage.addListener((message) => {
+      if (message.messageType === MESSAGE_TYPE.SEND_TX_HISTORY && message.txs) {
+        setTxs(message.txs);
       }
-    });
 
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      if (request.messageType === MESSAGE_TYPE.GOTO_SEND_PAGE) {
-        const searchString = queryString.stringify(request.payload);
+      if (message.type === MESSAGE_TYPE.GOTO_SEND_PAGE) {
+        const searchString = queryString.stringify(message.payload);
         history.push(`/send-tx?${searchString}`);
       }
     });
