@@ -3,7 +3,6 @@ import { KEYSTORE_TYPE } from '../utils/constants';
 import Address, { AddressPrefix } from './address';
 
 const KeyperWallet = require('../keyper/keyperwallet');
-const EC = require('elliptic').ec;
 
 const wallets = [];
 let currentWallet = {};
@@ -13,11 +12,11 @@ const addressesList = [];
 export async function addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore) {
   await KeyperWallet.init();
 
-  const keystore = await KeyperWallet.generateByPrivateKey(privateKey, password);
+  const keystore = await KeyperWallet.generateKeystore(privateKey, password);
   // prefix '0x'
-  // const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
+  const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
   // params publicKey No '0x'
-  // KeyperWallet.setUpContainer(publicKey.substr(2));
+  KeyperWallet.setUpContainer(publicKey.substr(2));
 
   // Keyper accounts
   const accounts = await KeyperWallet.accounts();
@@ -83,11 +82,13 @@ export function getKeystoreFromWallets(publicKey) {
   if (!publicKey.startsWith('0x')) {
     nPublicKey = `0x${publicKey}`;
   }
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   const ks = findKeystoreInWallets(wallets, nPublicKey);
   // keys[nPublicKey]
   return ks;
 }
 
+// eslint-disable-next-line no-shadow
 function findKeystoreInWallets(wallets, publicKey) {
   function findKeystore(wallet) {
     return wallet.publicKey === publicKey;

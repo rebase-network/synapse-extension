@@ -1,13 +1,12 @@
-import * as scrypt from 'scrypt.js';
+// import * as scrypt from 'scrypt.js';
 import { SignatureAlgorithm } from '@keyper/specs/lib';
-import { scriptToHash, hexToBytes, bytesToHex } from '@nervosnetwork/ckb-sdk-utils/lib';
+import { scriptToHash, hexToBytes } from '@nervosnetwork/ckb-sdk-utils/lib';
 import { scriptToAddress } from '@keyper/specs/lib/address';
-// import * as Keystore from '@keyper/specs/lib/Keystore';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
+import * as _ from 'lodash';
 import * as Keystore from '../wallet/passwordEncryptor';
-
 import { getKeystoreFromWallets } from '../wallet/addKeyperWallet';
-import { secp256k1Dep, getDepFromLockType } from '../utils/deps';
+import { getDepFromLockType } from '../utils/deps';
 import { ADDRESS_TYPE_CODEHASH } from '../utils/constants';
 
 const { Container } = require('@keyper/container/lib');
@@ -16,6 +15,7 @@ const { AnyPayLockScript } = require('@keyper/container/lib/locks/anyone-can-pay
 const Keccak256LockScript = require('./locks/keccak256');
 const storage = require('./storage');
 
+// eslint-disable-next-line import/order
 const EC = require('elliptic').ec;
 
 let seed;
@@ -124,22 +124,22 @@ const generateKeystore = async (privateKey, password) => {
 };
 
 // ks -> keystore
-const saveKeystore = (ks, publicKey) => {
-  keys = {};
-  ks.publicKey = publicKey;
-  if (!storage.keyperStorage().get('keys')) {
-    storage.keyperStorage().set('keys', JSON.stringify(ks));
-  } else {
-    const keys = storage.keyperStorage().get('keys');
-    keys.push(JSON.stringify(ks));
-    storage.keyperStorage().set('keys', keys);
-  }
+// const saveKeystore = (ks, publicKey) => {
+//   keys = {};
+//   ks.publicKey = publicKey;
+//   if (!storage.keyperStorage().get('keys')) {
+//     storage.keyperStorage().set('keys', JSON.stringify(ks));
+//   } else {
+//     const keys = storage.keyperStorage().get('keys');
+//     keys.push(JSON.stringify(ks));
+//     storage.keyperStorage().set('keys', keys);
+//   }
 
-  // keys[`0x${publicKey}`] = key;
-  keys[`0x${publicKey}`] = ks;
+//   // keys[`0x${publicKey}`] = key;
+//   keys[`0x${publicKey}`] = ks;
 
-  return keys;
-};
+//   return keys;
+// };
 
 // const saveKeystoreToWallet = (ks, wallet) => {
 //     wallet.Keystore = ks;
@@ -167,8 +167,6 @@ const setUpContainer = (publicKey) => {
     };
     addRules.push(addRule);
   });
-
-  chrome.storage.local.set({ container });
 };
 
 const generateByPrivateKey = async (privateKey, password) => {
@@ -242,7 +240,10 @@ async function reCreateCurrentContainer(publicKey) {
 }
 
 const signTx = async (lockHash, password, rawTx, config, publicKey) => {
-  await reCreateCurrentContainer(publicKey);
+  if (_.isEmpty(container)) {
+    await reCreateCurrentContainer(publicKey);
+  }
+
   const tx = await container.sign(
     {
       lockHash,
@@ -270,7 +271,7 @@ module.exports = {
   getAllLockHashesAndMeta,
   // reloadCacheRuls,
   generateKeystore,
-  saveKeystore,
+  //  saveKeystore,
   setUpContainer,
   container,
 };
