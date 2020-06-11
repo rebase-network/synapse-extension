@@ -1,22 +1,22 @@
 {
-    "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "rootDir": "src",
-        "outDir": "dist/js",
-        "baseUrl": ".",
-        "paths": {
-            "@src/*": ["./src/*"],
-            "@ui/*": ["./src/ui/*"],
-            "@background/*": ["./src/background/*"],
-            "@contentScript/*": ["./src/contentScript/*"],
-            "@utils/*": ["./src/utils/*"],
-        },
-        "sourceMap": true,
-        "jsx": "react",
-        "lib": ["es2015", "dom"],
-        "experimentalDecorators": true,
-        "allowSyntheticDefaultImports": true
-    }
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "rootDir": "src",
+    "outDir": "dist/js",
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["src/*"],
+      "@ui/*": ["src/ui/*"],
+      "@background/*": ["src/background/*"],
+      "@contentScript/*": ["src/contentScript/*"],
+      "@utils/*": ["src/utils/*"]
+    },
+    "sourceMap": true,
+    "jsx": "react",
+    "lib": ["es2015", "dom"],
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true
+  }
 }
