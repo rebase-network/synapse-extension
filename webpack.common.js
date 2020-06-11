@@ -22,6 +22,10 @@ module.exports = {
         to: path.join(__dirname, 'dist'),
       },
       {
+        from: 'node_modules/webextension-polyfill/dist/browser-polyfill.js',
+        to: path.join(__dirname, 'dist/js'),
+      },
+      {
         from: './src/popup.html',
         to: path.join(__dirname, 'dist'),
       },

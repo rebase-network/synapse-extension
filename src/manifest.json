@@ -4,7 +4,7 @@
   "version": "0.0.3",
   "options_page": "",
   "background": {
-    "page": "background.html",
+    "scripts": ["js/browser-polyfill.js", "js/background.js"],
     "persistent": false
   },
   "browser_action": {
@@ -17,7 +17,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["js/contentScript.js"],
+      "js": ["js/browser-polyfill.js", "js/contentScript.js"],
       "run_at": "document_start",
       "all_frames": true
     }
