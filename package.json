@@ -8,8 +8,8 @@
     "watch": "webpack -w --config webpack.dev.js",
     "lint": "eslint 'src/**/*.{ts, tsx}'",
     "code:format": "prettier './src/**/**.{js,jsx,ts,tsx}' --write",
-    "test:watch": "jest --watch",
-    "test": "jest"
+    "test:watch": "jest --watch --runInBand",
+    "test": "jest --runInBand"
   },
   "author": "Rebase Team",
   "license": "MIT",
