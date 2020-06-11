@@ -25,10 +25,6 @@ window.ckb = {
       );
     });
   },
-  getLocks: (message: RPCMessage.LocksRequest) => {
-    if (message.type !== MESSAGE_TYPE.EXTERNAL_GET_LOCKS) return;
-    window.postMessage(message, '*');
-  },
   sign: (message: RPCMessage.SignRequest) => {
     if (message.type !== MESSAGE_TYPE.EXTERNAL_SIGN) return;
     window.postMessage(message, '*');
