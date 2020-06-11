@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import {
   mnemonicToSeedSync,
   validateMnemonic,
@@ -8,7 +7,6 @@ import {
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 import { generateMnemonic, ExtendedPrivateKey } from '@src/wallet/key';
 import Keychain from '@src/wallet/keychain';
-
 import { sendTransaction } from '@src/wallet/transaction/sendTransaction';
 import Address from '@src/wallet/address';
 import { getTxHistories, createScriptObj } from '@background/transaction';
@@ -28,7 +26,7 @@ import {
 } from '@utils/wallet';
 import { getStatusByTxHash, getBlockNumberByTxHash } from '@utils/transaction';
 import { MESSAGE_TYPE } from '@utils/constants';
-import externalMessageHandler from '@background/messageHandlers';
+import addExternalMessageListener from '@background/messageHandlers';
 /**
  * Listen messages from popup
  */
@@ -36,10 +34,9 @@ let wallets = [];
 let currentWallet = {};
 let addressesList = [];
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-  externalMessageHandler(request, sender, sendResponse);
+addExternalMessageListener();
 
+chrome.runtime.onMessage.addListener(async (request) => {
   // IMPORT_MNEMONIC
   if (request.messageType === MESSAGE_TYPE.IMPORT_MNEMONIC) {
     // call import mnemonic method

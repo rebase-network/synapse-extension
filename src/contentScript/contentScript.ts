@@ -1,4 +1,5 @@
-import { MESSAGE_TYPE } from '../utils/constants';
+import * as browser from 'webextension-polyfill';
+import { BACKGROUND_PORT, WEB_PAGE } from '@utils/message/constants';
 
 function injectCustomJs(jsPath) {
   const jsPathToInject = jsPath || 'js/injectedScript.js';
@@ -16,19 +17,24 @@ function injectCustomJs(jsPath) {
 
 injectCustomJs('js/injectedScript.js');
 
+// listen message from background
+const port = browser.runtime.connect({ name: 'knockknock' });
+port.onMessage.addListener((message: any) => {
+  if (message.type && message.success) {
+    // send to web page(injected script)
+    window.postMessage({ ...message, port: WEB_PAGE }, '*');
+  } else if (message.type === 'Madame who?') {
+    port.postMessage(message);
+  }
+});
+
 window.addEventListener(
   'message',
   (e) => {
-    if (e.data.messageType === MESSAGE_TYPE.EXTERNAL_SEND) {
-      chrome.runtime.sendMessage(
-        {
-          messageType: MESSAGE_TYPE.EXTERNAL_SEND,
-          payload: e.data.payload,
-        },
-        (response) => {
-          console.log(`from bg${response}`);
-        },
-      );
+    const message = e.data;
+    const isMessageValid = message.type && message.port === BACKGROUND_PORT;
+    if (isMessageValid) {
+      port.postMessage(message);
     }
   },
   false,
