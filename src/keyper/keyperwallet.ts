@@ -187,7 +187,7 @@ const generateByPrivateKey = async (privateKey, password) => {
   //   keys.push(JSON.stringify(ks));
   //   storage.keyperStorage().set("keys", keys);
   // }
-  saveKeystore(ks, publicKey);
+  //   saveKeystore(ks, publicKey);
 
   // keys[`0x${publicKey}`] = key;
   // keys[`0x${publicKey}`] = ks;
