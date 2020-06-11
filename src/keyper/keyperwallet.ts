@@ -236,7 +236,13 @@ const accounts = async () => {
   return result;
 };
 
-const signTx = async (lockHash, password, rawTx, config) => {
+async function reCreateCurrentContainer(publicKey) {
+  init();
+  setUpContainer(publicKey);
+}
+
+const signTx = async (lockHash, password, rawTx, config, publicKey) => {
+  await reCreateCurrentContainer(publicKey);
   const tx = await container.sign(
     {
       lockHash,

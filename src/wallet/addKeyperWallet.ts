@@ -96,6 +96,6 @@ function findKeystoreInWallets(wallets, publicKey) {
   return wallet.keystore;
 }
 
-export async function signTx(lockHash, password, rawTransaction, config) {
-  return KeyperWallet.signTx(lockHash, password, rawTransaction, config);
+export async function signTx(lockHash, password, rawTransaction, config, publicKey) {
+  return KeyperWallet.signTx(lockHash, password, rawTransaction, config, publicKey);
 }

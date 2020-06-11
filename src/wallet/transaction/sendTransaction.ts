@@ -1,6 +1,7 @@
 import { BN } from 'bn.js';
 import { addressToScript } from '@keyper/specs';
 import { ADDRESS_TYPE_CODEHASH } from '@utils/constants';
+import { privateKeyToPublicKey } from '@nervosnetwork/ckb-sdk-core/node_modules/@nervosnetwork/ckb-sdk-utils';
 import { getUnspentCells } from '../../utils/apis';
 import { createRawTx, createAnyPayRawTx } from './txGenerator';
 import { getDepFromLockType } from '../../utils/deps';
@@ -20,6 +21,7 @@ export const sendTransaction = async (
   lockHash,
   lockType,
   password,
+  publicKey,
 ) => {
   const toAddressScript = addressToScript(toAddress);
   let toLockType = '';
@@ -41,7 +43,7 @@ export const sendTransaction = async (
     rawTransaction = await generateTx(fromAddress, toAddress, toAmount, fee, lockHash, lockType);
 
     const config = { index: 0, length: -1 };
-    const signedTx = await signTx(lockHash, password, rawTransaction, config);
+    const signedTx = await signTx(lockHash, password, rawTransaction, config, publicKey);
 
     const realTxHash = await ckb.rpc.sendTransaction(signedTx);
     return realTxHash;
@@ -51,7 +53,7 @@ export const sendTransaction = async (
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     rawTransaction = await generateTx(fromAddress, toAddress, toAmount, fee, lockHash, lockType);
     const config = { index: 0, length: -1 };
-    const signedTx = await signTx(lockHash, password, rawTransaction, config);
+    const signedTx = await signTx(lockHash, password, rawTransaction, config, publicKey);
 
     const realTxHash = await ckb.rpc.sendTransaction(signedTx);
     return realTxHash;
@@ -68,7 +70,7 @@ export const sendTransaction = async (
       toLockType,
     );
     const config = { index: 1, length: 1 };
-    const signedTx = await signTx(lockHash, password, rawTransaction, config);
+    const signedTx = await signTx(lockHash, password, rawTransaction, config, publicKey);
 
     const realTxHash = await ckb.rpc.sendTransaction(signedTx);
     return realTxHash;

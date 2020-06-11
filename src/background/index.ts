@@ -218,6 +218,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         lockHash,
         lockType,
         password,
+        publicKey.replace('0x', ''),
       );
 
       chrome.runtime.sendMessage({
