@@ -1,7 +1,6 @@
 import { BN } from 'bn.js';
 import { addressToScript } from '@keyper/specs';
 import { ADDRESS_TYPE_CODEHASH } from '@utils/constants';
-import { privateKeyToPublicKey } from '@nervosnetwork/ckb-sdk-core/node_modules/@nervosnetwork/ckb-sdk-utils';
 import { getUnspentCells } from '../../utils/apis';
 import { createRawTx, createAnyPayRawTx } from './txGenerator';
 import { getDepFromLockType } from '../../utils/deps';

@@ -1,13 +1,12 @@
-const CkbUtils = require('@nervosnetwork/ckb-sdk-utils');
-
+import * as chrome from 'sinon-chrome';
+import browser from 'sinon-chrome/webextensions';
 import { generateMnemonic, AccountExtendedPublicKey, ExtendedPrivateKey } from '../wallet/key';
 import Keystore from './keystore';
 import Keychain from '../wallet/keychain';
 import { entropyToMnemonic, mnemonicToSeedSync } from '../wallet/mnemonic';
 import Address, { AddressType, AddressPrefix } from '../wallet/address';
 
-import * as chrome from 'sinon-chrome';
-import browser from 'sinon-chrome/webextensions';
+const CkbUtils = require('@nervosnetwork/ckb-sdk-utils');
 // import * as browser from 'sinon-chrome/webextensions'
 // import extensions from 'sinon-chrome/extensions'
 
@@ -80,12 +79,10 @@ describe('wallet', () => {
       Buffer.from(masterPrivateKey.chainCode, 'hex'),
     );
 
-    const hdPrivateKey =
-      '0x' +
-      newMasterKeychain
-        .derivePath(`m/44'/309'/0'/0`)
-        .deriveChild(0, false)
-        .privateKey.toString('hex');
+    const hdPrivateKey = `0x${newMasterKeychain
+      .derivePath("m/44'/309'/0'/0")
+      .deriveChild(0, false)
+      .privateKey.toString('hex')}`;
 
     const hdtestnetAddr = CkbUtils.privateKeyToAddress(hdPrivateKey, {
       prefix: 'ckt',
@@ -120,33 +117,5 @@ describe('load and check password', () => {
     const extendedPrivateKey = keystore.extendedPrivateKey(password);
     expect(extendedPrivateKey.privateKey).toEqual(fixture2.privateKey);
     expect(extendedPrivateKey.chainCode).toEqual(fixture2.chainCode);
-  });
-});
-
-describe('ckb address', () => {
-  it('from mnenonics get ckb address', () => {
-    const seed = mnemonicToSeedSync(mnenonics);
-    const masterKeychain = Keychain.fromSeed(seed);
-
-    const accountKeychain = masterKeychain.derivePath(AccountExtendedPublicKey.ckbAccountPath);
-
-    const accountExtendedPublicKey = new AccountExtendedPublicKey(
-      accountKeychain.publicKey.toString('hex'),
-      accountKeychain.chainCode.toString('hex'),
-    );
-
-    const testnetAddr = accountExtendedPublicKey.address(
-      AddressType.Receiving,
-      0,
-      AddressPrefix.Testnet,
-    );
-    const mainnetAddr = accountExtendedPublicKey.address(
-      AddressType.Receiving,
-      0,
-      AddressPrefix.Mainnet,
-    );
-
-    expect(mainnetAddr.address).toBe('ckb1qyqt9ed4emcxyfed77ed0dp7kcm3mxsn97lsvzve7j');
-    expect(testnetAddr.address).toBe('ckt1qyqt9ed4emcxyfed77ed0dp7kcm3mxsn97ls38jxjw');
   });
 });
