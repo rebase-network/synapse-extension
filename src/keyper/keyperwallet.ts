@@ -19,6 +19,7 @@ const storage = require('./storage');
 const EC = require('elliptic').ec;
 
 let seed;
+let keys;
 let container;
 const addRules = []; // Mod by River
 
@@ -77,7 +78,7 @@ const init = () => {
     new AnyPayLockScript(ADDRESS_TYPE_CODEHASH.AnyPay, 'type', getDepFromLockType('AnyPay')),
   );
   // keys = {};
-  reloadKeys();
+  // reloadKeys();
 };
 
 const reloadKeys = () => {
@@ -88,7 +89,7 @@ const reloadKeys = () => {
         payload: `0x${key.publicKey}`,
         algorithm: SignatureAlgorithm.secp256k1,
       });
-      // keys[`0x${key.publicKey}`] = key;
+      keys[`0x${key.publicKey}`] = key;
     });
   }
 };
@@ -122,17 +123,16 @@ const generateKeystore = async (privateKey, password) => {
   return ks;
 };
 
+// ks -> keystore
 const saveKeystore = (ks, publicKey) => {
-  const keys = {};
+  keys = {};
   ks.publicKey = publicKey;
   if (!storage.keyperStorage().get('keys')) {
     storage.keyperStorage().set('keys', JSON.stringify(ks));
-    chrome.storage.local.set({ keys: ks });
   } else {
     const keys = storage.keyperStorage().get('keys');
     keys.push(JSON.stringify(ks));
     storage.keyperStorage().set('keys', keys);
-    chrome.storage.local.set({ keys });
   }
 
   // keys[`0x${publicKey}`] = key;
@@ -266,4 +266,5 @@ module.exports = {
   generateKeystore,
   saveKeystore,
   setUpContainer,
+  container,
 };
