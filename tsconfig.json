@@ -11,7 +11,7 @@
       "@ui/*": ["src/ui/*"],
       "@background/*": ["src/background/*"],
       "@contentScript/*": ["src/contentScript/*"],
-      "@utils/*": ["src/utils/*"],
+      "@utils/*": ["src/utils/*"]
     },
     "sourceMap": true,
     "jsx": "react",
