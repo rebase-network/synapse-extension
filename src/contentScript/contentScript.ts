@@ -1,5 +1,6 @@
 import * as browser from 'webextension-polyfill';
-import { BACKGROUND_PORT, WEB_PAGE } from '@utils/message/constants';
+import { BACKGROUND_PORT, WEB_PAGE, CONTENT_SCRIPT } from '@utils/message/constants';
+import * as _ from 'lodash';
 
 function injectCustomJs(jsPath) {
   const jsPathToInject = jsPath || 'js/injectedScript.js';
@@ -16,14 +17,23 @@ function injectCustomJs(jsPath) {
 
 injectCustomJs('js/injectedScript.js');
 
-// listen message from background
+// post and listen message(long live) from background
 const port = browser.runtime.connect({ name: 'knockknock' });
 port.onMessage.addListener((message: any) => {
-  if (message.type && message.success) {
+  const shouldHandleByMe = [WEB_PAGE, CONTENT_SCRIPT].indexOf(message.type) !== -1;
+  const messageHandled = _.has(message, 'success');
+  if (shouldHandleByMe && messageHandled) {
     // send to web page(injected script)
     window.postMessage({ ...message, target: WEB_PAGE }, '*');
-  } else if (message.type === 'Madame who?') {
-    port.postMessage(message);
+  }
+});
+
+// post and listen message(one time) from background
+browser.runtime.onMessage.addListener((message) => {
+  const messageHandled = _.has(message, 'success');
+  const sendToWebPage = message.target === WEB_PAGE;
+  if (messageHandled && sendToWebPage) {
+    window.postMessage(message, '*');
   }
 });
 
@@ -31,8 +41,9 @@ window.addEventListener(
   'message',
   (e) => {
     const message = e.data;
-    const isMessageValid = message.type && message.target === BACKGROUND_PORT;
-    if (isMessageValid) {
+    const isMessageValid = message.type;
+    const sendToBG = message.target === BACKGROUND_PORT;
+    if (isMessageValid && sendToBG) {
       port.postMessage(message);
     }
   },
