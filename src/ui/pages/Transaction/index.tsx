@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as browser from 'webextension-polyfill';
+import * as _ from 'lodash';
 import { Link } from 'react-router-dom';
 import * as queryString from 'query-string';
 import { Button, TextField } from '@material-ui/core';
@@ -29,28 +30,31 @@ const useStyles = makeStyles({
     'background-color': '#4caf50',
     'border-radius': '4px',
   },
+  error: {
+    color: 'red',
+  },
 });
 
-interface AppProps {}
+interface AppProps {
+  values: any;
+  placeholder: any;
+  touched: any;
+  errors: any;
+  dirty: any;
+  isSubmitting: any;
+  handleChange: any;
+  handleBlur: any;
+  handleSubmit: any;
+  handleReset: any;
+}
 
 interface AppState {}
 
-export const innerForm = (props) => {
+export const innerForm = (props: AppProps) => {
   const classes = useStyles();
   const intl = useIntl();
 
-  const {
-    values,
-    placeholder,
-    touched,
-    errors,
-    dirty,
-    isSubmitting,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    handleReset,
-  } = props;
+  const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
 
   return (
     <Form className="form-mnemonic" id="form-mnemonic" onSubmit={handleSubmit}>
@@ -84,6 +88,21 @@ export const innerForm = (props) => {
         margin="normal"
         variant="outlined"
         data-testid="field-capacity"
+      />
+      <TextField
+        label={intl.formatMessage({ id: 'Data' })}
+        id="data"
+        name="data"
+        type="text"
+        fullWidth
+        className={classes.textField}
+        value={values.data}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={!!errors.data}
+        helperText={errors.data && touched.data && errors.data}
+        margin="normal"
+        variant="outlined"
       />
       <TextField
         label={intl.formatMessage({ id: 'Fee' })}
@@ -146,7 +165,7 @@ export const innerForm = (props) => {
   );
 };
 
-export default function (props: AppProps, state: AppState) {
+export default function (props) {
   const classes = useStyles();
   const intl = useIntl();
   const searchParams = queryString.parse(location.search);
@@ -155,6 +174,7 @@ export default function (props: AppProps, state: AppState) {
   const [sending, setSending] = React.useState(false);
   const [valAddress, setValAddress] = React.useState(true);
   const [open, setOpen] = React.useState(false);
+  const [errMsg, setErrMsg] = React.useState('');
   const [selectedTx, setSelectedTx] = React.useState('');
 
   const openModal = () => {
@@ -172,9 +192,16 @@ export default function (props: AppProps, state: AppState) {
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener((message) => {
-      if (message.success && message.type === MESSAGE_TYPE.EXTERNAL_SIGN_SEND) {
+      const messageHandled = _.has(message, 'success');
+
+      if (messageHandled && message.type === MESSAGE_TYPE.EXTERNAL_SIGN_SEND) {
         setSending(false);
-        onSelectTx(message?.data?.tx);
+        if (message.success) {
+          onSelectTx(message?.data?.tx);
+        } else {
+          setErrMsg('TX failed to send, please try again later');
+        }
+
         // send result to content script
         browser.runtime.sendMessage(message);
       }
@@ -210,12 +237,24 @@ export default function (props: AppProps, state: AppState) {
   };
 
   let sendingNode = null;
-  if (sending)
+  if (sending) {
     sendingNode = (
       <div className={classes.alert}>
         {intl.formatMessage({ id: 'The transaction is sending, please wait for seconds...' })}
       </div>
     );
+  }
+
+  let errNode = null;
+
+  if (errMsg) {
+    sendingNode = null;
+    errNode = (
+      <div className={classes.error}>
+        {intl.formatMessage({ id: 'The transaction failed to send, please try again later' })}
+      </div>
+    );
+  }
 
   let validateNode = null;
   if (!valAddress) validateNode = <div>Invalid Address</div>;
@@ -228,7 +267,14 @@ export default function (props: AppProps, state: AppState) {
     </Modal>
   );
 
-  const initialValues = { address: '', capacity: '', fee: '0.0001', password: '', ...searchParams };
+  const initialValues = {
+    address: '',
+    capacity: '',
+    data: '',
+    fee: '0.0001',
+    password: '',
+    ...searchParams,
+  };
   if (searchParams.to) {
     initialValues.address = searchParams.to as string;
   }
@@ -238,6 +284,7 @@ export default function (props: AppProps, state: AppState) {
       <PageNav to="/address" title={intl.formatMessage({ id: 'Send CKB' })} />
       <div className={classes.container}>
         {sendingNode}
+        {errNode}
         {validateNode}
         <Formik
           initialValues={initialValues}

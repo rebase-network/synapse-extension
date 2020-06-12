@@ -2,6 +2,7 @@ export default {
   'Import Mnemonic': '导入助记词',
   'Generate Mnemonic': '生成助记词',
   Setting: '设置',
+  Data: '数据',
   Fee: '交易费',
   'Tx Hash': '交易哈希',
   Block: '区块',

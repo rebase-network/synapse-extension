@@ -2,6 +2,7 @@ export default {
   'Import Mnemonic': 'Import Mnemonic',
   'Generate Mnemonic': 'Generate Mnemonic',
   Setting: 'Setting',
+  Data: 'Data',
   Fee: 'Fee',
   'Tx Hash': 'Tx Hash',
   Block: 'Block',
