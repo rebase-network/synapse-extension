@@ -203,7 +203,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
       const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
       const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
 
-      let isTXHandled = false;
       const responseMsg = {
         type: MESSAGE_TYPE.EXTERNAL_SIGN_SEND,
         // extension does not allow to send to web page(injected script) directly
@@ -236,20 +235,20 @@ chrome.runtime.onMessage.addListener(async (request) => {
           password,
           publicKey.replace('0x', ''),
         );
-        isTXHandled = true;
         responseMsg.data.hash = sendTxHash;
         responseMsg.data.tx.hash = sendTxHash;
       } catch (error) {
-        isTXHandled = true;
         responseMsg.success = false;
       }
 
+      // sedb back to extension UI
+      chrome.runtime.sendMessage(responseMsg);
+
       function sendToContentScript(tabs) {
-        if (!isTXHandled) return;
-        // sedb back to extension UI
-        chrome.runtime.sendMessage(responseMsg);
         // send back reponse to web page
-        browser.tabs.sendMessage(tabs[0]?.id, responseMsg);
+        if (tabs[0]?.id) {
+          browser.tabs.sendMessage(tabs[0]?.id, responseMsg);
+        }
       }
       browser.tabs
         .query({ currentWindow: false, active: true })
