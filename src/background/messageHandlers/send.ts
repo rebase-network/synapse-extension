@@ -7,7 +7,7 @@ export default (port, message) => {
         url: 'notification.html',
         type: 'popup',
         width: 360,
-        height: 560,
+        height: 590,
         top: 100,
         left: 100,
       },
@@ -16,7 +16,7 @@ export default (port, message) => {
         setTimeout(() => {
           chrome.runtime.sendMessage({
             type: MESSAGE_TYPE.GOTO_SEND_PAGE,
-            payload: message.payload,
+            data: message.data,
           });
         }, 3000);
       },
