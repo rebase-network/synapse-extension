@@ -1,16 +1,6 @@
 import { BN } from 'bn.js';
-import { scriptToHash, utf8ToBytes, bytesToHex } from '@nervosnetwork/ckb-sdk-utils/lib';
+import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils/lib';
 import * as _ from 'lodash';
-
-export function textToHex(text) {
-  let result = text.trim();
-  if (result.startsWith('0x')) {
-    return result;
-  }
-  const bytes = utf8ToBytes(result);
-  result = bytesToHex(bytes);
-  return result;
-}
 
 export function createRawTx(
   toAmount,
@@ -19,7 +9,7 @@ export function createRawTx(
   fromLockScript: CKBComponents.Script,
   deps,
   fee,
-  toData?,
+  toDataHex?,
 ) {
   const rawTx = {
     version: '0x0',
@@ -51,8 +41,7 @@ export function createRawTx(
     capacity: `0x${new BN(toAmount).toString(16)}`,
     lock: toLockScript,
   });
-  if (!_.isEmpty(toData)) {
-    const toDataHex = textToHex(toData);
+  if (!_.isEmpty(toDataHex)) {
     rawTx.outputsData.push(toDataHex);
   } else {
     rawTx.outputsData.push('0x');

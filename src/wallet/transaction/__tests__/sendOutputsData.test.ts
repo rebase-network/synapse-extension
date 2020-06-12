@@ -1,11 +1,12 @@
 import { BN } from 'bn.js';
 import { addressToScript } from '@keyper/specs';
 import * as utils from '@nervosnetwork/ckb-sdk-utils/lib';
-import { createRawTx, textToHex } from '../txGenerator';
+import { createRawTx } from '../txGenerator';
 import { getUnspentCells } from '../../../utils/apis';
 import { configService } from '../../../config';
 import { bobAddresses } from '../../../test/fixture/address';
 import { secp256k1Dep } from '../../../test/fixture/deps';
+import textToHex from '../../../utils/index';
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default;
 
@@ -20,10 +21,9 @@ describe('Transaction test', () => {
     const lock = addressToScript(fromAddress);
     const toLock = addressToScript(toAddress);
     const fee = new BN(100000000);
-    let toData = 'synapse'; // 0x73796e61707365
-    toData = textToHex(toData);
-    console.log(toData);
-    const bytes = utils.hexToBytes(toData);
+    const toData = 'synapse'; // 0x73796e61707365
+    const toDataHex = textToHex(toData);
+    const bytes = utils.hexToBytes(toDataHex);
     const { byteLength } = bytes;
     let toAmount = new BN(byteLength * 100000000);
     toAmount = toAmount.add(new BN('6100000000'));
@@ -42,7 +42,7 @@ describe('Transaction test', () => {
       total: new BN(totalCapity),
     };
 
-    const signObj = createRawTx(toAmount, toLock, cells, lock, deps, fee, toData);
+    const signObj = createRawTx(toAmount, toLock, cells, lock, deps, fee, toDataHex);
     console.log('--- rawTx ---', JSON.stringify(signObj));
 
     const signedTx = ckb.signTransaction(privateKey)(signObj.tx);
