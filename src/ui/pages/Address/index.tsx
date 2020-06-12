@@ -7,7 +7,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import CallMadeIcon from '@material-ui/icons/CallMade';
 import { useHistory } from 'react-router-dom';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import { AppContext } from '@ui/utils/context';
 import { MESSAGE_TYPE, EXPLORER_URL } from '../../../utils/constants';
 import { truncateAddress, shannonToCKBFormatter } from '../../../utils/formatters';
 import { getAddressInfo } from '../../../utils/apis';
@@ -98,12 +97,7 @@ interface AppProps {}
 
 interface AppState {}
 
-type searchObj = {
-  address: string;
-  type: string;
-};
-
-export default function (props: AppProps, state: AppState) {
+export default function (props: AppProps) {
   const classes = useStyles();
   const history = useHistory();
   const addressFromUrl = _.get(props, 'match.params.address', '');
@@ -117,11 +111,10 @@ export default function (props: AppProps, state: AppState) {
   const [type, setType] = React.useState('');
   const [disableFlg, setDisableFlg] = React.useState(false);
   const [tooltipMsg, setTooltipMsg] = React.useState('Copy to clipboard');
-  const { network } = React.useContext(AppContext);
 
   const updateCapacity = async (lockHash: string) => {
-    const { capacity } = await getAddressInfo(lockHash);
-    setCapacity(shannonToCKBFormatter(capacity));
+    const { capacity: addressCapacity } = await getAddressInfo(lockHash);
+    setCapacity(shannonToCKBFormatter(addressCapacity));
     setLoading(false);
   };
 
@@ -136,14 +129,14 @@ export default function (props: AppProps, state: AppState) {
     // if (!addressFromUrl) {
     chrome.storage.local.get(['currentWallet'], async ({ currentWallet }) => {
       if (_.isEmpty(currentWallet)) return;
-      const { address, type, lock } = currentWallet;
-      setAddress(address);
-      if (type == 'Keccak256') {
+      const { address: currentAddress, type: lockType, lock } = currentWallet;
+      setAddress(currentAddress);
+      if (lockType === 'Keccak256') {
         setDisableFlg(true);
       } else {
         setDisableFlg(false);
       }
-      setType(type);
+      setType(lockType);
       updateCapacity(lock);
 
       chrome.runtime.sendMessage({
