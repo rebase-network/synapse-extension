@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as browser from 'webextension-polyfill';
 import { Link } from 'react-router-dom';
 import * as queryString from 'query-string';
 import { Button, TextField } from '@material-ui/core';
@@ -171,9 +172,11 @@ export default function (props: AppProps, state: AppState) {
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener((message) => {
-      if (message.messageType === MESSAGE_TYPE.TO_TX_DETAIL) {
+      if (message.success && message.type === MESSAGE_TYPE.EXTERNAL_SIGN_SEND) {
         setSending(false);
-        onSelectTx(message.tx);
+        onSelectTx(message?.data?.tx);
+        // send result to content script
+        browser.runtime.sendMessage(message);
       }
     });
     // setLoading(true);

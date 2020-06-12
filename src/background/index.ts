@@ -214,16 +214,20 @@ chrome.runtime.onMessage.addListener(async (request) => {
       );
 
       chrome.runtime.sendMessage({
-        tx: {
-          fromAddress,
-          toAddress,
-          amount: capacity.toString(),
-          fee: fee.toString(),
-          hash: sendTxHash,
-          status: 'Pending',
-          blockNum: 'Pending',
+        type: MESSAGE_TYPE.EXTERNAL_SIGN_SEND,
+        success: true,
+        message: 'tx is sent, status is pending',
+        data: {
+          tx: {
+            fromAddress,
+            toAddress,
+            amount: capacity.toString(),
+            fee: fee.toString(),
+            hash: sendTxHash,
+            status: 'Pending',
+            blockNum: 'Pending',
+          },
         },
-        messageType: MESSAGE_TYPE.TO_TX_DETAIL,
       });
     });
   }

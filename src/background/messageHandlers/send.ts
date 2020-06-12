@@ -1,7 +1,7 @@
 import { MESSAGE_TYPE } from '@utils/constants';
 
 export default (port, message) => {
-  if (message.type === MESSAGE_TYPE.EXTERNAL_SEND) {
+  if (message.type === MESSAGE_TYPE.EXTERNAL_SIGN_SEND) {
     chrome.windows.create(
       {
         url: 'notification.html',
