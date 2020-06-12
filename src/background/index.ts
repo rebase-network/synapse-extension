@@ -192,6 +192,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       const capacity = request.capacity * 10 ** 8;
       const fee = request.fee * 10 ** 8;
       const password = request.password.trim();
+      const toData = request.data.trim();
       const {
         address: fromAddress,
         publicKey,
@@ -234,6 +235,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
           lockType,
           password,
           publicKey.replace('0x', ''),
+          toData,
         );
         responseMsg.data.hash = sendTxHash;
         responseMsg.data.tx.hash = sendTxHash;

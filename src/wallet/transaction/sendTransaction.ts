@@ -1,6 +1,7 @@
 import { BN } from 'bn.js';
 import { addressToScript } from '@keyper/specs';
 import { ADDRESS_TYPE_CODEHASH } from '@utils/constants';
+import textToHex from '@utils/index';
 import { getUnspentCells } from '../../utils/apis';
 import { createRawTx, createAnyPayRawTx } from './txGenerator';
 import { getDepFromLockType } from '../../utils/deps';
@@ -21,7 +22,9 @@ export const sendTransaction = async (
   lockType,
   password,
   publicKey,
+  toData?,
 ) => {
+  const toDataHex = textToHex(toData);
   const toAddressScript = addressToScript(toAddress);
   let toLockType = '';
   if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
@@ -39,7 +42,15 @@ export const sendTransaction = async (
   const unspentWalletCells = await getUnspentCells(toLockHash);
   if (unspentWalletCells.length === 0) {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    rawTransaction = await generateTx(fromAddress, toAddress, toAmount, fee, lockHash, lockType);
+    rawTransaction = await generateTx(
+      fromAddress,
+      toAddress,
+      toAmount,
+      fee,
+      lockHash,
+      lockType,
+      toDataHex,
+    );
 
     const config = { index: 0, length: -1 };
     const signedTx = await signTx(lockHash, password, rawTransaction, config, publicKey);
@@ -50,7 +61,15 @@ export const sendTransaction = async (
 
   if (toLockType === 'Secp256k1') {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    rawTransaction = await generateTx(fromAddress, toAddress, toAmount, fee, lockHash, lockType);
+    rawTransaction = await generateTx(
+      fromAddress,
+      toAddress,
+      toAmount,
+      fee,
+      lockHash,
+      lockType,
+      toDataHex,
+    );
     const config = { index: 0, length: -1 };
     const signedTx = await signTx(lockHash, password, rawTransaction, config, publicKey);
 
@@ -76,7 +95,15 @@ export const sendTransaction = async (
   }
 };
 
-export const generateTx = async (fromAddress, toAddress, toAmount, fee, lockHash, lockType) => {
+export const generateTx = async (
+  fromAddress,
+  toAddress,
+  toAmount,
+  fee,
+  lockHash,
+  lockType,
+  toDataHex?,
+) => {
   const unspentCells = await getUnspentCells(lockHash);
   function getTotalCapity(total, cell) {
     return BigInt(total) + BigInt(cell.capacity);
@@ -99,6 +126,7 @@ export const generateTx = async (fromAddress, toAddress, toAmount, fee, lockHash
     fromLockScript,
     [depObj],
     new BN(fee),
+    toDataHex,
   );
   const rawTransaction = rawObj.tx;
 
