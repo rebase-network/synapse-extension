@@ -1,3 +1,4 @@
+import * as browser from 'webextension-polyfill';
 import {
   mnemonicToSeedSync,
   validateMnemonic,
@@ -27,6 +28,7 @@ import {
 import { getStatusByTxHash, getBlockNumberByTxHash } from '@utils/transaction';
 import { MESSAGE_TYPE } from '@utils/constants';
 import addExternalMessageListener from '@background/messageHandlers';
+import { WEB_PAGE } from '@src/utils/message/constants';
 /**
  * Listen messages from popup
  */
@@ -201,34 +203,57 @@ chrome.runtime.onMessage.addListener(async (request) => {
       const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
       const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
 
-      const sendTxHash = await sendTransaction(
-        privateKey,
-        fromAddress,
-        toAddress,
-        BigInt(capacity),
-        BigInt(fee),
-        lockHash,
-        lockType,
-        password,
-        publicKey.replace('0x', ''),
-      );
-
-      chrome.runtime.sendMessage({
+      let isTXHandled = false;
+      const responseMsg = {
         type: MESSAGE_TYPE.EXTERNAL_SIGN_SEND,
+        // extension does not allow to send to web page(injected script) directly
+        // content script will receive it and forward to web page
+        target: WEB_PAGE,
         success: true,
-        message: 'tx is sent, status is pending',
+        message: 'tx is sent',
         data: {
+          hash: '',
           tx: {
             fromAddress,
             toAddress,
             amount: capacity.toString(),
             fee: fee.toString(),
-            hash: sendTxHash,
+            hash: '',
             status: 'Pending',
             blockNum: 'Pending',
           },
         },
-      });
+      };
+      try {
+        const sendTxHash = await sendTransaction(
+          privateKey,
+          fromAddress,
+          toAddress,
+          BigInt(capacity),
+          BigInt(fee),
+          lockHash,
+          lockType,
+          password,
+          publicKey.replace('0x', ''),
+        );
+        isTXHandled = true;
+        responseMsg.data.hash = sendTxHash;
+        responseMsg.data.tx.hash = sendTxHash;
+      } catch (error) {
+        isTXHandled = true;
+        responseMsg.success = false;
+      }
+
+      function sendToContentScript(tabs) {
+        if (!isTXHandled) return;
+        // sedb back to extension UI
+        chrome.runtime.sendMessage(responseMsg);
+        // send back reponse to web page
+        browser.tabs.sendMessage(tabs[0]?.id, responseMsg);
+      }
+      browser.tabs
+        .query({ currentWindow: false, active: true })
+        .then(sendToContentScript, console.error);
     });
   }
 
