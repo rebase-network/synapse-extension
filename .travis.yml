@@ -27,11 +27,11 @@ notifications:
 
 before_deploy:
   - mv dist synapse-extension
-  - zip -q -r synapse-extension.zip synapse-extension  # 打包压缩
-  - sha256sum synapse-extension.zip > synapse-extension.asc # 校验值
+  - zip -q -r synapse-extension.zip synapse-extension # 打包压缩
+  - shasum -a 256 synapse-extension.zip > synapse-extension.asc # 校验值
 
 deploy:
-  provider: releases # 这个阶段要操作 repo 的 releases 页面
+  provider: releases # 操作 releases 页面
   token: $GITHUB_TOKEN
   file:
     - synapse-extension.zip
