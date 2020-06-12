@@ -21,7 +21,7 @@ const port = browser.runtime.connect({ name: 'knockknock' });
 port.onMessage.addListener((message: any) => {
   if (message.type && message.success) {
     // send to web page(injected script)
-    window.postMessage({ ...message, port: WEB_PAGE }, '*');
+    window.postMessage({ ...message, target: WEB_PAGE }, '*');
   } else if (message.type === 'Madame who?') {
     port.postMessage(message);
   }
@@ -31,7 +31,7 @@ window.addEventListener(
   'message',
   (e) => {
     const message = e.data;
-    const isMessageValid = message.type && message.port === BACKGROUND_PORT;
+    const isMessageValid = message.type && message.target === BACKGROUND_PORT;
     if (isMessageValid) {
       port.postMessage(message);
     }
