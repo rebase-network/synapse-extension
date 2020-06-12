@@ -7,10 +7,10 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { AppContext } from '@ui/utils/context';
-import { MESSAGE_TYPE, MIN_CELL_CAPACITY } from '../../../utils/constants';
-import PageNav from '../../Components/PageNav';
-import Modal from '../../Components/Modal';
-import TxDetail from '../../Components/TxDetail';
+import { MESSAGE_TYPE, MIN_CELL_CAPACITY } from '@utils/constants';
+import PageNav from '@ui/Components/PageNav';
+import Modal from '@ui/Components/Modal';
+import TxDetail from '@ui/Components/TxDetail';
 
 const useStyles = makeStyles({
   container: {
@@ -149,17 +149,12 @@ export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
   const intl = useIntl();
   const searchParams = queryString.parse(location.search);
-  console.log(searchParams);
 
   const { network } = React.useContext(AppContext);
   const [sending, setSending] = React.useState(false);
   const [valAddress, setValAddress] = React.useState(true);
   const [open, setOpen] = React.useState(false);
   const [selectedTx, setSelectedTx] = React.useState('');
-
-  const toggleModal = () => {
-    setOpen(!open);
-  };
 
   const openModal = () => {
     setOpen(true);
@@ -175,7 +170,7 @@ export default function (props: AppProps, state: AppState) {
   };
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+    chrome.runtime.onMessage.addListener((message) => {
       if (message.messageType === MESSAGE_TYPE.TO_TX_DETAIL) {
         setSending(false);
         onSelectTx(message.tx);
@@ -183,6 +178,21 @@ export default function (props: AppProps, state: AppState) {
     });
     // setLoading(true);
   });
+
+  // check the current network and address
+  const validateAddress = (address, networkType) => {
+    if (address.length !== 46) {
+      setValAddress(false);
+      return;
+    }
+    if (networkType === 'testnet' && !address.startsWith('ckt')) {
+      setValAddress(false);
+      return;
+    }
+    if (networkType === 'mainnet' && !address.startsWith('ckb')) {
+      setValAddress(false);
+    }
+  };
 
   const onSubmit = async (values) => {
     setSending(true);
@@ -196,26 +206,11 @@ export default function (props: AppProps, state: AppState) {
     });
   };
 
-  // check the current network and address
-  const validateAddress = (address, network) => {
-    if (address.length !== 46) {
-      setValAddress(false);
-      return;
-    }
-    if (network == 'testnet' && !address.startsWith('ckt')) {
-      setValAddress(false);
-      return;
-    }
-    if (network == 'mainnet' && !address.startsWith('ckb')) {
-      setValAddress(false);
-    }
-  };
-
   let sendingNode = null;
   if (sending)
     sendingNode = (
       <div className={classes.alert}>
-        {intl.formatMessage({ id: 'The transaction is sending, please wait for seconds...' })}{' '}
+        {intl.formatMessage({ id: 'The transaction is sending, please wait for seconds...' })}
       </div>
     );
 
