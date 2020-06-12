@@ -6,7 +6,7 @@ export const shannonToCKBFormatter = (
   delimiter: string = ',',
 ) => {
   if (Number.isNaN(+shannon)) {
-    console.warn(`Shannon is not a valid number`);
+    console.warn('Shannon is not a valid number');
     return shannon;
   }
   if (shannon === null) {
@@ -41,7 +41,7 @@ export const shannonToCKBFormatter = (
 };
 
 export const truncateAddress = (address: string) =>
-  address.substr(0, 10) + '...' + address.substr(address.length - 10, address.length);
+  `${address.substr(0, 10)}...${address.substr(address.length - 10, address.length)}`;
 
 export default {
   shannonToCKBFormatter,
