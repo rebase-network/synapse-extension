@@ -20,7 +20,7 @@ injectCustomJs('js/injectedScript.js');
 // post and listen message(long live) from background
 const port = browser.runtime.connect({ name: 'knockknock' });
 port.onMessage.addListener((message: any) => {
-  const shouldHandleByMe = [WEB_PAGE, CONTENT_SCRIPT].indexOf(message.type) !== -1;
+  const shouldHandleByMe = [WEB_PAGE, CONTENT_SCRIPT].indexOf(message.target) !== -1;
   const messageHandled = _.has(message, 'success');
   if (shouldHandleByMe && messageHandled) {
     // send to web page(injected script)
