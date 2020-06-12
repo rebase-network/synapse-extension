@@ -152,7 +152,7 @@ export default function (props: AppProps) {
       }
 
       if (message.type === MESSAGE_TYPE.GOTO_SEND_PAGE) {
-        const searchString = queryString.stringify(message.payload);
+        const searchString = queryString.stringify(message.data?.meta);
         history.push(`/send-tx?${searchString}`);
       }
     });
