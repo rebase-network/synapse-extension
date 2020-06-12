@@ -27,6 +27,7 @@ notifications:
 
 before_deploy:
   - mv dist synapse-extension
+  - rm synapse-extension.zip
   - zip -q -r synapse-extension.zip synapse-extension # 打包压缩
   - shasum -a 256 synapse-extension.zip > synapse-extension.asc # 校验值
 
