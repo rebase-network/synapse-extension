@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Button } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { makeStyles, Theme, createStyles, withStyles } from '@material-ui/core/styles';
-import { MESSAGE_TYPE } from '../../../utils/constants';
 import Grid from '@material-ui/core/Grid';
 import { FormattedMessage } from 'react-intl';
+import { MESSAGE_TYPE } from '../../../utils/constants';
 
 const useStylesTheme = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,7 +57,7 @@ export default function (props: AppProps, state: AppState) {
   };
 
   const onGenerate = () => {
-    chrome.runtime.sendMessage({ messageType: MESSAGE_TYPE.GEN_MNEMONIC });
+    chrome.runtime.sendMessage({ type: MESSAGE_TYPE.GEN_MNEMONIC });
     history.push('/generate-mnemonic');
   };
 

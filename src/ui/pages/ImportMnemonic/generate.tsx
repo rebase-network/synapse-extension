@@ -1,12 +1,12 @@
 import * as React from 'react';
-import Title from '../../Components/Title';
 import { Button, TextField } from '@material-ui/core';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { MESSAGE_TYPE } from '../../../utils/constants';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { MESSAGE_TYPE } from '../../../utils/constants';
+import Title from '../../Components/Title';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -114,13 +114,13 @@ export default function GenerateMnemonic(props: AppProps, state: AppState) {
   const onSubmit = async (values) => {
     if (vaildate) {
       setSuccess(true);
-      chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.SAVE_MNEMONIC });
+      chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.SAVE_MNEMONIC });
     }
   };
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
-      if (msg.messageType === MESSAGE_TYPE.RECE_MNEMONIC && msg.mnemonic) {
+      if (msg.type === MESSAGE_TYPE.RECE_MNEMONIC && msg.mnemonic) {
         setMnemonic(msg.mnemonic);
       } else if (msg === MESSAGE_TYPE.VALIDATE_PASS) {
         setValidate(true);
@@ -140,8 +140,8 @@ export default function GenerateMnemonic(props: AppProps, state: AppState) {
       <Title title={intl.formatMessage({ id: 'Generate Mnemonic' })} testId="" />
       {successNode}
       <Formik
-        enableReinitialize={true}
-        initialValues={{ mnemonic: mnemonic, password: '', confirmPassword: '' }}
+        enableReinitialize
+        initialValues={{ mnemonic, password: '', confirmPassword: '' }}
         onSubmit={onSubmit}
         validationSchema={Yup.object().shape({
           mnemonic: Yup.string().trim().required('Required'),

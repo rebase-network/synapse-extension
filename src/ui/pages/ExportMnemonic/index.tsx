@@ -4,8 +4,8 @@ import { useHistory } from 'react-router-dom';
 import { Button, TextField } from '@material-ui/core';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { MESSAGE_TYPE } from '../../../utils/constants';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { MESSAGE_TYPE } from '../../../utils/constants';
 import PageNav from '../../Components/PageNav';
 
 const useStyles = makeStyles({
@@ -82,18 +82,18 @@ export default function (props: AppProps, state: AppState) {
   const intl = useIntl();
 
   const onSubmit = async (values) => {
-    //background.ts check the password
-    chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK });
+    // background.ts check the password
+    chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK });
   };
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-      if (message.messageType === MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT) {
+      if (message.type === MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT) {
         if (message.isValidatePassword) {
-          history.push('/export-mnemonic-second'); //测试成功的地址
+          history.push('/export-mnemonic-second'); // 测试成功的地址
           chrome.runtime.sendMessage({
             message,
-            messageType: MESSAGE_TYPE.EXPORT_MNEONIC_SECOND,
+            type: MESSAGE_TYPE.EXPORT_MNEONIC_SECOND,
           });
         }
       }

@@ -42,9 +42,9 @@ export default function (props: AppProps, state: AppState) {
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-      if (request.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND_RESULT) {
-        const privateKey = request.privateKey;
-        const keystore = request.keystore;
+      if (request.type === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND_RESULT) {
+        const { privateKey } = request;
+        const { keystore } = request;
         // keystore.substr(1, keystore.length-2)
         setPrivateKey(privateKey);
         setKeystore(keystore);

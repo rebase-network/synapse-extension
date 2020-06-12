@@ -147,14 +147,14 @@ export default function (props: AppProps, state: AppState) {
       updateCapacity(lock);
 
       chrome.runtime.sendMessage({
-        messageType: MESSAGE_TYPE.GET_TX_HISTORY,
+        type: MESSAGE_TYPE.GET_TX_HISTORY,
       });
     });
 
     setLoading(true);
 
     chrome.runtime.onMessage.addListener((message) => {
-      if (message.messageType === MESSAGE_TYPE.SEND_TX_HISTORY && message.txs) {
+      if (message.type === MESSAGE_TYPE.SEND_TX_HISTORY && message.txs) {
         setTxs(message.txs);
       }
 

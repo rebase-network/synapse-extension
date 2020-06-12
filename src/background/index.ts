@@ -38,7 +38,7 @@ addExternalMessageListener();
 
 chrome.runtime.onMessage.addListener(async (request) => {
   // IMPORT_MNEMONIC
-  if (request.messageType === MESSAGE_TYPE.IMPORT_MNEMONIC) {
+  if (request.type === MESSAGE_TYPE.IMPORT_MNEMONIC) {
     // call import mnemonic method
     const mnemonic = request.mnemonic.trim();
     const password = request.password.trim();
@@ -97,17 +97,17 @@ chrome.runtime.onMessage.addListener(async (request) => {
   }
 
   // GEN_MNEMONIC
-  if (request.messageType === MESSAGE_TYPE.GEN_MNEMONIC) {
+  if (request.type === MESSAGE_TYPE.GEN_MNEMONIC) {
     const newmnemonic = generateMnemonic();
 
     chrome.runtime.sendMessage({
       mnemonic: newmnemonic,
-      messageType: MESSAGE_TYPE.RECE_MNEMONIC,
+      type: MESSAGE_TYPE.RECE_MNEMONIC,
     });
   }
 
   // SAVE_MNEMONIC
-  if (request.messageType === MESSAGE_TYPE.SAVE_MNEMONIC) {
+  if (request.type === MESSAGE_TYPE.SAVE_MNEMONIC) {
     const mnemonic = request.mnemonic.trim();
     const password = request.password.trim();
     // const confirmPassword = request.confirmPassword.trim();
@@ -167,7 +167,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
   }
 
   // get tx history by address
-  if (request.messageType === MESSAGE_TYPE.GET_TX_HISTORY) {
+  if (request.type === MESSAGE_TYPE.GET_TX_HISTORY) {
     // /
     chrome.storage.local.get(['currentWallet'], async (wallet) => {
       const address = wallet.currentWallet ? wallet.currentWallet.address : undefined;
@@ -178,13 +178,13 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
       chrome.runtime.sendMessage({
         txs,
-        messageType: MESSAGE_TYPE.SEND_TX_HISTORY,
+        type: MESSAGE_TYPE.SEND_TX_HISTORY,
       });
     });
   }
 
   // send transactioin
-  if (request.messageType === MESSAGE_TYPE.RESQUEST_SEND_TX) {
+  if (request.type === MESSAGE_TYPE.RESQUEST_SEND_TX) {
     chrome.storage.local.get(['currentWallet', 'wallets'], async (result) => {
       const toAddress = request.address.trim();
       const capacity = request.capacity * 10 ** 8;
@@ -233,7 +233,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
   }
 
   // transactioin detail
-  if (request.messageType === MESSAGE_TYPE.REQUEST_TX_DETAIL) {
+  if (request.type === MESSAGE_TYPE.REQUEST_TX_DETAIL) {
     const { txHash } = request.message;
     const { capacity } = request.message;
     const { fee } = request.message;
@@ -249,12 +249,12 @@ chrome.runtime.onMessage.addListener(async (request) => {
       outputs,
       txHash,
       blockNumber: blockNumber.toString(),
-      messageType: MESSAGE_TYPE.TX_DETAIL,
+      type: MESSAGE_TYPE.TX_DETAIL,
     });
   }
 
   // export-private-key check
-  if (request.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK) {
+  if (request.type === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK) {
     chrome.storage.local.get(['currentWallet', 'wallets'], async (result) => {
       const { password } = request;
       const { publicKey } = result.currentWallet;
@@ -268,7 +268,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       if (!(privateKey.startsWith('0x') && privateKey.length === 64)) {
         chrome.runtime.sendMessage({
           isValidatePassword: false,
-          messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
+          type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
         });
       }
       const keystore = WalletKeystore.encrypt(privateKeyBuffer.data, password);
@@ -277,25 +277,25 @@ chrome.runtime.onMessage.addListener(async (request) => {
         isValidatePassword: true,
         keystore,
         privateKey,
-        messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
+        type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
       });
     });
   }
 
   // export-private-key-second check
-  if (request.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND) {
+  if (request.type === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND) {
     const { privateKey } = request.message;
     const { keystore } = request.message;
 
     chrome.runtime.sendMessage({
       privateKey,
       keystore: JSON.stringify(keystore),
-      messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND_RESULT,
+      type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND_RESULT,
     });
   }
 
   // export-mneonic check
-  if (request.messageType === MESSAGE_TYPE.EXPORT_MNEONIC_CHECK) {
+  if (request.type === MESSAGE_TYPE.EXPORT_MNEONIC_CHECK) {
     chrome.storage.local.get(['currentWallet', 'wallets'], async (result) => {
       const { password } = request;
       const { publicKey } = result.currentWallet;
@@ -309,7 +309,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       if (_.isEmpty(entropy)) {
         chrome.runtime.sendMessage({
           isValidatePassword: false,
-          messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
+          type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
         });
       }
 
@@ -317,13 +317,13 @@ chrome.runtime.onMessage.addListener(async (request) => {
         isValidatePassword: true,
         password,
         entropyKeystore,
-        messageType: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT,
+        type: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT,
       });
     });
   }
 
   // export-mneonic-second check
-  if (request.messageType === MESSAGE_TYPE.EXPORT_MNEONIC_SECOND) {
+  if (request.type === MESSAGE_TYPE.EXPORT_MNEONIC_SECOND) {
     const { password } = request.message;
     const { entropyKeystore } = request.message;
 
@@ -333,12 +333,12 @@ chrome.runtime.onMessage.addListener(async (request) => {
     chrome.runtime.sendMessage({
       // mnemonic: JSON.stringify(mnemonic),
       mnemonic,
-      messageType: MESSAGE_TYPE.EXPORT_MNEONIC_SECOND_RESULT,
+      type: MESSAGE_TYPE.EXPORT_MNEONIC_SECOND_RESULT,
     });
   }
 
   // import private key
-  if (request.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY) {
+  if (request.type === MESSAGE_TYPE.IMPORT_PRIVATE_KEY) {
     chrome.storage.local.get(['currentWallet', 'wallets'], async (result) => {
       let privateKey: string = request.privateKey.trim();
       privateKey = privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`;
@@ -353,7 +353,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       if (privateKeyObj == null) {
         chrome.runtime.sendMessage({
           // 'password incorrect',
-          messageType: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR,
+          type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR,
         });
         return;
       }
@@ -383,7 +383,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       saveToStorage(wallets, currentWallet, addressesList);
 
       chrome.runtime.sendMessage({
-        messageType: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK,
+        type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK,
       });
     });
   }
@@ -395,7 +395,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
    * 3- get the privateKey by the keystore
    * 4- create the keystore(passworder) by the privatekey
    */
-  if (request.messageType === MESSAGE_TYPE.IMPORT_KEYSTORE) {
+  if (request.type === MESSAGE_TYPE.IMPORT_KEYSTORE) {
     chrome.storage.local.get(['currentWallet', 'wallets'], async (result) => {
       // 01- get the params from request
       const keystore = request.keystore.trim();
@@ -406,7 +406,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       if (!WalletKeystore.checkPasswd(keystore, kPassword)) {
         chrome.runtime.sendMessage({
           // 'password incorrect',
-          messageType: MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_KPASSWORD,
+          type: MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_KPASSWORD,
         });
         return;
       }
@@ -419,7 +419,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       if (privateKeyObj == null) {
         chrome.runtime.sendMessage({
           // 'password incorrect',
-          messageType: MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_UPASSWORD,
+          type: MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_UPASSWORD,
         });
         return;
       }
@@ -449,7 +449,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       saveToStorage(wallets, currentWallet, addressesList);
 
       chrome.runtime.sendMessage({
-        messageType: MESSAGE_TYPE.IMPORT_KEYSTORE_OK,
+        type: MESSAGE_TYPE.IMPORT_KEYSTORE_OK,
       });
     });
   }

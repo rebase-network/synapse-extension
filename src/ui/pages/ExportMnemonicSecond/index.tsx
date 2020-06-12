@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { MESSAGE_TYPE } from '../../../utils/constants';
 import PageNav from '../../Components/PageNav';
-import { FormattedMessage, useIntl } from 'react-intl';
 
 const useStyles = makeStyles({
   container: {
@@ -26,8 +26,8 @@ export default function (props: AppProps, state: AppState) {
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-      if (request.messageType === MESSAGE_TYPE.EXPORT_MNEONIC_SECOND_RESULT) {
-        const mnemonic = request.mnemonic;
+      if (request.type === MESSAGE_TYPE.EXPORT_MNEONIC_SECOND_RESULT) {
+        const { mnemonic } = request;
         setMnemonic(mnemonic);
       }
     });

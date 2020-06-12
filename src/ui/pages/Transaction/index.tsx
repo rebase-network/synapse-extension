@@ -205,7 +205,7 @@ export default function (props: AppProps, state: AppState) {
     chrome.runtime.sendMessage({
       ...values,
       network,
-      messageType: MESSAGE_TYPE.RESQUEST_SEND_TX,
+      type: MESSAGE_TYPE.RESQUEST_SEND_TX,
     });
   };
 

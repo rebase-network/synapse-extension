@@ -72,20 +72,20 @@ export default function (props: AppProps, state: AppState) {
   const intl = useIntl();
 
   const onSubmit = async (values) => {
-    //background.ts check the password
-    chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK });
+    // background.ts check the password
+    chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK });
   };
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       if (
-        message.messageType === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT &&
+        message.type === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT &&
         message.isValidatePassword
       ) {
-        history.push('/export-private-key-second'); //测试成功的地址
+        history.push('/export-private-key-second'); // 测试成功的地址
         chrome.runtime.sendMessage({
           message,
-          messageType: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND,
+          type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND,
         });
       }
     });

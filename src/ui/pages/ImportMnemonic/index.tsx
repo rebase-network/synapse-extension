@@ -4,9 +4,9 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Button, TextField } from '@material-ui/core';
+import { FormattedMessage, useIntl } from 'react-intl';
 import Title from '../../Components/Title';
 import { MESSAGE_TYPE } from '../../../utils/constants';
-import { FormattedMessage, useIntl } from 'react-intl';
 
 const useStyles = makeStyles({
   container: {
@@ -109,7 +109,7 @@ export default function ImportMnemonic(props: AppProps, state: AppState) {
   const onSubmit = async (values) => {
     chrome.runtime.sendMessage({
       ...values,
-      messageType: MESSAGE_TYPE.IMPORT_MNEMONIC,
+      type: MESSAGE_TYPE.IMPORT_MNEMONIC,
     });
     if (vaildate) {
       setSuccess(true);
@@ -120,8 +120,7 @@ export default function ImportMnemonic(props: AppProps, state: AppState) {
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
       if (msg === MESSAGE_TYPE.IS_NOT_VALIDATE_MNEMONIC) {
-        setValidate(false); //false验证未通过
-        return;
+        setValidate(false); // false验证未通过
       } else if (msg === MESSAGE_TYPE.VALIDATE_PASS) {
         setValidate(true);
         history.push('/address');

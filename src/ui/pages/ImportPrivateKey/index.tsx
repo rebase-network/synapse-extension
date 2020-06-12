@@ -40,16 +40,16 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
       if (
-        msg.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK ||
-        msg.messageType === MESSAGE_TYPE.IMPORT_KEYSTORE_OK
+        msg.type === MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK ||
+        msg.type === MESSAGE_TYPE.IMPORT_KEYSTORE_OK
       ) {
         history.push('/address');
         setSuccess(true);
-      } else if (msg.messageType === MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR) {
+      } else if (msg.type === MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR) {
         setSuccess(false);
-      } else if (msg.messageType === MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_KPASSWORD) {
+      } else if (msg.type === MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_KPASSWORD) {
         setIsValidateKPassword(false);
-      } else if (msg.messageType === MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_UPASSWORD) {
+      } else if (msg.type === MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_UPASSWORD) {
         setIsValidateUPassword(false);
       }
     });
@@ -57,9 +57,9 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
 
   const onSubmit = async (values) => {
     if (!isHidePrivate) {
-      chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_PRIVATE_KEY });
+      chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY });
     } else {
-      chrome.runtime.sendMessage({ ...values, messageType: MESSAGE_TYPE.IMPORT_KEYSTORE });
+      chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.IMPORT_KEYSTORE });
     }
   };
 
