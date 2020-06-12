@@ -27,9 +27,9 @@ notifications:
 
 before_deploy:
   - mv dist synapse-extension
-  - rm synapse-extension.zip
+  - rm synapse-extension.zip synapse-extension.asc # 保持clean的env
   - zip -q -r synapse-extension.zip synapse-extension # 打包压缩
-  - shasum -a 256 synapse-extension.zip > synapse-extension.asc # 校验值
+  - shasum -a 256 synapse-extension.zip | tee synapse-extension.asc # 校验值并输出结果到console
 
 deploy:
   provider: releases # 操作 releases 页面
