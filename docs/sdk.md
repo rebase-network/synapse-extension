@@ -84,7 +84,7 @@ params: {
   },
 };
 ```
-#### Example:
+### Example:
 ```js
 const txInfo = {
   "meta": {
