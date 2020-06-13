@@ -16,7 +16,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["file://*/*", "http://*/*", "https://*/*"],
       "js": ["js/browser-polyfill.js", "js/contentScript.js"],
       "run_at": "document_start",
       "all_frames": true
@@ -25,6 +25,7 @@
   "web_accessible_resources": ["js/injectedScript.js"],
   "permissions": [
     "storage",
+    "activeTab",
     "notifications",
     "http://106.13.40.34:8114/",
     "http://106.13.40.34:8117/",
