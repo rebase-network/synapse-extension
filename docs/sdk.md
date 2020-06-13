@@ -1,5 +1,7 @@
 # Synapse sdk
 
+DApp demo: https://github.com/rebase-network/simplestdapp/
+
 Synapse will inject a object `ckb` into browser `window` object, so you can use method under ckb directly. The following docs will talk about how to use the methods provided by ckb.
 
 **Note**: The sdk will be changed frequently before we publish the production version. If you have any questions, problems and suggestions, do not hesitate to create an issue.
