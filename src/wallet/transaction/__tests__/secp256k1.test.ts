@@ -1,6 +1,6 @@
 import { BN } from 'bn.js';
-import { createRawTx } from '../txGenerator';
 import { addressToScript } from '@keyper/specs';
+import { createRawTx } from '../txGenerator';
 import { getUnspentCells } from '../../../utils/apis';
 import { configService } from '../../../config';
 import { bobAddresses, aliceAddresses } from '../../../test/fixture/address';
@@ -12,7 +12,7 @@ describe('Transaction test', () => {
   const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
 
   it('createRawTx test secp256k1', async () => {
-    const privateKey = bobAddresses.privateKey;
+    const { privateKey } = bobAddresses;
     const fromAddress = bobAddresses.secp256k1.address;
     const toAddress = aliceAddresses.secp256k1.address;
 

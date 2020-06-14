@@ -135,3 +135,61 @@ export function createAnyPayRawTx(
 
   return signObj;
 }
+
+/**
+ *
+ * the function update inputcell's outputdata to '0x'
+ * @export
+ * @param {*} dataCapacity: the capacity of the inputcells
+ * @param {CKBComponents.Script} fromLockScript : input data cell
+ * @param {*} inputDataCells : the cell of contains the data
+ * @param {*} deps : secp256k1| anypay | kaccak256 contract
+ * @param {*} fee : the fee of transaction
+ * @param {*} [toDataHex]: the data Hex
+ * @returns
+ */
+export function createRawTxUpdateData(
+  fromLockScript: CKBComponents.Script,
+  inputOutPoint,
+  dataCapacity,
+
+  deps,
+  fee,
+) {
+  const rawTx = {
+    version: '0x0',
+    cellDeps: deps,
+    headerDeps: [],
+    inputs: [],
+    outputs: [],
+    witnesses: [],
+    outputsData: [],
+  };
+
+  // inputs
+  rawTx.inputs.push({
+    previousOutput: inputOutPoint,
+    since: '0x0',
+  });
+  rawTx.witnesses.push('0x');
+  rawTx.witnesses[0] = {
+    lock: '',
+    inputType: '',
+    outputType: '',
+  };
+
+  // outputs
+  const outputCapacity = dataCapacity.sub(fee);
+  rawTx.outputs.push({
+    capacity: `0x${new BN(outputCapacity).toString(16)}`,
+    lock: fromLockScript,
+  });
+  rawTx.outputsData.push('0x');
+
+  const signObj = {
+    target: scriptToHash(fromLockScript),
+    tx: rawTx,
+  };
+
+  return signObj;
+}
