@@ -1,4 +1,4 @@
-import Axios, { AxiosRequestConfig } from 'axios';
+import Axios from 'axios';
 import { configService } from '../config';
 
 export const getAddressInfo = async (lockHash: string): Promise<{ capacity: string }> => {
@@ -7,9 +7,9 @@ export const getAddressInfo = async (lockHash: string): Promise<{ capacity: stri
   return result.data;
 };
 
-export const getUnspentCells = async (lockHash: string) => {
+export const getUnspentCells = async (lockHash: string, isEmpty: string = 'true') => {
   const result = await Axios.get(
-    `${configService.CACHE_LAYER_ENDPOINT}/cell/getUnspentCells/${lockHash}`,
+    `${configService.CACHE_LAYER_ENDPOINT}/cell/getUnspentCells/${lockHash}/${isEmpty}`,
   );
   return result.data;
 };
