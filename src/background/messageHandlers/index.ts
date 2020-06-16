@@ -2,11 +2,16 @@ import * as browser from 'webextension-polyfill';
 import * as _ from 'lodash';
 import { MESSAGE_TYPE } from '@utils/constants';
 import send from './send';
+import sign from './sign';
 import getAddressInfoHandler from './getAddressInfo';
 
 const handler = async (message, port) => {
   if (message.type === MESSAGE_TYPE.EXTERNAL_SIGN_SEND) {
     send(port, message);
+  }
+
+  if (message.type === MESSAGE_TYPE.EXTERNAL_SIGN) {
+    sign(port, message);
   }
 
   if (message.type === MESSAGE_TYPE.EXTERNAL_GET_ADDRESS_INFO) {

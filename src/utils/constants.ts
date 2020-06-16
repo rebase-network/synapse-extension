@@ -53,6 +53,7 @@ export const MESSAGE_TYPE = {
   SEND_TX_HISTORY: 'SEND_TX_HISTORY',
 
   GOTO_SEND_PAGE: 'GOTO_SEND_PAGE',
+  GOTO_SIGN_PAGE: 'GOTO_SIGN_PAGE',
 
   // message from dapp
   EXTERNAL_AUTH: 'auth',

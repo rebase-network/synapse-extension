@@ -15,10 +15,12 @@ interface TXMeta {
   data?: string;
 }
 
-interface SignSendTXRequest {
+interface SignTXRequest {
   tx: CKBComponents.RawTransactionToSign;
   meta: TXMeta;
 }
+
+type SignSendTXRequest = SignTXRequest;
 
 const promisedMessageHandler = (requestMessage: RequestMessage) => {
   window.postMessage(requestMessage, '*');
@@ -47,6 +49,21 @@ window.ckb = {
     },
   ) => promisedMessageHandler(requestMessage),
 
+  sign: (signRequest: SignTXRequest) => {
+    const requestMessage = {
+      type: MESSAGE_TYPE.EXTERNAL_SIGN,
+      target: BACKGROUND_PORT,
+      token: 'signToken',
+      requestId: 'signRequestId',
+      data: {
+        tx: signRequest.tx,
+        meta: signRequest.meta,
+      },
+    };
+
+    return promisedMessageHandler(requestMessage);
+  },
+
   send: (signSendRequest: SignSendTXRequest) => {
     const requestMessage = {
       type: MESSAGE_TYPE.EXTERNAL_SIGN_SEND,
@@ -55,8 +72,6 @@ window.ckb = {
       requestId: 'signSendRequestId',
       data: {
         tx: signSendRequest.tx,
-        target: 'LOCK_HASH',
-        config: { index: 0, length: -1 },
         meta: signSendRequest.meta,
       },
     };
@@ -65,4 +80,4 @@ window.ckb = {
   },
 };
 
-console.log('Injected ckb successfully');
+console.log('Synapse: Injected ckb');
