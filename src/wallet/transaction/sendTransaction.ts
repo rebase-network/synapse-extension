@@ -5,7 +5,6 @@ import { textToHex, textToBytesLength } from '@utils/index';
 import * as _ from 'lodash';
 import { getDepFromLockType } from '@utils/deps';
 import { getUnspentCells } from '@utils/apis';
-import { string } from 'yup';
 import { createRawTx, createAnyPayRawTx, createUpdateDataRawTx } from './txGenerator';
 import { configService } from '../../config';
 import { signTx } from '../addKeyperWallet';
