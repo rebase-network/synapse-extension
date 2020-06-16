@@ -36,10 +36,12 @@ export default async (port, message) => {
   notifyExtension(msg);
 
   try {
+    let QUERY_LIMIT = 5;
     const intervalId = setInterval(async () => {
+      QUERY_LIMIT -= 1;
       const tabs = await browser.tabs.query({ windowId: notifWindow.id });
       // status: [loading, complete]
-      if (tabs?.[0]?.status === 'complete') {
+      if (tabs?.[0]?.status === 'complete' || QUERY_LIMIT === 0) {
         clearInterval(intervalId);
         browser.runtime.sendMessage({
           type: MESSAGE_TYPE.GOTO_SIGN_PAGE,
