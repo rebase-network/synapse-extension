@@ -1,6 +1,6 @@
-import { utf8ToBytes, bytesToHex } from '@nervosnetwork/ckb-sdk-utils/lib';
+import { utf8ToBytes, bytesToHex, hexToBytes } from '@nervosnetwork/ckb-sdk-utils/lib';
 
-function textToHex(text) {
+export function textToHex(text) {
   let result = text.trim();
   if (result.startsWith('0x')) {
     return result;
@@ -10,4 +10,8 @@ function textToHex(text) {
   return result;
 }
 
-export default textToHex;
+export function textToBytesLength(text) {
+  const textHex = textToHex(text);
+  const result = hexToBytes(textHex);
+  return result.length;
+}

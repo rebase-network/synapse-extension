@@ -1,7 +1,7 @@
 import { BN } from 'bn.js';
 import { addressToScript } from '@keyper/specs';
 import textToHex from '@utils/index';
-import { createRawTxUpdateData } from '../txGenerator';
+import { createRawTxDeleteData } from '../txGenerator';
 import { configService } from '../../../config';
 import { bobAddresses } from '../../../test/fixture/address';
 import { secp256k1Dep } from '../../../test/fixture/deps';
@@ -38,7 +38,7 @@ describe('Transaction test', () => {
     //   }
     const dataCapacity = BigInt(liveCellResult.cell.output.capacity);
 
-    const signObj = createRawTxUpdateData(
+    const signObj = createRawTxDeleteData(
       fromLockScript,
       inputOutPoint,
       new BN(dataCapacity),
