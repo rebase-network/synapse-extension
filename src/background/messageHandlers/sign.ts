@@ -50,7 +50,7 @@ export default async (port, message) => {
       }
     }, 2000);
   } catch (error) {
-    console.log('query tabs error: ', error);
+    console.error('query tabs error: ', error);
   }
 
   // chrome.windows.create(
