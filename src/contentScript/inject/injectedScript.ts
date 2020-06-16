@@ -12,7 +12,7 @@ interface TXMeta {
   from: string;
   to: string;
   capacity: number;
-  data: string;
+  data?: string;
 }
 
 interface SignSendTXRequest {
