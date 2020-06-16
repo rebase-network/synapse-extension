@@ -17,6 +17,8 @@ function injectCustomJs(jsPath) {
 
 injectCustomJs('js/injectedScript.js');
 
+// Refer to chrome extension messaging: https://developer.chrome.com/extensions/messaging
+
 // post and listen message(long live) from background
 const port = browser.runtime.connect({ name: 'knockknock' });
 port.onMessage.addListener((message: any) => {
@@ -29,6 +31,7 @@ port.onMessage.addListener((message: any) => {
 });
 
 // post and listen message(one time) from background
+// background can not send message with port, can only use one time message
 browser.runtime.onMessage.addListener((message) => {
   const messageHandled = _.has(message, 'success');
   const sendToWebPage = message.target === WEB_PAGE;
@@ -37,6 +40,7 @@ browser.runtime.onMessage.addListener((message) => {
   }
 });
 
+// forward message from web page to background
 window.addEventListener(
   'message',
   (e) => {
