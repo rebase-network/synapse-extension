@@ -1,7 +1,6 @@
 import { BN } from 'bn.js';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils/lib';
 import * as _ from 'lodash';
-import { MIN_CELL_CAPACITY } from '@utils/constants';
 
 export function createRawTx(
   toAmount,
@@ -307,5 +306,96 @@ export function createRawTxUpdateData(
   return signObj;
 }
 
-// 1- 0x38d72c557463f6aae63d2c82954157ed17b959f092b1604f8b71ef2174eb922e
-// 2- 0xacfc6eb21764c8e3189c20fe389442d0b56ef8bc810bc702fe2ab1ebee616034
+/**
+ *
+ * the function update inputcell's outputdata from oldData to newData
+ * @export
+ * @param {*} deps : secp256k1| anypay | kaccak256 contract
+ * @param {*} fee :  fee of transaction
+ * @param {*} fromLockScript : input data cell
+ * @param {*} inputOutPoint : txHash, index
+ * @param {*} oldDataCellCapacity : capacity of data cell
+ * @param {*} unspentCells : unspent cells
+ * @param {*} newDataCapacity : capacity of new data
+ * @param {*} newDataHex: Hex of new Data
+ * @returns
+ */
+export function createUpdateDataRawTx(
+  deps,
+  fee,
+  fromLockScript: CKBComponents.Script,
+  inputOutPoint,
+  dataCellCapacity,
+  unspentCells,
+  newDataCapacity,
+  newDataHex,
+) {
+  const rawTx = {
+    version: '0x0',
+    cellDeps: deps,
+    headerDeps: [],
+    inputs: [],
+    outputs: [],
+    witnesses: [],
+    outputsData: [],
+  };
+
+  function getTotalCapity(total, cell) {
+    return BigInt(total) + BigInt(cell.capacity);
+  }
+  // console.log('oldDataCapacity < newDataCapacity + fee');
+  const unspentTotalCapacity = unspentCells.reduce(getTotalCapity, 0);
+
+  // inputs - 001 - data cell
+  rawTx.inputs.push({
+    previousOutput: inputOutPoint,
+    since: '0x0',
+  });
+  rawTx.witnesses.push('0x');
+  rawTx.witnesses[0] = {
+    lock: '',
+    inputType: '',
+    outputType: '',
+  };
+  // inputs - 002 - free cell
+  for (let i = 0; i < unspentCells.length; i += 1) {
+    const cell = unspentCells[i];
+    rawTx.inputs.push({
+      previousOutput: cell.outPoint,
+      since: '0x0',
+    });
+    rawTx.witnesses.push('0x');
+  }
+
+  if (newDataHex === '0x') {
+    const unspentCapacity = unspentTotalCapacity + dataCellCapacity - fee;
+    rawTx.outputs.push({
+      capacity: `0x${new BN(unspentCapacity).toString(16)}`,
+      lock: fromLockScript,
+    });
+    rawTx.outputsData.push('0x');
+  } else {
+    // outputs 001- data cell
+    const newDataCellCapacity = newDataCapacity + BigInt(61 * 10 ** 8);
+    rawTx.outputs.push({
+      capacity: `0x${new BN(newDataCellCapacity).toString(16)}`,
+      lock: fromLockScript,
+    });
+    rawTx.outputsData.push(newDataHex);
+
+    // outputs 002- change cell
+    const unspentCapacity = unspentTotalCapacity + dataCellCapacity - newDataCellCapacity - fee;
+    rawTx.outputs.push({
+      capacity: `0x${new BN(unspentCapacity).toString(16)}`,
+      lock: fromLockScript,
+    });
+    rawTx.outputsData.push('0x');
+  }
+
+  const signObj = {
+    target: scriptToHash(fromLockScript),
+    tx: rawTx,
+  };
+
+  return signObj;
+}
