@@ -214,9 +214,9 @@ chrome.runtime.onMessage.addListener(async (request) => {
         data: {
           hash: '',
           tx: {
-            fromAddress,
-            toAddress,
-            amount: capacity.toString(),
+            from: fromAddress,
+            to: toAddress,
+            capacity: capacity.toString(),
             fee: fee.toString(),
             hash: '',
             status: 'Pending',
