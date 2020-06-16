@@ -52,24 +52,4 @@ export default async (port, message) => {
   } catch (error) {
     console.error('query tabs error: ', error);
   }
-
-  // chrome.windows.create(
-  //   {
-  //     url: 'notification.html',
-  //     type: 'popup',
-  //     width: 360,
-  //     height: 590,
-  //     top: 100,
-  //     left: 100,
-  //   },
-  //   () => {
-  //     // WORKAROUND: improve me
-  //     setTimeout(() => {
-  //       chrome.runtime.sendMessage({
-  //         type: MESSAGE_TYPE.GOTO_SIGN_PAGE,
-  //         data: message.data,
-  //       });
-  //     }, 3000);
-  //   },
-  // );
 };
