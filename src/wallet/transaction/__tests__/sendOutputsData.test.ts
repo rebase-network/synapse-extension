@@ -6,7 +6,7 @@ import { getUnspentCells } from '../../../utils/apis';
 import { configService } from '../../../config';
 import { bobAddresses } from '../../../test/fixture/address';
 import { secp256k1Dep } from '../../../test/fixture/deps';
-import textToHex from '../../../utils/index';
+import { textToHex } from '../../../utils/index';
 
 const CKB = require('@nervosnetwork/ckb-sdk-core').default;
 

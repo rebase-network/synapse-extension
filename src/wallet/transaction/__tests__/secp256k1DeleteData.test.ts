@@ -1,6 +1,5 @@
 import { BN } from 'bn.js';
 import { addressToScript } from '@keyper/specs';
-import textToHex from '@utils/index';
 import { createRawTxDeleteData } from '../txGenerator';
 import { configService } from '../../../config';
 import { bobAddresses } from '../../../test/fixture/address';
