@@ -7,39 +7,54 @@ export const txInfo = {
   },
   tx: {
     version: '0x0',
-    cell_deps: [
+    cellDeps: [
       {
-        out_point: {
-          tx_hash: '0xf8de3bb47d055cdf460d93a2a6e1b05f7432f9777c8c474abf4eec1d4aee5d37',
+        depType: 'depGroup',
+        outPoint: {
+          txHash: '0xace5ea83c478bb866edf122ff862085789158f5cbff155b7bb5f13058555b708',
           index: '0x0',
         },
-        dep_type: 'dep_group',
       },
     ],
+    headerDeps: [],
     inputs: [
       {
-        previous_output: {
-          tx_hash: '0xfe1e35cabdd2c58e3eb6fe71183c1b39cd1145a396380c573bbd8aa9e8a2b4e9',
+        since: '0x0',
+        previousOutput: {
+          txHash: '0x5e3d6849c28321c5e8b47b2a6809bff940ffeb45a167b2de7e10d424a350ed95',
           index: '0x0',
         },
-        since: '0x0',
       },
     ],
     outputs: [
       {
-        capacity: '0x19b45a500',
+        capacity: '0x174876e800',
         lock: {
-          code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-          hash_type: 'type',
-          args: '0x8eb4d75815e2207bd29a0b3651523e5a48e8fd34',
+          hashType: 'type',
+          codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+          args: '0xf57fe2adc2cfc6022badb5f800bbe25f19586e51',
+        },
+        type: null,
+      },
+      {
+        capacity: '0x177e1bd100',
+        lock: {
+          hashType: 'type',
+          codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+          args: '0x9b84887ab2ea170998cff9895675dcd29cd26d4d',
         },
         type: null,
       },
     ],
-    outputs_data: ['0x7465737420616161'],
-    header_deps: [],
+    outputsData: ['0x', '0x'],
     witnesses: [
-      '0x5500000010000000550000005500000041000000fff39ea320780c08e166543ca32b7d868cc2ce0bc5991c605ea1ba8d6b92efc21178b4409fa1270b0c6087a84dc46d1dc783bd7d19f4be49406ef878e4da10e701',
+      {
+        lock: '',
+        inputType: '',
+        outputType: '',
+      },
     ],
   },
 };
+
+export default txInfo;
