@@ -16,6 +16,7 @@ import {
   getAddressesList,
   getCurrentWallet,
   getWallets,
+  signTx,
 } from '@src/wallet/addKeyperWallet';
 import * as WalletKeystore from '@src/wallet/keystore';
 import * as PasswordKeystore from '@src/wallet/passwordEncryptor';
@@ -183,6 +184,40 @@ chrome.runtime.onMessage.addListener(async (request) => {
         txs,
         type: MESSAGE_TYPE.SEND_TX_HISTORY,
       });
+    });
+  }
+
+  // sign tx
+  if (request.type === MESSAGE_TYPE.SIGN_TX) {
+    const { currentWallet } = await browser.storage.local.get(['currentWallet']);
+    const rawTx = request.tx;
+    const password = request.password.trim();
+    const config = { index: 0, length: -1 };
+    const signedTx = await signTx(
+      currentWallet?.lock,
+      password,
+      rawTx,
+      config,
+      currentWallet?.publicKey?.replace('0x', ''),
+    );
+    const responseMsg = {
+      type: MESSAGE_TYPE.EXTERNAL_SIGN,
+      // extension does not allow to send to web page(injected script) directly
+      // content script will receive it and forward to web page
+      target: WEB_PAGE,
+      success: true,
+      message: 'tx is signed',
+      data: {
+        tx: signedTx,
+      },
+    };
+    sendToWebPage(responseMsg);
+
+    browser.notifications.create({
+      type: 'basic',
+      iconUrl: 'logo-32.png',
+      title: 'TX Signed',
+      message: 'Your TX has been signed',
     });
   }
 
