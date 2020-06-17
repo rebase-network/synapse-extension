@@ -11,13 +11,6 @@ export default async (port, message) => {
 
   let notifWindow = await browser.tabs.query({ windowType: 'popup' });
 
-  await browser.notifications.create({
-    type: 'basic',
-    iconUrl: 'logo-32.png',
-    title: 'Tabs reloaded',
-    message: 'Your tabs have been reloaded',
-  });
-
   if (_.isEmpty(notifWindow)) {
     notifWindow = await browser.windows.create({
       url: 'notification.html',
