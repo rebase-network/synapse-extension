@@ -10,8 +10,11 @@ import { SignatureAlgorithm } from '@keyper/specs/lib';
 
 class AnyPayLockScript {
   name = 'AnyPay';
+
   codeHash = '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b';
+
   hashType = 'type';
+
   provider = null;
 
   deps() {
