@@ -240,6 +240,13 @@ chrome.runtime.onMessage.addListener(async (request) => {
         );
         responseMsg.data.hash = sendTxHash;
         responseMsg.data.tx.hash = sendTxHash;
+
+        browser.notifications.create({
+          type: 'basic',
+          iconUrl: 'logo-32.png',
+          title: 'TX Sent',
+          message: 'Your TX has been sent',
+        });
       } catch (error) {
         responseMsg.success = false;
       }
