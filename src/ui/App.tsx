@@ -6,6 +6,7 @@ import Address from './pages/Address';
 import ImportMnemonic from './pages/ImportMnemonic/index';
 import GenerateMnemonic from './pages/ImportMnemonic/generate';
 import Transaction from './pages/Transaction';
+import Sign from './pages/Sign';
 import TxHistoryDetail from './pages/Transaction/txHistoryDetail';
 import MnemonicSetting from './pages/MnemonicSetting';
 import ImportPrivateKey from './pages/ImportPrivateKey';
@@ -46,6 +47,9 @@ export default function App() {
             </Route>
             <Route path="/send-tx">
               <Transaction />
+            </Route>
+            <Route path="/sign-tx">
+              <Sign />
             </Route>
             <Route path="/tx-history-detail">
               <TxHistoryDetail />

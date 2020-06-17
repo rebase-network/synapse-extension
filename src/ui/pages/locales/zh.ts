@@ -15,6 +15,7 @@ export default {
   'Latest 20 Transactions': '最近20笔交易',
   Receive: '接收',
   Send: '发送',
+  'Sign TX': '签名交易',
   Confirm: '确认',
   Required: '必填项',
   Password: '密码',

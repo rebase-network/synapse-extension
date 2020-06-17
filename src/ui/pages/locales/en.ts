@@ -15,6 +15,7 @@ export default {
   'Latest 20 Transactions': 'Latest 20 Transactions',
   Receive: 'Receive',
   Send: 'Send',
+  'Sign TX': 'Sign TX',
   Confirm: 'Confirm',
   Required: 'Required',
   Password: 'Password',

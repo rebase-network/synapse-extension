@@ -155,6 +155,11 @@ export default function (props: AppProps) {
         const searchString = queryString.stringify(message.data?.meta);
         history.push(`/send-tx?${searchString}`);
       }
+
+      if (message.type === MESSAGE_TYPE.GOTO_SIGN_PAGE) {
+        const searchString = queryString.stringify({ tx: JSON.stringify(message.data?.tx) });
+        history.push(`/sign-tx?${searchString}`);
+      }
     });
   }, [address, capacity, type]);
 
