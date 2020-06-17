@@ -29,6 +29,7 @@ import { getStatusByTxHash, getBlockNumberByTxHash } from '@utils/transaction';
 import { MESSAGE_TYPE } from '@utils/constants';
 import addExternalMessageListener from '@background/messageHandlers';
 import { WEB_PAGE } from '@src/utils/message/constants';
+import { sendToWebPage } from '@background/messageHandlers/proxy';
 /**
  * Listen messages from popup
  */
@@ -246,15 +247,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       // sedb back to extension UI
       chrome.runtime.sendMessage(responseMsg);
 
-      function sendToContentScript(tabs) {
-        // send back reponse to web page
-        if (tabs[0]?.id) {
-          browser.tabs.sendMessage(tabs[0]?.id, responseMsg);
-        }
-      }
-      browser.tabs
-        .query({ currentWindow: false, active: true })
-        .then(sendToContentScript, console.error);
+      sendToWebPage(responseMsg);
     });
   }
 
