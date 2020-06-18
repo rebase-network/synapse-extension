@@ -15,7 +15,11 @@ function injectCustomJs(jsPath) {
   container.appendChild(temp);
 }
 
-injectCustomJs('js/injectedScript.js');
+try {
+  injectCustomJs('js/injectedScript.js');
+} catch (e) {
+  console.error('Synapse injection failed.', e);
+}
 
 // Refer to chrome extension messaging: https://developer.chrome.com/extensions/messaging
 

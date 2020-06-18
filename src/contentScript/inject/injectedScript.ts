@@ -38,6 +38,10 @@ const promisedMessageHandler = (requestMessage: RequestMessage) => {
   });
 };
 
+if (typeof window.ckb !== 'undefined') {
+  throw new Error('Synapse detected another ckb. Please remove one and try again');
+}
+
 window.ckb = {
   // rpc: new CKB(configService.CKB_RPC_ENDPOINT),
   getAddressInfo: async (
