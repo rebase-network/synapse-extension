@@ -51,7 +51,7 @@ export default function (props: AppProps) {
         </Link>
       </ListItem>
       <ListItem>
-        <ListItemText secondary={item.income ? `Received` : `Sent`} />
+        <ListItemText secondary={item.income ? 'Received' : 'Sent'} />
         <ListItemText secondary={moment(item.timestamp).format('YYYY-MM-DD HH:mm:ss')} />
       </ListItem>
       <Modal open={open && selectedTxHash === item.hash} onClose={closeModal}>
