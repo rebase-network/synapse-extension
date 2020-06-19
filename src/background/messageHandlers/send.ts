@@ -1,25 +1,15 @@
 import { MESSAGE_TYPE } from '@utils/constants';
+import createPopup from '@common/popup';
 
-export default (port, message) => {
+export default async (port, message) => {
   if (message.type === MESSAGE_TYPE.EXTERNAL_SIGN_SEND) {
-    chrome.windows.create(
-      {
-        url: 'notification.html',
-        type: 'popup',
-        width: 360,
-        height: 590,
-        top: 100,
-        left: 100,
-      },
-      () => {
-        // WORKAROUND: improve me
-        setTimeout(() => {
-          chrome.runtime.sendMessage({
-            type: MESSAGE_TYPE.GOTO_SEND_PAGE,
-            data: message.data,
-          });
-        }, 3000);
-      },
-    );
+    const popup = await createPopup();
+
+    await popup.waitTabLoaded();
+
+    browser.runtime.sendMessage({
+      type: MESSAGE_TYPE.GOTO_SEND_PAGE,
+      data: message.data,
+    });
   }
 };
