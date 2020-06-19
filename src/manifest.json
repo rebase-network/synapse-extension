@@ -25,7 +25,6 @@
   "web_accessible_resources": ["js/injectedScript.js"],
   "permissions": [
     "storage",
-    "activeTab",
     "notifications",
     "http://106.13.40.34:8114/",
     "http://106.13.40.34:8117/",
