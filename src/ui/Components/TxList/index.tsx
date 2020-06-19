@@ -25,7 +25,7 @@ export default function (props: AppProps) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [selectedTxHash, setSelectedTxHash] = React.useState('');
-
+  const { txList } = props;
   const toggleModal = () => {
     setOpen(!open);
   };
@@ -39,7 +39,7 @@ export default function (props: AppProps) {
     setSelectedTxHash(hash);
   };
 
-  const txListElem = props.txList.map((item) => (
+  const txListElem = txList.map((item) => (
     <List onClick={() => onSelectTx(item.hash)} key={item.hash} className={classes.list}>
       <Divider />
       <ListItem>
