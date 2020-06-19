@@ -158,8 +158,8 @@ const signedTx = await sign(params);
 ```js
 // ? means optional
 params: {
-  tx?: TX_JSON, // ckb raw transaction, refer to below example
-  meta: { // this is required
+  tx: TX_JSON, // required. ckb raw transaction, refer to below example
+  meta?: { // optional
     capacity: number;
     to: string;
     from?: string;
@@ -170,6 +170,11 @@ params: {
 ```
 
 ### Return value:
+
+Will return:
+<details>
+  <summary>Click to expand!</summary>
+
 ```js
 {
   type: string; // the value is "sign_send"
@@ -186,8 +191,16 @@ params: {
     },
   },
 };
-```
+``` 
+</details>
+
+
 ### Example:
+
+1. Prepare for you data to be signed
+<details>
+  <summary>Click to expand!</summary>
+ 
 ```js
 const rawTx = {
   version: '0x0',
@@ -256,15 +269,25 @@ const rawTxWithMeta = {
   tx: rawTx,
 };
 
+```
+</details>
 
+2. Sign:
+
+```js
 const txResult = await ckb.sign(rawTxWithMeta);
 ```
+
+3. Will pop up a notification window to prompt user to enter Synapse wallet password. The `sign` method will return value after user enter password.
 
 **TX is signed successfully:**
 
 Note the value inside witnesses array, it's the signed result.
 
 Will return:
+<details>
+  <summary>Click to expand!</summary>
+ 
 ```js
 {
   type: 'sign',
@@ -332,3 +355,4 @@ Will return:
   },
 }
 ```
+</details>
