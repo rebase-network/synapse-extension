@@ -111,7 +111,7 @@ export const innerForm = (props: AppProps) => {
         type="text"
         fullWidth
         className={classes.textField}
-        value={values.fee ? values.fee : 0.0001}
+        value={values.fee}
         onChange={handleChange}
         onBlur={handleBlur}
         error={!!errors.fee}
@@ -271,7 +271,7 @@ export default function (props) {
     address: '',
     capacity: '',
     data: '',
-    fee: '0.0001',
+    fee: 0.0001,
     password: '',
     ...searchParams,
   };
