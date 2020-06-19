@@ -33,6 +33,7 @@ export default {
   'Keystore Password': 'Keystore密码',
   'Send CKB': '发送CKB',
   'The transaction is sending, please wait for seconds...': '交易正在确认中, 请等待...',
+  'The transaction failed to send, please try again later': '交易发送失败，请稍后再试',
   'Should be greater than ': '应该大于',
   Cancel: '取消',
   Capacity: '数量',

@@ -20,8 +20,7 @@ export default {
   Required: 'Required',
   Password: 'Password',
   Submitting: 'Submitting',
-  'It may take 1 minute for the generation of keystore':
-    'It may take 1 minute for the generation of keystore',
+  'It may take 1 minute for the generation of keystore': 'It may take 1 minute for the generation of keystore',
   Keystore: 'Keystore',
   'Private Key': 'Private Key',
   'Mnemonic | Only Support 12 Words': 'Mnemonic | Only Support 12 Words',
@@ -33,9 +32,10 @@ export default {
   'Wallet Password': 'Wallet Password',
   'Keystore Password': 'Keystore Password',
   'Send CKB': 'Send CKB',
-  'The transaction is sending, please wait for seconds...':
-    'The transaction is sending, please wait for seconds...',
+  'The transaction is sending, please wait for seconds...': 'The transaction is sending, please wait for seconds...',
   'Should be greater than ': 'Should be greater than ',
+  'The transaction failed to send, please try again later':
+    'The transaction failed to send, please try again later',
   Cancel: 'Cancel',
   Capacity: 'Capacity',
   To: 'To',
