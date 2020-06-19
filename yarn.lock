@@ -668,6 +668,11 @@
   dependencies:
     "@babel/runtime" "^7.10.2"
 
+"@types/anymatch@*":
+  version "1.3.1"
+  resolved "https://registry.npm.taobao.org/@types/anymatch/download/@types/anymatch-1.3.1.tgz#336badc1beecb9dacc38bea2cf32adf627a8421a"
+  integrity sha1-M2utwb7sudrMOL6izzKt9ieoQho=
+
 "@types/babel__core@^7.1.0":
   version "7.1.6"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.6.tgz#16ff42a5ae203c9af1c6e190ed1f30f83207b610"
@@ -736,6 +741,11 @@
   version "0.0.28"
   resolved "https://registry.yarnpkg.com/@types/filewriter/-/filewriter-0.0.28.tgz#c054e8af4d9dd75db4e63abc76f885168714d4b3"
   integrity sha1-wFTor02d11205jq8dviFFocU1LM=
+
+"@types/firefox-webext-browser@^70.0.1":
+  version "70.0.1"
+  resolved "https://registry.npm.taobao.org/@types/firefox-webext-browser/download/@types/firefox-webext-browser-70.0.1.tgz#53a3915bfbe25e2c5ec439dbdbe6e303610012bb"
+  integrity sha1-U6ORW/viXixexDnb2+bjA2EAErs=
 
 "@types/history@*":
   version "4.7.5"
@@ -860,10 +870,20 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
+"@types/source-list-map@*":
+  version "0.1.2"
+  resolved "https://registry.npm.taobao.org/@types/source-list-map/download/@types/source-list-map-0.1.2.tgz#0078836063ffaf17412349bba364087e0ac02ec9"
+  integrity sha1-AHiDYGP/rxdBI0m7o2QIfgrALsk=
+
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
   integrity sha512-l42BggppR6zLmpfU6fq9HEa2oGPEI8yrSPL3GITjfRInppYFahObbIQOQK3UGxEnyQpltZLaPe75046NOZQikw==
+
+"@types/tapable@*":
+  version "1.0.6"
+  resolved "https://registry.npm.taobao.org/@types/tapable/download/@types/tapable-1.0.6.tgz#a9ca4b70a18b270ccb2bc0aaafefd1d486b7ea74"
+  integrity sha1-qcpLcKGLJwzLK8Cqr+/R1Ia36nQ=
 
 "@types/testing-library__jest-dom@^5.0.2":
   version "5.0.2"
@@ -871,6 +891,34 @@
   integrity sha1-ibeC4PGH/h6A1jdRM9p0GCugIGU=
   dependencies:
     "@types/jest" "*"
+
+"@types/uglify-js@*":
+  version "3.9.2"
+  resolved "https://registry.npm.taobao.org/@types/uglify-js/download/@types/uglify-js-3.9.2.tgz#01992579debba674e1e359cd6bcb1a1d0ab2e02b"
+  integrity sha1-AZkled67pnTh41nNa8saHQqy4Cs=
+  dependencies:
+    source-map "^0.6.1"
+
+"@types/webpack-sources@*":
+  version "1.4.0"
+  resolved "https://registry.npm.taobao.org/@types/webpack-sources/download/@types/webpack-sources-1.4.0.tgz#e58f1f05f87d39a5c64cf85705bdbdbb94d4d57e"
+  integrity sha1-5Y8fBfh9OaXGTPhXBb29u5TU1X4=
+  dependencies:
+    "@types/node" "*"
+    "@types/source-list-map" "*"
+    source-map "^0.7.3"
+
+"@types/webpack@^4.41.17":
+  version "4.41.17"
+  resolved "https://registry.npm.taobao.org/@types/webpack/download/@types/webpack-4.41.17.tgz?cache=0&sync_timestamp=1591057393390&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fwebpack%2Fdownload%2F%40types%2Fwebpack-4.41.17.tgz#0a69005e644d657c85b7d6ec1c826a71bebd1c93"
+  integrity sha1-CmkAXmRNZXyFt9bsHIJqcb69HJM=
+  dependencies:
+    "@types/anymatch" "*"
+    "@types/node" "*"
+    "@types/tapable" "*"
+    "@types/uglify-js" "*"
+    "@types/webpack-sources" "*"
+    source-map "^0.6.0"
 
 "@types/yargs-parser@*":
   version "15.0.0"
