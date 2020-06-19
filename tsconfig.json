@@ -11,6 +11,7 @@
       "@ui/*": ["src/ui/*"],
       "@background/*": ["src/background/*"],
       "@contentScript/*": ["src/contentScript/*"],
+      "@common/*": ["src/common/*"],
       "@utils/*": ["src/utils/*"]
     },
     "sourceMap": true,
