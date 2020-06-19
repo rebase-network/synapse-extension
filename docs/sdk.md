@@ -175,22 +175,16 @@ Will return:
 <details>
   <summary>Click to expand!</summary>
 
+Currently there is no error returned.
 ```js
 {
-  type: string; // the value is "sign_send"
-  success: boolean;
-  message: string;  // now is a fixed value: 'tx is sent'
+  type: 'sign',
+  success: true,
+  message: 'tx is signed',
   data: {
-    hash: string; // tx hash, will be empty string if fail to send tx
-    tx: {
-      fromAddress: string;  // will be change to `from` in next version
-      toAddress: string;  // will be change to `to` in next version
-      amount: number; // the unit will be `CKB`, will be change to `capacity` in next version
-      fee: number;  // currently the default value is 0.001
-      hash: string; // same value with previous one
-    },
-  },
-};
+    tx: TX_JSON_SIGNED
+  }
+}
 ``` 
 </details>
 
