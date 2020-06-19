@@ -10,7 +10,8 @@ import { generateMnemonic, ExtendedPrivateKey } from '@src/wallet/key';
 import Keychain from '@src/wallet/keychain';
 import { sendTransaction } from '@src/wallet/transaction/sendTransaction';
 import Address from '@src/wallet/address';
-import { getTxHistories, createScriptObj } from '@background/transaction';
+import { createScriptObj } from '@background/transaction';
+import { getTxHistories } from '@utils/apis';
 import {
   addKeyperWallet,
   getAddressesList,
