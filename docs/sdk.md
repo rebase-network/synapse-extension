@@ -258,17 +258,17 @@ const rawTx = {
   ],
 };
 
-const rawTxWithMeta = {
-  meta: {}, // optional
-  tx: rawTx,
-};
-
 ```
 </details>
 
 2. Sign:
 
 ```js
+const rawTxWithMeta = {
+  meta: {}, // optional
+  tx: rawTx,
+};
+
 const txResult = await ckb.sign(rawTxWithMeta);
 ```
 
