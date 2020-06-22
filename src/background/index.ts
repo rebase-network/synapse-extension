@@ -191,12 +191,14 @@ chrome.runtime.onMessage.addListener(async (request) => {
   // sign tx
   if (request.type === MESSAGE_TYPE.SIGN_TX) {
     const { currentWallet } = await browser.storage.local.get(['currentWallet']);
-    const rawTx = request.tx;
-    const password = request.password.trim();
-    const config = { index: 0, length: -1 };
+    const {
+      data: { tx: rawTx, meta },
+      password,
+    } = request;
+    const config = meta?.config || { index: 0, length: -1 };
     const signedTx = await signTx(
       currentWallet?.lock,
-      password,
+      password.trim(),
       rawTx,
       config,
       currentWallet?.publicKey?.replace('0x', ''),

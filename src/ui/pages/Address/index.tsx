@@ -157,7 +157,7 @@ export default function (props: AppProps) {
       }
 
       if (message.type === MESSAGE_TYPE.GOTO_SIGN_PAGE) {
-        const searchString = queryString.stringify({ tx: JSON.stringify(message.data?.tx) });
+        const searchString = queryString.stringify({ data: JSON.stringify(message.data) });
         history.push(`/sign-tx?${searchString}`);
       }
     });
