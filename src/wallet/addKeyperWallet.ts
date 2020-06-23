@@ -1,5 +1,6 @@
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 import * as _ from 'lodash';
+import { indexerIsExistOrCreate } from '@background/indexer';
 import { KEYSTORE_TYPE } from '../utils/constants';
 import Address, { AddressPrefix } from './address';
 
@@ -22,8 +23,18 @@ export async function addKeyperWallet(privateKey, password, entropyKeystore, roo
   // Keyper accounts
   const accounts = await KeyperWallet.accounts();
 
+  // add indexer
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  await indexerAddress(accounts);
+
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
   await saveWallets(privateKey, keystore, accounts, entropyKeystore, rootKeystore);
+}
+
+async function indexerAddress(accounts) {
+  accounts.forEach(async (account) => {
+    await indexerIsExistOrCreate(account.lock);
+  });
 }
 
 function loadWalletsInStorage() {

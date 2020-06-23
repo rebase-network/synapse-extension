@@ -22,6 +22,13 @@ export const getIndexStatusByLockHash = async (lockHash: string) => {
   return false;
 };
 
+export const indexerIsExistOrCreate = async (lockHash: string, indexFrom: string = '0x0') => {
+  const isExist = await getIndexStatusByLockHash(lockHash);
+  if (!isExist) {
+    await createIndexerByLockHash(lockHash, indexFrom);
+  }
+};
+
 export const getTransactionsByLockHash = async (
   lockHash: string,
   page: bigint = BigInt(0),

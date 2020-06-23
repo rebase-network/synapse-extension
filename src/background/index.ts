@@ -11,7 +11,7 @@ import Keychain from '@src/wallet/keychain';
 import { sendTransaction } from '@src/wallet/transaction/sendTransaction';
 import Address from '@src/wallet/address';
 import { createScriptObj } from '@background/transaction';
-import { getTxHistories } from '@background/indexer';
+import { getTxHistories, indexerIsExistOrCreate } from '@background/indexer';
 import {
   addKeyperWallet,
   getAddressesList,
@@ -32,6 +32,7 @@ import { MESSAGE_TYPE } from '@utils/constants';
 import addExternalMessageListener from '@background/messageHandlers';
 import { WEB_PAGE } from '@src/utils/message/constants';
 import { sendToWebPage } from '@background/messageHandlers/proxy';
+
 /**
  * Listen messages from popup
  */
