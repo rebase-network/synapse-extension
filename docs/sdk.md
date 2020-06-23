@@ -12,7 +12,7 @@ Synapse will inject a object `ckb` into browser `window` object, so you can use 
 ```js
 ckb.getAddressInfo
 
-const addressInfo = ckb.getAddressInfo()
+const addressInfo = await ckb.getAddressInfo()
 ```
 ### Return value
 ```js
@@ -26,7 +26,7 @@ const addressInfo = ckb.getAddressInfo()
 ```
 ### Example
 ```js
-const addressInfo = ckb.getAddressInfo()
+const addressInfo = await ckb.getAddressInfo()
 console.log('addressInfo: ', addressInfo);
 ```
 will output:
