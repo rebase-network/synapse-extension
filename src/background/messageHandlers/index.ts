@@ -1,21 +1,22 @@
 import * as browser from 'webextension-polyfill';
 import * as _ from 'lodash';
 import { MESSAGE_TYPE } from '@utils/constants';
-import send from './send';
-import sign from './sign';
+import sendToPopup from './sendToPopup';
 import getAddressInfoHandler from './getAddressInfo';
 
 const handler = async (message, port) => {
-  if (message.type === MESSAGE_TYPE.EXTERNAL_SIGN_SEND) {
-    send(port, message);
-  }
+  const isSendToPopup =
+    [
+      MESSAGE_TYPE.EXTERNAL_SIGN,
+      MESSAGE_TYPE.EXTERNAL_SEND,
+      MESSAGE_TYPE.EXTERNAL_SIGN_SEND,
+    ].indexOf(message.type) !== -1;
 
-  if (message.type === MESSAGE_TYPE.EXTERNAL_SIGN) {
-    sign(port, message);
+  if (isSendToPopup) {
+    sendToPopup(port, message);
   }
 
   if (message.type === MESSAGE_TYPE.EXTERNAL_GET_ADDRESS_INFO) {
-    // TODO: capacity
     getAddressInfoHandler(port);
   }
 };

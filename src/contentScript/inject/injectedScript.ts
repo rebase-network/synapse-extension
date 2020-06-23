@@ -15,12 +15,19 @@ interface TXMeta {
   data?: string;
 }
 
-interface SignTXRequest {
-  tx: CKBComponents.RawTransactionToSign;
-  meta: TXMeta;
+interface SignConfig {
+  index: number;
+  length: number;
 }
 
-type SignSendTXRequest = SignTXRequest;
+interface SignTxMeta {
+  config?: SignConfig;
+}
+
+interface SignTXRequest {
+  tx: CKBComponents.RawTransactionToSign;
+  meta: SignTxMeta;
+}
 
 const promisedMessageHandler = (requestMessage: RequestMessage) => {
   window.postMessage(requestMessage, '*');
@@ -52,32 +59,38 @@ window.ckb = {
       requestId: 'getAddressInfoRequestId',
     },
   ) => promisedMessageHandler(requestMessage),
-
-  sign: (signRequest: SignTXRequest) => {
+  // sign tx
+  sign: (request: SignTXRequest) => {
     const requestMessage = {
       type: MESSAGE_TYPE.EXTERNAL_SIGN,
       target: BACKGROUND_PORT,
       token: 'signToken',
       requestId: 'signRequestId',
-      data: {
-        tx: signRequest.tx,
-        meta: signRequest.meta,
-      },
+      data: request,
     };
 
     return promisedMessageHandler(requestMessage);
   },
+  // send signed tx
+  send: (request: SignTXRequest) => {
+    const requestMessage = {
+      type: MESSAGE_TYPE.EXTERNAL_SEND,
+      target: BACKGROUND_PORT,
+      token: 'sendToken',
+      requestId: 'sendRequestId',
+      data: request,
+    };
 
-  send: (signSendRequest: SignSendTXRequest) => {
+    return promisedMessageHandler(requestMessage);
+  },
+  // sign + send
+  signSend: (request: SignTXRequest) => {
     const requestMessage = {
       type: MESSAGE_TYPE.EXTERNAL_SIGN_SEND,
       target: BACKGROUND_PORT,
-      token: 'signSendToken',
-      requestId: 'signSendRequestId',
-      data: {
-        tx: signSendRequest.tx,
-        meta: signSendRequest.meta,
-      },
+      token: 'signToken',
+      requestId: 'signRequestId',
+      data: request,
     };
 
     return promisedMessageHandler(requestMessage);

@@ -1,6 +1,4 @@
-import Axios, { AxiosRequestConfig } from 'axios';
-
-import { configService } from '../config';
+import { signTx } from '@src/wallet/addKeyperWallet';
 
 const { Secp256k1LockScript } = require('@keyper/container/lib/locks/secp256k1');
 const Keccak256LockScript = require('../keyper/locks/keccak256');
@@ -49,4 +47,21 @@ export const createScriptObj = (publicKey, type, address) => {
     };
     return scriptObj;
   }
+};
+
+export const signTxFromMsg = async (request) => {
+  const { currentWallet } = await browser.storage.local.get(['currentWallet']);
+  const {
+    data: { tx: rawTx, meta },
+    password,
+  } = request;
+  const config = meta?.config || { index: 0, length: -1 };
+  const signedTx = await signTx(
+    currentWallet?.lock,
+    password.trim(),
+    rawTx,
+    config,
+    currentWallet?.publicKey?.replace('0x', ''),
+  );
+  return signedTx;
 };

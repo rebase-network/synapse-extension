@@ -10,7 +10,7 @@ import { generateMnemonic, ExtendedPrivateKey } from '@src/wallet/key';
 import Keychain from '@src/wallet/keychain';
 import { sendTransaction } from '@src/wallet/transaction/sendTransaction';
 import Address from '@src/wallet/address';
-import { createScriptObj } from '@background/transaction';
+import { createScriptObj, signTxFromMsg } from '@background/transaction';
 import { getTxHistories } from '@utils/apis';
 import {
   addKeyperWallet,
@@ -27,18 +27,19 @@ import {
   findInWalletsByPublicKey,
   findInAddressesListByPublicKey,
 } from '@utils/wallet';
-import { getStatusByTxHash, getBlockNumberByTxHash } from '@utils/transaction';
+import { getStatusByTxHash, getBlockNumberByTxHash, sendSignedTx } from '@utils/transaction';
 import { MESSAGE_TYPE } from '@utils/constants';
 import addExternalMessageListener from '@background/messageHandlers';
 import { WEB_PAGE } from '@src/utils/message/constants';
 import { sendToWebPage } from '@background/messageHandlers/proxy';
-/**
- * Listen messages from popup
- */
+
 let wallets = [];
 let currentWallet = {};
 let addressesList = [];
 
+/**
+ * Listen messages from popup
+ */
 addExternalMessageListener();
 
 chrome.runtime.onMessage.addListener(async (request) => {
@@ -189,111 +190,122 @@ chrome.runtime.onMessage.addListener(async (request) => {
   }
 
   // sign tx
-  if (request.type === MESSAGE_TYPE.SIGN_TX) {
-    const { currentWallet } = await browser.storage.local.get(['currentWallet']);
-    const {
-      data: { tx: rawTx, meta },
-      password,
-    } = request;
-    const config = meta?.config || { index: 0, length: -1 };
-    const signedTx = await signTx(
-      currentWallet?.lock,
-      password.trim(),
-      rawTx,
-      config,
-      currentWallet?.publicKey?.replace('0x', ''),
-    );
+  if (request.type === MESSAGE_TYPE.EXTERNAL_SIGN) {
     const responseMsg = {
-      type: MESSAGE_TYPE.EXTERNAL_SIGN,
+      type: request.type,
       // extension does not allow to send to web page(injected script) directly
       // content script will receive it and forward to web page
       target: WEB_PAGE,
-      success: true,
-      message: 'tx is signed',
+      success: false,
+      message: 'tx failed to sign',
       data: {
-        tx: signedTx,
+        tx: null,
       },
     };
-    sendToWebPage(responseMsg);
 
-    browser.notifications.create({
+    const notificationMsg = {
       type: 'basic',
       iconUrl: 'logo-32.png',
-      title: 'TX Signed',
-      message: 'Your TX has been signed',
-    });
+      title: 'TX failed to sign',
+      message: 'Your TX failed to send',
+    };
+
+    try {
+      const signedTx = await signTxFromMsg(request);
+
+      responseMsg.data.tx = signedTx;
+      responseMsg.message = 'tx is signed';
+      responseMsg.success = true;
+
+      notificationMsg.title = 'TX Signed';
+      notificationMsg.message = 'Your TX has been signed';
+    } catch (error) {
+      console.error('error happened when signing tx: ', error);
+    }
+
+    sendToWebPage(responseMsg);
+
+    browser.notifications.create(notificationMsg);
   }
 
-  // send transactioin
-  if (request.type === MESSAGE_TYPE.RESQUEST_SEND_TX) {
-    chrome.storage.local.get(['currentWallet', 'wallets'], async (result) => {
-      const toAddress = request.address.trim();
-      const capacity = request.capacity * 10 ** 8;
-      const fee = request.fee * 10 ** 8;
-      const password = request.password.trim();
-      const toData = request.data.trim();
-      const {
-        address: fromAddress,
-        publicKey,
-        lock: lockHash,
-        type: lockType,
-      } = result.currentWallet;
-      const wallet = findInWalletsByPublicKey(publicKey, result.wallets);
-      const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
-      const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
-      const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
+  // sign and send tx
+  if (request.type === MESSAGE_TYPE.EXTERNAL_SIGN_SEND) {
+    const responseMsg = {
+      type: request.type,
+      // extension does not allow to send to web page(injected script) directly
+      // content script will receive it and forward to web page
+      target: WEB_PAGE,
+      success: false,
+      message: 'tx failed to send',
+      data: {
+        hash: null,
+      },
+    };
 
-      const responseMsg = {
-        type: MESSAGE_TYPE.EXTERNAL_SIGN_SEND,
-        // extension does not allow to send to web page(injected script) directly
-        // content script will receive it and forward to web page
-        target: WEB_PAGE,
-        success: true,
-        message: 'tx is sent',
-        data: {
-          hash: '',
-          tx: {
-            from: fromAddress,
-            to: toAddress,
-            capacity: capacity.toString(),
-            fee: fee.toString(),
-            hash: '',
-            status: 'Pending',
-            blockNum: 'Pending',
-          },
-        },
-      };
-      try {
-        const sendTxHash = await sendTransaction(
-          privateKey,
-          fromAddress,
-          toAddress,
-          BigInt(capacity),
-          BigInt(fee),
-          lockHash,
-          lockType,
-          password,
-          publicKey.replace('0x', ''),
-          toData,
-        );
-        responseMsg.data.hash = sendTxHash;
-        responseMsg.data.tx.hash = sendTxHash;
+    const notificationMsg = {
+      type: 'basic',
+      iconUrl: 'logo-32.png',
+      title: 'TX failed to sign',
+      message: 'Your TX failed to send',
+    };
 
-        browser.notifications.create({
-          type: 'basic',
-          iconUrl: 'logo-32.png',
-          title: 'TX Sent',
-          message: 'Your TX has been sent',
-        });
-      } catch (error) {
-        responseMsg.success = false;
-      }
+    try {
+      const signedTx = await signTxFromMsg(request);
+      const sentTxHash = await sendSignedTx(signedTx);
 
-      // sedb back to extension UI
-      chrome.runtime.sendMessage(responseMsg);
+      responseMsg.data.hash = sentTxHash;
+      responseMsg.message = 'tx is sent';
+      responseMsg.success = true;
 
-      sendToWebPage(responseMsg);
-    });
+      notificationMsg.title = 'TX Sent';
+      notificationMsg.message = 'tx is sent';
+    } catch (error) {
+      console.error('error happened when sending tx: ', error);
+    }
+
+    sendToWebPage(responseMsg);
+
+    browser.notifications.create(notificationMsg);
+  }
+
+  // send tx
+  if (request.type === MESSAGE_TYPE.EXTERNAL_SEND) {
+    console.log('get EXTERNAL_SEND mesage ============= ');
+    const responseMsg = {
+      type: request.type,
+      // extension does not allow to send to web page(injected script) directly
+      // content script will receive it and forward to web page
+      target: WEB_PAGE,
+      success: false,
+      message: 'tx failed to send',
+      data: {
+        hash: null,
+      },
+    };
+
+    const notificationMsg = {
+      type: 'basic',
+      iconUrl: 'logo-32.png',
+      title: 'TX failed to sign',
+      message: 'Your TX failed to send',
+    };
+
+    try {
+      const sentTxHash = await sendSignedTx(request.data?.tx);
+
+      responseMsg.data.hash = sentTxHash;
+      responseMsg.message = 'tx is sent';
+      responseMsg.success = true;
+
+      notificationMsg.title = 'TX Sent';
+      notificationMsg.message = 'tx is sent';
+    } catch (error) {
+      console.error('error happened when sending tx: ', error);
+    }
+
+    sendToWebPage(responseMsg);
+
+    browser.notifications.create(notificationMsg);
   }
 
   // transactioin detail

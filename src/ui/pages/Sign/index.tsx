@@ -77,9 +77,10 @@ export default function (props: AppProps, state: AppState) {
   const searchParams = queryString.parse(location.search);
 
   const onSubmit = async (values) => {
-    const requestMsg = { ...values, type: MESSAGE_TYPE.SIGN_TX };
-    if (searchParams?.data) {
+    const requestMsg = { ...values };
+    if (searchParams?.data && searchParams?.type) {
       requestMsg.data = JSON.parse(searchParams.data as string);
+      requestMsg.type = searchParams.type;
       browser.runtime.sendMessage(requestMsg);
     }
   };
