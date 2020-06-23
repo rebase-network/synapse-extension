@@ -1,4 +1,3 @@
-// import * as scrypt from 'scrypt.js';
 import { SignatureAlgorithm } from '@keyper/specs/lib';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils/lib';
 import { scriptToAddress } from '@keyper/specs/lib/address';
@@ -19,7 +18,7 @@ const Keccak256LockScript = require('./locks/keccak256');
 const EC = require('elliptic').ec;
 
 let container;
-const addRules = []; // Mod by River
+const addRules = [];
 
 const init = () => {
   container = new Container([
