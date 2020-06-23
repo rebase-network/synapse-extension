@@ -11,7 +11,7 @@ import Keychain from '@src/wallet/keychain';
 import { sendTransaction } from '@src/wallet/transaction/sendTransaction';
 import Address from '@src/wallet/address';
 import { createScriptObj } from '@background/transaction';
-import { getTxHistories } from '@utils/apis';
+import { getTxHistories } from '@background/indexer';
 import {
   addKeyperWallet,
   getAddressesList,

@@ -1,7 +1,3 @@
-import Axios, { AxiosRequestConfig } from 'axios';
-
-import { configService } from '../config';
-
 const { Secp256k1LockScript } = require('@keyper/container/lib/locks/secp256k1');
 const Keccak256LockScript = require('../keyper/locks/keccak256');
 const AnyPayLockScript = require('../keyper/locks/anypay');
