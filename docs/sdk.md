@@ -9,9 +9,8 @@ Synapse will inject a object `ckb` into browser `window` object, so you can use 
 ## Methods list
 * [ckb.getAddressInfo](#get-address-info)
 * [ckb.sign](#sign-tx)
-* [ckb.send](#send-tx)
 * [ckb.signSend](#sign-and-send-tx)
-
+* [ckb.send](#send-tx)
 
 
 ## Get address info
