@@ -1,10 +1,4 @@
-import {
-  createIndexerByLockHash,
-  getIndexStatusByLockHash,
-  getTransactionsByLockHash,
-  parseBlockTxs,
-  getTxHistories,
-} from '@background/indexer.ts';
+import { createIndexerByLockHash, getIndexStatusByLockHash } from '@background/indexer.ts';
 
 describe('indexer test', () => {
   const lockHash = '0x5d67b4eeb98698535f76f1b34a77d852112a35072eb6b834cb4cc8868ac02fb2';
@@ -22,21 +16,21 @@ describe('indexer test', () => {
     expect(indexerStatus).toEqual(true);
   });
 
-  it.skip('get transaction List', async () => {
-    const transactionList = await getTransactionsByLockHash(lockHash, page, per);
-    expect(transactionList.length).toEqual(20);
-  });
+  //   it.skip('get transaction List', async () => {
+  //     const transactionList = await getTransactionsByLockHash(lockHash, page, per);
+  //     expect(transactionList.length).toEqual(20);
+  //   });
 
-  it.skip('parseBlockTxs', async () => {
-    const transactionList = await getTransactionsByLockHash(lockHash, page, per);
-    const blockTxs = await parseBlockTxs(transactionList);
-    console.log(/blockTxs/, JSON.stringify(blockTxs));
-  });
+  //   it.skip('parseBlockTxs', async () => {
+  //     const transactionList = await getTransactionsByLockHash(lockHash, page, per);
+  //     const blockTxs = await parseBlockTxs(transactionList);
+  //     console.log(/blockTxs/, JSON.stringify(blockTxs));
+  //   });
 
-  it('getTxHistories', async () => {
-    const transactionList = await getTransactionsByLockHash(lockHash, page, per);
-    const blockTxs = await parseBlockTxs(transactionList);
-    // const getTxHistoriesResult = await getTxHistories(blockTxs, args);
-    console.log(/blockTxs/, JSON.stringify(blockTxs));
-  });
+  //   it('getTxHistories', async () => {
+  //     const transactionList = await getTransactionsByLockHash(lockHash, page, per);
+  //     const blockTxs = await parseBlockTxs(transactionList);
+  //     // const getTxHistoriesResult = await getTxHistories(blockTxs, args);
+  //     console.log(/blockTxs/, JSON.stringify(blockTxs));
+  //   });
 });
