@@ -6,13 +6,20 @@ Synapse will inject a object `ckb` into browser `window` object, so you can use 
 
 **Note**: The sdk will be changed frequently before we publish the production version. If you have any questions, problems and suggestions, do not hesitate to create an issue.
 
+## Methods list
+* [ckb.getAddressInfo](#get-address-info)
+* [ckb.sign](#sign-tx)
+* [ckb.signSend](#sign-and-send-tx)
+* [ckb.send](#send-tx)
+
+
 ## Get address info
 
 ### Method
 ```js
 ckb.getAddressInfo
 
-const addressInfo = ckb.getAddressInfo()
+const addressInfo = await ckb.getAddressInfo()
 ```
 ### Return value
 ```js
@@ -26,7 +33,7 @@ const addressInfo = ckb.getAddressInfo()
 ```
 ### Example
 ```js
-const addressInfo = ckb.getAddressInfo()
+const addressInfo = await ckb.getAddressInfo()
 console.log('addressInfo: ', addressInfo);
 ```
 will output:
@@ -39,107 +46,6 @@ addressInfo: {
   "capacity":"516899970000"
 }
 ```
-
-## Send tx
-
-Dapp could use `send` method to send tx with Synapse, it will bring up a notification window with the send tx form.
-
-### Method:
-
-```js
-ckb.send
-
-const tx = await send(params);
-```
-
-`params` has the following structure：
-
-```js
-// ? means optional
-params: {
-  tx?: TX_JSON, // not in use for now
-  meta: { // this is required
-    capacity: number;
-    to: string;
-    from?: string;
-    fee?: number;
-    data?: string;
-  }
-}
-```
-
-### Return value:
-```js
-{
-  type: string; // the value is "sign_send"
-  success: boolean;
-  message: string;  // now is a fixed value: 'tx is sent'
-  data: {
-    hash: string; // tx hash, will be empty string if fail to send tx
-    tx: {
-      fromAddress: string;  // will be change to `from` in next version
-      toAddress: string;  // will be change to `to` in next version
-      amount: number; // the unit will be `CKB`, will be change to `capacity` in next version
-      fee: number;  // currently the default value is 0.001
-      hash: string; // same value with previous one
-    },
-  },
-};
-```
-### Example:
-```js
-const rawTxWithMeta = {
-  "meta": {
-    "from": "ckt1qyqgadxhtq27ygrm62dqkdj32gl95j8gl56qum0yyn",
-    "to": "ckt1qyqfhpyg02ew59cfnr8lnz2kwhwd98xjd4xsscxlae",
-    "capacity": 100,
-    "data": "0x68656c6c6f20636b62"  // hello ckb
-  }
-}
-
-const txResult = await ckb.send(rawTxWithMeta);
-```
-
-**TX is sent successfully:**
-```js
-{
-  type: "sign_send",
-  success: true,
-  message: 'tx is sent',
-  data: {
-    hash: '0x02805e5a97a09ab9e8634fb0d3c75ed2ee4669f7e2ef67dcc33dc6d7f931821d',
-    tx: {
-      fromAddress: ckt1qyqgadxhtq27ygrm62dqkdj32gl95j8gl56qum0yyn,  // will be change to `from` in next version
-      toAddress: ckt1qyqfhpyg02ew59cfnr8lnz2kwhwd98xjd4xsscxlae,  // will be change to `to` in next version
-      amount: 100,  // will be change to `capacity` in next version
-      fee: 0.001,
-      hash: '0x02805e5a97a09ab9e8634fb0d3c75ed2ee4669f7e2ef67dcc33dc6d7f931821d',
-    },
-  },
-};
-```
-
-**TX fail to send:**
-`success` value will be `false`, `hash` will be empty string.
-
-```js
-{
-  type: "sign_send",
-  success: false,
-  message: 'tx is sent',
-  data: {
-    hash: '',
-    tx: {
-      fromAddress: ckt1qyqgadxhtq27ygrm62dqkdj32gl95j8gl56qum0yyn,  // will be change to `from` in next version
-      toAddress: ckt1qyqfhpyg02ew59cfnr8lnz2kwhwd98xjd4xsscxlae,  // will be change to `to` in next version
-      amount: 100,  // will be change to `capacity` in next version
-      fee: 0.001,
-      hash: '',
-    },
-  },
-};
-```
-
 
 ## Sign tx
 
@@ -157,16 +63,17 @@ const signedTx = await sign(params);
 
 ```js
 // ? means optional
+// For how to use the params, please refer to below example
 params: {
-  tx: TX_JSON, // required. ckb raw transaction, refer to below example
+  tx: TX_IN_JSON_FORMAT, // required. ckb raw transaction
   meta?: { // optional
-    capacity: number;
-    to: string;
-    from?: string;
-    fee?: number;
-    data?: string;
+    config: { // This is telling which inputs you want to sign
+      index: 0, // index value in inputs array. Default: 0
+      length: -1  // length from index
+    }
   }
 }
+
 ```
 
 ### Return value:
@@ -182,7 +89,7 @@ Currently there is no error returned.
   success: true,
   message: 'tx is signed',
   data: {
-    tx: TX_JSON_SIGNED
+    tx: TX_JSON_SIGNED,
   }
 }
 ``` 
@@ -196,63 +103,193 @@ Currently there is no error returned.
   <summary>Click to expand!</summary>
  
 ```js
+// https://explorer.nervos.org/aggron/transaction/0x44f543d59974cb9dac09323008a162beebaa19e6d7d0dbf91507947f678e612c
 const rawTx = {
-  version: '0x0',
   cellDeps: [
     {
       depType: 'depGroup',
       outPoint: {
-        txHash: '0xace5ea83c478bb866edf122ff862085789158f5cbff155b7bb5f13058555b708',
+        txHash: '0xf8de3bb47d055cdf460d93a2a6e1b05f7432f9777c8c474abf4eec1d4aee5d37',
         index: '0x0',
       },
     },
     {
       depType: 'code',
       outPoint: {
-        txHash: '0xe3f981cf8ba46b3c664ca0d823767f7f059ed31139cc54f76182d7e2129cb0e0',
+        txHash: '0x809e977a2537b181aeef4b6bbc4cfd4e5d9dbd699aa836a1549089016ccee455',
+        index: '0x0',
+      },
+    },
+    {
+      depType: 'code',
+      outPoint: {
+        txHash: '0x7fc297edbb7bef34343d4449bf04813cf6a12c3873c83da20d31f8e402ee9f75',
+        index: '0x0',
+      },
+    },
+    {
+      depType: 'code',
+      outPoint: {
+        txHash: '0x8dab22e2507dbcc90693d2a6d4beebfcc320f72b3e05ca1473f627b942955c73',
         index: '0x0',
       },
     },
   ],
+
   headerDeps: [],
+
   inputs: [
     {
-      since: '0x0',
       previousOutput: {
-        txHash: '0xe3f981cf8ba46b3c664ca0d823767f7f059ed31139cc54f76182d7e2129cb0e0',
+        txHash: '0x4a3f8226f5448c02b5f8d94a17aea546ccad400df144f57bb76aabb5ce9ea0bb',
+        index: '0x0',
+      },
+      since: '0x0',
+    },
+    {
+      previousOutput: {
+        txHash: '0x4a3f8226f5448c02b5f8d94a17aea546ccad400df144f57bb76aabb5ce9ea0bb',
         index: '0x1',
       },
+      since: '0x0',
+    },
+    {
+      previousOutput: {
+        txHash: '0x4a3f8226f5448c02b5f8d94a17aea546ccad400df144f57bb76aabb5ce9ea0bb',
+        index: '0x2',
+      },
+      since: '0x0',
+    },
+    {
+      previousOutput: {
+        txHash: '0xd9ec339161532b1786b547d5ed24520d1ed68208f81b1deea56604f5bdb6122e',
+        index: '0x5',
+      },
+      since: '0x0',
+    },
+    {
+      previousOutput: {
+        txHash: '0x630486b8061894fa98a1ecc03e135a0361a47f5bdd10a0e1c5df0e3c37a416a6',
+        index: '0x4',
+      },
+      since: '0x0',
     },
   ],
+
   outputs: [
     {
-      capacity: '0x34e62ce00',
+      capacity: '0x6fc23ac00',
       lock: {
+        args:
+          '0x00000000000000000000000000000000000000000000000000000000000000009417da44c3f62caa8f514a9aef8153ff8a148d628803d9579b9ddbd0b410cbb3',
+        codeHash: '0x66b29f4c99c832d852f5a9c6018dedd6f90a5339f2db71276366fd5faa8173c8',
         hashType: 'type',
-        codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-        args: '0x9b84887ab2ea170998cff9895675dcd29cd26d4d',
       },
       type: {
-        hashType: 'data',
-        codeHash: '0xe7f93d7120de3ca8548b34d2ab9c40fe662eec35023f07e143797789895b4869',
-        args: '0x5d67b4eeb98698535f76f1b34a77d852112a35072eb6b834cb4cc8868ac02fb2',
+        args:
+          '0x00000000000000000728461320fe9bac472fb4b71984acb4451bc544360cff57d980df25fd80f1b005000000',
+        codeHash: '0x9fe22d1defd1f7b765f2b814b2fdb9ba0e9a163bc1f5de0a3364f0ce4a856328',
+        hashType: 'type',
       },
     },
     {
-      capacity: '0x2bb8a24afc0',
+      capacity: '0x6fc23df2b',
       lock: {
+        args:
+          '0x00000000000000000000000000000000000000000000000000000000000000009417da44c3f62caa8f514a9aef8153ff8a148d628803d9579b9ddbd0b410cbb3',
+        codeHash: '0x66b29f4c99c832d852f5a9c6018dedd6f90a5339f2db71276366fd5faa8173c8',
         hashType: 'type',
-        codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-        args: '0x9b84887ab2ea170998cff9895675dcd29cd26d4d',
       },
-      type: null,
+    },
+    {
+      capacity: '0x47272df00',
+      lock: {
+        args:
+          '0x00000000000000000000000000000000000000000000000000000000000000009417da44c3f62caa8f514a9aef8153ff8a148d628803d9579b9ddbd0b410cbb3',
+        codeHash: '0x66b29f4c99c832d852f5a9c6018dedd6f90a5339f2db71276366fd5faa8173c8',
+        hashType: 'type',
+      },
+      type: {
+        args: '0xfdc6bb73b0cbb033ffb122b7cd0a5bdec5de445637908239feb4f2e5168a4d09',
+        codeHash: '0x8971b3a963e6288868cc0ff81686ae177c7ee315a471298f486ae2074260ff4c',
+        hashType: 'type',
+      },
+    },
+    {
+      capacity: '0x16b969d00',
+      lock: {
+        args: '0xa3f81ce386206baf6673217a4ddc70e07b26da14',
+        codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+        hashType: 'type',
+      },
+    },
+    {
+      capacity: '0x351e771a33d2',
+      lock: {
+        args: '0xd310bba5375bda7a2ace4f9a483bd51d12384bd1',
+        codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+        hashType: 'type',
+      },
+    },
+    {
+      capacity: '0x16b969d00',
+      lock: {
+        args: '0xd310bba5375bda7a2ace4f9a483bd51d12384bd1',
+        codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+        hashType: 'type',
+      },
+    },
+    {
+      capacity: '0x35458af00',
+      lock: {
+        args: '0xd310bba5375bda7a2ace4f9a483bd51d12384bd1',
+        codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+        hashType: 'type',
+      },
+      type: {
+        args: '0xfdc6bb73b0cbb033ffb122b7cd0a5bdec5de445637908239feb4f2e5168a4d09',
+        codeHash: '0x8971b3a963e6288868cc0ff81686ae177c7ee315a471298f486ae2074260ff4c',
+        hashType: 'type',
+      },
     },
   ],
-  outputsData: ['0x40420f00000000000000000000000000', '0x'],
+
+  outputsData: [
+    '0x2bdf23fc0600000000000000000000005d1d000000000000000000000000000010270000000000000000000000000000',
+    '0x',
+    '0x5d1d0000000000000000000000000000',
+    '0x',
+    '0x',
+    '0x',
+    '0x45050000000000000000000000000000',
+  ],
+
+  version: '0x0',
+
   witnesses: [
     {
-      lock: '',
       inputType: '',
+      lock: '',
+      outputType: '',
+    },
+    {
+      inputType: '',
+      lock: '',
+      outputType: '',
+    },
+    {
+      inputType: '',
+      lock: '',
+      outputType: '',
+    },
+    {
+      inputType: '',
+      lock: '',
+      outputType: '',
+    },
+    {
+      inputType: '',
+      lock: '',
       outputType: '',
     },
   ],
@@ -265,8 +302,10 @@ const rawTx = {
 
 ```js
 const rawTxWithMeta = {
-  meta: {}, // optional
   tx: rawTx,
+  meta: { // optional
+    config: { index: 3, length: 2 } // sign the 4th and 5th of inputs array
+  },
 };
 
 const txResult = await ckb.sign(rawTxWithMeta);
@@ -290,63 +329,338 @@ Will return:
   message: 'tx is signed',
   data: {
     tx: {
-      version: '0x0',
       cellDeps: [
         {
           depType: 'depGroup',
           outPoint: {
-            txHash: '0xace5ea83c478bb866edf122ff862085789158f5cbff155b7bb5f13058555b708',
+            txHash: '0xf8de3bb47d055cdf460d93a2a6e1b05f7432f9777c8c474abf4eec1d4aee5d37',
             index: '0x0',
           },
         },
         {
           depType: 'code',
           outPoint: {
-            txHash: '0xe3f981cf8ba46b3c664ca0d823767f7f059ed31139cc54f76182d7e2129cb0e0',
+            txHash: '0x809e977a2537b181aeef4b6bbc4cfd4e5d9dbd699aa836a1549089016ccee455',
+            index: '0x0',
+          },
+        },
+        {
+          depType: 'code',
+          outPoint: {
+            txHash: '0x7fc297edbb7bef34343d4449bf04813cf6a12c3873c83da20d31f8e402ee9f75',
+            index: '0x0',
+          },
+        },
+        {
+          depType: 'code',
+          outPoint: {
+            txHash: '0x8dab22e2507dbcc90693d2a6d4beebfcc320f72b3e05ca1473f627b942955c73',
             index: '0x0',
           },
         },
       ],
+
       headerDeps: [],
+
       inputs: [
         {
-          since: '0x0',
           previousOutput: {
-            txHash: '0xe3f981cf8ba46b3c664ca0d823767f7f059ed31139cc54f76182d7e2129cb0e0',
+            txHash: '0x4a3f8226f5448c02b5f8d94a17aea546ccad400df144f57bb76aabb5ce9ea0bb',
+            index: '0x0',
+          },
+          since: '0x0',
+        },
+        {
+          previousOutput: {
+            txHash: '0x4a3f8226f5448c02b5f8d94a17aea546ccad400df144f57bb76aabb5ce9ea0bb',
             index: '0x1',
           },
+          since: '0x0',
+        },
+        {
+          previousOutput: {
+            txHash: '0x4a3f8226f5448c02b5f8d94a17aea546ccad400df144f57bb76aabb5ce9ea0bb',
+            index: '0x2',
+          },
+          since: '0x0',
+        },
+        {
+          previousOutput: {
+            txHash: '0xd9ec339161532b1786b547d5ed24520d1ed68208f81b1deea56604f5bdb6122e',
+            index: '0x5',
+          },
+          since: '0x0',
+        },
+        {
+          previousOutput: {
+            txHash: '0x630486b8061894fa98a1ecc03e135a0361a47f5bdd10a0e1c5df0e3c37a416a6',
+            index: '0x4',
+          },
+          since: '0x0',
         },
       ],
+
       outputs: [
         {
-          capacity: '0x34e62ce00',
+          capacity: '0x6fc23ac00',
           lock: {
+            args:
+              '0x00000000000000000000000000000000000000000000000000000000000000009417da44c3f62caa8f514a9aef8153ff8a148d628803d9579b9ddbd0b410cbb3',
+            codeHash: '0x66b29f4c99c832d852f5a9c6018dedd6f90a5339f2db71276366fd5faa8173c8',
             hashType: 'type',
-            codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-            args: '0x9b84887ab2ea170998cff9895675dcd29cd26d4d',
           },
           type: {
-            hashType: 'data',
-            codeHash: '0xe7f93d7120de3ca8548b34d2ab9c40fe662eec35023f07e143797789895b4869',
-            args: '0x5d67b4eeb98698535f76f1b34a77d852112a35072eb6b834cb4cc8868ac02fb2',
+            args:
+              '0x00000000000000000728461320fe9bac472fb4b71984acb4451bc544360cff57d980df25fd80f1b005000000',
+            codeHash: '0x9fe22d1defd1f7b765f2b814b2fdb9ba0e9a163bc1f5de0a3364f0ce4a856328',
+            hashType: 'type',
           },
         },
         {
-          capacity: '0x2bb8a24afc0',
+          capacity: '0x6fc23df2b',
           lock: {
+            args:
+              '0x00000000000000000000000000000000000000000000000000000000000000009417da44c3f62caa8f514a9aef8153ff8a148d628803d9579b9ddbd0b410cbb3',
+            codeHash: '0x66b29f4c99c832d852f5a9c6018dedd6f90a5339f2db71276366fd5faa8173c8',
             hashType: 'type',
-            codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-            args: '0x9b84887ab2ea170998cff9895675dcd29cd26d4d',
           },
-          type: null,
+        },
+        {
+          capacity: '0x47272df00',
+          lock: {
+            args:
+              '0x00000000000000000000000000000000000000000000000000000000000000009417da44c3f62caa8f514a9aef8153ff8a148d628803d9579b9ddbd0b410cbb3',
+            codeHash: '0x66b29f4c99c832d852f5a9c6018dedd6f90a5339f2db71276366fd5faa8173c8',
+            hashType: 'type',
+          },
+          type: {
+            args: '0xfdc6bb73b0cbb033ffb122b7cd0a5bdec5de445637908239feb4f2e5168a4d09',
+            codeHash: '0x8971b3a963e6288868cc0ff81686ae177c7ee315a471298f486ae2074260ff4c',
+            hashType: 'type',
+          },
+        },
+        {
+          capacity: '0x16b969d00',
+          lock: {
+            args: '0xa3f81ce386206baf6673217a4ddc70e07b26da14',
+            codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+            hashType: 'type',
+          },
+        },
+        {
+          capacity: '0x351e771a33d2',
+          lock: {
+            args: '0xd310bba5375bda7a2ace4f9a483bd51d12384bd1',
+            codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+            hashType: 'type',
+          },
+        },
+        {
+          capacity: '0x16b969d00',
+          lock: {
+            args: '0xd310bba5375bda7a2ace4f9a483bd51d12384bd1',
+            codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+            hashType: 'type',
+          },
+        },
+        {
+          capacity: '0x35458af00',
+          lock: {
+            args: '0xd310bba5375bda7a2ace4f9a483bd51d12384bd1',
+            codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+            hashType: 'type',
+          },
+          type: {
+            args: '0xfdc6bb73b0cbb033ffb122b7cd0a5bdec5de445637908239feb4f2e5168a4d09',
+            codeHash: '0x8971b3a963e6288868cc0ff81686ae177c7ee315a471298f486ae2074260ff4c',
+            hashType: 'type',
+          },
         },
       ],
-      outputsData: ['0x40420f00000000000000000000000000', '0x'],
+
+      outputsData: [
+        '0x2bdf23fc0600000000000000000000005d1d000000000000000000000000000010270000000000000000000000000000',
+        '0x',
+        '0x5d1d0000000000000000000000000000',
+        '0x',
+        '0x',
+        '0x',
+        '0x45050000000000000000000000000000',
+      ],
+
+      version: '0x0',
+
       witnesses: [
-        '0x550000001000000055000000550000004100000062c5c2e4ff80aea4914ecb6c11a7b8f820d2b914185d84780899ca2f69f553cb30de239ea75c98c451e4e8650cdd325a4a75c93c8fd750c3a71547ba68c50d4401',
+        {
+          inputType: '',
+          lock: '',
+          outputType: '',
+        },
+        {
+          inputType: '',
+          lock: '',
+          outputType: '',
+        },
+        {
+          inputType: '',
+          lock: '',
+          outputType: '',
+        },
+        '0x5500000010000000550000005500000041000000d1e172abccec16973df781ec6a4a19b0aa9930be7e8ef9b6b7b43d0bda95b9ac4a271ed96e28164c0d15136be5b0d47a1c087aac76b7ce5b8f36caa095f6794a00',
+        {
+          inputType: '',
+          lock: '',
+          outputType: '',
+        },
       ],
     },
   },
-}
+};
 ```
 </details>
+
+
+
+## Sign and send tx
+
+Dapp could use `signSend` method to sign and send tx, it will bring up a notification window with the password form. After user enter correct password, `signSend` method will  signed tx, then send it and return the result.
+
+### Method:
+
+```js
+ckb.sign
+
+const result = await signSend(params);
+```
+
+`params` has the following structure：
+
+```js
+params: {
+  tx: TX_IN_JSON_FORMAT // required, refer to sign method for data sample
+  meta?: { // optional
+    config: { // This is telling which inputs you want to sign
+      index: 0, // index value in inputs array. Default: 0
+      length: -1  // length from index
+    }
+  }
+}
+```
+
+### Return value:
+```js
+{
+  type: string; // the value is "signSend"
+  success: boolean;
+  message: string;  // now is a fixed value: 'tx is sent'
+  data: {
+    hash: string | null; // tx hash, will be `null` if fail to send tx
+  },
+};
+```
+### Example:
+```js
+const rawTxWithMeta = {
+  tx: SIGNED_TX_IN_JSON_FORMAT // required. please refer to sign method to see the data format
+  meta: { // optional
+    config: { index: 3, length: 2 } // sign the 4th and 5th of inputs array
+  },
+}
+
+const result = await ckb.signSend(rawTxWithMeta);
+```
+
+**TX is sent successfully:**
+```js
+{
+  type: "signSend",
+  success: true,
+  message: 'tx is sent',
+  data: {
+    hash: '0x02805e5a97a09ab9e8634fb0d3c75ed2ee4669f7e2ef67dcc33dc6d7f931821d',
+  },
+};
+```
+
+**TX fail to send:**
+`success` value will be `false`, `hash` will be `null`.
+
+```js
+{
+  type: "signSend",
+  success: false,
+  message: 'tx failed to sent',
+  data: {
+    hash: null
+    },
+  },
+};
+```
+
+## Send tx
+
+Dapp could use `send` method to send signed tx, it will bring up a notification window with the password form. After user enter correct password, tx will be sent and return the tx hash if succeed.
+
+### Method:
+
+```js
+ckb.send
+
+const result = await ckb.send(params);
+```
+
+`params` has the following structure：
+
+```js
+params: {
+  tx: SIGNED_TX_IN_JSON_FORMAT // required
+}
+```
+
+### Return value:
+```js
+{
+  type: string; // the value is "send"
+  success: boolean;
+  message: string;  // now is a fixed value: 'tx is sent'
+  data: {
+    hash: string | null; // tx hash, will be `null` if fail to send tx
+  },
+};
+```
+### Example:
+```js
+const rawTxWithMeta = {
+  tx: SIGNED_TX_IN_JSON_FORMAT // please refer to sign method to see the data format
+}
+
+const result = await ckb.send(rawTxWithMeta);
+```
+
+**TX is sent successfully:**
+```js
+{
+  type: "send",
+  success: true,
+  message: 'tx is sent',
+  data: {
+    hash: '0x02805e5a97a09ab9e8634fb0d3c75ed2ee4669f7e2ef67dcc33dc6d7f931821d',
+  },
+};
+```
+
+**TX fail to send:**
+`success` value will be `false`, `hash` will be `null`.
+
+```js
+{
+  type: "send",
+  success: false,
+  message: 'tx failed to sent',
+  data: {
+    hash: null
+    },
+  },
+};
+```
+

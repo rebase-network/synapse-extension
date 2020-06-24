@@ -151,13 +151,15 @@ export default function (props: AppProps) {
         setTxs(message.txs);
       }
 
-      if (message.type === MESSAGE_TYPE.GOTO_SEND_PAGE) {
-        const searchString = queryString.stringify(message.data?.meta);
-        history.push(`/send-tx?${searchString}`);
-      }
-
-      if (message.type === MESSAGE_TYPE.GOTO_SIGN_PAGE) {
-        const searchString = queryString.stringify({ data: JSON.stringify(message.data) });
+      if (
+        message.type === MESSAGE_TYPE.EXTERNAL_SEND ||
+        message.type === MESSAGE_TYPE.EXTERNAL_SIGN ||
+        message.type === MESSAGE_TYPE.EXTERNAL_SIGN_SEND
+      ) {
+        const searchString = queryString.stringify({
+          ...message,
+          data: JSON.stringify(message.data),
+        });
         history.push(`/sign-tx?${searchString}`);
       }
     });

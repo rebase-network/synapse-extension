@@ -1,4 +1,3 @@
-import { MESSAGE_TYPE } from '@utils/constants';
 import createPopup from '@common/popup';
 
 export default async (port, message) => {
@@ -6,8 +5,5 @@ export default async (port, message) => {
 
   await popup.waitTabLoaded();
 
-  browser.runtime.sendMessage({
-    type: MESSAGE_TYPE.GOTO_SIGN_PAGE,
-    data: message.data,
-  });
+  browser.runtime.sendMessage(message);
 };

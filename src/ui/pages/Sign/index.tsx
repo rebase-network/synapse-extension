@@ -5,7 +5,6 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import * as queryString from 'query-string';
 import { makeStyles } from '@material-ui/core/styles';
-import { MESSAGE_TYPE } from '@utils/constants';
 import PageNav from '@ui/Components/PageNav';
 import * as browser from 'webextension-polyfill';
 
@@ -19,20 +18,10 @@ interface AppProps {}
 
 interface AppState {}
 
-export const innerForm = (props) => {
+export const innerForm = (props: any) => {
   const intl = useIntl();
 
-  const {
-    values,
-    touched,
-    errors,
-    dirty,
-    isSubmitting,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    handleReset,
-  } = props;
+  const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
 
   return (
     <Form className="password" id="password-field" onSubmit={handleSubmit} aria-label="form">
@@ -71,22 +60,23 @@ export const innerForm = (props) => {
   );
 };
 
-export default function (props: AppProps, state: AppState) {
+export default () => {
   const classes = useStyles();
   const intl = useIntl();
   const searchParams = queryString.parse(location.search);
 
   const onSubmit = async (values) => {
-    const requestMsg = { ...values, type: MESSAGE_TYPE.SIGN_TX };
-    if (searchParams?.data) {
+    const requestMsg = { ...values };
+    if (searchParams?.data && searchParams?.type) {
       requestMsg.data = JSON.parse(searchParams.data as string);
+      requestMsg.type = searchParams.type;
       browser.runtime.sendMessage(requestMsg);
     }
   };
 
   return (
     <div>
-      <PageNav to="/setting" title={<FormattedMessage id="Sign TX" />} />
+      <PageNav to="/setting" title={<FormattedMessage id="Auth" />} />
       <div className={classes.container}>
         <Formik
           initialValues={{ password: '' }}
@@ -102,4 +92,4 @@ export default function (props: AppProps, state: AppState) {
       </div>
     </div>
   );
-}
+};

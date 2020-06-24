@@ -12,7 +12,7 @@ export default async (port) => {
   }
   port.postMessage({
     type: MESSAGE_TYPE.EXTERNAL_GET_ADDRESS_INFO,
-    requestId: 1,
+    requestId: 'getAddressInfo',
     success: true,
     message: currentWallet ? 'get address info successfully' : 'do not have wallet info',
     target: WEB_PAGE,

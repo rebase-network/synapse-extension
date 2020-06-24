@@ -1,7 +1,5 @@
-import { Ckb } from './constants';
+import CKB from '@nervosnetwork/ckb-sdk-core';
 import { configService } from '../config';
-
-const CKB = require('@nervosnetwork/ckb-sdk-core').default;
 
 const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
 
@@ -19,4 +17,8 @@ export const getBlockNumberByTxHash = async (txHash) => {
     .getBlock(result.txStatus.blockHash)
     .then((b) => b.header);
   return BigInt(depositBlockHeader.number);
+};
+
+export const sendSignedTx = async (signedTx) => {
+  return ckb.rpc.sendTransaction(signedTx);
 };

@@ -1,3 +1,5 @@
+// prettier-ignore
+// eslint-disable max-len
 export default {
   'Import Mnemonic': '导入助记词',
   'Generate Mnemonic': '生成助记词',
@@ -41,4 +43,5 @@ export default {
   Home: '首页',
   'Copy to clipboard': '复制地址',
   Copied: '复制成功',
+  Auth: '授权',
 };
