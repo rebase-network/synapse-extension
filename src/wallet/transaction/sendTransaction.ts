@@ -13,83 +13,6 @@ const CKB = require('@nervosnetwork/ckb-sdk-core').default;
 
 const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
 
-export const sendTransaction = async (
-  privateKey,
-  fromAddress,
-  toAddress,
-  toAmount,
-  fee,
-  lockHash,
-  lockType,
-  password,
-  publicKey,
-  toData?,
-) => {
-  const toDataHex = textToHex(toData);
-  const toAddressScript = addressToScript(toAddress);
-  let toLockType = '';
-  if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
-    toLockType = 'Secp256k1';
-  } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Keccak256) {
-    toLockType = 'Keccak256';
-  } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.AnyPay) {
-    toLockType = 'AnyPay';
-  }
-  let rawTransaction = {};
-
-  // wallet cells check
-  const toLockScript = addressToScript(toAddress);
-  const toLockHash = ckb.utils.scriptToHash(toLockScript);
-  const unspentWalletCells = await getUnspentCells(toLockHash);
-  let realTxHash;
-  let config = { index: 0, length: -1 };
-
-  if (unspentWalletCells.length === 0) {
-    rawTransaction = await generateTx(
-      fromAddress,
-      toAddress,
-      toAmount,
-      fee,
-      lockHash,
-      lockType,
-      toDataHex,
-    );
-  }
-
-  if (toLockType === 'Secp256k1') {
-    rawTransaction = await generateTx(
-      fromAddress,
-      toAddress,
-      toAmount,
-      fee,
-      lockHash,
-      lockType,
-      toDataHex,
-    );
-    config = { index: 0, length: -1 };
-  }
-  if (toLockType === 'AnyPay') {
-    rawTransaction = await generateAnyPayTx(
-      fromAddress,
-      toAddress,
-      toAmount,
-      fee,
-      lockHash,
-      lockType,
-      toLockType,
-    );
-    config = { index: 1, length: 1 };
-  }
-
-  const signedTx = await signTx(lockHash, password, rawTransaction, config, publicKey);
-  try {
-    realTxHash = await ckb.rpc.sendTransaction(signedTx);
-  } catch (error) {
-    console.error(`Failed to send tx: ${error}`);
-  }
-  return realTxHash;
-};
-
 export const generateTx = async (
   fromAddress,
   toAddress,
@@ -239,5 +162,82 @@ export const sendUpdateDataTransaction = async (
   const signedTx = await signTx(lockHash, password, rawTransaction, config, publicKey);
 
   const realTxHash = await ckb.rpc.sendTransaction(signedTx);
+  return realTxHash;
+};
+
+export const sendTransaction = async (
+  privateKey,
+  fromAddress,
+  toAddress,
+  toAmount,
+  fee,
+  lockHash,
+  lockType,
+  password,
+  publicKey,
+  toData?,
+) => {
+  const toDataHex = textToHex(toData);
+  const toAddressScript = addressToScript(toAddress);
+  let toLockType = '';
+  if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
+    toLockType = 'Secp256k1';
+  } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Keccak256) {
+    toLockType = 'Keccak256';
+  } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.AnyPay) {
+    toLockType = 'AnyPay';
+  }
+  let rawTransaction = {};
+
+  // wallet cells check
+  const toLockScript = addressToScript(toAddress);
+  const toLockHash = ckb.utils.scriptToHash(toLockScript);
+  const unspentWalletCells = await getUnspentCells(toLockHash);
+  let realTxHash;
+  let config = { index: 0, length: -1 };
+
+  if (unspentWalletCells.length === 0) {
+    rawTransaction = await generateTx(
+      fromAddress,
+      toAddress,
+      toAmount,
+      fee,
+      lockHash,
+      lockType,
+      toDataHex,
+    );
+  }
+
+  if (toLockType === 'Secp256k1') {
+    rawTransaction = await generateTx(
+      fromAddress,
+      toAddress,
+      toAmount,
+      fee,
+      lockHash,
+      lockType,
+      toDataHex,
+    );
+    config = { index: 0, length: -1 };
+  }
+  if (toLockType === 'AnyPay') {
+    rawTransaction = await generateAnyPayTx(
+      fromAddress,
+      toAddress,
+      toAmount,
+      fee,
+      lockHash,
+      lockType,
+      toLockType,
+    );
+    config = { index: 1, length: 1 };
+  }
+
+  const signedTx = await signTx(lockHash, password, rawTransaction, config, publicKey);
+  try {
+    realTxHash = await ckb.rpc.sendTransaction(signedTx);
+  } catch (error) {
+    console.error(`Failed to send tx: ${error}`);
+  }
   return realTxHash;
 };
