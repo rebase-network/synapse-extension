@@ -4,7 +4,6 @@ import CKB from '@nervosnetwork/ckb-sdk-core';
 import { createRawTx } from '../txGenerator';
 import { getUnspentCells } from '../../../utils/apis';
 import { configService } from '../../../config';
-
 import { bobAddresses, aliceAddresses } from '../../../test/fixture/address';
 import { anypayDep } from '../../../test/fixture/deps';
 
@@ -38,7 +37,7 @@ describe('Transaction test', () => {
     const signObj = createRawTx(toAmount, toLock, cells, lock, deps, fee);
     console.log('--- rawTx ---', JSON.stringify(signObj));
 
-    const signedTx = ckb.signTransaction(privateKey)(signObj.tx);
+    const signedTx = ckb.signTransaction(privateKey)(signObj.tx, []);
     const realTxHash = await ckb.rpc.sendTransaction(signedTx);
     console.log('realTxHash =>', JSON.stringify(realTxHash));
   });

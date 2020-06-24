@@ -51,7 +51,7 @@ describe('send Transaction test', () => {
       newInputDataHex,
       unspentCells,
     );
-    const signedTx = ckb.signTransaction(privateKey)(signObj.tx);
+    const signedTx = ckb.signTransaction(privateKey)(signObj.tx, []);
     const realTxHash = await ckb.rpc.sendTransaction(signedTx);
     console.log('realTxHash =>', JSON.stringify(realTxHash));
   });
@@ -100,7 +100,7 @@ describe('send Transaction test', () => {
       BigInt(newDataCapacity),
       newInputDataHex,
     );
-    const signedTx = ckb.signTransaction(privateKey)(signObj.tx);
+    const signedTx = ckb.signTransaction(privateKey)(signObj.tx, []);
     const realTxHash = await ckb.rpc.sendTransaction(signedTx);
     console.log('realTxHash =>', JSON.stringify(realTxHash));
   });

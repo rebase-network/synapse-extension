@@ -44,7 +44,7 @@ describe('Transaction test', () => {
     const signObj = createRawTx(toAmount, toLock, cells, lock, deps, fee, toDataHex);
     console.log('--- rawTx ---', JSON.stringify(signObj));
 
-    const signedTx = ckb.signTransaction(privateKey)(signObj.tx);
+    const signedTx = ckb.signTransaction(privateKey)(signObj.tx, []);
     const realTxHash = await ckb.rpc.sendTransaction(signedTx);
     console.log('realTxHash =>', JSON.stringify(realTxHash));
   });
