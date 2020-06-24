@@ -5,7 +5,7 @@ const Keccak256LockScript = require('../keyper/locks/keccak256');
 const AnyPayLockScript = require('../keyper/locks/anypay');
 
 export const createScriptObj = (publicKey, type, address) => {
-  if (type == 'Secp256k1') {
+  if (type === 'Secp256k1') {
     const secp256k1 = new Secp256k1LockScript();
     const secp256k1Script = secp256k1.script(publicKey);
     const scriptObj = {
@@ -19,7 +19,7 @@ export const createScriptObj = (publicKey, type, address) => {
     };
     return scriptObj;
   }
-  if (type == 'AnyPay') {
+  if (type === 'AnyPay') {
     const anypay = new AnyPayLockScript();
     const anypayScript = anypay.script(publicKey);
     const scriptObj = {
@@ -33,7 +33,7 @@ export const createScriptObj = (publicKey, type, address) => {
     };
     return scriptObj;
   }
-  if (type == 'Keccak256') {
+  if (type === 'Keccak256') {
     const keccak256 = new Keccak256LockScript();
     const keccak256Script = keccak256.script(publicKey);
     const scriptObj = {
