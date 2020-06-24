@@ -5,11 +5,10 @@ import { textToHex, textToBytesLength } from '@utils/index';
 import * as _ from 'lodash';
 import { getDepFromLockType } from '@utils/deps';
 import { getUnspentCells } from '@utils/apis';
+import CKB from '@nervosnetwork/ckb-sdk-core';
 import { createRawTx, createAnyPayRawTx, createUpdateDataRawTx } from './txGenerator';
 import { configService } from '../../config';
 import { signTx } from '../addKeyperWallet';
-
-const CKB = require('@nervosnetwork/ckb-sdk-core').default;
 
 const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
 

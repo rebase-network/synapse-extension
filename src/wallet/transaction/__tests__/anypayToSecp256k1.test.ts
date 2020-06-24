@@ -1,10 +1,9 @@
 import { BN } from 'bn.js';
-import { createRawTx } from '../txGenerator';
 import { addressToScript } from '@keyper/specs';
+import CKB from '@nervosnetwork/ckb-sdk-core';
+import { createRawTx } from '../txGenerator';
 import { getUnspentCells } from '../../../utils/apis';
 import { configService } from '../../../config';
-const CKB = require('@nervosnetwork/ckb-sdk-core').default;
-
 import { bobAddresses, aliceAddresses } from '../../../test/fixture/address';
 import { anypayDep } from '../../../test/fixture/deps';
 
@@ -12,7 +11,7 @@ describe('Transaction test', () => {
   const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
 
   it('send transaction from anypay to secp256k1', async () => {
-    const privateKey = bobAddresses.privateKey;
+    const { privateKey } = bobAddresses;
     const fromAddress = bobAddresses.anyPay.address;
     const toAddress = aliceAddresses.secp256k1.address;
 

@@ -3,12 +3,11 @@ import { addressToScript } from '@keyper/specs';
 import { textToHex, textToBytesLength } from '@utils/index';
 import { getUnspentCells } from '@src/utils/apis';
 import * as _ from 'lodash';
+import CKB from '@nervosnetwork/ckb-sdk-core';
 import { createRawTxUpdateData, createUpdateDataRawTx } from '../txGenerator';
 import { configService } from '../../../config';
 import { bobAddresses } from '../../../test/fixture/address';
 import { secp256k1Dep } from '../../../test/fixture/deps';
-
-const CKB = require('@nervosnetwork/ckb-sdk-core').default;
 
 describe('send Transaction test', () => {
   const ckb = new CKB(configService.CKB_RPC_ENDPOINT);

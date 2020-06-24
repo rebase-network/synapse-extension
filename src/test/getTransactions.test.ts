@@ -1,7 +1,6 @@
-const CKB = require('@nervosnetwork/ckb-sdk-core').default;
-
-import { configService } from '../config';
+import CKB from '@nervosnetwork/ckb-sdk-core';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
+import { configService } from '../config';
 
 const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
 export const EMPTY_TX_HASH = '0x0000000000000000000000000000000000000000000000000000000000000000';
@@ -69,7 +68,7 @@ const getReceivedCapacity = (args, outputs) => {
   let capacity = BigInt(0);
   for (let index = 0; index < outputs.length; index++) {
     if (outputs[index].lock.args == args) {
-      capacity = capacity + BigInt(outputs[index].capacity);
+      capacity += BigInt(outputs[index].capacity);
     }
   }
   return capacity;
@@ -79,7 +78,7 @@ const getSendCapacity = (args, outputs) => {
   let capacity = BigInt(0);
   for (let index = 0; index < outputs.length; index++) {
     if (outputs[index].lock.args != args) {
-      capacity = capacity + BigInt(outputs[index].capacity);
+      capacity += BigInt(outputs[index].capacity);
     }
   }
   return capacity;
@@ -99,14 +98,14 @@ describe('get_transaction test', () => {
 
       const txObj = txListResult[index];
 
-      newTx['address'] = address;
-      newTx['hash'] = txObj.tx_hash;
+      newTx.address = address;
+      newTx.hash = txObj.tx_hash;
       const dataItem0 = txObj.dataItem[0];
       if (dataItem0.block_number) {
-        newTx['blockNum'] = parseInt(dataItem0.block_number, 16);
+        newTx.blockNum = parseInt(dataItem0.block_number, 16);
         const header = await ckb.rpc.getHeaderByNumber(dataItem0.block_number);
         if (!header) continue;
-        newTx['timestamp'] = parseInt(header.timestamp, 16);
+        newTx.timestamp = parseInt(header.timestamp, 16);
       }
       const { transaction } = await ckb.rpc.getTransaction(txObj.tx_hash);
       const { inputs, outputs } = transaction;
@@ -116,14 +115,14 @@ describe('get_transaction test', () => {
       isContainedOutput = isContained('output', txObj.dataItem);
       if (isContainedInput == null && isContainedOutput != null) {
         const receiveCap = getReceivedCapacity(args, outputs);
-        newTx['capacity'] = receiveCap;
-        newTx['tag'] = 'Received';
+        newTx.capacity = receiveCap;
+        newTx.tag = 'Received';
       }
 
       if (isContainedInput != null && isContainedOutput != null) {
         const sendCapacity = getSendCapacity(args, outputs);
-        newTx['capacity'] = sendCapacity;
-        newTx['tag'] = 'Send';
+        newTx.capacity = sendCapacity;
+        newTx.tag = 'Send';
       }
       newTxs.push(newTx);
     }
