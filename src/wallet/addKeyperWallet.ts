@@ -24,6 +24,8 @@ export async function addKeyperWallet(privateKey, password, entropyKeystore, roo
 
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
   await saveWallets(privateKey, keystore, accounts, entropyKeystore, rootKeystore);
+
+  return accounts;
 }
 
 function loadWalletsInStorage() {

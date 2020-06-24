@@ -33,6 +33,12 @@ import addExternalMessageListener from '@background/messageHandlers';
 import { WEB_PAGE } from '@src/utils/message/constants';
 import { sendToWebPage } from '@background/messageHandlers/proxy';
 
+import { indexerAddresses, getTipBlockNumber } from '@background/indexer';
+
+/**
+ * Listen messages from popup
+ */
+
 let wallets = [];
 let currentWallet = {};
 let addressesList = [];
@@ -91,7 +97,11 @@ chrome.runtime.onMessage.addListener(async (request) => {
       };
     } else {
       // Add Keyper to Synapse
-      await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
+      const accounts = await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
+
+      // add addresses indexer
+      await indexerAddresses(accounts);
+
       wallets = getWallets();
       addressesList = getAddressesList();
       currentWallet = getCurrentWallet();
@@ -160,7 +170,11 @@ chrome.runtime.onMessage.addListener(async (request) => {
       };
     } else {
       // Add Keyper to Synapse
-      await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
+      const accounts = await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
+
+      const currBlkNumber = await getTipBlockNumber();
+      // add addresses indexer
+      await indexerAddresses(accounts, currBlkNumber);
       wallets = getWallets();
       addressesList = getAddressesList();
       currentWallet = getCurrentWallet();
@@ -450,7 +464,10 @@ chrome.runtime.onMessage.addListener(async (request) => {
         if (privateKey.startsWith('0x')) {
           privateKey = privateKey.substr(2);
         }
-        await addKeyperWallet(privateKey, password, '', '');
+        const accounts = await addKeyperWallet(privateKey, password, '', '');
+        // add addresses indexer
+        await indexerAddresses(accounts);
+
         wallets = getWallets();
         addressesList = getAddressesList();
         currentWallet = getCurrentWallet();
@@ -515,7 +532,10 @@ chrome.runtime.onMessage.addListener(async (request) => {
           lock: addresses[0].lock,
         };
       } else {
-        await addKeyperWallet(privateKey, uPassword, '', '');
+        const accounts = await addKeyperWallet(privateKey, uPassword, '', '');
+        // add addresses indexer
+        await indexerAddresses(accounts);
+
         wallets = getWallets();
         addressesList = getAddressesList();
         currentWallet = getCurrentWallet();

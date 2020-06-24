@@ -29,7 +29,7 @@ export const getUnspentCells = async (lockHash: string) => {
 };
 
 export const getTxHistories = async (scriptObj): Promise<any> => {
-  const url = `${configService.CACHE_LAYER_ENDPOINT}/cell/getTxHistories`;
+  const url = `${configService.CACHE_LAYER_ENDPOINT}/cell/getTxHistoriesByIndexer`;
   const result = await Axios.post(url, scriptObj);
   return result.data;
 };
