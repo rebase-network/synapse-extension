@@ -1,5 +1,8 @@
 const windowCrypto = require('window-crypto');
 const crypto = require('crypto');
+require('dotenv').config({
+  path: './.env',
+});
 
 Object.assign(global.crypto, {
   ...windowCrypto,
