@@ -194,16 +194,13 @@ export default function (props) {
     chrome.runtime.onMessage.addListener((message) => {
       const messageHandled = _.has(message, 'success');
 
-      if (messageHandled && message.type === MESSAGE_TYPE.EXTERNAL_SIGN_SEND) {
+      if (messageHandled && message.type === MESSAGE_TYPE.SEND_TX_OVER) {
         setSending(false);
         if (message.success) {
           onSelectTx(message?.data?.tx);
         } else {
           setErrMsg('TX failed to send, please try again later');
         }
-
-        // send result to content script
-        browser.runtime.sendMessage(message);
       }
     });
     // setLoading(true);

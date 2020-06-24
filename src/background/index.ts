@@ -323,7 +323,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
   }
 
   // send transactioin
-  if (request.type === MESSAGE_TYPE.RESQUEST_SEND_TX) {
+  if (request.type === MESSAGE_TYPE.REQUEST_SEND_TX) {
     chrome.storage.local.get(['currentWallet', 'wallets'], async (result) => {
       const toAddress = request.address.trim();
       const capacity = request.capacity * 10 ** 8;
@@ -341,14 +341,26 @@ chrome.runtime.onMessage.addListener(async (request) => {
       const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
       const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
 
-      const notificationMsg = {
-        type: 'basic',
-        iconUrl: 'logo-32.png',
-        title: 'Send TX',
-        message: 'Your TX has been sent',
+      const responseMsg = {
+        type: MESSAGE_TYPE.SEND_TX_OVER,
+        success: false,
+        message: 'tx failed to send',
+        data: {
+          hash: '',
+          tx: {
+            from: fromAddress,
+            to: toAddress,
+            amount: capacity.toString(),
+            fee: fee.toString(),
+            hash: '',
+            status: 'Pending',
+            blockNum: 'Pending',
+          },
+        },
       };
+
       try {
-        await sendTransaction(
+        const sendTxHash = await sendTransaction(
           privateKey,
           fromAddress,
           toAddress,
@@ -360,11 +372,15 @@ chrome.runtime.onMessage.addListener(async (request) => {
           publicKey.replace('0x', ''),
           toData,
         );
+        responseMsg.data.hash = sendTxHash;
+        responseMsg.data.tx.hash = sendTxHash;
+        responseMsg.success = true;
       } catch (error) {
-        notificationMsg.message = `Failed to send tx: ${error}`;
+        responseMsg.message = `Failed to send tx: ${error}`;
       }
 
-      browser.notifications.create(notificationMsg);
+      // sedb back to extension UI
+      chrome.runtime.sendMessage(responseMsg);
     });
   }
 
