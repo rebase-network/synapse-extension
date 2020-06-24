@@ -43,7 +43,6 @@ describe('export mnemonic page', () => {
 
   it('should change form fields: password', async () => {
     const password = screen.getByLabelText('Password');
-    screen.debug(password);
 
     expect(password).toBeInTheDocument();
     expect(password).toBeEmpty();
