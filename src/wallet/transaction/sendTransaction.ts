@@ -41,8 +41,10 @@ export const sendTransaction = async (
   const toLockScript = addressToScript(toAddress);
   const toLockHash = ckb.utils.scriptToHash(toLockScript);
   const unspentWalletCells = await getUnspentCells(toLockHash);
+  let realTxHash;
+  let config = { index: 0, length: -1 };
+
   if (unspentWalletCells.length === 0) {
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     rawTransaction = await generateTx(
       fromAddress,
       toAddress,
@@ -52,16 +54,9 @@ export const sendTransaction = async (
       lockType,
       toDataHex,
     );
-
-    const config = { index: 0, length: -1 };
-    const signedTx = await signTx(lockHash, password, rawTransaction, config, publicKey);
-
-    const realTxHash = await ckb.rpc.sendTransaction(signedTx);
-    return realTxHash;
   }
 
   if (toLockType === 'Secp256k1') {
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     rawTransaction = await generateTx(
       fromAddress,
       toAddress,
@@ -71,14 +66,9 @@ export const sendTransaction = async (
       lockType,
       toDataHex,
     );
-    const config = { index: 0, length: -1 };
-    const signedTx = await signTx(lockHash, password, rawTransaction, config, publicKey);
-
-    const realTxHash = await ckb.rpc.sendTransaction(signedTx);
-    return realTxHash;
+    config = { index: 0, length: -1 };
   }
   if (toLockType === 'AnyPay') {
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     rawTransaction = await generateAnyPayTx(
       fromAddress,
       toAddress,
@@ -88,13 +78,16 @@ export const sendTransaction = async (
       lockType,
       toLockType,
     );
-    const config = { index: 1, length: 1 };
-    const signedTx = await signTx(lockHash, password, rawTransaction, config, publicKey);
-
-    const realTxHash = await ckb.rpc.sendTransaction(signedTx);
-    return realTxHash;
+    config = { index: 1, length: 1 };
   }
-  return null;
+
+  const signedTx = await signTx(lockHash, password, rawTransaction, config, publicKey);
+  try {
+    realTxHash = await ckb.rpc.sendTransaction(signedTx);
+  } catch (error) {
+    console.error(`Failed to send tx: ${error}`);
+  }
+  return realTxHash;
 };
 
 export const generateTx = async (
