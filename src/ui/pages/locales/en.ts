@@ -1,3 +1,5 @@
+// prettier-ignore
+// eslint-disable max-len
 export default {
   'Import Mnemonic': 'Import Mnemonic',
   'Generate Mnemonic': 'Generate Mnemonic',
@@ -34,12 +36,12 @@ export default {
   'Send CKB': 'Send CKB',
   'The transaction is sending, please wait for seconds...': 'The transaction is sending, please wait for seconds...',
   'Should be greater than ': 'Should be greater than ',
-  'The transaction failed to send, please try again later':
-    'The transaction failed to send, please try again later',
+  'The transaction failed to send, please try again later': 'The transaction failed to send, please try again later',
   Cancel: 'Cancel',
   Capacity: 'Capacity',
   To: 'To',
   Home: 'Home',
   'Copy to clipboard': 'Copy to clipboard',
   Copied: 'Copied',
+  Auth: 'Auth',
 };

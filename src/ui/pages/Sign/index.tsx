@@ -87,7 +87,7 @@ export default function (props: AppProps, state: AppState) {
 
   return (
     <div>
-      <PageNav to="/setting" title={<FormattedMessage id="Sign TX" />} />
+      <PageNav to="/setting" title={<FormattedMessage id="Auth" />} />
       <div className={classes.container}>
         <Formik
           initialValues={{ password: '' }}
