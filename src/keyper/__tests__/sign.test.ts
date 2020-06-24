@@ -1,6 +1,6 @@
 import { sign } from '@src/keyper/sign';
 import { aliceAddresses } from '@src/test/fixture/address';
-import { txHash } from './fixture';
+import { txHash } from '../fixture';
 
 describe('Sign tx with secp256k1 lock', () => {
   it('sign a tx hash', () => {
