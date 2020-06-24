@@ -322,6 +322,52 @@ chrome.runtime.onMessage.addListener(async (request) => {
     browser.notifications.create(notificationMsg);
   }
 
+  // send transactioin
+  if (request.type === MESSAGE_TYPE.RESQUEST_SEND_TX) {
+    chrome.storage.local.get(['currentWallet', 'wallets'], async (result) => {
+      const toAddress = request.address.trim();
+      const capacity = request.capacity * 10 ** 8;
+      const fee = request.fee * 10 ** 8;
+      const password = request.password.trim();
+      const toData = request.data.trim();
+      const {
+        address: fromAddress,
+        publicKey,
+        lock: lockHash,
+        type: lockType,
+      } = result.currentWallet;
+      const wallet = findInWalletsByPublicKey(publicKey, result.wallets);
+      const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
+      const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
+      const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
+
+      const notificationMsg = {
+        type: 'basic',
+        iconUrl: 'logo-32.png',
+        title: 'Send TX',
+        message: 'Your TX has been sent',
+      };
+      try {
+        await sendTransaction(
+          privateKey,
+          fromAddress,
+          toAddress,
+          BigInt(capacity),
+          BigInt(fee),
+          lockHash,
+          lockType,
+          password,
+          publicKey.replace('0x', ''),
+          toData,
+        );
+      } catch (error) {
+        notificationMsg.message = `Failed to send tx: ${error}`;
+      }
+
+      browser.notifications.create(notificationMsg);
+    });
+  }
+
   // transactioin detail
   if (request.type === MESSAGE_TYPE.REQUEST_TX_DETAIL) {
     const { txHash } = request.message;

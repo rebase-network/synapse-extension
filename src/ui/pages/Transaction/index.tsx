@@ -232,7 +232,7 @@ export default function (props) {
     chrome.runtime.sendMessage({
       ...values,
       network,
-      type: MESSAGE_TYPE.RESQUEST_SEND_TX,
+      type: MESSAGE_TYPE.REQUEST_SEND_TX,
     });
   };
 
