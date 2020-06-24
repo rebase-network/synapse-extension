@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as browser from 'webextension-polyfill';
 import * as _ from 'lodash';
 import { Link } from 'react-router-dom';
 import * as queryString from 'query-string';
@@ -165,10 +164,10 @@ export const innerForm = (props: AppProps) => {
   );
 };
 
-export default function (props) {
+export default () => {
   const classes = useStyles();
   const intl = useIntl();
-  const searchParams = queryString.parse(location.search);
+  const searchParams = queryString.parse(window.location.search);
 
   const { network } = React.useContext(AppContext);
   const [sending, setSending] = React.useState(false);
@@ -308,4 +307,4 @@ export default function (props) {
       {txModal}
     </div>
   );
-}
+};
