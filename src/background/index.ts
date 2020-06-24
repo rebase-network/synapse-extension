@@ -344,7 +344,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       const responseMsg = {
         type: MESSAGE_TYPE.SEND_TX_OVER,
         success: false,
-        message: 'tx failed to send',
+        message: 'Failed to send tx',
         data: {
           hash: '',
           tx: {
@@ -375,8 +375,9 @@ chrome.runtime.onMessage.addListener(async (request) => {
         responseMsg.data.hash = sendTxHash;
         responseMsg.data.tx.hash = sendTxHash;
         responseMsg.success = true;
+        responseMsg.message = 'TX is sent';
       } catch (error) {
-        responseMsg.message = `Failed to send tx: ${error}`;
+        responseMsg.message = `${responseMsg.message}: ${error}`;
       }
 
       // sedb back to extension UI
