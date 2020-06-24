@@ -17,10 +17,6 @@ class ConfigService {
     return process.env.CKB_RPC_ENDPOINT || 'http://106.13.40.34:8117/rpc';
   }
 
-  get CKB_INDEXER_ENDPOINT(): string {
-    return process.env.CKB_INDEXER_ENDPOINT || 'http://106.13.40.34:8117/indexer';
-  }
-
   get CACHE_LAYER_ENDPOINT(): string {
     return process.env.CACHE_LAYER_ENDPOINT || 'http://106.13.40.34:2333';
   }
@@ -43,7 +39,6 @@ class ConfigService {
 const configService = new ConfigService();
 // .ensureValues([
 //   'CKB_RPC_ENDPOINT',
-//   'CKB_INDEXER_ENDPOINT',
 //   'CACHE_LAYER_ENDPOINT',
 // ])
 
