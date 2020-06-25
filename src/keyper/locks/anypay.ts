@@ -4,7 +4,7 @@
 //   SignatureAlgorithm
 // } = require("@keyper/specs/lib");
 
-import * as numberToBN from 'number-to-bn';
+import numberToBN from 'number-to-bn';
 import * as utils from '@nervosnetwork/ckb-sdk-utils/lib';
 import { SignatureAlgorithm } from '@keyper/specs/lib';
 

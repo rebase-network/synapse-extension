@@ -1,6 +1,6 @@
 import { BN } from 'bn.js';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils/lib';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 export function createRawTx(
   toAmount,

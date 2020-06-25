@@ -1,6 +1,6 @@
 import * as browser from 'webextension-polyfill';
 import { BACKGROUND_PORT, WEB_PAGE, CONTENT_SCRIPT } from '@utils/message/constants';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 function injectCustomJs(jsPath) {
   const jsPathToInject = jsPath || 'js/injectedScript.js';

@@ -21,7 +21,7 @@ import {
 } from '@src/wallet/addKeyperWallet';
 import * as WalletKeystore from '@src/wallet/keystore';
 import * as PasswordKeystore from '@src/wallet/passwordEncryptor';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import {
   saveToStorage,
   findInWalletsByPublicKey,

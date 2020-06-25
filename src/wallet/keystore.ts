@@ -1,11 +1,7 @@
-import * as crypto from 'crypto';
-// const blake2b = require("blake2b");
-// const randomBytes = require( "randombytes");
-// const scrypt = require( "scrypt.js");
-// const uuidv4 = require( "uuid/v4");
+import crypto from 'crypto';
 import * as blake2b from 'blake2b';
-import * as randomBytes from 'randombytes';
-import * as scrypt from 'scrypt.js';
+import randomBytes from 'randombytes';
+import scrypt from 'scrypt.js';
 import { v4 as uuidv4 } from 'uuid';
 
 interface V3Params {

@@ -1,5 +1,5 @@
 import CKB from '@nervosnetwork/ckb-sdk-core';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { configService } from '../config';
 
 const ckb = new CKB(configService.CKB_RPC_ENDPOINT);

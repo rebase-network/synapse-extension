@@ -1,9 +1,9 @@
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Button, TextField } from '@material-ui/core';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import * as queryString from 'query-string';
+import queryString from 'query-string';
 import { makeStyles } from '@material-ui/core/styles';
 import PageNav from '@ui/Components/PageNav';
 import * as browser from 'webextension-polyfill';

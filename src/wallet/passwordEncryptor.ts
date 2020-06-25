@@ -1,4 +1,4 @@
-import * as passworder from 'browser-passworder';
+import passworder from 'browser-passworder';
 
 export async function encrypt(privKey: Buffer, password: string) {
   return await passworder.encrypt(password, privKey);

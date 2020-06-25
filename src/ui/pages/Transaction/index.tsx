@@ -1,7 +1,7 @@
-import * as React from 'react';
-import * as _ from 'lodash';
+import React from 'react';
+import _ from 'lodash';
 import { Link } from 'react-router-dom';
-import * as queryString from 'query-string';
+import queryString from 'query-string';
 import { Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';

@@ -2,7 +2,8 @@ import { SignatureAlgorithm } from '@keyper/specs/lib';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils/lib';
 import { scriptToAddress } from '@keyper/specs/lib/address';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
-import * as _ from 'lodash';
+
+import _ from 'lodash';
 import * as Keystore from '../wallet/passwordEncryptor';
 import { getKeystoreFromWallets } from '../wallet/addKeyperWallet';
 import { getDepFromLockType } from '../utils/deps';

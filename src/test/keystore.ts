@@ -1,5 +1,5 @@
-import * as crypto from 'crypto';
 const scryptsy = require('scrypt.js');
+import crypto from 'crypto';
 
 import { Keccak } from 'sha3';
 import { v4 as uuid } from 'uuid';

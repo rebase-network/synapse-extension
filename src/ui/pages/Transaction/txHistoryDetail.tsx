@@ -1,10 +1,11 @@
-import * as React from 'react';
 import Title from '../../Components/Title';
 import { Button, TextField } from '@material-ui/core';
 
 import { MESSAGE_TYPE } from '../../../utils/constants';
 import { useHistory } from 'react-router-dom';
 
+import React from 'react';
+import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -12,7 +13,6 @@ import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import PageNav from '../../Components/PageNav';
 
-import * as moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
   container: {

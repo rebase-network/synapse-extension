@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import { Link } from 'react-router-dom';

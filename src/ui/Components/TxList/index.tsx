@@ -1,6 +1,5 @@
-import * as React from 'react';
-import * as moment from 'moment';
-import * as _ from 'lodash';
+import React from 'react';
+import moment from 'moment';
 import { FormattedMessage } from 'react-intl';
 import { ListItem, ListItemText, List, Link, Tooltip } from '@material-ui/core';
 import CallMadeIcon from '@material-ui/icons/CallMade';

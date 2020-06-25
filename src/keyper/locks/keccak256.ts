@@ -6,9 +6,9 @@
 //   SignatureAlgorithm
 // } = require("@keyper/specs/lib");
 
-import * as numberToBN from 'number-to-bn';
-import * as secp256k1 from 'secp256k1';
-import * as createKeccakHash from 'keccak';
+import numberToBN from 'number-to-bn';
+import secp256k1 from 'secp256k1';
+import createKeccakHash from 'keccak';
 import * as utils from '@nervosnetwork/ckb-sdk-utils/lib';
 import { SignatureAlgorithm } from '@keyper/specs/lib';
 
