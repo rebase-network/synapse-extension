@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import * as blake2b from 'blake2b';
+import blake2b from 'blake2b';
 import randomBytes from 'randombytes';
 import scrypt from 'scrypt.js';
 import { v4 as uuidv4 } from 'uuid';
