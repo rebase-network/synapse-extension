@@ -1,5 +1,5 @@
-import * as React from 'react';
-import * as moment from 'moment';
+import React from 'react';
+import moment from 'moment';
 import { Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -128,7 +128,7 @@ export default function (props: AppProps, state: AppState) {
             <Link
               rel="noreferrer"
               target="_blank"
-              href={'https://explorer.nervos.org/aggron/transaction/' + txHash}
+              href={`https://explorer.nervos.org/aggron/transaction/${txHash}`}
             >
               <Typography className={classes.typography}>{txHash}</Typography>
             </Link>

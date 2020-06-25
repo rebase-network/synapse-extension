@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import App from './index';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';

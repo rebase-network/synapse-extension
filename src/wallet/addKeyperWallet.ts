@@ -1,5 +1,5 @@
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { KEYSTORE_TYPE } from '../utils/constants';
 import Address, { AddressPrefix } from './address';
 

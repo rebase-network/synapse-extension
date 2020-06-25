@@ -1,5 +1,4 @@
-import * as browser from 'webextension-polyfill';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { MESSAGE_TYPE } from '@utils/constants';
 import sendToPopup from './sendToPopup';
 import getAddressInfoHandler from './getAddressInfo';

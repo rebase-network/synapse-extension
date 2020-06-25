@@ -1,11 +1,7 @@
-import * as crypto from 'crypto';
-// const blake2b = require("blake2b");
-// const randomBytes = require( "randombytes");
-// const scrypt = require( "scrypt.js");
-// const uuidv4 = require( "uuid/v4");
-import * as blake2b from 'blake2b';
-import * as randomBytes from 'randombytes';
-import * as scrypt from 'scrypt.js';
+import crypto from 'crypto';
+import blake2b from 'blake2b';
+import randomBytes from 'randombytes';
+import scrypt from 'scrypt.js';
 import { v4 as uuidv4 } from 'uuid';
 
 interface V3Params {
@@ -42,7 +38,7 @@ function validateHexString(paramName: string, str: string, length?: number) {
     return str;
   }
   if ((length as number) % 2) {
-    throw new Error(`Invalid length argument, must be an even number`);
+    throw new Error('Invalid length argument, must be an even number');
   }
   if (typeof length === 'number' && str.length !== length) {
     throw new Error(`Invalid ${paramName}, string must be ${length} hex characters`);
@@ -305,7 +301,8 @@ export function decrypt(
     throw new Error('Not a V3 wallet');
   }
 
-  let derivedKey: Buffer, kdfparams: any;
+  let derivedKey: Buffer;
+  let kdfparams: any;
 
   if (json.crypto.kdf === 'scrypt') {
     kdfparams = json.crypto.kdfparams;
@@ -360,7 +357,8 @@ export function checkPasswd(input: string | V3Keystore, password: string): boole
     throw new Error('Not a V3 wallet');
   }
 
-  let derivedKey: Buffer, kdfparams: any;
+  let derivedKey: Buffer;
+  let kdfparams: any;
 
   if (json.crypto.kdf === 'scrypt') {
     kdfparams = json.crypto.kdfparams;

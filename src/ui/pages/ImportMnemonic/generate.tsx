@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Button, TextField } from '@material-ui/core';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';

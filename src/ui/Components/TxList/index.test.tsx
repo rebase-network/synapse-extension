@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import TxList from './index';
 import { txList } from './fixture';
 import { render, fireEvent, waitFor } from '@testing-library/react';

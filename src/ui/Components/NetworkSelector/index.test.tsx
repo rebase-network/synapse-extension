@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import NetworkSelector from './index';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';

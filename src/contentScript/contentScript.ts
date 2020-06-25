@@ -1,6 +1,5 @@
-import * as browser from 'webextension-polyfill';
 import { BACKGROUND_PORT, WEB_PAGE, CONTENT_SCRIPT } from '@utils/message/constants';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 function injectCustomJs(jsPath) {
   const jsPathToInject = jsPath || 'js/injectedScript.js';
@@ -24,7 +23,7 @@ try {
 // Refer to chrome extension messaging: https://developer.chrome.com/extensions/messaging
 
 // post and listen message(long live) from background
-const port = browser.runtime.connect({ name: 'knockknock' });
+const port = browser.runtime.connect('', { name: 'knockknock' });
 port.onMessage.addListener((message: any) => {
   const shouldHandleByMe = [WEB_PAGE, CONTENT_SCRIPT].indexOf(message.target) !== -1;
   const messageHandled = _.has(message, 'success');

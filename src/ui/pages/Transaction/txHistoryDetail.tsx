@@ -1,18 +1,11 @@
-import * as React from 'react';
-import Title from '../../Components/Title';
-import { Button, TextField } from '@material-ui/core';
-
-import { MESSAGE_TYPE } from '../../../utils/constants';
-import { useHistory } from 'react-router-dom';
-
+import React from 'react';
+import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import PageNav from '../../Components/PageNav';
-
-import * as moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -35,13 +28,14 @@ interface AppProps {}
 
 interface AppState {}
 
-export default function TxHistoryDetail(props: AppProps, state: AppState) {
-  const [tx, setTx] = React.useState({});
+export default function TxHistoryDetail(props: any) {
+  const [tx] = React.useState({} as any);
   const classes = useStyles();
+  const { status } = props;
 
   const viewTxInputs = (inputs) => {
     return inputs.map((item) => {
-      return <Typography>{item['address']}</Typography>;
+      return <Typography>{item.address}</Typography>;
     });
   };
 
@@ -63,9 +57,7 @@ export default function TxHistoryDetail(props: AppProps, state: AppState) {
             <Grid item xs zeroMinWidth>
               <Avatar>R</Avatar>
               <Typography noWrap>{status}</Typography>
-              <Typography noWrap>
-                {moment(tx['timestamp']).format('YYYY-MM-DD HH:mm:ss')}
-              </Typography>
+              <Typography noWrap>{moment(tx.timestamp).format('YYYY-MM-DD HH:mm:ss')}</Typography>
             </Grid>
           </Grid>
         </Paper>
@@ -81,13 +73,13 @@ export default function TxHistoryDetail(props: AppProps, state: AppState) {
             </Grid>
 
             <Grid item xs>
-              <Typography>{tx['amount'] / 10 ** 8} CKB</Typography>
+              <Typography>{tx.amount / 10 ** 8} CKB</Typography>
             </Grid>
           </Grid>
 
           <Grid container wrap="nowrap" spacing={2}>
             <Grid item>
-              <Typography noWrap>{tx['income'] ? `Received` : `Send`}</Typography>
+              <Typography noWrap>{tx.income ? 'Received' : 'Send'}</Typography>
             </Grid>
           </Grid>
 
@@ -96,7 +88,7 @@ export default function TxHistoryDetail(props: AppProps, state: AppState) {
               <Typography noWrap>Fee&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Typography>
             </Grid>
             <Grid item xs>
-              <Typography>{tx['fee']}</Typography>
+              <Typography>{tx.fee}</Typography>
             </Grid>
           </Grid>
 
@@ -105,7 +97,7 @@ export default function TxHistoryDetail(props: AppProps, state: AppState) {
               <Typography noWrap>Inputs &nbsp;&nbsp;</Typography>
             </Grid>
             <Grid item xs>
-              {viewTxInputs(tx['inputs'])}
+              {viewTxInputs(tx.inputs)}
             </Grid>
           </Grid>
           <Grid container wrap="nowrap" spacing={2}>
@@ -114,7 +106,7 @@ export default function TxHistoryDetail(props: AppProps, state: AppState) {
               <Typography noWrap>Outputs&nbsp; </Typography>
             </Grid>
             <Grid item xs>
-              {viewTxOutputs(tx['outputs'])}
+              {viewTxOutputs(tx.outputs)}
             </Grid>
           </Grid>
         </Paper>
@@ -130,7 +122,7 @@ export default function TxHistoryDetail(props: AppProps, state: AppState) {
               <Typography noWrap>Tx Hash</Typography>
             </Grid>
             <Grid item xs>
-              <Typography>{tx['hash']}</Typography>
+              <Typography>{tx.hash}</Typography>
             </Grid>
           </Grid>
           <Grid container wrap="nowrap" spacing={2}>
@@ -138,7 +130,7 @@ export default function TxHistoryDetail(props: AppProps, state: AppState) {
               <Typography noWrap>Block Number&nbsp;&nbsp;&nbsp;&nbsp;</Typography>
             </Grid>
             <Grid item xs>
-              <Typography>{tx['blockNum']}</Typography>
+              <Typography>{tx.blockNum}</Typography>
             </Grid>
           </Grid>
         </Paper>

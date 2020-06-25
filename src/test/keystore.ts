@@ -1,11 +1,12 @@
-import * as crypto from 'crypto';
-const scryptsy = require('scrypt.js');
+import crypto from 'crypto';
 
 import { Keccak } from 'sha3';
 import { v4 as uuid } from 'uuid';
 
 import { UnsupportedCipher, IncorrectPassword, InvalidKeystore } from '../exceptions';
-import { ExtendedPrivateKey } from '../../src/wallet/key';
+import { ExtendedPrivateKey } from '../wallet/key';
+
+const scryptsy = require('scrypt.js');
 
 const CIPHER = 'aes-128-ctr';
 const CKB_CLI_ORIGIN = 'ckb-cli';
@@ -34,7 +35,9 @@ interface Crypto {
 // Encrypt and save master extended private key.
 export default class Keystore {
   crypto: Crypto;
+
   id: string;
+
   version: number = 3;
 
   constructor(theCrypto: Crypto, id: string) {
@@ -46,7 +49,7 @@ export default class Keystore {
     try {
       const object = JSON.parse(json);
       if (object.origin === CKB_CLI_ORIGIN) {
-        throw 'Keystore from CKB CLI is not supported';
+        throw new Error('Keystore from CKB CLI is not supported');
       }
       return new Keystore(object.crypto, object.id);
     } catch {
@@ -191,10 +194,10 @@ export default class Keystore {
   };
 
   public toJson = () => {
-    let obj = {};
-    obj['id'] = this.id;
-    obj['version'] = this.version;
-    obj['crypto'] = this.crypto;
+    const obj: any = {};
+    obj.id = this.id;
+    obj.version = this.version;
+    obj.crypto = this.crypto;
     return obj;
   };
 }

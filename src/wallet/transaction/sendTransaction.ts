@@ -2,7 +2,7 @@ import { BN } from 'bn.js';
 import { addressToScript } from '@keyper/specs';
 import { ADDRESS_TYPE_CODEHASH } from '@utils/constants';
 import { textToHex, textToBytesLength } from '@utils/index';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { getDepFromLockType } from '@utils/deps';
 import { getUnspentCells } from '@utils/apis';
 import CKB from '@nervosnetwork/ckb-sdk-core';

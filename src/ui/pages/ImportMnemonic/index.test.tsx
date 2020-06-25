@@ -1,8 +1,8 @@
-import * as React from 'react';
+import React from 'react';
 import App from './index';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import * as chrome from 'sinon-chrome';
+import chrome from 'sinon-chrome';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import en from '../locales/en';
@@ -21,7 +21,9 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('import mnemonic page', () => {
-  let tree, container, getByTestId;
+  let tree;
+  let container;
+  let getByTestId;
 
   beforeAll(() => {
     window.chrome = chrome;

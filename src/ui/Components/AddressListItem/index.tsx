@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import {
   makeStyles,
   Theme,
@@ -87,18 +87,18 @@ export default function (props: AppProps, state: AppState) {
         <ListItemText
           primary={truncateAddress(address)}
           secondary={
-            <React.Fragment>
+            <>
               <Typography
                 component="span"
                 variant="body2"
                 className={classes.inline}
                 color="textPrimary"
               >
-                {capacity + ' CKB'}
+                {`${capacity} CKB`}
               </Typography>
               <br />
               {type}
-            </React.Fragment>
+            </>
           }
         />
       </ListItem>
