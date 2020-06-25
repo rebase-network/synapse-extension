@@ -1,4 +1,4 @@
-import * as crypto from 'crypto';
+import crypto from 'crypto';
 
 // import Address, { AddressType, AddressPrefix } from './address'
 // import Keychain, { privateToPublic } from './keychain'

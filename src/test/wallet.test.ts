@@ -1,4 +1,4 @@
-import * as chrome from 'sinon-chrome';
+import chrome from 'sinon-chrome';
 import browser from 'sinon-chrome/webextensions';
 import { generateMnemonic, AccountExtendedPublicKey, ExtendedPrivateKey } from '../wallet/key';
 import Keystore from './keystore';
