@@ -10,6 +10,8 @@ module.exports = {
     'import/no-extraneous-dependencies': [error, {
       devDependencies: true
     }],
+    'no-plusplus': [error, {
+      allowForLoopAfterthoughts: true
     }]
   }
 };
