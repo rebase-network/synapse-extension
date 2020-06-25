@@ -7,10 +7,10 @@ module.exports = {
     project: './tsconfig.json',
   },
   rules: {
-    'import/no-extraneous-dependencies': [error, {
+    'import/no-extraneous-dependencies': ["warn", {
       devDependencies: true
     }],
-    'no-plusplus': [error, {
+    'no-plusplus': ["warn", {
       allowForLoopAfterthoughts: true
     }]
   }
