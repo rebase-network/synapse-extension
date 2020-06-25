@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { Button, TextField } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 import Title from '../../Components/Title';
@@ -20,21 +20,11 @@ interface AppProps {}
 
 interface AppState {}
 
-export const innerForm = (props) => {
+export const innerForm = (props: any) => {
   const classes = useStyles();
   const intl = useIntl();
 
-  const {
-    values,
-    touched,
-    errors,
-    dirty,
-    isSubmitting,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    handleReset,
-  } = props;
+  const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
 
   return (
     <Form className="form-mnemonic" id="form-mnemonic" onSubmit={handleSubmit}>

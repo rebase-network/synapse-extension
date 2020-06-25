@@ -3,12 +3,12 @@ import moment from 'moment';
 import { FormattedMessage } from 'react-intl';
 import { ListItem, ListItemText, List, Link, Tooltip } from '@material-ui/core';
 import CallMadeIcon from '@material-ui/icons/CallMade';
-import { createStyles, withStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
-import { EXPLORER_URL } from '../../../utils/constants';
+import { EXPLORER_URL } from '@utils/constants';
+import { shannonToCKBFormatter } from '@utils/formatters';
 import Modal from '../Modal';
 import TxDetail from '../TxDetail';
-import { shannonToCKBFormatter } from '../../../utils/formatters';
 
 const useStyles = makeStyles({
   list: {

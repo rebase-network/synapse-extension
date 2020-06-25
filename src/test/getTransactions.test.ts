@@ -67,7 +67,7 @@ const extractPayloadFromAddress = (address: string) => {
 const getReceivedCapacity = (args, outputs) => {
   let capacity = BigInt(0);
   for (let index = 0; index < outputs.length; index++) {
-    if (outputs[index].lock.args == args) {
+    if (outputs[index].lock.args === args) {
       capacity += BigInt(outputs[index].capacity);
     }
   }
@@ -77,7 +77,7 @@ const getReceivedCapacity = (args, outputs) => {
 const getSendCapacity = (args, outputs) => {
   let capacity = BigInt(0);
   for (let index = 0; index < outputs.length; index++) {
-    if (outputs[index].lock.args != args) {
+    if (outputs[index].lock.args !== args) {
       capacity += BigInt(outputs[index].capacity);
     }
   }
@@ -91,7 +91,7 @@ describe('get_transaction test', () => {
 
     const txListResult = txListObjCluster(txListObjects);
     for (let index = 0; index < txListResult.length; index++) {
-      const newTx = {};
+      const newTx: any = {};
 
       let isContainedInput = null;
       let isContainedOutput = null;
@@ -108,7 +108,7 @@ describe('get_transaction test', () => {
         newTx.timestamp = parseInt(header.timestamp, 16);
       }
       const { transaction } = await ckb.rpc.getTransaction(txObj.tx_hash);
-      const { inputs, outputs } = transaction;
+      const { outputs } = transaction;
       const args = extractPayloadFromAddress(address);
 
       isContainedInput = isContained('input', txObj.dataItem);

@@ -128,7 +128,7 @@ export default function (props: AppProps, state: AppState) {
             <Link
               rel="noreferrer"
               target="_blank"
-              href={'https://explorer.nervos.org/aggron/transaction/' + txHash}
+              href={`https://explorer.nervos.org/aggron/transaction/${txHash}`}
             >
               <Typography className={classes.typography}>{txHash}</Typography>
             </Link>

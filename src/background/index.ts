@@ -1,4 +1,6 @@
-import * as browser from 'webextension-polyfill';
+// eslint-disable-next-line spaced-comment
+/// <reference types="@types/firefox-webext-browser" />
+
 import {
   mnemonicToSeedSync,
   validateMnemonic,
@@ -17,7 +19,6 @@ import {
   getAddressesList,
   getCurrentWallet,
   getWallets,
-  signTx,
 } from '@src/wallet/addKeyperWallet';
 import * as WalletKeystore from '@src/wallet/keystore';
 import * as PasswordKeystore from '@src/wallet/passwordEncryptor';
@@ -217,7 +218,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       },
     };
 
-    const notificationMsg = {
+    const notificationMsg: browser.notifications.CreateNotificationOptions = {
       type: 'basic',
       iconUrl: 'logo-32.png',
       title: 'TX failed to sign',
@@ -256,7 +257,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       },
     };
 
-    const notificationMsg = {
+    const notificationMsg: browser.notifications.CreateNotificationOptions = {
       type: 'basic',
       iconUrl: 'logo-32.png',
       title: 'TX failed to sign',
@@ -278,13 +279,11 @@ chrome.runtime.onMessage.addListener(async (request) => {
     }
 
     sendToWebPage(responseMsg);
-
     browser.notifications.create(notificationMsg);
   }
 
   // send tx
   if (request.type === MESSAGE_TYPE.EXTERNAL_SEND) {
-    console.log('get EXTERNAL_SEND mesage ============= ');
     const responseMsg = {
       type: request.type,
       // extension does not allow to send to web page(injected script) directly
@@ -297,7 +296,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       },
     };
 
-    const notificationMsg = {
+    const notificationMsg: browser.notifications.CreateNotificationOptions = {
       type: 'basic',
       iconUrl: 'logo-32.png',
       title: 'TX failed to sign',

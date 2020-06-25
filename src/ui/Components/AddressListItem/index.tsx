@@ -87,18 +87,18 @@ export default function (props: AppProps, state: AppState) {
         <ListItemText
           primary={truncateAddress(address)}
           secondary={
-            <React.Fragment>
+            <>
               <Typography
                 component="span"
                 variant="body2"
                 className={classes.inline}
                 color="textPrimary"
               >
-                {capacity + ' CKB'}
+                {`${capacity} CKB`}
               </Typography>
               <br />
               {type}
-            </React.Fragment>
+            </>
           }
         />
       </ListItem>

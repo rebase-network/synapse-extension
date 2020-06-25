@@ -1,14 +1,8 @@
-import chrome from 'sinon-chrome';
-import browser from 'sinon-chrome/webextensions';
-import { generateMnemonic, AccountExtendedPublicKey, ExtendedPrivateKey } from '../wallet/key';
+import * as CkbUtils from '@nervosnetwork/ckb-sdk-utils';
+import { generateMnemonic, ExtendedPrivateKey } from '../wallet/key';
 import Keystore from './keystore';
 import Keychain from '../wallet/keychain';
-import { entropyToMnemonic, mnemonicToSeedSync } from '../wallet/mnemonic';
-import Address, { AddressType, AddressPrefix } from '../wallet/address';
-
-const CkbUtils = require('@nervosnetwork/ckb-sdk-utils');
-// import * as browser from 'sinon-chrome/webextensions'
-// import extensions from 'sinon-chrome/extensions'
+import { mnemonicToSeedSync } from '../wallet/mnemonic';
 
 const fixture = {
   entropy: '7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f',
