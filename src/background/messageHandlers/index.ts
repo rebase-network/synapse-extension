@@ -1,4 +1,3 @@
-import * as browser from 'webextension-polyfill';
 import _ from 'lodash';
 import { MESSAGE_TYPE } from '@utils/constants';
 import sendToPopup from './sendToPopup';

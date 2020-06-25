@@ -1,4 +1,3 @@
-import * as browser from 'webextension-polyfill';
 
 export const sendToWebPage = (message) => {
   function sendToContentScript(tabs) {

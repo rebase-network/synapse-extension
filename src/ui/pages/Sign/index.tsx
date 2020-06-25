@@ -6,7 +6,6 @@ import * as Yup from 'yup';
 import queryString from 'query-string';
 import { makeStyles } from '@material-ui/core/styles';
 import PageNav from '@ui/Components/PageNav';
-import * as browser from 'webextension-polyfill';
 
 const useStyles = makeStyles({
   container: {

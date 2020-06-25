@@ -1,4 +1,3 @@
-import * as browser from 'webextension-polyfill';
 import { MESSAGE_TYPE } from '@utils/constants';
 import { WEB_PAGE } from '@utils/message/constants';
 import { getAddressInfo } from '@utils/apis';
