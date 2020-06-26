@@ -7,6 +7,9 @@ module.exports = {
     project: './tsconfig.json',
   },
   rules: {
+    "spaced-comment": ["error", "always", {
+      "markers": ["/"]
+    }],
     'import/no-extraneous-dependencies': ["warn", {
       devDependencies: true
     }],

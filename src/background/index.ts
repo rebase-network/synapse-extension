@@ -1,4 +1,3 @@
-// eslint-disable-next-line spaced-comment
 /// <reference types="@types/firefox-webext-browser" />
 
 import {
