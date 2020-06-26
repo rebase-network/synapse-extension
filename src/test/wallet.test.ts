@@ -78,9 +78,13 @@ describe('wallet', () => {
       .deriveChild(0, false)
       .privateKey.toString('hex')}`;
 
-    const hdtestnetAddr = CkbUtils.privateKeyToAddress(hdPrivateKey, {
-      prefix: 'ckt',
-    });
+    const defaultAddressOptions: CkbUtils.AddressOptions = {
+      prefix: CkbUtils.AddressPrefix.Testnet,
+      type: CkbUtils.AddressType.HashIdx,
+      codeHashOrCodeHashIndex: '0x00',
+    };
+
+    const hdtestnetAddr = CkbUtils.privateKeyToAddress(hdPrivateKey, defaultAddressOptions);
 
     expect(hdtestnetAddr).toBe('ckt1qyqt9ed4emcxyfed77ed0dp7kcm3mxsn97ls38jxjw');
   });
