@@ -1,5 +1,3 @@
-/// <reference types="@types/firefox-webext-browser" />
-
 import {
   mnemonicToSeedSync,
   validateMnemonic,
