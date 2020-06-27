@@ -126,9 +126,10 @@ export default function (props: AppProps) {
   React.useEffect(() => {
     setTxs([]); // clean tx data
 
-    chrome.storage.local.get(['currentWallet'], async ({ currentWallet }) => {
-      if (_.isEmpty(currentWallet)) return;
-      const { address: currentAddress, type: lockType, lock } = currentWallet;
+    browser.storage.local.get('currentWallet').then((result) => {
+      if (_.isEmpty(result)) return;
+
+      const { address: currentAddress, type: lockType, lock } = result.currentWallet;
       setAddress(currentAddress);
       if (lockType === 'Keccak256') {
         setDisableFlg(true);

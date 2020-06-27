@@ -1,9 +1,15 @@
 export function saveToStorage(wallets, currentWallet, addressesList) {
-  chrome.storage.local.set({ wallets }, () => {});
+  browser.storage.local.set({
+    wallets: wallets,
+  })
 
-  chrome.storage.local.set({ currentWallet }, () => {});
+  browser.storage.local.set({
+    currentWallet: currentWallet,
+  })
 
-  chrome.storage.local.set({ addressesList }, () => {});
+  browser.storage.local.set({
+    addressesList: addressesList,
+  })
 }
 
 export function findInWalletsByPublicKey(publicKey, wallets) {

@@ -26,7 +26,7 @@ export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
 
   React.useEffect(() => {
-    chrome.storage.local.get(['addressesList'], function (result) {
+    browser.storage.local.get('addressesList').then((result) => {
       setLoading(false);
       if (!result.addressesList) return;
       setAddressesList(result.addressesList);

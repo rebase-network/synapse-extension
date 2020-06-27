@@ -28,17 +28,9 @@ export async function addKeyperWallet(privateKey, password, entropyKeystore, roo
   return accounts;
 }
 
-function loadWalletsInStorage() {
-  return new Promise((resolve) => {
-    // eslint-disable-next-line func-names
-    chrome.storage.local.get('wallets', function (items) {
-      resolve(items.wallets);
-    });
-  });
-}
-
 export async function getWalletsInStorage() {
-  const walletsObj = await loadWalletsInStorage();
+  const walletsObj = await browser.storage.local.get("wallets");
+
   if (Array.isArray(walletsObj)) {
     wallets = walletsObj;
   }
