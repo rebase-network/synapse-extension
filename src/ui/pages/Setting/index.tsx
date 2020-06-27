@@ -3,8 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import { Link } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
-import PageNav from '../../Components/PageNav';
-import LanguageSelector from '../../Components/LanguageSelector';
+import PageNav from '@ui/Components/PageNav';
+import LanguageSelector from '@ui/Components/LanguageSelector';
 
 const useStyles = makeStyles({
   container: {
@@ -49,6 +49,8 @@ export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
   const intl = useIntl();
 
+  const isLogin = localStorage.getItem('IS_MNEMONIC_SET') === 'YES';
+
   const settingElem = settingItems.map((item) => {
     return (
       <Link to={item.link} className={classes.link} key={item.link}>
@@ -64,8 +66,7 @@ export default function (props: AppProps, state: AppState) {
     <div>
       <PageNav to="/" title={intl.formatMessage({ id: 'Home' })} />
       <div className={classes.container}>
-        {settingElem}
-
+        {isLogin ? settingElem : ''}
         <LanguageSelector />
       </div>
     </div>

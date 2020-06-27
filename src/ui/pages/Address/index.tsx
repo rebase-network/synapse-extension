@@ -126,7 +126,6 @@ export default function (props: AppProps) {
   React.useEffect(() => {
     setTxs([]); // clean tx data
 
-    // if (!addressFromUrl) {
     chrome.storage.local.get(['currentWallet'], async ({ currentWallet }) => {
       if (_.isEmpty(currentWallet)) return;
       const { address: currentAddress, type: lockType, lock } = currentWallet;
@@ -187,9 +186,9 @@ export default function (props: AppProps) {
     })();
   }, [open, address]);
 
-  const isMnemonicImported = localStorage.getItem('IS_MNEMONIC_SET') === 'YES';
+  const isLogin = localStorage.getItem('IS_MNEMONIC_SET') === 'YES';
 
-  if (!isMnemonicImported) {
+  if (!isLogin) {
     history.push('./mnemonic-setting');
   }
 
