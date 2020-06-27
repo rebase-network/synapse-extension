@@ -4,8 +4,8 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { makeStyles } from '@material-ui/core/styles';
-import { MESSAGE_TYPE } from '../../../utils/constants';
-import PageNav from '../../Components/PageNav';
+import { MESSAGE_TYPE } from '@utils/constants';
+import PageNav from '@ui/Components/PageNav';
 
 const useStyles = makeStyles({
   container: {

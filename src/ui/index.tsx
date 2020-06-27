@@ -5,9 +5,9 @@ import { IntlProvider } from 'react-intl';
 import CKB from '@nervosnetwork/ckb-sdk-core';
 import zh from '@src/ui/pages/locales/zh';
 import en from '@src/ui//pages/locales/en';
-import App from './App';
-import { configService } from '../config';
-import { getDefaultLanguage } from '../utils/locale';
+import App from '@ui/App';
+import { configService } from '@src/config';
+import { getDefaultLanguage } from '@utils/locale';
 
 const messages = {
   en,

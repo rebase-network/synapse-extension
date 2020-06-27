@@ -5,8 +5,8 @@ import * as Yup from 'yup';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, TextField } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
-import Title from '../../Components/Title';
-import { MESSAGE_TYPE } from '../../../utils/constants';
+import Title from '@ui/Components/Title';
+import { MESSAGE_TYPE } from '@utils/constants';
 
 const useStyles = makeStyles({
   container: {
@@ -110,7 +110,7 @@ export default function ImportMnemonic(props: AppProps, state: AppState) {
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
       if (msg === MESSAGE_TYPE.IS_NOT_VALIDATE_MNEMONIC) {
-        setValidate(false); // false验证未通过
+        setValidate(false);
       } else if (msg === MESSAGE_TYPE.VALIDATE_PASS) {
         setValidate(true);
         history.push('/address');

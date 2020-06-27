@@ -5,8 +5,8 @@ import { Button, TextField } from '@material-ui/core';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { MESSAGE_TYPE } from '../../../utils/constants';
-import PageNav from '../../Components/PageNav';
+import { MESSAGE_TYPE } from '@utils/constants';
+import PageNav from '@ui/Components/PageNav';
 
 const useStyles = makeStyles({
   container: {

@@ -10,7 +10,7 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { MESSAGE_TYPE, EXPLORER_URL } from '../../../utils/constants';
 import { truncateAddress, shannonToCKBFormatter } from '../../../utils/formatters';
 import { getAddressInfo } from '../../../utils/apis';
-import TxList from '../../Components/TxList';
+import TxList from '@ui/Components/TxList';
 
 const QrCode = require('qrcode.react');
 

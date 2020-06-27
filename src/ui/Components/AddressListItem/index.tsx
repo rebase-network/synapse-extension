@@ -10,8 +10,8 @@ import {
   ThemeProvider,
 } from '@material-ui/core/styles';
 import { ListItem, ListItemText, Typography } from '@material-ui/core';
-import { truncateAddress, shannonToCKBFormatter } from '../../../utils/formatters';
-import { getAddressInfo } from '../../../utils/apis';
+import { truncateAddress, shannonToCKBFormatter } from '@utils/formatters';
+import { getAddressInfo } from '@utils/apis';
 
 const useStylesTheme = makeStyles((theme: Theme) =>
   createStyles({

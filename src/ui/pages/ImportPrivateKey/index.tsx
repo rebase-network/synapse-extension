@@ -10,8 +10,8 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import { FormattedMessage, useIntl } from 'react-intl';
-import PageNav from '../../Components/PageNav';
-import { MESSAGE_TYPE } from '../../../utils/constants';
+import PageNav from '@ui/Components/PageNav';
+import { MESSAGE_TYPE } from '@utils/constants';
 
 const useStyles = makeStyles({
   container: {

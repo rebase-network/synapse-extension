@@ -5,7 +5,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
-import PageNav from '../../Components/PageNav';
+import PageNav from '@ui/Components/PageNav';
 
 const useStyles = makeStyles((theme) => ({
   container: {
