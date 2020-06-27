@@ -25,7 +25,7 @@ export default {
   'It may take 1 minute for the generation of keystore': '生成 keystore 可能需要 1 分钟',
   Keystore: 'Keystore',
   'Private Key': '私钥',
-  'Mnemonic | Only Support 12 Words': '助记词 | 仅支持12个单词',
+  'Mnemonic(Only Support 12 Words)': '助记词(仅支持12个单词)',
   'Password (min 6 chars)': '密码 （最小6个字符）',
   'Confirm Password': '确认密码',
   "Passwords don't match!": '密码不匹配',

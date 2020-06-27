@@ -25,7 +25,7 @@ export default {
   'It may take 1 minute for the generation of keystore': 'It may take 1 minute for the generation of keystore',
   Keystore: 'Keystore',
   'Private Key': 'Private Key',
-  'Mnemonic | Only Support 12 Words': 'Mnemonic | Only Support 12 Words',
+  'Mnemonic(Only Support 12 Words)': 'Mnemonic(Only Support 12 Words)',
   'Password (min 6 chars)': 'Password (min 6 chars)',
   'Confirm Password': 'Confirm Password',
   "Passwords don't match!": "Passwords don't match!",
