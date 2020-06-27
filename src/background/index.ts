@@ -186,19 +186,19 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
   // get tx history by address
   if (request.type === MESSAGE_TYPE.GET_TX_HISTORY) {
-    // /
-    chrome.storage.local.get(['currentWallet'], async (wallet) => {
-      const address = wallet.currentWallet ? wallet.currentWallet.address : undefined;
-      const { publicKey } = wallet.currentWallet;
-      const { type } = wallet.currentWallet;
-      const typeScript = createScriptObj(publicKey, type, address);
-      const txs = address ? await getTxHistories(typeScript) : [];
 
-      chrome.runtime.sendMessage({
-        txs,
-        type: MESSAGE_TYPE.SEND_TX_HISTORY,
-      });
+    const _currentWallet = await browser.storage.local.get('currentWallet')
+
+    const address = _currentWallet.currentWallet ? _currentWallet.currentWallet.address : undefined;
+    const { publicKey, type } = _currentWallet.currentWallet;
+
+    const typeScript = createScriptObj(publicKey, type, address);
+    const txs = address ? await getTxHistories(typeScript) : [];
+    chrome.runtime.sendMessage({
+      txs,
+      type: MESSAGE_TYPE.SEND_TX_HISTORY,
     });
+
   }
 
   // sign tx
@@ -320,65 +320,70 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
   // send transactioin
   if (request.type === MESSAGE_TYPE.REQUEST_SEND_TX) {
-    chrome.storage.local.get(['currentWallet', 'wallets'], async (result) => {
-      const toAddress = request.address.trim();
-      const capacity = request.capacity * 10 ** 8;
-      const fee = request.fee * 10 ** 8;
-      const password = request.password.trim();
-      const toData = request.data.trim();
-      const {
-        address: fromAddress,
-        publicKey,
-        lock: lockHash,
-        type: lockType,
-      } = result.currentWallet;
-      const wallet = findInWalletsByPublicKey(publicKey, result.wallets);
-      const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
-      const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
-      const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
 
-      const responseMsg = {
-        type: MESSAGE_TYPE.SEND_TX_OVER,
-        success: false,
-        message: 'Failed to send tx',
-        data: {
+    const _currentWallet = await browser.storage.local.get('currentWallet')
+    const _wallets = await browser.storage.local.get('wallets')
+
+    const toAddress = request.address.trim();
+    const capacity = request.capacity * 10 ** 8;
+    const fee = request.fee * 10 ** 8;
+    const password = request.password.trim();
+    const toData = request.data.trim();
+
+    const {
+      address: fromAddress,
+      publicKey,
+      lock: lockHash,
+      type: lockType,
+    } = _currentWallet.currentWallet;
+
+    const wallet = findInWalletsByPublicKey(publicKey, _wallets.wallets);
+    const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
+    const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
+    const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
+
+    const responseMsg = {
+      type: MESSAGE_TYPE.SEND_TX_OVER,
+      success: false,
+      message: 'Failed to send tx',
+      data: {
+        hash: '',
+        tx: {
+          from: fromAddress,
+          to: toAddress,
+          amount: capacity.toString(),
+          fee: fee.toString(),
           hash: '',
-          tx: {
-            from: fromAddress,
-            to: toAddress,
-            amount: capacity.toString(),
-            fee: fee.toString(),
-            hash: '',
-            status: 'Pending',
-            blockNum: 'Pending',
-          },
+          status: 'Pending',
+          blockNum: 'Pending',
         },
-      };
+      },
+    }
 
-      try {
-        const sendTxHash = await sendTransaction(
-          privateKey,
-          fromAddress,
-          toAddress,
-          BigInt(capacity),
-          BigInt(fee),
-          lockHash,
-          lockType,
-          password,
-          publicKey.replace('0x', ''),
-          toData,
-        );
-        responseMsg.data.hash = sendTxHash;
-        responseMsg.data.tx.hash = sendTxHash;
-        responseMsg.success = true;
-        responseMsg.message = 'TX is sent';
-      } catch (error) {
-        responseMsg.message = `${responseMsg.message}: ${error}`;
-      }
+    try {
+      const sendTxHash = await sendTransaction(
+        privateKey,
+        fromAddress,
+        toAddress,
+        BigInt(capacity),
+        BigInt(fee),
+        lockHash,
+        lockType,
+        password,
+        publicKey.replace('0x', ''),
+        toData,
+      );
 
-      // sedb back to extension UI
-      chrome.runtime.sendMessage(responseMsg);
-    });
+      responseMsg.data.hash = sendTxHash;
+      responseMsg.data.tx.hash = sendTxHash;
+      responseMsg.success = true;
+      responseMsg.message = 'TX is sent';
+    } catch (error) {
+      responseMsg.message = `${responseMsg.message}: ${error}`;
+    }
+
+    // sedb back to extension UI
+    chrome.runtime.sendMessage(responseMsg);
   }
 
   // transactioin detail
@@ -404,30 +409,31 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
   // export-private-key check
   if (request.type === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK) {
-    chrome.storage.local.get(['currentWallet', 'wallets'], async (result) => {
-      const { password } = request;
-      const { publicKey } = result.currentWallet;
-      const wallet = findInWalletsByPublicKey(publicKey, result.wallets);
+    const _currentWallet = await browser.storage.local.get('currentWallet')
+    const _wallets = await browser.storage.local.get('wallets')
+    const { password } = request;
+    const { publicKey } = _currentWallet.currentWallet;
 
-      const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
-      const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
-      const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
+    const wallet = findInWalletsByPublicKey(publicKey, _wallets.wallets);
+    const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
+    const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
+    const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
 
-      // check the password
-      if (!(privateKey.startsWith('0x') && privateKey.length === 64)) {
-        chrome.runtime.sendMessage({
-          isValidatePassword: false,
-          type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
-        });
-      }
-      const keystore = WalletKeystore.encrypt(privateKeyBuffer.data, password);
-
+    // check the password
+    if (!(privateKey.startsWith('0x') && privateKey.length === 64)) {
       chrome.runtime.sendMessage({
-        isValidatePassword: true,
-        keystore,
-        privateKey,
+        isValidatePassword: false,
         type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
       });
+    }
+
+    const keystore = WalletKeystore.encrypt(privateKeyBuffer.data, password);
+
+    chrome.runtime.sendMessage({
+      isValidatePassword: true,
+      keystore,
+      privateKey,
+      type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
     });
   }
 
@@ -445,29 +451,27 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
   // export-mneonic check
   if (request.type === MESSAGE_TYPE.EXPORT_MNEONIC_CHECK) {
-    chrome.storage.local.get(['currentWallet', 'wallets'], async (result) => {
-      const { password } = request;
-      const { publicKey } = result.currentWallet;
-      const wallet = findInWalletsByPublicKey(publicKey, result.wallets);
-      const { entropyKeystore } = wallet;
-
-      // check the password
-      const entropy = await PasswordKeystore.decrypt(entropyKeystore, password);
-
-      // send the check result to the page
-      if (_.isEmpty(entropy)) {
-        chrome.runtime.sendMessage({
-          isValidatePassword: false,
-          type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
-        });
-      }
-
+    const _currentWallet = await browser.storage.local.get('currentWallet')
+    const _wallets = await browser.storage.local.get('wallets')
+    const { password } = request;
+    const { publicKey } = _currentWallet.currentWallet;
+    const wallet = findInWalletsByPublicKey(publicKey, _wallets.wallets);
+    const { entropyKeystore } = wallet;
+    // check the password
+    const entropy = await PasswordKeystore.decrypt(entropyKeystore, password);
+    // send the check result to the page
+    if (_.isEmpty(entropy)) {
       chrome.runtime.sendMessage({
-        isValidatePassword: true,
-        password,
-        entropyKeystore,
-        type: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT,
+        isValidatePassword: false,
+        type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
       });
+    }
+
+    chrome.runtime.sendMessage({
+      isValidatePassword: true,
+      password,
+      entropyKeystore,
+      type: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT,
     });
   }
 
@@ -488,55 +492,58 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
   // import private key
   if (request.type === MESSAGE_TYPE.IMPORT_PRIVATE_KEY) {
-    chrome.storage.local.get(['currentWallet', 'wallets'], async (result) => {
-      let privateKey: string = request.privateKey.trim();
-      privateKey = privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`;
-      const publicKey = ckbUtils.privateKeyToPublicKey(privateKey);
-      const password = request.password.trim();
 
-      // get the current keystore and check the password
-      const currentPublicKey = result.currentWallet.publicKey;
-      const currWallet = findInWalletsByPublicKey(currentPublicKey, result.wallets);
-      const currKeystore = currWallet.keystore;
-      const privateKeyObj = await PasswordKeystore.checkByPassword(currKeystore, password);
-      if (privateKeyObj == null) {
-        chrome.runtime.sendMessage({
-          // 'password incorrect',
-          type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR,
-        });
-        return;
-      }
+    const _currentWallet = await browser.storage.local.get('currentWallet')
+    const _wallets = await browser.storage.local.get('wallets')
 
-      // check the keystore exist or not by publicKey
-      const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
+    let privateKey: string = request.privateKey.trim();
+    privateKey = privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`;
+    const publicKey = ckbUtils.privateKeyToPublicKey(privateKey);
+    const password = request.password.trim();
 
-      if (!_.isEmpty(addressesObj)) {
-        const { addresses } = addressesObj;
-        currentWallet = {
-          publicKey,
-          address: addresses[0].address,
-          type: addresses[0].type,
-          lock: addresses[0].lock,
-        };
-      } else {
-        // 'No '0x'
-        if (privateKey.startsWith('0x')) {
-          privateKey = privateKey.substr(2);
-        }
-        const accounts = await addKeyperWallet(privateKey, password, '', '');
-        // add addresses indexer
-        await indexerAddresses(accounts);
+    // get the current keystore and check the password
+    const currentPublicKey = _currentWallet.currentWallet.publicKey;
+    const currWallet = findInWalletsByPublicKey(currentPublicKey, _wallets.wallets);
+    const currKeystore = currWallet.keystore;
+    const privateKeyObj = await PasswordKeystore.checkByPassword(currKeystore, password);
 
-        wallets = getWallets();
-        addressesList = getAddressesList();
-        currentWallet = getCurrentWallet();
-      }
-
-      saveToStorage(wallets, currentWallet, addressesList);
-
+    if (privateKeyObj == null) {
       chrome.runtime.sendMessage({
-        type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK,
+        // 'password incorrect',
+        type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR,
       });
+      return;
+    }
+
+    // check the keystore exist or not by publicKey
+    const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
+    if (!_.isEmpty(addressesObj)) {
+      const {  addresses } = addressesObj;
+
+      currentWallet = {
+        publicKey,
+        address: addresses[0].address,
+        type: addresses[0].type,
+        lock: addresses[0].lock,
+      }
+
+    } else {
+      // 'No '0x'
+      if (privateKey.startsWith('0x')) {
+        privateKey = privateKey.substr(2);
+      }
+      const accounts = await addKeyperWallet(privateKey, password, '', '');
+      // add addresses indexer
+      await indexerAddresses(accounts);
+      wallets = getWallets();
+      addressesList = getAddressesList();
+      currentWallet = getCurrentWallet();
+    }
+
+    saveToStorage(wallets, currentWallet, addressesList);
+
+    chrome.runtime.sendMessage({
+      type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK,
     });
   }
 
@@ -548,64 +555,65 @@ chrome.runtime.onMessage.addListener(async (request) => {
    * 4- create the keystore(passworder) by the privatekey
    */
   if (request.type === MESSAGE_TYPE.IMPORT_KEYSTORE) {
-    chrome.storage.local.get(['currentWallet', 'wallets'], async (result) => {
-      // 01- get the params from request
-      const keystore = request.keystore.trim();
-      const kPassword = request.keystorePassword.trim();
-      const uPassword = request.userPassword.trim();
+    const _currentWallet = await browser.storage.local.get('currentWallet')
+    const _wallets = await browser.storage.local.get('wallets')
 
-      // 02- check the keystore by the keystorePassword
-      if (!WalletKeystore.checkPasswd(keystore, kPassword)) {
-        chrome.runtime.sendMessage({
-          // 'password incorrect',
-          type: MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_KPASSWORD,
-        });
-        return;
-      }
+    // 01- get the params from request
+    const keystore = request.keystore.trim();
+    const kPassword = request.keystorePassword.trim();
+    const uPassword = request.userPassword.trim();
 
-      // 021- check the synapse password by the currentWallet Keystore
-      const currentPublicKey = result.currentWallet.publicKey;
-      const currWallet = findInWalletsByPublicKey(currentPublicKey, result.wallets);
-      const currKeystore = currWallet.keystore;
-      const privateKeyObj = await PasswordKeystore.checkByPassword(currKeystore, uPassword);
-      if (privateKeyObj == null) {
-        chrome.runtime.sendMessage({
-          // 'password incorrect',
-          type: MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_UPASSWORD,
-        });
-        return;
-      }
-
-      // 03 - get the private by input keystore
-      const privateKey = await WalletKeystore.decrypt(keystore, kPassword);
-      const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
-      // check the keystore exist or not by the publicKey
-      const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
-
-      if (!_.isEmpty(addressesObj)) {
-        const { addresses } = addressesObj;
-        currentWallet = {
-          publicKey,
-          address: addresses[0].address,
-          type: addresses[0].type,
-          lock: addresses[0].lock,
-        };
-      } else {
-        const accounts = await addKeyperWallet(privateKey, uPassword, '', '');
-        // add addresses indexer
-        await indexerAddresses(accounts);
-
-        wallets = getWallets();
-        addressesList = getAddressesList();
-        currentWallet = getCurrentWallet();
-      }
-
-      // 002-
-      saveToStorage(wallets, currentWallet, addressesList);
-
+    // 02- check the keystore by the keystorePassword
+    if (!WalletKeystore.checkPasswd(keystore, kPassword)) {
       chrome.runtime.sendMessage({
-        type: MESSAGE_TYPE.IMPORT_KEYSTORE_OK,
+        // 'password incorrect',
+        type: MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_KPASSWORD,
       });
+      return;
+    }
+
+    // 021- check the synapse password by the currentWallet Keystore
+    const currentPublicKey = _currentWallet.currentWallet.publicKey;
+    const currWallet = findInWalletsByPublicKey(currentPublicKey, _wallets.wallets);
+    const currKeystore = currWallet.keystore;
+    const privateKeyObj = await PasswordKeystore.checkByPassword(currKeystore, uPassword);
+
+    if (privateKeyObj == null) {
+      chrome.runtime.sendMessage({
+        // 'password incorrect',
+        type: MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_UPASSWORD,
+      });
+      return;
+    }
+
+    // 03 - get the private by input keystore
+    const privateKey = await WalletKeystore.decrypt(keystore, kPassword);
+    const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
+    // check the keystore exist or not by the publicKey
+    const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
+    if (!_.isEmpty(addressesObj)) {
+      const { addresses } = addressesObj;
+
+      currentWallet = {
+        publicKey,
+        address: addresses[0].address,
+        type: addresses[0].type,
+        lock: addresses[0].lock,
+      }
+
+    } else {
+      const accounts = await addKeyperWallet(privateKey, uPassword, '', '');
+      // add addresses indexer
+      await indexerAddresses(accounts);
+      wallets = getWallets();
+      addressesList = getAddressesList();
+      currentWallet = getCurrentWallet();
+    }
+    // 002-
+    saveToStorage(wallets, currentWallet, addressesList);
+
+    chrome.runtime.sendMessage({
+      type: MESSAGE_TYPE.IMPORT_KEYSTORE_OK,
     });
   }
 });
