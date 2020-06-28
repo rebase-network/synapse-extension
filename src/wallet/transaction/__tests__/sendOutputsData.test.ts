@@ -9,6 +9,8 @@ import { configService } from '../../../config';
 import { bobAddresses } from '../../../test/fixture/address';
 import { secp256k1Dep } from '../../../test/fixture/deps';
 
+jest.mock('@utils/apis');
+
 describe('Transaction test', () => {
   const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
 

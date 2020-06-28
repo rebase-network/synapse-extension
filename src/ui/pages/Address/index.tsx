@@ -7,10 +7,10 @@ import CloseIcon from '@material-ui/icons/Close';
 import CallMadeIcon from '@material-ui/icons/CallMade';
 import { useHistory } from 'react-router-dom';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import { MESSAGE_TYPE, EXPLORER_URL } from '../../../utils/constants';
-import { truncateAddress, shannonToCKBFormatter } from '../../../utils/formatters';
-import { getAddressInfo } from '../../../utils/apis';
-import TxList from '@ui/Components/TxList';
+import { MESSAGE_TYPE, EXPLORER_URL } from '@utils/constants';
+import { truncateAddress, shannonToCKBFormatter } from '@utils/formatters';
+import { getAddressInfo } from '@utils/apis';
+import TxList from '../../Components/TxList';
 
 const QrCode = require('qrcode.react');
 
@@ -126,10 +126,9 @@ export default function (props: AppProps) {
   React.useEffect(() => {
     setTxs([]); // clean tx data
 
-    browser.storage.local.get('currentWallet').then((result) => {
-      if (_.isEmpty(result)) return;
-
-      const { address: currentAddress, type: lockType, lock } = result.currentWallet;
+    chrome.storage.local.get(['currentWallet'], async ({ currentWallet }) => {
+      if (_.isEmpty(currentWallet)) return;
+      const { address: currentAddress, type: lockType, lock } = currentWallet;
       setAddress(currentAddress);
       if (lockType === 'Keccak256') {
         setDisableFlg(true);

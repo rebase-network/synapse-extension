@@ -3,8 +3,8 @@
     "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
-    "rootDir": "src",
-    "outDir": "dist/js",
+    "rootDir": ".",
+    "outDir": "src/dist/js",
     "baseUrl": ".",
     "paths": {
       "@src/*": ["src/*"],

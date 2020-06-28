@@ -8,7 +8,7 @@ const {
 } = require('./tsconfig');
 
 module.exports = {
-  roots: ['<rootDir>/src'],
+  roots: ['<rootDir>'],
   setupFilesAfterEnv: ['./jest.setup.js'],
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
