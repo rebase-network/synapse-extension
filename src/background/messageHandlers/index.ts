@@ -1,7 +1,8 @@
 import _ from 'lodash';
 import { MESSAGE_TYPE } from '@utils/constants';
 import sendToPopup from './sendToPopup';
-import getAddressInfoHandler from './getAddressInfo';
+import getAddressInfo from './getAddressInfo';
+import getLiveCells from './getLiveCells';
 
 const handler = async (message, port) => {
   const isSendToPopup =
@@ -16,7 +17,11 @@ const handler = async (message, port) => {
   }
 
   if (message.type === MESSAGE_TYPE.EXTERNAL_GET_ADDRESS_INFO) {
-    getAddressInfoHandler(port);
+    getAddressInfo(port);
+  }
+
+  if (message.type === MESSAGE_TYPE.EXTERNAL_GET_LIVE_CELLS) {
+    getLiveCells(port);
   }
 };
 

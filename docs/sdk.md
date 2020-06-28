@@ -8,6 +8,7 @@ Synapse will inject a object `ckb` into browser `window` object, so you can use 
 
 ## Methods list
 * [ckb.getAddressInfo](#get-address-info)
+* [ckb.getLiveCells](#get-live-cells)
 * [ckb.sign](#sign-tx)
 * [ckb.signSend](#sign-and-send-tx)
 * [ckb.send](#send-tx)
@@ -21,16 +22,23 @@ ckb.getAddressInfo
 
 const addressInfo = await ckb.getAddressInfo()
 ```
+
 ### Return value
 ```js
 {
-  address: string; // current address(secp256k1)
-  lock: string; // lock script hash value
-  publicKey: stirng;  // public key
-  type: string, // currently a fixed value: Secp256k1
-  capacity: string; // capacity in string format, such as "516899970000"
+  message: string // "get address info successfully"
+  success: boolean  // true
+  type: string  // "address_info"
+  data: {
+    address: string; // current address(secp256k1)
+    lock: string; // lock script hash value
+    publicKey: stirng;  // public key
+    type: string, // currently a fixed value: Secp256k1
+    capacity: string; // capacity in string format, such as "516899970000"
+  }
 }
 ```
+
 ### Example
 ```js
 const addressInfo = await ckb.getAddressInfo()
@@ -38,13 +46,93 @@ console.log('addressInfo: ', addressInfo);
 ```
 will output:
 ```js
-addressInfo: {
-  "address":"ckt1qyqgadxhtq27ygrm62dqkdj32gl95j8gl56qum0yyn",
-  "lock":"0x111823010653d32d36b18c9a257fe13158ca012e22b9b82f0640be187f10904b",
-  "publicKey":"0x021b30b3047a645d8b6c10c513b767a3e08efa1a53df5f81bcb37af3c8c8358ae9",
-  "type":"Secp256k1",
-  "capacity":"516899970000"
+{
+  message: "get address info successfully",
+  success: true,
+  type: "address_info",
+  data: {
+    "address":"ckt1qyqgadxhtq27ygrm62dqkdj32gl95j8gl56qum0yyn",
+    "lock":"0x111823010653d32d36b18c9a257fe13158ca012e22b9b82f0640be187f10904b",
+    "publicKey":"0x021b30b3047a645d8b6c10c513b767a3e08efa1a53df5f81bcb37af3c8c8358ae9",
+    "type":"Secp256k1",
+    "capacity":"516899970000"
+  }
 }
+```
+
+## Get live cells
+
+### Method
+```js
+ckb.getLiveCells
+
+const liveCells = await ckb.getLiveCells()
+```
+### Return value
+```js
+{
+  message: string // "get live cells successfully"
+  success: boolean  // true
+  type: string  // "live_cells"
+  data: Cell[]
+}
+
+interface LockScript {
+  codeHash: string; // '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8'
+  hashType: string; // 'type'
+  args: string; // '0x8eb4d75815e2207bd29a0b3651523e5a48e8fd34'
+}
+
+interface Cell {
+  blockHash: string; // '0xd9027f4740c5995b17f2580ca5db9ac4ce4909e652ede2eb26d64709c26201ae',
+  lock: LockScript | null;
+  outPoint: {
+    txHash: string; // '0xdb255da9ceb84c81e2053238d239e65a92076f3080aee13346d586746b3bc8ce'
+    index: string; // '0x1'
+  };
+  outputData: string; // '0x'
+  outputDataLen: string; // '0x0'
+  capacity: string; // '0x535a743210'
+  type: LockScript | null;
+  dataHash: string; // '0x0000000000000000000000000000000000000000000000000000000000000000'
+  status: string; // 'live'
+}
+
+```
+
+### Example
+```js
+const liveCells = await ckb.getLiveCells()
+console.log('live cells: ', liveCells);
+```
+will output:
+```js
+{
+  type: 'live_cells',
+  success: true,
+  message: 'get live cells successfully',
+  data: [
+    {
+      blockHash: '0xd9027f4740c5995b17f2580ca5db9ac4ce4909e652ede2eb26d64709c26201ae',
+      lock: {
+        codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+        hashType: 'type',
+        args: '0x8eb4d75815e2207bd29a0b3651523e5a48e8fd34',
+      },
+      outPoint: {
+        txHash: '0xdb255da9ceb84c81e2053238d239e65a92076f3080aee13346d586746b3bc8ce',
+        index: '0x1',
+      },
+      outputData: '0x',
+      outputDataLen: '0x0',
+      capacity: '0x535a743210',
+      type: null,
+      dataHash: '0x0000000000000000000000000000000000000000000000000000000000000000',
+      status: 'live',
+    },
+  ],
+}
+
 ```
 
 ## Sign tx
@@ -324,7 +412,6 @@ Will return:
 ```js
 {
   type: 'sign',
-  target: 'injectedScript',
   success: true,
   message: 'tx is signed',
   data: {
