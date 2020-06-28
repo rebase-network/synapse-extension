@@ -161,62 +161,6 @@ export const uniformTimeFormatter = (time: string | number | Date) => {
   return timeFormatter.format(+time).replace(/\//g, '-');
 };
 
-// export const addressesToBalance = (addresses: State.Address[] = []) => {
-//   return addresses
-//     .reduce((total, addr) => {
-//       if (Number.isNaN(+addr.balance)) {
-//         return total
-//       }
-//       return total + BigInt(addr.balance || 0)
-//     }, BigInt(0))
-//     .toString()
-// }
-
-// export const outputsToTotalAmount = (outputs: Readonly<State.Output[]>) => {
-//   const totalCapacity = outputs.reduce((total, cur) => {
-//     if (Number.isNaN(+(cur.amount || ''))) {
-//       return total
-//     }
-//     return total + BigInt(CKBToShannonFormatter(cur.amount, cur.unit))
-//   }, BigInt(0))
-//   return totalCapacity.toString()
-// }
-
-// export const failureResToNotification = (res: any): State.Message => {
-//   return {
-//     type: 'alert',
-//     timestamp: +new Date(),
-//     code: res.status,
-//     content: typeof res.message !== 'string' ? res.message.content : res.message,
-//     meta: typeof res.message !== 'string' ? res.message.meta : undefined,
-//   }
-// }
-
-// export const difficultyFormatter = (value: bigint) => {
-//   const units = new Map([
-//     ['YH', 1e24],
-//     ['ZH', 1e21],
-//     ['EH', 1e18],
-//     ['PH', 1e15],
-//     ['TH', 1e12],
-//     ['GH', 1e9],
-//     ['MH', 1e6],
-//     ['KH', 1e3],
-//   ])
-
-//   /* eslint-disable no-restricted-syntax */
-//   for (const [unit, range] of units) {
-//     if (value >= range * 1e3) {
-//       const integer = value / BigInt(range)
-//       const decimal = (Number(value) / range).toFixed(2).split('.')[1]
-//       return `${localNumberFormatter(integer)}.${decimal} ${unit}`
-//     }
-//   }
-//   /* eslint-enable no-restricted-syntax */
-
-//   return `${localNumberFormatter(value)} H`
-// }
-
 export default {
   queryFormatter,
   currencyFormatter,
@@ -224,8 +168,4 @@ export default {
   shannonToCKBFormatter,
   localNumberFormatter,
   uniformTimeFormatter,
-  // difficultyFormatter,
-  // addressesToBalance,
-  // outputsToTotalAmount,
-  // failureResToNotification,
 };

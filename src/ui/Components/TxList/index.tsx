@@ -7,8 +7,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import { EXPLORER_URL } from '@utils/constants';
 import { shannonToCKBFormatter } from '@utils/formatters';
-import Modal from '../Modal';
-import TxDetail from '../TxDetail';
+import Modal from '@ui/Components/Modal';
+import TxDetail from '@ui/Components/TxDetail';
 
 const useStyles = makeStyles({
   list: {

@@ -97,7 +97,7 @@ export default function (props: AppProps, state: AppState) {
     ) {
       if (message.type === MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT) {
         if (message.isValidatePassword && message.isValidateEntropy) {
-          history.push('/export-mnemonic-second'); // 测试成功的地址
+          history.push('/export-mnemonic-second');
           chrome.runtime.sendMessage({
             message,
             type: MESSAGE_TYPE.EXPORT_MNEONIC_SECOND,

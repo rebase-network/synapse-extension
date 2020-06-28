@@ -9,7 +9,7 @@ import Divider from '@material-ui/core/Divider';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Typography from '@material-ui/core/Typography';
 import { FormattedMessage } from 'react-intl';
-import PageNav from '../PageNav';
+import PageNav from '@ui/Components/PageNav';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -99,22 +99,7 @@ export default function (props: AppProps, state: AppState) {
             <Typography>{fee / 10 ** 8} CKB </Typography>
           </Grid>
         </Grid>
-        {/* <Grid container wrap="nowrap" spacing={2}>
-          <Grid item>
-            <Typography noWrap>Inputs</Typography>
-          </Grid>
-          <Grid item xs>
-            <Typography className={classes.typography}>{inputs}</Typography>
-          </Grid>
-        </Grid>
-        <Grid container wrap="nowrap" spacing={2}>
-          <Grid item>
-            <Typography noWrap>Outputs </Typography>
-          </Grid>
-          <Grid item xs>
-            <Typography className={classes.typography}>{outputs}</Typography>
-          </Grid>
-        </Grid> */}
+
         <br />
         <Divider variant="middle" className={classes.divider} />
         <br />
