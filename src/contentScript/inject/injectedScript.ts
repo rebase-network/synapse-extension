@@ -59,6 +59,14 @@ window.ckb = {
       requestId: 'getAddressInfoRequestId',
     },
   ) => promisedMessageHandler(requestMessage),
+  getLiveCells: async (
+    requestMessage: RequestMessage = {
+      type: MESSAGE_TYPE.EXTERNAL_GET_LIVE_CELLS,
+      target: BACKGROUND_PORT,
+      token: 'getLiveCellsToken',
+      requestId: 'getLiveCellsRequestId',
+    },
+  ) => promisedMessageHandler(requestMessage),
   // sign tx
   sign: (request: SignTXRequest) => {
     const requestMessage = {

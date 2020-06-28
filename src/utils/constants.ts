@@ -63,6 +63,7 @@ export const MESSAGE_TYPE = {
   EXTERNAL_SIGN: 'sign',
   EXTERNAL_SEND: 'send',
   EXTERNAL_SIGN_SEND: 'sign_send',
+  EXTERNAL_GET_LIVE_CELLS: 'live_cells',
 };
 
 export const Ckb = {
