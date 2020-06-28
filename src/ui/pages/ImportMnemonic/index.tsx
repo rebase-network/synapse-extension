@@ -104,7 +104,8 @@ export default function ImportMnemonic(props: AppProps, state: AppState) {
     if (vaildate) {
       setSuccess(true);
     }
-    localStorage.setItem('IS_MNEMONIC_SET', 'YES');
+
+    localStorage.setItem('IS_LOGIN', 'YES');
   };
 
   React.useEffect(() => {

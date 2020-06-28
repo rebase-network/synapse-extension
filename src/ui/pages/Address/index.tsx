@@ -10,7 +10,7 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { MESSAGE_TYPE, EXPLORER_URL } from '@utils/constants';
 import { truncateAddress, shannonToCKBFormatter } from '@utils/formatters';
 import { getAddressInfo } from '@utils/apis';
-import TxList from '../../Components/TxList';
+import TxList from '@ui/Components/TxList';
 
 const QrCode = require('qrcode.react');
 
@@ -186,7 +186,7 @@ export default function (props: AppProps) {
     })();
   }, [open, address]);
 
-  const isLogin = localStorage.getItem('IS_MNEMONIC_SET') === 'YES';
+  const isLogin = localStorage.getItem('IS_LOGIN') === 'YES';
 
   if (!isLogin) {
     history.push('./mnemonic-setting');

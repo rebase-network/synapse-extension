@@ -124,7 +124,7 @@ export default function GenerateMnemonic(props: AppProps, state: AppState) {
         setMnemonic(msg.mnemonic);
       } else if (msg === MESSAGE_TYPE.VALIDATE_PASS) {
         setValidate(true);
-        localStorage.setItem('IS_MNEMONIC_SET', 'YES');
+        localStorage.setItem('IS_LOGIN', 'YES');
         history.push('/address');
       }
     });
