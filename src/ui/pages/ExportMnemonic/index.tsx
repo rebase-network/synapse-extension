@@ -4,13 +4,14 @@ import { useHistory } from 'react-router-dom';
 import { Button, TextField } from '@material-ui/core';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { MESSAGE_TYPE } from '@utils/constants';
 import PageNav from '@ui/Components/PageNav';
 
 const useStyles = makeStyles({
   container: {
     margin: 30,
+    fontSize: 12,
   },
 });
 
@@ -80,6 +81,8 @@ export default function (props: AppProps, state: AppState) {
   const history = useHistory();
   const classes = useStyles();
   const intl = useIntl();
+  const [vaildate, setVaildate] = React.useState(true);
+  const [errorMessage, setErrorMessage] = React.useState('');
 
   const onSubmit = async (values) => {
     // background.ts check the password
@@ -87,23 +90,38 @@ export default function (props: AppProps, state: AppState) {
   };
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+    chrome.runtime.onMessage.addListener(function listenerProcessing(
+      message,
+      sender,
+      sendResponse,
+    ) {
       if (message.type === MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT) {
-        if (message.isValidatePassword) {
+        if (message.isValidatePassword && message.isValidateEntropy) {
           history.push('/export-mnemonic-second'); // 测试成功的地址
           chrome.runtime.sendMessage({
             message,
             type: MESSAGE_TYPE.EXPORT_MNEONIC_SECOND,
           });
+        } else if (!message.isValidateEntropy) {
+          setVaildate(false);
+          setErrorMessage('Can not export Mnemonic,Try to export privateKey.');
+        } else if (!message.isValidatePassword) {
+          setVaildate(false);
+          setErrorMessage('Invalid password,Try another again.');
         }
       }
     });
   }, []);
 
+  let failureNode = null;
+  if (!vaildate) {
+    failureNode = <div className="failure">{errorMessage}</div>;
+  }
   return (
     <div>
       <PageNav to="/setting" title={<FormattedMessage id="Export Mnemonic" />} />
       <div className={classes.container}>
+        {failureNode}
         <Formik
           initialValues={{ password: '' }}
           onSubmit={onSubmit}
