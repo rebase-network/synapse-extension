@@ -64,6 +64,10 @@ export const MESSAGE_TYPE = {
   EXTERNAL_SEND: 'send',
   EXTERNAL_SIGN_SEND: 'sign_send',
   EXTERNAL_GET_LIVE_CELLS: 'live_cells',
+
+  // delete wallet
+  DELETE_WALLET: 'DELETE_WALLET',
+  DELETE_WALLET_ERR: 'DELETE_WALLET_ERR',
 };
 
 export const Ckb = {

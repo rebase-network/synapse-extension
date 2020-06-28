@@ -46,4 +46,6 @@ export default {
   Auth: 'Auth',
   'invalidated mnemonic': 'Can not export Mnemonic,Try to export privateKey.',
   'invalidated password': 'Invalid password,Try another again.',
+  'Delete Wallet': 'Delete Wallet',
+  'Incorrect Password': 'Incorrect Password',
 };

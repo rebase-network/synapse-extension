@@ -46,4 +46,6 @@ export default {
   Auth: '授权',
   'invalidated mnemonic': '不能导出助记词，请尝试导出私钥。',
   'invalidated password': '无效的密码，请重新输入。',
+  'Delete Wallet': '删除钱包',
+  'Incorrect Password': '密码不正确',
 };
