@@ -13,6 +13,7 @@ before_install:
 
 script:
   # - yarn lint
+  - cp .env.example .env
   - yarn test
   - yarn build
 
