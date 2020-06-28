@@ -44,4 +44,6 @@ export default {
   'Copy to clipboard': '复制地址',
   Copied: '复制成功',
   Auth: '授权',
+  'invalidated mnemonic': '不能导出助记词，请尝试导出私钥。',
+  'invalidated password': '无效的密码，请重新输入。',
 };

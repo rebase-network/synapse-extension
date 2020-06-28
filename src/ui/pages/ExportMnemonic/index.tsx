@@ -104,10 +104,16 @@ export default function (props: AppProps, state: AppState) {
           });
         } else if (!message.isValidateEntropy) {
           setVaildate(false);
-          setErrorMessage('Can not export Mnemonic,Try to export privateKey.');
+          const errorMessagei18n = intl.formatMessage({
+            id: 'invalidated mnemonic',
+          });
+          setErrorMessage(errorMessagei18n);
         } else if (!message.isValidatePassword) {
           setVaildate(false);
-          setErrorMessage('Invalid password,Try another again.');
+          const errorMessagei18n = intl.formatMessage({
+            id: 'invalidated password',
+          });
+          setErrorMessage(errorMessagei18n);
         }
       }
     });

@@ -44,4 +44,6 @@ export default {
   'Copy to clipboard': 'Copy to clipboard',
   Copied: 'Copied',
   Auth: 'Auth',
+  'invalidated mnemonic': 'Can not export Mnemonic,Try to export privateKey.',
+  'invalidated password': 'Invalid password,Try another again.',
 };
