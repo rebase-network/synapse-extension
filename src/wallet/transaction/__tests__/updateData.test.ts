@@ -1,13 +1,15 @@
 import { BN } from 'bn.js';
 import { addressToScript } from '@keyper/specs';
 import { textToHex, textToBytesLength } from '@utils/index';
-import { getUnspentCells } from '@src/utils/apis';
+import { getUnspentCells } from '@utils/apis';
 import _ from 'lodash';
 import CKB from '@nervosnetwork/ckb-sdk-core';
 import { createRawTxUpdateData, createUpdateDataRawTx } from '../txGenerator';
 import { configService } from '../../../config';
 import { bobAddresses } from '../../../test/fixture/address';
 import { secp256k1Dep } from '../../../test/fixture/deps';
+
+jest.mock('@utils/apis');
 
 describe('send Transaction test', () => {
   const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
