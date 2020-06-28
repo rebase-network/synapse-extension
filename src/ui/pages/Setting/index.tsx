@@ -49,7 +49,7 @@ export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
   const intl = useIntl();
 
-  const isLogin = localStorage.getItem('IS_MNEMONIC_SET') === 'YES';
+  const isLogin = localStorage.getItem('IS_LOGIN') === 'YES';
 
   const settingElem = settingItems.map((item) => {
     return (
