@@ -68,6 +68,10 @@ export const MESSAGE_TYPE = {
   // delete wallet
   DELETE_WALLET: 'DELETE_WALLET',
   DELETE_WALLET_ERR: 'DELETE_WALLET_ERR',
+
+  // manage contacts
+  MANAGE_CONTACTS_ADD: 'MANAGE_CONTACTS_ADD',
+  MANAGE_CONTACTS_RESULT: 'MANAGE_CONTACTS_RESULT',
 };
 
 export const Ckb = {

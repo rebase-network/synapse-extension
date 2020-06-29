@@ -48,4 +48,5 @@ export default {
   'invalidated password': 'Invalid password,Try another again.',
   'Delete Wallet': 'Delete Wallet',
   'Incorrect Password': 'Incorrect Password',
+  'Manage Contacts':'Manage Contacts',
 };

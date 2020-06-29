@@ -40,6 +40,7 @@ import { indexerAddresses, getTipBlockNumber } from '@background/indexer';
 let wallets = [];
 let currentWallet = {};
 let addressesList = [];
+let contacts = [];
 
 /**
  * Listen messages from popup
@@ -619,6 +620,27 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
     chrome.runtime.sendMessage({
       type: MESSAGE_TYPE.IMPORT_KEYSTORE_OK,
+    });
+  }
+
+  /**
+   * Manage Contacts
+   */
+  if (request.type === MESSAGE_TYPE.MANAGE_CONTACTS_ADD) {
+    const { address, name } = request;
+
+    const manageContacts = await browser.storage.local.get('contacts');
+    if (Array.isArray(manageContacts)) {
+      contacts = manageContacts;
+    }
+    const contact = { address, name };
+    contacts.push(contact);
+    await browser.storage.local.set({ contacts });
+
+    const result = await browser.storage.local.get('contacts');
+    chrome.runtime.sendMessage({
+      contacts: result,
+      type: MESSAGE_TYPE.MANAGE_CONTACTS_RESULT,
     });
   }
 });

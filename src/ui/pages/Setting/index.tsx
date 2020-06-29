@@ -43,6 +43,11 @@ const settingItems = [
     text: <FormattedMessage id="Import Private Key / Keystore" />,
     testId: 'importPrivateKey',
   },
+  {
+    link: '/manage-contacts',
+    text: <FormattedMessage id="Manage Contacts" />,
+    testId: 'manageContacts',
+  },
 ];
 
 export default function (props: AppProps, state: AppState) {

@@ -48,4 +48,5 @@ export default {
   'invalidated password': '无效的密码，请重新输入。',
   'Delete Wallet': '删除钱包',
   'Incorrect Password': '密码不正确',
+  'Manage Contacts':'联系人管理',
 };
