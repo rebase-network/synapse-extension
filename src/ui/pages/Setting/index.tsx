@@ -1,10 +1,14 @@
 import React from 'react';
+import * as Yup from 'yup';
+import { Formik, Form } from 'formik';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-import { Link } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
 import PageNav from '@ui/Components/PageNav';
 import LanguageSelector from '@ui/Components/LanguageSelector';
+import { TextField, Button, Modal } from '@material-ui/core';
+import { MESSAGE_TYPE } from '@utils/constants';
 
 const useStyles = makeStyles({
   container: {
@@ -45,9 +49,90 @@ const settingItems = [
   },
 ];
 
+export const innerForm = (props) => {
+  const classes = useStyles();
+  const intl = useIntl();
+
+  const {
+    values,
+    touched,
+    errors,
+    dirty,
+    isSubmitting,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    handleReset,
+  } = props;
+
+  return (
+    <Form
+      className="export-mnemonic-key"
+      id="export-mnemonic-key"
+      onSubmit={handleSubmit}
+      aria-label="form"
+    >
+      <TextField
+        label={intl.formatMessage({ id: 'Password' })}
+        name="password"
+        type="password"
+        id="password"
+        fullWidth
+        value={values.password}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={!!errors.password}
+        helperText={errors.password && touched.password && errors.password}
+        margin="normal"
+        variant="outlined"
+        data-testid="field-password"
+      />
+
+      {isSubmitting && (
+        <div id="submitting">
+          <FormattedMessage id="Submitting" />
+        </div>
+      )}
+      <Button
+        type="submit"
+        id="submit-button"
+        disabled={isSubmitting}
+        color="primary"
+        variant="contained"
+        data-testid="submit-button"
+      >
+        <FormattedMessage id="Confirm" />
+      </Button>
+    </Form>
+  );
+};
+
 export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
   const intl = useIntl();
+
+  const [open, setOpen] = React.useState(false);
+  const [success, setSuccess] = React.useState(true);
+
+  React.useEffect(() => {
+    chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
+      if (msg.type === MESSAGE_TYPE.DELETE_WALLET_ERR) {
+        setSuccess(false);
+      }
+    });
+  }, []);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const onSubmit = async (values) => {
+    browser.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.DELETE_WALLET });
+  };
 
   const isLogin = localStorage.getItem('IS_LOGIN') === 'YES';
 
@@ -62,11 +147,50 @@ export default function (props: AppProps, state: AppState) {
     );
   });
 
+  const deleteWalletElem = () => {
+    return <div></div>;
+  };
+
+  let errMsgNode = null;
+  if (!success) {
+    const errMsgI18n = intl.formatMessage({
+      id: 'Incorrect Password',
+    });
+    errMsgNode = <div className="failure">{errMsgI18n}</div>;
+  }
+
   return (
     <div>
       <PageNav to="/" title={intl.formatMessage({ id: 'Home' })} />
       <div className={classes.container}>
         {isLogin ? settingElem : ''}
+
+        {isLogin ? (
+          <div>
+            <Button size="large" color="secondary" variant="contained" onClick={handleOpen}>
+              <FormattedMessage id="Delete Wallet" />
+            </Button>
+            <Modal open={open} onClose={handleClose}>
+              <div className={classes.container}>
+                {errMsgNode}
+                <Formik
+                  initialValues={{ password: '' }}
+                  onSubmit={onSubmit}
+                  validationSchema={Yup.object().shape({
+                    password: Yup.string()
+                      .min(6)
+                      .required(intl.formatMessage({ id: 'Required' })),
+                  })}
+                >
+                  {innerForm}
+                </Formik>
+              </div>
+            </Modal>
+          </div>
+        ) : (
+          ''
+        )}
+
         <LanguageSelector />
       </div>
     </div>
