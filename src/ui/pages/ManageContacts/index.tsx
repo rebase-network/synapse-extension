@@ -93,15 +93,31 @@ export default function initFunction(props: AppProps, state: AppState) {
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(async function listenerProcessing(message) {
       if (message.type === MESSAGE_TYPE.MANAGE_CONTACTS_RESULT) {
-        const result = await browser.storage.local.get('contacts');
-        console.log(/result/, JSON.stringify(result));
-        if (Array.isArray(result.contacts)) {
-          setContactItems(result.contacts);
+        const contactsStorage = await browser.storage.local.get('contacts');
+        if (Array.isArray(contactsStorage.contacts)) {
+          setContactItems(contactsStorage.contacts);
         }
-        console.log(/contactItems/, JSON.stringify(contactItems));
+      }
+    });
+    browser.storage.local.get('contacts').then((result) => {
+      if (Array.isArray(result.contacts)) {
+        setContactItems(result.contacts);
       }
     });
   }, []);
+
+  const handleListItemClick = async (event, address) => {
+    chrome.runtime.sendMessage({ address, type: MESSAGE_TYPE.MANAGE_CONTACTS_DEL });
+
+    // const contactsStorage = await browser.storage.local.get('contacts');
+    // if (Array.isArray(contactsStorage.contacts)) {
+    //   setContactItems(contactsStorage.contacts);
+    // }
+    // const removeReslt = _.remove(contactItems, function (contact) {
+    //   return contact.address === address;
+    // });
+    // await browser.storage.local.set({ contacts: removeReslt });
+  };
 
   const contactElem = contactItems.map((item, index) => {
     return (
@@ -109,7 +125,11 @@ export default function initFunction(props: AppProps, state: AppState) {
         <ListItem>
           <ListItemText primary={truncateAddress(item.address)} secondary={item.name} />
           <ListItemSecondaryAction>
-            <IconButton edge="end" aria-label="delete">
+            <IconButton
+              edge="end"
+              aria-label="delete"
+              onClick={(event) => handleListItemClick(event, item.address)}
+            >
               <DeleteIcon />
             </IconButton>
           </ListItemSecondaryAction>

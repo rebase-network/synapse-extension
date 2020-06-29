@@ -40,7 +40,6 @@ import { indexerAddresses, getTipBlockNumber } from '@background/indexer';
 let wallets = [];
 let currentWallet = {};
 let addressesList = [];
-let contacts = [];
 
 /**
  * Listen messages from popup
@@ -627,19 +626,48 @@ chrome.runtime.onMessage.addListener(async (request) => {
    * Manage Contacts
    */
   if (request.type === MESSAGE_TYPE.MANAGE_CONTACTS_ADD) {
+    let contactsObj = [];
     const { address, name } = request;
-
-    const manageContacts = await browser.storage.local.get('contacts');
-    if (Array.isArray(manageContacts)) {
-      contacts = manageContacts;
+    const contactsStorage = await browser.storage.local.get('contacts');
+    if (Array.isArray(contactsStorage.contacts)) {
+      contactsObj = contactsStorage.contacts;
     }
-    const contact = { address, name };
-    contacts.push(contact);
-    await browser.storage.local.set({ contacts });
+    const contactObj = { address, name };
+    const modContactIndex = _.findIndex(contactsObj, function (contactItem) {
+      return contactItem.address === address;
+    });
+    if (modContactIndex === -1) {
+      contactsObj.push(contactObj);
+    } else {
+      contactsObj[modContactIndex].name = name;
+    }
+    await browser.storage.local.set({ contacts: contactsObj });
 
-    const result = await browser.storage.local.get('contacts');
+    // const result = await browser.storage.local.get('contacts');
     chrome.runtime.sendMessage({
-      contacts: result,
+      //   contacts: result,
+      type: MESSAGE_TYPE.MANAGE_CONTACTS_RESULT,
+    });
+  }
+
+  if (request.type === MESSAGE_TYPE.MANAGE_CONTACTS_DEL) {
+    let contactsObj = [];
+    const { address } = request;
+
+    const contactsStorage = await browser.storage.local.get('contacts');
+    if (Array.isArray(contactsStorage.contacts)) {
+      contactsObj = contactsStorage.contacts;
+    }
+    if (contactsObj.length !== 1) {
+      _.remove(contactsObj, function (contact) {
+        return contact.address === address;
+      });
+    }
+    await browser.storage.local.set({ contacts: contactsObj });
+
+    // const result = await browser.storage.local.get('contacts');
+    chrome.runtime.sendMessage({
+      //   contacts: result,
       type: MESSAGE_TYPE.MANAGE_CONTACTS_RESULT,
     });
   }
