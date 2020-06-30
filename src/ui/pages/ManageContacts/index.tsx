@@ -14,6 +14,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { truncateAddress } from '@utils/formatters';
+import _ from 'lodash';
 
 const useStyles = makeStyles({
   container: {
@@ -86,19 +87,27 @@ export default function initFunction(props: AppProps, state: AppState) {
   const [contactItems, setContactItems] = React.useState([]);
 
   const onSubmit = async (values) => {
-    //
-    chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.MANAGE_CONTACTS_ADD });
+    // chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.MANAGE_CONTACTS_ADD });
+    let contactsObj = [];
+    const { address, name } = values;
+    const contactsStorage = await browser.storage.local.get('contacts');
+    if (Array.isArray(contactsStorage.contacts)) {
+      contactsObj = contactsStorage.contacts;
+    }
+    const contactObj = { address, name };
+    const modContactIndex = _.findIndex(contactsObj, function (contactItem) {
+      return contactItem.address === address;
+    });
+    if (modContactIndex === -1) {
+      contactsObj.push(contactObj);
+    } else {
+      contactsObj[modContactIndex].name = name;
+    }
+    setContactItems(contactsObj);
+    await browser.storage.local.set({ contacts: contactsObj });
   };
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener(async function listenerProcessing(message) {
-      if (message.type === MESSAGE_TYPE.MANAGE_CONTACTS_RESULT) {
-        const contactsStorage = await browser.storage.local.get('contacts');
-        if (Array.isArray(contactsStorage.contacts)) {
-          setContactItems(contactsStorage.contacts);
-        }
-      }
-    });
     browser.storage.local.get('contacts').then((result) => {
       if (Array.isArray(result.contacts)) {
         setContactItems(result.contacts);
@@ -107,16 +116,19 @@ export default function initFunction(props: AppProps, state: AppState) {
   }, [contactItems]);
 
   const handleListItemClick = async (event, address) => {
-    chrome.runtime.sendMessage({ address, type: MESSAGE_TYPE.MANAGE_CONTACTS_DEL });
+    let contactsObj = [];
 
-    // const contactsStorage = await browser.storage.local.get('contacts');
-    // if (Array.isArray(contactsStorage.contacts)) {
-    //   setContactItems(contactsStorage.contacts);
-    // }
-    // const removeReslt = _.remove(contactItems, function (contact) {
-    //   return contact.address === address;
-    // });
-    // await browser.storage.local.set({ contacts: removeReslt });
+    const contactsStorage = await browser.storage.local.get('contacts');
+    if (Array.isArray(contactsStorage.contacts)) {
+      contactsObj = contactsStorage.contacts;
+    }
+
+    _.remove(contactsObj, function (contact) {
+      return contact.address === address;
+    });
+
+    setContactItems(contactsObj);
+    await browser.storage.local.set({ contacts: contactsObj });
   };
 
   const contactElem = contactItems.map((item, index) => {
