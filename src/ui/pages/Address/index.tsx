@@ -224,17 +224,20 @@ export default function (props: AppProps) {
   // init name of  address
   React.useEffect(() => {
     (async () => {
-      const currentWallet = await browser.storage.local.get('contacts');
-      const currentAddress = currentWallet.address;
-      console.log(/currentAddress/, currentAddress);
+      const currentWalletStorage = await browser.storage.local.get('currentWallet');
+
+      const currentAddress = currentWalletStorage?.currentWallet.address;
 
       const contactStorage = await browser.storage.local.get('contacts');
-      const contactIndex = _.findIndex(contactStorage, function (contactItem) {
+      console.log(/contactStorage/, JSON.stringify(contactStorage));
+      if (_.isEmpty(contactStorage)) return;
+      const { contacts } = contactStorage;
+      const contactIndex = _.findIndex(contacts, function (contactItem) {
         return contactItem.address === currentAddress;
       });
       console.log(/contactIndex/, contactIndex);
       if (contactIndex > -1) {
-        setName(contactStorage[contactIndex].name);
+        setName(contacts[contactIndex].name);
       }
     })();
   }, [name]);

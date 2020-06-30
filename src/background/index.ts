@@ -658,11 +658,11 @@ chrome.runtime.onMessage.addListener(async (request) => {
     if (Array.isArray(contactsStorage.contacts)) {
       contactsObj = contactsStorage.contacts;
     }
-    if (contactsObj.length !== 1) {
-      _.remove(contactsObj, function (contact) {
-        return contact.address === address;
-      });
-    }
+
+    _.remove(contactsObj, function (contact) {
+      return contact.address === address;
+    });
+
     await browser.storage.local.set({ contacts: contactsObj });
 
     // const result = await browser.storage.local.get('contacts');
