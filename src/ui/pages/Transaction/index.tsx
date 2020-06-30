@@ -47,6 +47,7 @@ interface AppProps {
   handleBlur: any;
   handleSubmit: any;
   handleReset: any;
+  setFieldValue: any;
 }
 
 interface AppState {}
@@ -62,18 +63,26 @@ export const innerForm = (props: AppProps) => {
         setContacts(result.contacts);
       }
     });
-  });
+  }, []);
 
-  const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
+  const {
+    values,
+    touched,
+    errors,
+    isSubmitting,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    setFieldValue,
+  } = props;
 
-  console.log(/values/, JSON.stringify(values));
   return (
     <Form className="form-mnemonic" id="form-mnemonic" onSubmit={handleSubmit}>
       <Autocomplete
         id="address"
-        // onChange={(event, newValue) => {
-        //   console.log(/newValue/, newValue);
-        // }}
+        onChange={(event, newValue) => {
+          setFieldValue('address', newValue.address);
+        }}
         options={contacts}
         getOptionLabel={(option) => option.address}
         renderOption={(option) => (
@@ -89,7 +98,7 @@ export const innerForm = (props: AppProps) => {
             label={intl.formatMessage({ id: 'To' })}
             name="address"
             value={values.address}
-            // onChange={handleChange}
+            onChange={handleChange}
             margin="normal"
             InputProps={{ ...params.InputProps, type: 'search' }}
             variant="outlined"
@@ -99,21 +108,6 @@ export const innerForm = (props: AppProps) => {
         )}
         style={{ width: 300 }}
       />
-      {/* <TextField
-        label={intl.formatMessage({ id: 'To' })}
-        name="address"
-        type="text"
-        fullWidth
-        className={classes.textField}
-        value={values.address}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        error={!!errors.address}
-        helperText={errors.address && touched.address && errors.address}
-        margin="normal"
-        variant="outlined"
-        data-testid="field-address"
-      /> */}
       <TextField
         label={intl.formatMessage({ id: 'Capacity' })}
         name="capacity"
