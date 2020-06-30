@@ -229,13 +229,11 @@ export default function (props: AppProps) {
       const currentAddress = currentWalletStorage?.currentWallet.address;
 
       const contactStorage = await browser.storage.local.get('contacts');
-      console.log(/contactStorage/, JSON.stringify(contactStorage));
       if (_.isEmpty(contactStorage)) return;
       const { contacts } = contactStorage;
       const contactIndex = _.findIndex(contacts, function (contactItem) {
         return contactItem.address === currentAddress;
       });
-      console.log(/contactIndex/, contactIndex);
       if (contactIndex > -1) {
         setName(contacts[contactIndex].name);
       }
