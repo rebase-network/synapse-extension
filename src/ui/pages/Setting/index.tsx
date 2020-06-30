@@ -25,6 +25,10 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'space-between',
   },
+  deleteGroup: {
+    marginTop: '25px',
+    marginBottom: '25px',
+  },
 });
 
 interface AppProps {}
@@ -131,7 +135,7 @@ export default function (props: AppProps, state: AppState) {
   };
 
   const onSubmit = async (values) => {
-    browser.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.DELETE_WALLET });
+    chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.DELETE_WALLET });
   };
 
   const isLogin = localStorage.getItem('IS_LOGIN') === 'YES';
@@ -166,22 +170,15 @@ export default function (props: AppProps, state: AppState) {
         {isLogin ? settingElem : ''}
 
         {isLogin ? (
-          <div>
+          <div className={classes.deleteGroup}>
             <Button size="large" color="secondary" variant="contained" onClick={handleOpen}>
               <FormattedMessage id="Delete Wallet" />
             </Button>
+
             <Modal open={open} onClose={handleClose}>
-              <div className={classes.container}>
+              <div>
                 {errMsgNode}
-                <Formik
-                  initialValues={{ password: '' }}
-                  onSubmit={onSubmit}
-                  validationSchema={Yup.object().shape({
-                    password: Yup.string()
-                      .min(6)
-                      .required(intl.formatMessage({ id: 'Required' })),
-                  })}
-                >
+                <Formik initialValues={{ password: '' }} onSubmit={onSubmit}>
                   {innerForm}
                 </Formik>
               </div>
