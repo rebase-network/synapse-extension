@@ -621,22 +621,19 @@ chrome.runtime.onMessage.addListener(async (request) => {
       type: MESSAGE_TYPE.IMPORT_KEYSTORE_OK,
     });
   }
-  }
-
 
   if (request.type === MESSAGE_TYPE.DELETE_WALLET) {
-
     const _currentWallet = await browser.storage.local.get('currentWallet');
     const _wallets = await browser.storage.local.get('wallets');
 
     const password = request.password.trim();
 
-    const currentPublicKey = _currentWallet.currentWallet.publicKey
-    const currWallet = findInWalletsByPublicKey(currentPublicKey, _wallets.wallets)
-    const currKeystore = currWallet.keystore
-    const privKeyObj = await PasswordKeystore.checkByPassword(currKeystore, password)
+    const currentPublicKey = _currentWallet.currentWallet.publicKey;
+    const currWallet = findInWalletsByPublicKey(currentPublicKey, _wallets.wallets);
+    const currKeystore = currWallet.keystore;
+    const privKeyObj = await PasswordKeystore.checkByPassword(currKeystore, password);
 
-    if (_.isEmpty(privKeyObj)){
+    if (_.isEmpty(privKeyObj)) {
       browser.runtime.sendMessage({
         type: MESSAGE_TYPE.DELETE_WALLET_ERR,
       });
@@ -650,5 +647,4 @@ chrome.runtime.onMessage.addListener(async (request) => {
       type: MESSAGE_TYPE.DELETE_WALLET_OK,
     });
   }
-
 });
