@@ -104,7 +104,7 @@ export default function initFunction(props: AppProps, state: AppState) {
         setContactItems(result.contacts);
       }
     });
-  }, []);
+  }, [contactItems]);
 
   const handleListItemClick = async (event, address) => {
     chrome.runtime.sendMessage({ address, type: MESSAGE_TYPE.MANAGE_CONTACTS_DEL });
