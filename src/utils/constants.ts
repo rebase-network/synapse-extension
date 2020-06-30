@@ -68,6 +68,7 @@ export const MESSAGE_TYPE = {
   // delete wallet
   DELETE_WALLET: 'DELETE_WALLET',
   DELETE_WALLET_ERR: 'DELETE_WALLET_ERR',
+  DELETE_WALLET_OK: 'DELETE_WALLET_OK',
 };
 
 export const Ckb = {
