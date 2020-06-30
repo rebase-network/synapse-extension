@@ -49,4 +49,6 @@ export default {
   'Delete Wallet': 'Delete Wallet',
   'Incorrect Password': 'Incorrect Password',
   'Manage Contacts':'Manage Contacts',
+  'Are your sure Delete Wallet': 'Are your sure Delete Wallet',
+  "Please backup your wallet, or wallet can't recover": "Please backup your wallet, or wallet can't recover",
 };

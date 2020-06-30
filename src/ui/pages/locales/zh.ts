@@ -49,4 +49,6 @@ export default {
   'Delete Wallet': '删除钱包',
   'Incorrect Password': '密码不正确',
   'Manage Contacts':'联系人管理',
+  'Are your sure Delete Wallet': '你确定删除钱包么',
+  "Please backup your wallet, or wallet can't recover": "请备份好钱包，否则无法恢复",
 };
