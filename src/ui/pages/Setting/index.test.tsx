@@ -3,8 +3,10 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
-import App from './index';
-import en from '../locales/en';
+import chrome from 'sinon-chrome';
+
+import App from '@ui/pages/Setting/index';
+import en from '@ui/pages/locales/en';
 
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
@@ -20,6 +22,10 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('setting page', () => {
+  beforeAll(() => {
+    window.chrome = chrome;
+  });
+
   beforeEach(() => {
     render(
       <IntlProvider locale="en" messages={en}>
@@ -28,6 +34,8 @@ describe('setting page', () => {
         </Router>
       </IntlProvider>,
     );
+
+    window.chrome = chrome;
   });
 
   it('should NOT render item: Export Mnemonic', async () => {
