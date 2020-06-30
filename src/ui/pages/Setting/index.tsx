@@ -1,7 +1,7 @@
 import React from 'react';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -28,6 +28,17 @@ const useStyles = makeStyles({
   deleteGroup: {
     marginTop: '25px',
     marginBottom: '25px',
+  },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    width: '90%',
+    height: '40%',
+    padding: '10px',
+    backgroundColor: 'white',
   },
 });
 
@@ -115,6 +126,7 @@ export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
   const intl = useIntl();
 
+  const history = useHistory();
   const [open, setOpen] = React.useState(false);
   const [success, setSuccess] = React.useState(true);
 
@@ -122,6 +134,10 @@ export default function (props: AppProps, state: AppState) {
     chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
       if (msg.type === MESSAGE_TYPE.DELETE_WALLET_ERR) {
         setSuccess(false);
+      }
+
+      if (msg.type === MESSAGE_TYPE.DELETE_WALLET_OK) {
+        history.push('./mnemonic-setting');
       }
     });
   }, []);
@@ -151,10 +167,6 @@ export default function (props: AppProps, state: AppState) {
     );
   });
 
-  const deleteWalletElem = () => {
-    return <div></div>;
-  };
-
   let errMsgNode = null;
   if (!success) {
     const errMsgI18n = intl.formatMessage({
@@ -175,9 +187,16 @@ export default function (props: AppProps, state: AppState) {
               <FormattedMessage id="Delete Wallet" />
             </Button>
 
-            <Modal open={open} onClose={handleClose}>
-              <div>
+            <Modal open={open} onClose={handleClose} className={classes.modal}>
+              <div className={classes.paper}>
                 {errMsgNode}
+
+                <h2>
+                  <FormattedMessage id="Are your sure Delete Wallet" />?
+                </h2>
+                <span>
+                  <FormattedMessage id="Please backup your wallet, or wallet can't recover" />
+                </span>
                 <Formik initialValues={{ password: '' }} onSubmit={onSubmit}>
                   {innerForm}
                 </Formik>

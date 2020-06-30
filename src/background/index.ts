@@ -645,6 +645,9 @@ chrome.runtime.onMessage.addListener(async (request) => {
     browser.storage.local.clear();
     localStorage.clear();
 
+    browser.runtime.sendMessage({
+      type: MESSAGE_TYPE.DELETE_WALLET_OK,
+    });
   }
 
 });
