@@ -20,7 +20,7 @@ interface AppProps {
   txList: any;
 }
 
-export default function (props: AppProps) {
+export default (props: AppProps) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [selectedTxHash, setSelectedTxHash] = React.useState('');
@@ -60,4 +60,4 @@ export default function (props: AppProps) {
   ));
 
   return <div data-testid="container">{txListElem}</div>;
-}
+};
