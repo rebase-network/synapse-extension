@@ -621,6 +621,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       type: MESSAGE_TYPE.IMPORT_KEYSTORE_OK,
     });
   }
+  }
 
 
   if (request.type === MESSAGE_TYPE.DELETE_WALLET) {

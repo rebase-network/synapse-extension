@@ -16,6 +16,7 @@ import ExportPrivateKeySecond from '@ui/pages/ExportPrivateKeySecond';
 import Setting from '@ui/pages/Setting';
 import ExportMnemonicSecond from '@ui/pages/ExportMnemonicSecond';
 import AppBar from '@ui/Components/AppBar';
+import ManageContacts from '@ui/pages/ManageContacts';
 
 import './styles/global.scss';
 
@@ -71,6 +72,9 @@ export default function App() {
             </Route>
             <Route path="/mnemonic-setting">
               <MnemonicSetting />
+            </Route>
+            <Route path="/manage-contacts">
+              <ManageContacts />
             </Route>
             <Route path="/setting">
               <Setting />

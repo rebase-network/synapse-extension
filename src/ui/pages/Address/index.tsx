@@ -111,6 +111,7 @@ export default function (props: AppProps) {
   const [type, setType] = React.useState('');
   const [disableFlg, setDisableFlg] = React.useState(false);
   const [tooltipMsg, setTooltipMsg] = React.useState('Copy to clipboard');
+  const [name, setName] = React.useState('');
 
   const updateCapacity = async (lockHash: string) => {
     const { capacity: addressCapacity } = await getAddressInfo(lockHash);
@@ -220,6 +221,24 @@ export default function (props: AppProps) {
     ) : (
       <TxList txList={txs} />
     );
+  // init name of  address
+  React.useEffect(() => {
+    (async () => {
+      const currentWalletStorage = await browser.storage.local.get('currentWallet');
+
+      const currentAddress = currentWalletStorage?.currentWallet.address;
+
+      const contactStorage = await browser.storage.local.get('contacts');
+      if (_.isEmpty(contactStorage)) return;
+      const { contacts } = contactStorage;
+      const contactIndex = _.findIndex(contacts, function (contactItem) {
+        return contactItem.address === currentAddress;
+      });
+      if (contactIndex > -1) {
+        setName(contacts[contactIndex].name);
+      }
+    })();
+  }, [name]);
 
   return (
     <div className={classes.container}>
@@ -227,6 +246,7 @@ export default function (props: AppProps) {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Box textAlign="center" fontSize={22} data-testid="address-info">
+              <div>{name}</div>
               <Tooltip title={<FormattedMessage id={tooltipMsg} />} arrow placement="bottom">
                 <Button
                   size="large"

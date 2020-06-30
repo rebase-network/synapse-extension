@@ -58,6 +58,7 @@ export default function (props: AppProps, state: AppState) {
   const { addressInfo } = props;
   const { address, type, lock } = addressInfo;
   const [capacity, setCapacity] = React.useState('0');
+  const [name, setName] = React.useState('');
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -67,12 +68,26 @@ export default function (props: AppProps, state: AppState) {
     fetchData();
   }, [capacity]);
 
+  React.useEffect(() => {
+    (async () => {
+      const contactStorage = await browser.storage.local.get('contacts');
+      if (_.isEmpty(contactStorage)) return;
+      const { contacts } = contactStorage;
+      const contactIndex = _.findIndex(contacts, function (contactItem) {
+        return contactItem.address === address;
+      });
+      if (contactIndex > -1) {
+        setName(contacts[contactIndex].name);
+      }
+    })();
+  }, [name]);
+
   const handleListItemClick = (event, addressInfo: TAddressInfo) => {
     const currentWallet = _.clone(addressInfo);
     delete currentWallet.amount;
     props.onSelectAddress({ right: false });
 
-    browser.storage.local.set({ currentWallet: currentWallet });
+    browser.storage.local.set({ currentWallet });
 
     history.push(`/address/${addressInfo.address}`);
   };
@@ -97,7 +112,8 @@ export default function (props: AppProps, state: AppState) {
                 {`${capacity} CKB`}
               </Typography>
               <br />
-              {type}
+              {`${type} `}
+              {name}
             </>
           }
         />

@@ -174,9 +174,9 @@ export const sendTransaction = async (
   lockType,
   password,
   publicKey,
-  toData?,
+  toData = '0x',
 ) => {
-  const toDataHex = textToHex(toData);
+  const toDataHex = textToHex(toData || '0x');
   const toAddressScript = addressToScript(toAddress);
   let toLockType = '';
   if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {

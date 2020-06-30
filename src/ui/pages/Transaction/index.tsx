@@ -12,6 +12,8 @@ import { MESSAGE_TYPE, MIN_CELL_CAPACITY } from '@utils/constants';
 import PageNav from '@ui/Components/PageNav';
 import Modal from '@ui/Components/Modal';
 import TxDetail from '@ui/Components/TxDetail';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { truncateAddress } from '@utils/formatters';
 
 const useStyles = makeStyles({
   container: {
@@ -45,6 +47,7 @@ interface AppProps {
   handleBlur: any;
   handleSubmit: any;
   handleReset: any;
+  setFieldValue: any;
 }
 
 interface AppState {}
@@ -52,25 +55,58 @@ interface AppState {}
 export const innerForm = (props: AppProps) => {
   const classes = useStyles();
   const intl = useIntl();
+  const [contacts, setContacts] = React.useState([]);
 
-  const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
+  React.useEffect(() => {
+    browser.storage.local.get('contacts').then((result) => {
+      if (Array.isArray(result.contacts)) {
+        setContacts(result.contacts);
+      }
+    });
+  }, []);
+
+  const {
+    values,
+    touched,
+    errors,
+    isSubmitting,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    setFieldValue,
+  } = props;
 
   return (
     <Form className="form-mnemonic" id="form-mnemonic" onSubmit={handleSubmit}>
-      <TextField
-        label={intl.formatMessage({ id: 'To' })}
-        name="address"
-        type="text"
-        fullWidth
-        className={classes.textField}
-        value={values.address}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        error={!!errors.address}
-        helperText={errors.address && touched.address && errors.address}
-        margin="normal"
-        variant="outlined"
-        data-testid="field-address"
+      <Autocomplete
+        id="address"
+        onChange={(event, newValue) => {
+          setFieldValue('address', newValue.address);
+        }}
+        options={contacts}
+        getOptionLabel={(option) => option.address}
+        renderOption={(option) => (
+          <>
+            {`${option.name}: `}
+            {truncateAddress(option.address)}
+          </>
+        )}
+        freeSolo
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label={intl.formatMessage({ id: 'To' })}
+            name="address"
+            value={values.address}
+            onChange={handleChange}
+            margin="normal"
+            InputProps={{ ...params.InputProps, type: 'search' }}
+            variant="outlined"
+            error={!!errors.address}
+            helperText={errors.address && touched.address && errors.address}
+          />
+        )}
+        style={{ width: 300 }}
       />
       <TextField
         label={intl.formatMessage({ id: 'Capacity' })}
