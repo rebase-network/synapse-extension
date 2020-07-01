@@ -144,11 +144,11 @@ export const udtsLiveCells = [
 // aggregate result from tokens
 export const udtsCapacity = {
   '0x1c5f32c5efb08ac256bd9413c30eef7420ae54f30ff11075967b89570326c295': {
-    ckb: 16595753631744,
+    ckb: 170400000000,
     udt: 310043332,
   },
   '0x663265381e55af0f9789d2b0c9bd38525358b40c29bd6254c0b0c9b2926c6844': {
-    ckb: 2765958938624,
+    ckb: 28400000000,
     udt: 900,
   },
 };
@@ -164,9 +164,8 @@ export const udtsMeta = [
     name: 'SuperNewToken',
     decimal: 4,
     symbol: 'SNB',
-    typeHash: '0x1c5f32c5efb08ac256bd9413c30eef7420ae54f30ff11075967b89570326c295'
-
-  }
+    typeHash: '0x1c5f32c5efb08ac256bd9413c30eef7420ae54f30ff11075967b89570326c295',
+  },
 ];
 
 export const addressInfo = {

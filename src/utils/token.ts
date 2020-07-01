@@ -17,7 +17,7 @@ export const aggregateUDT = (udtArr: UDTInfo[]) => {
       };
     }
     result[cur.typeHash].udt += hexToDecimal(cur.outputdata, false);
-    result[cur.typeHash].ckb += parseInt(cur.capacity, 16);
+    result[cur.typeHash].ckb += parseInt(cur.capacity, 10);
     return result;
   }, {});
 };
