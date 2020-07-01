@@ -7,7 +7,7 @@ describe('token list', () => {
     expect(elem).toBeInTheDocument();
   });
   it('should have correct amount of Love Lina Token', () => {
-    const elem = screen.getByText('Love Lina Token');
-    expect(elem).toBe(75570);
+    const elem = screen.getByText('900');
+    expect(elem).toBeInTheDocument();
   });
 });

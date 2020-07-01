@@ -1,7 +1,7 @@
-import { udtInfo } from '@utils/fixtures/token';
+import { udtsCapacity } from '@utils/fixtures/token';
 
-export { udtInfo };
+export { udtsCapacity };
 
 export default {
-  udtInfo,
+  udtsCapacity,
 };
