@@ -13,11 +13,6 @@ describe('token list', () => {
       </IntlProvider>,
     );
   });
-  // it('should render Love Lina Token', () => {
-  //   const elem = screen.getByText('Love Lina Token');
-  //   console.log('token elem: ', elem);
-  //   expect(elem).toBeInTheDocument();
-  // });
   it('should have correct amount of Love Lina Token', () => {
     const elems = screen.getAllByRole('listitem');
     expect(elems).toHaveLength(2);
