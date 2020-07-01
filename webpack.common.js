@@ -22,7 +22,7 @@ module.exports = {
         to: path.join(__dirname, 'dist'),
       },
       {
-        from: 'node_modules/webextension-polyfill/dist/browser-polyfill.js',
+        from: 'node_modules/webextension-polyfill/dist/browser-polyfill.min.js',
         to: path.join(__dirname, 'dist/js'),
       },
       {
