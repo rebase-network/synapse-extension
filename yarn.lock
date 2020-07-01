@@ -4520,6 +4520,11 @@ jest-watcher@^25.1.0:
     jest-util "^25.1.0"
     string-length "^3.1.0"
 
+jest-webextension-mock@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.npm.taobao.org/jest-webextension-mock/download/jest-webextension-mock-3.6.0.tgz#4dc727e17f3471180e853021e54192881d3d3f52"
+  integrity sha1-Tccn4X80cRgOhTAh5UGSiB09P1I=
+
 jest-worker@^25.1.0:
   version "25.1.0"
   resolved "https://registry.yarnpkg.com/jest-worker/-/jest-worker-25.1.0.tgz#75d038bad6fdf58eba0d2ec1835856c497e3907a"
