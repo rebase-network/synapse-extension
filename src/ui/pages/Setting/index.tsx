@@ -67,6 +67,11 @@ const settingItems = [
     text: <FormattedMessage id="Manage Contacts" />,
     testId: 'manageContacts',
   },
+  {
+    link: '/manage-udts',
+    text: <FormattedMessage id="Manage UDTs" />,
+    testId: 'ManageUDTs',
+  },
 ];
 
 export const innerForm = (props) => {

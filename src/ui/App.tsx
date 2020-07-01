@@ -17,6 +17,7 @@ import Setting from '@ui/pages/Setting';
 import ExportMnemonicSecond from '@ui/pages/ExportMnemonicSecond';
 import AppBar from '@ui/Components/AppBar';
 import ManageContacts from '@ui/pages/ManageContacts';
+import ManageUDTs from '@ui/pages/ManageUDTs';
 
 import './styles/global.scss';
 
@@ -75,6 +76,9 @@ export default function App() {
             </Route>
             <Route path="/manage-contacts">
               <ManageContacts />
+            </Route>
+            <Route path="/manage-udts">
+              <ManageUDTs />
             </Route>
             <Route path="/setting">
               <Setting />

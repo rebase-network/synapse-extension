@@ -1,11 +1,8 @@
 import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { useHistory } from 'react-router-dom';
 import { Button, TextField } from '@material-ui/core';
 import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
 import { makeStyles } from '@material-ui/core/styles';
-import { MESSAGE_TYPE } from '@utils/constants';
 import PageNav from '@ui/Components/PageNav';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -40,7 +37,7 @@ export const innerForm = (props) => {
       aria-label="form"
     >
       <TextField
-        label="address"
+        label={intl.formatMessage({ id: 'Address' })}
         id="address"
         name="address"
         type="address"
@@ -55,7 +52,7 @@ export const innerForm = (props) => {
         data-testid="field-address"
       />
       <TextField
-        label="name"
+        label={intl.formatMessage({ id: 'Name' })}
         id="name"
         name="name"
         type="name"
@@ -76,7 +73,7 @@ export const innerForm = (props) => {
         variant="contained"
         data-testid="submit-button"
       >
-        <FormattedMessage id="Confirm" />
+        <FormattedMessage id="Add" />
       </Button>
     </Form>
   );
@@ -113,7 +110,7 @@ export default function initFunction(props: AppProps, state: AppState) {
         setContactItems(result.contacts);
       }
     });
-  }, [contactItems]);
+  }, []);
 
   const handleListItemClick = async (event, address) => {
     let contactsObj = [];
@@ -154,18 +151,6 @@ export default function initFunction(props: AppProps, state: AppState) {
     <div>
       <PageNav to="/setting" title="Manage Contacts" />
       <div className={classes.container}>
-        {/* <div>
-          <List>
-            <ListItem>
-              <ListItemText primary="Single-line item" secondary="secondary item" />
-              <ListItemSecondaryAction>
-                <IconButton edge="end" aria-label="delete">
-                  <DeleteIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-          </List>
-        </div> */}
         {contactElem}
         <Formik
           initialValues={{ address: '', name: '' }}
