@@ -51,4 +51,12 @@ export default {
   'Manage Contacts':'Manage Contacts',
   'Are your sure Delete Wallet': 'Are your sure Delete Wallet',
   "Please backup your wallet, or wallet can't recover": "Please backup your wallet, or wallet can't recover",
+  'Manage UDTs':'Manage UDTs',
+  'Add':'Add',
+  'Address':'Address',
+  'Name':'Name',
+  'UDT Name':'UDT Name',
+  'UDT Hash':'UDT Hash',
+  'Decimals':'Decimals',
+  'Symbols':'Symbols',
 };

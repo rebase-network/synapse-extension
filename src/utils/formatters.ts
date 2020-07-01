@@ -43,6 +43,9 @@ export const shannonToCKBFormatter = (
 export const truncateAddress = (address: string) =>
   `${address.substr(0, 10)}...${address.substr(address.length - 10, address.length)}`;
 
+export const truncateHash = (hashParma: string) =>
+  `${hashParma.substr(0, 10)}...${hashParma.substr(hashParma.length - 10, hashParma.length)}`;
+
 export default {
   shannonToCKBFormatter,
   truncateAddress,
