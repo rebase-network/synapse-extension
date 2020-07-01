@@ -225,15 +225,18 @@ export default function (props: AppProps) {
   React.useEffect(() => {
     (async () => {
       const currentWalletStorage = await browser.storage.local.get('currentWallet');
-
-      const currentAddress = currentWalletStorage?.currentWallet.address;
-
+      const currentAddress = currentWalletStorage?.currentWallet?.address;
       const contactStorage = await browser.storage.local.get('contacts');
-      if (_.isEmpty(contactStorage)) return;
+
+      if (_.isEmpty(contactStorage)) {
+        return;
+      }
+
       const { contacts } = contactStorage;
-      const contactIndex = _.findIndex(contacts, function (contactItem) {
+      const contactIndex = _.findIndex(contacts, (contactItem) => {
         return contactItem.address === currentAddress;
       });
+
       if (contactIndex > -1) {
         setName(contacts[contactIndex].name);
       }
