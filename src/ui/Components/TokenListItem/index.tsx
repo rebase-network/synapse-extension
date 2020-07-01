@@ -14,7 +14,7 @@ const useStyles = makeStyles({
 
 type TTokenInfo = {
   name: string;
-  capacity: number;
+  udt: number;
   ckb: number;
 };
 
@@ -26,12 +26,13 @@ interface AppState {}
 
 export default (props: AppProps) => {
   const classes = useStyles();
-  const { tokenInfo } = props;
-  const { name, capacity, ckb } = tokenInfo;
-
+  const {
+    tokenInfo: { name, udt, ckb },
+  } = props;
+  console.log('tokenlist item: props: ', props);
   return (
-    <ListItem button key={`item-${name}`}>
-      <ListItemText primary={truncateAddress(name)} secondary={capacity} />
+    <ListItem>
+      <ListItemText primary={ckb} secondary={udt} />
     </ListItem>
   );
 };
