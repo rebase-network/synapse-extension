@@ -160,6 +160,13 @@ export const udtsMeta = [
     decimal: 8,
     typeHash: '0x663265381e55af0f9789d2b0c9bd38525358b40c29bd6254c0b0c9b2926c6844',
   },
+  {
+    name: 'SuperNewToken',
+    decimal: 4,
+    symbol: 'SNB',
+    typeHash: '0x1c5f32c5efb08ac256bd9413c30eef7420ae54f30ff11075967b89570326c295'
+
+  }
 ];
 
 export const addressInfo = {
