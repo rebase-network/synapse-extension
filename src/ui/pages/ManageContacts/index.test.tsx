@@ -1,18 +1,21 @@
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import '@testing-library/jest-dom/extend-expect';
+import App from './index';
 import { render, screen } from '@testing-library/react';
-import { IntlProvider } from 'react-intl';
-import App from '@ui/pages/ManageContacts/index';
+import userEvent from '@testing-library/user-event';
+import '@testing-library/jest-dom/extend-expect';
 import chrome from 'sinon-chrome';
-import en from '@ui/pages/locales/en';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { IntlProvider } from 'react-intl';
+import en from '../locales/en';
 
 jest.mock('react-router-dom', () => {
+  // Require the original module to not be mocked...
   const originalModule = jest.requireActual('react-router-dom');
 
   return {
     __esModule: true,
     ...originalModule,
+    // add your noops here
     useParams: jest.fn(),
     useHistory: jest.fn(),
   };
@@ -33,5 +36,34 @@ describe('export mnemonic page', () => {
     );
   });
 
-  it('should render form fields: submitbutton', async () => {});
+  it('should render form fields: submitbutton', async () => {
+    const submitButton = screen.getByRole('button', { name: /Add/i });
+    expect(submitButton).toBeInTheDocument();
+  });
+
+  it('should change form fields: name', async () => {
+    const name = screen.getByLabelText('Name');
+
+    expect(name).toBeInTheDocument();
+    expect(name).toBeEmpty();
+
+    await userEvent.type(name, 'syuukawa');
+
+    expect(screen.getByRole('form')).toHaveFormValues({
+      name: 'syuukawa',
+    });
+  });
+
+  it('should change form fields: address', async () => {
+    const address = screen.getByLabelText('Address');
+
+    expect(address).toBeInTheDocument();
+    expect(address).toBeEmpty();
+
+    await userEvent.type(address, 'ckt1qyqfhpyg02ew59cfnr8lnz2kwhwd98xjd4xsscxlae');
+
+    expect(screen.getByRole('form')).toHaveFormValues({
+      address: 'ckt1qyqfhpyg02ew59cfnr8lnz2kwhwd98xjd4xsscxlae',
+    });
+  });
 });
