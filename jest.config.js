@@ -9,7 +9,7 @@ const {
 
 module.exports = {
   roots: ['<rootDir>'],
-  setupFilesAfterEnv: ['./jest.setup.js'],
+  setupFilesAfterEnv: ['./jest.setup.js', 'jest-webextension-mock'],
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
     '^.+\\.scss$': '<rootDir>/config/jest/cssTransform.js',
