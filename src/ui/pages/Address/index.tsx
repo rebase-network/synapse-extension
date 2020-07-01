@@ -11,6 +11,7 @@ import { MESSAGE_TYPE, EXPLORER_URL } from '@utils/constants';
 import { truncateAddress, shannonToCKBFormatter } from '@utils/formatters';
 import { getAddressInfo } from '@utils/apis';
 import TxList from '@ui/Components/TxList';
+import TokenList from '@ui/Components/TokenList';
 
 const QrCode = require('qrcode.react');
 
@@ -304,7 +305,7 @@ export default function (props: AppProps) {
       </div>
       <br />
       <br />
-
+      <TokenList />
       <div>
         <div className={classes.txHeader}>
           <h3>
