@@ -83,7 +83,7 @@ export default function initFunction(props: AppProps, state: AppState) {
   const classes = useStyles();
   const [contactItems, setContactItems] = React.useState([]);
 
-  const onSubmit = async (values) => {
+  const onSubmit = async (values, { resetForm }) => {
     // chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.MANAGE_CONTACTS_ADD });
     let contactsObj = [];
     const { address, name } = values;
@@ -102,6 +102,8 @@ export default function initFunction(props: AppProps, state: AppState) {
     }
     setContactItems(contactsObj);
     await browser.storage.local.set({ contacts: contactsObj });
+
+    resetForm();
   };
 
   React.useEffect(() => {
