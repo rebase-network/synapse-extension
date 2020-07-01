@@ -57,6 +57,6 @@ export default {
   'Name':'联系人',
   'UDT Name':'UDT 名称',
   'UDT Hash':'UDT 哈希',
-  'Decimals':'位数',
-  'Symbols':'符号',
+  'Decimal':'位数',
+  'Symbol':'符号',
 };

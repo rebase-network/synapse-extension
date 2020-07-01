@@ -68,7 +68,7 @@ export const innerForm = (props) => {
         data-testid="field-typeHash"
       />
       <TextField
-        label={intl.formatMessage({ id: 'Decimals' })}
+        label={intl.formatMessage({ id: 'Decimal' })}
         id="decimal"
         name="decimal"
         type="text"
@@ -83,7 +83,7 @@ export const innerForm = (props) => {
         data-testid="field-decimal"
       />
       <TextField
-        label={intl.formatMessage({ id: 'Symbols' })}
+        label={intl.formatMessage({ id: 'Symbol' })}
         id="symbol"
         name="symbol"
         type="text"
@@ -180,7 +180,7 @@ export default function initFunction(props: AppProps, state: AppState) {
 
   return (
     <div>
-      <PageNav to="/setting" title="Manage Contacts" />
+      <PageNav to="/setting" title="Manage UDTs" />
       <div className={classes.container}>
         {udtsElem}
         <Formik
