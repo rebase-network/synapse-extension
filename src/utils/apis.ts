@@ -34,8 +34,21 @@ export const getTxHistories = async (scriptObj): Promise<any> => {
   return result.data;
 };
 
+interface TLockAndTypeScripts {
+  lockHash: string;
+  typeScripts?: CKBComponents.Script[];
+}
+
+export const getUDTsByLockHash = async (params: TLockAndTypeScripts): Promise<any> => {
+  const url = `${configService.CACHE_LAYER_ENDPOINT}/cell/getCellsByLockHashAndTypeScripts`;
+
+  const result = await Axios.post(url, params);
+  return result.data;
+};
+
 export default {
   getAddressInfo,
   getUnspentCells,
   getTxHistories,
+  getUDTsByLockHash,
 };

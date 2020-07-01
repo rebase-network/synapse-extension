@@ -71,7 +71,7 @@ describe('export mnemonic page', () => {
   });
 
   it('should change form fields: symbol', async () => {
-    const symbol = screen.getByLabelText('Symbols');
+    const symbol = screen.getByLabelText('Symbol');
 
     expect(symbol).toBeInTheDocument();
     expect(symbol).toBeEmpty();
@@ -84,7 +84,7 @@ describe('export mnemonic page', () => {
   });
 
   it('should change form fields: decimals', async () => {
-    const decimal = screen.getByLabelText('Decimals');
+    const decimal = screen.getByLabelText('Decimal');
 
     expect(decimal).toBeInTheDocument();
 

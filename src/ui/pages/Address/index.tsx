@@ -3,14 +3,19 @@ import _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
 import { Grid, Button, Dialog, IconButton, Link, Tooltip, Divider, Box } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import CallMadeIcon from '@material-ui/icons/CallMade';
+import {
+  Close as CloseIcon,
+  CallMade as CallMadeIcon,
+  ExpandMore as ExpandMoreIcon,
+  ExpandLess as ExpandLessIcon,
+} from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { MESSAGE_TYPE, EXPLORER_URL } from '@utils/constants';
 import { truncateAddress, shannonToCKBFormatter } from '@utils/formatters';
 import { getAddressInfo } from '@utils/apis';
 import TxList from '@ui/Components/TxList';
+import TokenList from '@ui/Components/TokenList';
 
 const QrCode = require('qrcode.react');
 
@@ -102,6 +107,7 @@ export default function (props: AppProps) {
   const history = useHistory();
   const addressFromUrl = _.get(props, 'match.params.address', '');
 
+  const [showMore, setShowMore] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [address, setAddress] = React.useState(addressFromUrl);
   const [capacity, setCapacity] = React.useState('0');
@@ -204,6 +210,30 @@ export default function (props: AppProps) {
     </div>
   );
 
+  const handleClickShowMore = () => {
+    setShowMore(!showMore);
+  };
+
+  let showMoreNode = (
+    <span onClick={handleClickShowMore} role="button">
+      <ExpandMoreIcon color="primary" />
+    </span>
+  );
+  let tokenListNode = null;
+
+  if (showMore) {
+    showMoreNode = (
+      <span onClick={handleClickShowMore} role="button">
+        <ExpandLessIcon color="primary" />
+      </span>
+    );
+    tokenListNode = (
+      <Grid item xs={12}>
+        <TokenList />
+      </Grid>
+    );
+  }
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -274,8 +304,10 @@ export default function (props: AppProps) {
           <Grid item xs={12}>
             <Box textAlign="center" fontSize={22}>
               {capacityNode}
+              {showMoreNode}
             </Box>
           </Grid>
+          {tokenListNode}
           <Grid item xs={6} sm={6} className={classes.button}>
             <BootstrapButton
               type="button"
@@ -304,7 +336,6 @@ export default function (props: AppProps) {
       </div>
       <br />
       <br />
-
       <div>
         <div className={classes.txHeader}>
           <h3>

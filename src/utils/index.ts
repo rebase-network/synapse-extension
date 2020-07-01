@@ -15,3 +15,10 @@ export function textToBytesLength(text) {
   const result = hexToBytes(textHex);
   return result.length;
 }
+
+export const hexToDecimal = (hexStr: string, isBigEndian = true) => {
+  if (isBigEndian) {
+    return parseInt(hexStr, 16);
+  }
+  return parseInt(`0x${hexStr.replace('0x', '').match(/../g).reverse().join('')}`, 16);
+};

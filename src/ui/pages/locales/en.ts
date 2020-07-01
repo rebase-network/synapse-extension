@@ -57,6 +57,6 @@ export default {
   'Name':'Name',
   'UDT Name':'UDT Name',
   'UDT Hash':'UDT Hash',
-  'Decimals':'Decimals',
-  'Symbols':'Symbols',
+  'Decimal':'Decimal',
+  'Symbol':'Symbol',
 };
