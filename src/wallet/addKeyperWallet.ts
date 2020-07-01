@@ -29,10 +29,10 @@ export async function addKeyperWallet(privateKey, password, entropyKeystore, roo
 }
 
 export async function getWalletsInStorage() {
-  const walletsObj = await browser.storage.local.get("wallets");
+  const walletsObj = await browser.storage.local.get('wallets');
 
-  if (Array.isArray(walletsObj)) {
-    wallets = walletsObj;
+  if (Array.isArray(walletsObj.wallets)) {
+    wallets = walletsObj.wallets;
   }
   return wallets;
 }
