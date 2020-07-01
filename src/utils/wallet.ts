@@ -1,15 +1,15 @@
 export function saveToStorage(wallets, currentWallet, addressesList) {
   browser.storage.local.set({
-    wallets: wallets,
-  })
+    wallets,
+  });
 
   browser.storage.local.set({
-    currentWallet: currentWallet,
-  })
+    currentWallet,
+  });
 
   browser.storage.local.set({
-    addressesList: addressesList,
-  })
+    addressesList,
+  });
 }
 
 export function findInWalletsByPublicKey(publicKey, wallets) {
