@@ -39,63 +39,63 @@ export const innerForm = (props) => {
     >
       <TextField
         label={intl.formatMessage({ id: 'UDT Name' })}
-        id="udtname"
-        name="udtname"
+        id="name"
+        name="name"
         type="text"
         fullWidth
-        value={values.udtname}
+        value={values.name}
         onChange={handleChange}
         onBlur={handleBlur}
-        error={!!errors.udtname}
-        helperText={errors.udtname && touched.udtname && errors.udtname}
+        error={!!errors.name}
+        helperText={errors.name && touched.name && errors.name}
         margin="normal"
         variant="outlined"
-        data-testid="field-udtname"
+        data-testid="field-name"
       />
       <TextField
         label={intl.formatMessage({ id: 'UDT Hash' })}
-        id="udthash"
-        name="udthash"
+        id="typeHash"
+        name="typeHash"
         type="text"
         fullWidth
-        value={values.udthash}
+        value={values.typeHash}
         onChange={handleChange}
         onBlur={handleBlur}
-        error={!!errors.udthash}
-        helperText={errors.udthash && touched.udthash && errors.udthash}
+        error={!!errors.typeHash}
+        helperText={errors.typeHash && touched.typeHash && errors.typeHash}
         margin="normal"
         variant="outlined"
-        data-testid="field-udthash"
+        data-testid="field-typeHash"
       />
       <TextField
         label={intl.formatMessage({ id: 'Decimals' })}
-        id="decimals"
-        name="decimals"
+        id="decimal"
+        name="decimal"
         type="text"
         fullWidth
-        value={values.decimals}
+        value={values.decimal}
         onChange={handleChange}
         onBlur={handleBlur}
-        error={!!errors.decimals}
-        helperText={errors.decimals && touched.decimals && errors.decimals}
+        error={!!errors.decimal}
+        helperText={errors.decimal && touched.decimal && errors.decimal}
         margin="normal"
         variant="outlined"
-        data-testid="field-decimals"
+        data-testid="field-decimal"
       />
       <TextField
         label={intl.formatMessage({ id: 'Symbols' })}
-        id="symbols"
-        name="symbols"
+        id="symbol"
+        name="symbol"
         type="text"
         fullWidth
-        value={values.symbols}
+        value={values.symbol}
         onChange={handleChange}
         onBlur={handleBlur}
-        error={!!errors.symbols}
-        helperText={errors.symbols && touched.symbols && errors.symbols}
+        error={!!errors.symbol}
+        helperText={errors.symbol && touched.symbol && errors.symbol}
         margin="normal"
         variant="outlined"
-        data-testid="field-symbols"
+        data-testid="field-symbol"
       />
       <Button
         type="submit"
@@ -118,14 +118,14 @@ export default function initFunction(props: AppProps, state: AppState) {
 
   const onSubmit = async (values) => {
     let udtsList = [];
-    const { udtname, udthash, decimals, symbols } = values;
+    const { name, typeHash, decimal, symbol } = values;
     const udtsStorage = await browser.storage.local.get('udts');
     if (Array.isArray(udtsStorage.udts)) {
       udtsList = udtsStorage.udts;
     }
-    const udtObj = { udtname, udthash, decimals, symbols };
+    const udtObj = { name, typeHash, decimal, symbol };
     const modUdtsIndex = _.findIndex(udtsList, function findItemIndex(udtItem) {
-      return udtItem.udthash === udthash;
+      return udtItem.typeHash === typeHash;
     });
     if (modUdtsIndex === -1) {
       udtsList.push(udtObj);
@@ -133,6 +133,7 @@ export default function initFunction(props: AppProps, state: AppState) {
       udtsList[modUdtsIndex] = udtObj;
     }
     setUdtsItems(udtsList);
+    console.log(/udtsList/, JSON.stringify(udtsList));
     await browser.storage.local.set({ udts: udtsList });
   };
 
@@ -144,30 +145,30 @@ export default function initFunction(props: AppProps, state: AppState) {
     });
   }, []);
 
-  const handleListItemClick = async (event, udthash) => {
+  const handleListItemClick = async (event, typeHash) => {
     let udtsObj = [];
     const udtsStorage = await browser.storage.local.get('udts');
     if (Array.isArray(udtsStorage.udts)) {
       udtsObj = udtsStorage.udts;
     }
     _.remove(udtsObj, function removeItem(contact) {
-      return contact.udthash === udthash;
+      return contact.typeHash === typeHash;
     });
     setUdtsItems(udtsObj);
     await browser.storage.local.set({ udts: udtsObj });
   };
 
   const udtsElem = udtsItems.map((item, index) => {
-    const secondaryItem = `${item.udtname} - ${item.decimals} - ${item.symbols}`;
+    const secondaryItem = `${item.name} - ${item.decimal} - ${item.symbol}`;
     return (
-      <List component="nav" aria-label="udts List" key={`item-${item.udthash}`}>
+      <List component="nav" aria-label="udts List" key={`item-${item.typeHash}`}>
         <ListItem>
-          <ListItemText primary={truncateHash(item.udthash)} secondary={secondaryItem} />
+          <ListItemText primary={truncateHash(item.typeHash)} secondary={secondaryItem} />
           <ListItemSecondaryAction>
             <IconButton
               edge="end"
               aria-label="delete"
-              onClick={(event) => handleListItemClick(event, item.udthash)}
+              onClick={(event) => handleListItemClick(event, item.typeHash)}
             >
               <DeleteIcon />
             </IconButton>
@@ -183,13 +184,13 @@ export default function initFunction(props: AppProps, state: AppState) {
       <div className={classes.container}>
         {udtsElem}
         <Formik
-          initialValues={{ udtname: '', udthash: '', decimals: '8', symbols: '' }}
+          initialValues={{ name: '', typeHash: '', decimal: '8', symbol: '' }}
           onSubmit={onSubmit}
           validationSchema={Yup.object().shape({
-            udtname: Yup.string().required(intl.formatMessage({ id: 'Required' })),
-            udthash: Yup.string().required(intl.formatMessage({ id: 'Required' })),
-            decimals: Yup.string().required(intl.formatMessage({ id: 'Required' })),
-            symbols: Yup.string().required(intl.formatMessage({ id: 'Required' })),
+            name: Yup.string().required(intl.formatMessage({ id: 'Required' })),
+            typeHash: Yup.string().required(intl.formatMessage({ id: 'Required' })),
+            decimal: Yup.string().required(intl.formatMessage({ id: 'Required' })),
+            symbol: Yup.string().required(intl.formatMessage({ id: 'Required' })),
           })}
         >
           {innerForm}
