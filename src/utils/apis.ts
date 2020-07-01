@@ -39,7 +39,7 @@ interface TLockAndTypeScripts {
   typeScripts?: CKBComponents.Script[];
 }
 
-export const getUDTByLockHash = async (params: TLockAndTypeScripts): Promise<any> => {
+export const getUDTsByLockHash = async (params: TLockAndTypeScripts): Promise<any> => {
   const url = `${configService.CACHE_LAYER_ENDPOINT}/cell/getCellsByLockHashAndTypeScripts`;
 
   const result = await Axios.post(url, params);
@@ -50,5 +50,5 @@ export default {
   getAddressInfo,
   getUnspentCells,
   getTxHistories,
-  getUDTByLockHash,
+  getUDTsByLockHash,
 };
