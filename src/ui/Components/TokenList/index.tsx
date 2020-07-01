@@ -20,13 +20,14 @@ interface AppProps {
 
 export default () => {
   const [tokenList, setTokenList] = React.useState([]);
+  const [udtsMeta, setUdtsMeta] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const classes = useStyles();
   React.useEffect(() => {
     browser.storage.local.get('udts').then((result) => {
       setLoading(false);
-      if (!result.tokenList) return;
-      setTokenList(result.tokenList);
+      if (!result.udts) return;
+      setUdtsMeta(result.udts);
     });
 
     async function getUDTs(): Promise<void> {
@@ -46,8 +47,9 @@ export default () => {
   if (tokenList.length === 0) return null;
   const udtsCapacity = aggregateUDT(tokenList);
   console.log('udtsCapacity: ', udtsCapacity);
+  console.log('udtsMeta: ', udtsMeta);
 
-  const resultElem = <TokenListComponent udtsCapacity={udtsCapacity} />;
+  const resultElem = <TokenListComponent udtsCapacity={udtsCapacity} udtsMeta={udtsMeta} />;
 
   return <div className={classes.root}>{resultElem}</div>;
 };

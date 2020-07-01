@@ -1,22 +1,21 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { ListItem, ListItemText } from '@material-ui/core';
-import { truncateAddress } from '@utils/formatters';
+import { shannonToCKBFormatter } from '@utils/formatters';
 
 const useStyles = makeStyles({
-  container: {
-    margin: 30,
-  },
-  inline: {
-    display: 'inline',
+  name: {
+    maxWidth: 100,
   },
 });
 
-type TTokenInfo = {
+export interface TTokenInfo {
   name: string;
   udt: number;
   ckb: number;
-};
+  decimal: string;
+  symbol: string;
+}
 
 interface AppProps {
   tokenInfo: TTokenInfo;
@@ -27,12 +26,18 @@ interface AppState {}
 export default (props: AppProps) => {
   const classes = useStyles();
   const {
-    tokenInfo: { name, udt, ckb },
+    tokenInfo: { name = 'Unknown', udt, ckb, decimal = '8', symbol = '' },
   } = props;
+  const decimalInt = parseInt(decimal, 10);
+  const ckbStr = ckb.toString();
   console.log('tokenlist item: props: ', props);
   return (
     <ListItem>
-      <ListItemText primary={ckb} secondary={udt} />
+      <ListItemText primary={name} />
+      <ListItemText
+        primary={`${udt / 10 ** decimalInt} ${symbol}`}
+        secondary={`${shannonToCKBFormatter(ckbStr)} CKB`}
+      />
     </ListItem>
   );
 };
