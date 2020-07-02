@@ -29,6 +29,12 @@ interface SignTXRequest {
   meta: SignTxMeta;
 }
 
+interface QueryCellsParams {
+  lockHash?: string;
+  isEmpty?: boolean;
+  capacity?: number;
+}
+
 const promisedMessageHandler = (requestMessage: RequestMessage) => {
   window.postMessage(requestMessage, '*');
 
@@ -59,14 +65,17 @@ window.ckb = {
       requestId: 'getAddressInfoRequestId',
     },
   ) => promisedMessageHandler(requestMessage),
-  getLiveCells: async (
-    requestMessage: RequestMessage = {
+  getLiveCells: async (request: QueryCellsParams) => {
+    const requestMessage = {
       type: MESSAGE_TYPE.EXTERNAL_GET_LIVE_CELLS,
       target: BACKGROUND_PORT,
       token: 'getLiveCellsToken',
       requestId: 'getLiveCellsRequestId',
-    },
-  ) => promisedMessageHandler(requestMessage),
+      data: request,
+    };
+
+    return promisedMessageHandler(requestMessage);
+  },
   // sign tx
   sign: (request: SignTXRequest) => {
     const requestMessage = {

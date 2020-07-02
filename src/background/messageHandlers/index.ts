@@ -21,7 +21,7 @@ const handler = async (message, port) => {
   }
 
   if (message.type === MESSAGE_TYPE.EXTERNAL_GET_LIVE_CELLS) {
-    getLiveCells(port);
+    getLiveCells(port, message.data);
   }
 };
 

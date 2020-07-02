@@ -19,10 +19,10 @@ export const getAddressInfo = async (lockHash: string): Promise<{ capacity: stri
   return result.data;
 };
 
-export const getUnspentCells = async (lockHash: string) => {
+export const getUnspentCells = async (lockHash: string, isEmpty = true, capacity = 62) => {
   // cell/getUnspentCells/:lockHash?isEmpty=true
   const result = await Axios.get(
-    `${configService.CACHE_LAYER_ENDPOINT}/cell/getUnspentCells/${lockHash}?isEmpty=true`,
+    `${configService.CACHE_LAYER_ENDPOINT}/cell/getUnspentCells/${lockHash}?isEmpty=${isEmpty}&capacity=${capacity}`,
   );
 
   return result.data;
