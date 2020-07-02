@@ -7,23 +7,25 @@ Synapse will inject a object `ckb` into browser `window` object, so you can use 
 **Note**: The sdk will be changed frequently before we publish the production version. If you have any questions, problems and suggestions, do not hesitate to create an issue.
 
 ## Methods list
-* [ckb.getAddressInfo](#get-address-info)
-* [ckb.getLiveCells](#get-live-cells)
-* [ckb.sign](#sign-tx)
-* [ckb.signSend](#sign-and-send-tx)
-* [ckb.send](#send-tx)
 
+- [ckb.getAddressInfo](#get-address-info)
+- [ckb.getLiveCells](#get-live-cells)
+- [ckb.sign](#sign-tx)
+- [ckb.signSend](#sign-and-send-tx)
+- [ckb.send](#send-tx)
 
 ## Get address info
 
 ### Method
-```js
-ckb.getAddressInfo
 
-const addressInfo = await ckb.getAddressInfo()
+```js
+ckb.getAddressInfo;
+
+const addressInfo = await ckb.getAddressInfo();
 ```
 
 ### Return value
+
 ```js
 {
   message: string // "get address info successfully"
@@ -40,11 +42,14 @@ const addressInfo = await ckb.getAddressInfo()
 ```
 
 ### Example
+
 ```js
-const addressInfo = await ckb.getAddressInfo()
+const addressInfo = await ckb.getAddressInfo();
 console.log('addressInfo: ', addressInfo);
 ```
+
 will output:
+
 ```js
 {
   message: "get address info successfully",
@@ -63,12 +68,15 @@ will output:
 ## Get live cells
 
 ### Method
-```js
-ckb.getLiveCells
 
-const liveCells = await ckb.getLiveCells()
+```js
+ckb.getLiveCells;
+
+const liveCells = await ckb.getLiveCells();
 ```
+
 ### Return value
+
 ```js
 {
   message: string // "get live cells successfully"
@@ -101,11 +109,14 @@ interface Cell {
 ```
 
 ### Example
+
 ```js
-const liveCells = await ckb.getLiveCells()
+const liveCells = await ckb.getLiveCells();
 console.log('live cells: ', liveCells);
 ```
+
 will output:
+
 ```js
 {
   type: 'live_cells',
@@ -142,7 +153,7 @@ Dapp could use `sign` method to sign tx with Synapse, it will bring up a notific
 ### Method:
 
 ```js
-ckb.sign
+ckb.sign;
 
 const signedTx = await sign(params);
 ```
@@ -167,10 +178,12 @@ params: {
 ### Return value:
 
 Will return:
+
 <details>
   <summary>Click to expand!</summary>
 
 Currently there is no error returned.
+
 ```js
 {
   type: 'sign',
@@ -180,16 +193,16 @@ Currently there is no error returned.
     tx: TX_JSON_SIGNED,
   }
 }
-``` 
-</details>
+```
 
+</details>
 
 ### Example:
 
 1. Prepare for you data to be signed
 <details>
   <summary>Click to expand!</summary>
- 
+
 ```js
 // https://explorer.nervos.org/aggron/transaction/0x44f543d59974cb9dac09323008a162beebaa19e6d7d0dbf91507947f678e612c
 const rawTx = {
@@ -382,8 +395,8 @@ const rawTx = {
     },
   ],
 };
-
 ```
+
 </details>
 
 2. Sign:
@@ -391,8 +404,9 @@ const rawTx = {
 ```js
 const rawTxWithMeta = {
   tx: rawTx,
-  meta: { // optional
-    config: { index: 3, length: 2 } // sign the 4th and 5th of inputs array
+  meta: {
+    // optional
+    config: { index: 3, length: 2 }, // sign the 4th and 5th of inputs array
   },
 };
 
@@ -406,6 +420,7 @@ const txResult = await ckb.sign(rawTxWithMeta);
 Note the value inside witnesses array, it's the signed result.
 
 Will return:
+
 <details>
   <summary>Click to expand!</summary>
  
@@ -601,9 +616,11 @@ Will return:
         },
       ],
     },
-  },
+
+},
 };
-```
+
+````
 </details>
 
 
@@ -618,7 +635,7 @@ Dapp could use `signSend` method to sign and send tx, it will bring up a notific
 ckb.sign
 
 const result = await signSend(params);
-```
+````
 
 `params` has the following structure：
 
@@ -635,6 +652,7 @@ params: {
 ```
 
 ### Return value:
+
 ```js
 {
   type: string; // the value is "signSend"
@@ -645,7 +663,9 @@ params: {
   },
 };
 ```
+
 ### Example:
+
 ```js
 const rawTxWithMeta = {
   tx: SIGNED_TX_IN_JSON_FORMAT // required. please refer to sign method to see the data format
@@ -658,6 +678,7 @@ const result = await ckb.signSend(rawTxWithMeta);
 ```
 
 **TX is sent successfully:**
+
 ```js
 {
   type: "signSend",
@@ -691,7 +712,7 @@ Dapp could use `send` method to send signed tx, it will bring up a notification 
 ### Method:
 
 ```js
-ckb.send
+ckb.send;
 
 const result = await ckb.send(params);
 ```
@@ -700,11 +721,12 @@ const result = await ckb.send(params);
 
 ```js
 params: {
-  tx: SIGNED_TX_IN_JSON_FORMAT // required
+  tx: SIGNED_TX_IN_JSON_FORMAT; // required
 }
 ```
 
 ### Return value:
+
 ```js
 {
   type: string; // the value is "send"
@@ -715,16 +737,19 @@ params: {
   },
 };
 ```
+
 ### Example:
+
 ```js
 const rawTxWithMeta = {
-  tx: SIGNED_TX_IN_JSON_FORMAT // please refer to sign method to see the data format
-}
+  tx: SIGNED_TX_IN_JSON_FORMAT, // please refer to sign method to see the data format
+};
 
 const result = await ckb.send(rawTxWithMeta);
 ```
 
 **TX is sent successfully:**
+
 ```js
 {
   type: "send",
@@ -746,8 +771,6 @@ const result = await ckb.send(rawTxWithMeta);
   message: 'tx failed to sent',
   data: {
     hash: null
-    },
   },
 };
 ```
-
