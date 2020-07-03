@@ -21,7 +21,10 @@ export const generateTx = async (
   lockType,
   toDataHex?,
 ) => {
-  const unspentCells = await getUnspentCells(lockHash);
+  const params = {
+    capacity: toAmount,
+  };
+  const unspentCells = await getUnspentCells(lockHash, params);
   function getTotalCapity(total, cell) {
     return BigInt(total) + BigInt(cell.capacity);
   }
@@ -63,7 +66,10 @@ export const generateAnyPayTx = async (
   const toLockScript = addressToScript(toAddress);
   const toLockHash = ckb.utils.scriptToHash(toLockScript);
   // unspentCells
-  const unspentCells = await getUnspentCells(lockHash);
+  const params = {
+    capacity: toAmount,
+  };
+  const unspentCells = await getUnspentCells(lockHash, params);
   function getTotalCapity(total, cell) {
     return BigInt(total) + BigInt(cell.capacity);
   }
@@ -74,7 +80,10 @@ export const generateAnyPayTx = async (
   };
 
   // Wallet Cell
-  const unspentWalletCells = await getUnspentCells(toLockHash);
+  const params2 = {
+    capacity: toAmount,
+  };
+  const unspentWalletCells = await getUnspentCells(toLockHash, params2);
   function getWalletTotalCapity(total, cell) {
     return BigInt(total) + BigInt(cell.capacity);
   }
@@ -110,7 +119,10 @@ export const generateUpdateDataTx = async (
   const dataCell = await ckb.rpc.getLiveCell(inputOutPoint, true);
   const cellDataCapacity = BigInt(dataCell.cell.output.capacity);
 
-  const unspentCells = await getUnspentCells(lockHash);
+  const params = {
+    capacity: cellDataCapacity.toString(),
+  };
+  const unspentCells = await getUnspentCells(lockHash, params);
 
   let inputDataHex = '';
   let inputDataLength = 0;
@@ -191,11 +203,20 @@ export const sendTransaction = async (
   // wallet cells check
   const toLockScript = addressToScript(toAddress);
   const toLockHash = ckb.utils.scriptToHash(toLockScript);
-  const unspentWalletCells = await getUnspentCells(toLockHash);
+
+  // get anypay wallet
+  let unspentWalletCells = '';
+  if (toLockType === 'AnyPay') {
+    const params = {
+      limit: '10',
+    };
+    unspentWalletCells = await getUnspentCells(toLockHash, params);
+  }
+
   let realTxHash;
   let config = { index: 0, length: -1 };
 
-  if (unspentWalletCells.length === 0) {
+  if (toLockType === 'AnyPay' && unspentWalletCells.length === 0) {
     rawTransaction = await generateTx(
       fromAddress,
       toAddress,

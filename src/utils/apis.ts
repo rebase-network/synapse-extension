@@ -19,12 +19,29 @@ export const getAddressInfo = async (lockHash: string): Promise<{ capacity: stri
   return result.data;
 };
 
-export const getUnspentCells = async (lockHash: string, isEmpty = true, capacity = 62) => {
-  // cell/getUnspentCells/:lockHash?isEmpty=true
-  const result = await Axios.get(
-    `${configService.CACHE_LAYER_ENDPOINT}/cell/getUnspentCells/${lockHash}?isEmpty=${isEmpty}&capacity=${capacity}`,
-  );
+export interface UnspentCellsParams {
+  //   lockHash: string;
+  limit?: string;
+  typeHash?: string;
+  capacity?: string;
+  hasData?: string;
+}
 
+// https://github.com/rebase-network/ckb-cache-layer/blob/master/doc.md
+export const getUnspentCells = async (
+  lockHash: string,
+  { limit, typeHash, capacity, hasData }: UnspentCellsParams,
+) => {
+  const params = {
+    lockHash,
+    limit,
+    typeHash,
+    capacity,
+    hasData,
+  };
+  const result = await Axios.get(`${configService.CACHE_LAYER_ENDPOINT}/cell/getUnspentCells/`, {
+    params,
+  });
   return result.data;
 };
 

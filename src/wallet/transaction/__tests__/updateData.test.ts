@@ -40,7 +40,10 @@ describe('send Transaction test', () => {
     const oldDataCapacity = cellDataCapacity - BigInt(61 * 10 ** 8);
 
     // Free cells
-    const unspentCells = await getUnspentCells(lockHash);
+    const params = {
+      capacity: oldDataCapacity.toString(),
+    };
+    const unspentCells = await getUnspentCells(lockHash, params);
 
     const signObj = createRawTxUpdateData(
       deps,
@@ -90,7 +93,10 @@ describe('send Transaction test', () => {
     const cellDataCapacity = BigInt(liveDataCellResult.cell.output.capacity);
 
     // Free cells
-    const unspentCells = await getUnspentCells(lockHash);
+    const params = {
+      capacity: cellDataCapacity.toString(),
+    };
+    const unspentCells = await getUnspentCells(lockHash, params);
 
     const signObj = createUpdateDataRawTx(
       deps,

@@ -32,7 +32,10 @@ describe('Transaction test', () => {
     const deps = [secp256k1Dep];
 
     const lockHash = bobAddresses.secp256k1.lock;
-    const unspentCells = await getUnspentCells(lockHash);
+    const params = {
+      capacity: toAmount,
+    };
+    const unspentCells = await getUnspentCells(lockHash, params);
     function getTotalCapity(total, cell) {
       return BigInt(total) + BigInt(cell.capacity);
     }

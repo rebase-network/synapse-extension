@@ -8,7 +8,11 @@ export default async (port, data) => {
 
   let cells = [];
   if (currentWallet) {
-    cells = await getUnspentCells(lockHash, isEmpty, capacity);
+    const params = {
+      capacity,
+      hasData: isEmpty,
+    };
+    cells = await getUnspentCells(lockHash, params);
   }
 
   port.postMessage({
