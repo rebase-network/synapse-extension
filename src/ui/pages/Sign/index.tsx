@@ -70,6 +70,7 @@ export default () => {
       requestMsg.data = JSON.parse(searchParams.data as string);
       requestMsg.type = searchParams.type;
       browser.runtime.sendMessage(requestMsg);
+      window.close();
     }
   };
 
