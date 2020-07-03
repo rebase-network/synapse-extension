@@ -11,7 +11,7 @@ import {
 } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import { MESSAGE_TYPE, EXPLORER_URL } from '@utils/constants';
+import { MESSAGE_TYPE, EXPLORER_URL, LockType } from '@utils/constants';
 import { truncateAddress, shannonToCKBFormatter } from '@utils/formatters';
 import { getAddressInfo } from '@utils/apis';
 import TxList from '@ui/Components/TxList';
@@ -137,7 +137,7 @@ export default function (props: AppProps) {
       if (_.isEmpty(currentWallet)) return;
       const { address: currentAddress, type: lockType, lock } = currentWallet;
       setAddress(currentAddress);
-      if (lockType === 'Keccak256') {
+      if (lockType === LockType.Keccak256) {
         setDisableFlg(true);
       } else {
         setDisableFlg(false);

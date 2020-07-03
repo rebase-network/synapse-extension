@@ -92,5 +92,11 @@ export const ADDRESS_TYPE_CODEHASH = {
   Keccak256: '0xa5b896894539829f5e7c5902f0027511f94c70fa2406d509e7c6d1df76b06f08',
 };
 
+export const enum LockType {
+  Secp256k1 = 'Secp256k1',
+  AnyPay = 'AnyPay',
+  Keccak256 = 'Keccak256',
+}
+
 export const EMPTY_TX_HASH = '0x0000000000000000000000000000000000000000000000000000000000000000';
 export const EMPTY_DATA_HASH = EMPTY_TX_HASH;
