@@ -232,14 +232,11 @@ export default () => {
       if (messageHandled && message.type === MESSAGE_TYPE.SEND_TX_OVER) {
         setSending(false);
 
-        onSelectTx(message?.data?.tx);
-        // TODO: uncomment me after fix this issue:
-        // https://github.com/nervosnetwork/ckb-sdk-js/pull/447
-        // if (message.success) {
-        //   onSelectTx(message?.data?.tx);
-        // } else {
-        //   setErrMsg('TX failed to send, please try again later');
-        // }
+        if (message.success) {
+          onSelectTx(message?.data?.tx);
+        } else {
+          setErrMsg('TX failed to send, please try again later');
+        }
       }
     });
     // setLoading(true);
