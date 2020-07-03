@@ -59,4 +59,9 @@ export default {
   'UDT Hash':'UDT Hash',
   'Decimal':'Decimal',
   'Symbol':'Symbol',
+  Refresh: 'Refresh',
+  'Show UDT': 'Show UDT',
+  'Hide UDT': 'Hide UDT',
+  'No UDT found': 'No UDT found',
+  'Loading UDT...': 'Loading UDT...',
 };

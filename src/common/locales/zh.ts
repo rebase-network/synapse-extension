@@ -59,4 +59,9 @@ export default {
   'UDT Hash':'UDT 哈希',
   'Decimal':'位数',
   'Symbol':'符号',
+  Refresh: '刷新',
+  'Show UDT': '显示UDT',
+  'Hide UDT': '隐藏UDT',
+  'No UDT found': '没有UDT',
+  'Loading UDT...': '加载UDT...',
 };
