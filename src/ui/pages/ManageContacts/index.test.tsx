@@ -6,7 +6,7 @@ import '@testing-library/jest-dom/extend-expect';
 import chrome from 'sinon-chrome';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
-import en from '../locales/en';
+import en from '@src/common/locales/en';
 
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...

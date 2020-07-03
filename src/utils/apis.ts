@@ -6,6 +6,10 @@ Axios.interceptors.response.use(
   (response) => {
     // console.log('response', response);
     // Do something with response data
+    const result = response.data
+    if(result.errCode !== 0){
+        console.log(/result error/, JSON.stringify(result));
+    }
     return response.data;
   },
   (error) => {
@@ -44,14 +48,13 @@ export const getUnspentCells = async (
   const result = await Axios.get(`${configService.CACHE_LAYER_ENDPOINT}/cell/getUnspentCells/`, {
     params,
   });
-  console.log(/result/, JSON.stringify(result));
-
   return result.data;
 };
 
 export const getTxHistories = async (scriptObj): Promise<any> => {
   const url = `${configService.CACHE_LAYER_ENDPOINT}/cell/getTxHistoriesByIndexer`;
   const result = await Axios.post(url, scriptObj);
+
   return result.data;
 };
 
