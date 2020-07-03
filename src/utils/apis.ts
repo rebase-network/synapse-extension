@@ -32,8 +32,6 @@ export interface UnspentCellsParams {
 // https://github.com/rebase-network/ckb-cache-layer/blob/master/doc.md
 export const getUnspentCells = async (
   lockHash: string,
-  limit?: string,
-  typeHash?: string,
   { limit, typeHash, capacity, hasData }: UnspentCellsParams,
 ) => {
   const params = {
