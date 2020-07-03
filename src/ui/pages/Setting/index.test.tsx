@@ -6,7 +6,7 @@ import { IntlProvider } from 'react-intl';
 import chrome from 'sinon-chrome';
 
 import App from '@ui/pages/Setting/index';
-import en from '@ui/pages/locales/en';
+import en from '@common/locales/en';
 
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...

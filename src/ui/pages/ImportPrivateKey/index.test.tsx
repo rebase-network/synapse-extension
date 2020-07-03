@@ -3,9 +3,9 @@ import { render, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import '@testing-library/jest-dom/extend-expect';
 import chrome from 'sinon-chrome';
-import App from './index';
 import { IntlProvider } from 'react-intl';
-import en from '../locales/en';
+import en from '@common/locales/en';
+import App from './index';
 
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
@@ -22,7 +22,9 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('import privateKey page', () => {
-  let tree, container, getByTestId;
+  let tree;
+  let container;
+  let getByTestId;
 
   beforeAll(() => {
     window.chrome = chrome;

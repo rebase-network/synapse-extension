@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
-import en from '@ui/pages/locales/en';
+import en from '@common/locales/en';
 import { udtsCapacity, udtsMeta } from '@utils/fixtures/token';
 import Component from './component';
 

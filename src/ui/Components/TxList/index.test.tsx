@@ -1,13 +1,15 @@
 import React from 'react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import TxList from './index';
 import { txList } from './fixture';
-import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { IntlProvider } from 'react-intl';
-import en from '../../pages/locales/en';
+import en from '@common/locales/en';
 
 describe('TxList', () => {
-  let tree, container, getByTestId;
+  let tree;
+  let container;
+  let getByTestId;
   beforeAll(() => {
     tree = render(
       <IntlProvider locale="en" messages={en}>

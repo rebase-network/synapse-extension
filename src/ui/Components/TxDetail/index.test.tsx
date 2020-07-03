@@ -2,10 +2,10 @@ import React from 'react';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import chrome from 'sinon-chrome';
-import TxDetail from './index';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
-import en from '../../pages/locales/en';
+import en from '@common/locales/en';
+import TxDetail from './index';
 import { tx } from './fixture';
 
 jest.mock('react-router-dom', () => {
@@ -22,7 +22,8 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('txDetail page', () => {
-  let container, getByTestId;
+  let container;
+  let getByTestId;
   beforeAll(() => {
     window.chrome = chrome;
   });
