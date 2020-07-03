@@ -2,11 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { IntlProvider } from 'react-intl';
 
-import CKB from '@nervosnetwork/ckb-sdk-core';
 import zh from '@common/locales/zh';
 import en from '@common/locales/en';
 import App from '@ui/App';
-import { configService } from '@src/config';
 import { getDefaultLanguage } from '@utils/locale';
 
 const messages = {
@@ -19,10 +17,6 @@ declare global {
     ckb: any;
   }
 }
-
-window.ckb = {
-  rpc: new CKB(configService.CKB_RPC_ENDPOINT),
-};
 
 chrome.tabs.query({ active: true, currentWindow: true }, (tab) => {
   ReactDOM.render(
