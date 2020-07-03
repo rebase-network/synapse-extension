@@ -58,6 +58,10 @@ const useStyles = makeStyles({
     fontSize: '1.5rem',
     'text-transform': 'none',
   },
+  udtBtn: {
+    fontSize: '0.8rem',
+    'text-transform': 'none',
+  },
 });
 
 const BootstrapButton = withStyles({
@@ -105,7 +109,7 @@ interface AppProps {}
 
 interface AppState {}
 
-export default function (props: AppProps) {
+export default (props: AppProps) => {
   const classes = useStyles();
   const history = useHistory();
   const addressFromUrl = _.get(props, 'match.params.address', '');
@@ -228,17 +232,19 @@ export default function (props: AppProps) {
   };
 
   let showMoreNode = (
-    <span onClick={handleClickShowMore} role="button">
+    <Button onClick={handleClickShowMore} className={classes.udtBtn}>
+      <FormattedMessage id="Show UDT" />
       <ExpandMoreIcon color="primary" />
-    </span>
+    </Button>
   );
   let tokenListNode = null;
 
   if (showMore) {
     showMoreNode = (
-      <span onClick={handleClickShowMore} role="button">
+      <Button onClick={handleClickShowMore} className={classes.udtBtn}>
+        <FormattedMessage id="Hide UDT" />
         <ExpandLessIcon color="primary" />
-      </span>
+      </Button>
     );
     tokenListNode = (
       <Grid item xs={12}>
@@ -384,4 +390,4 @@ export default function (props: AppProps) {
       </Dialog>
     </div>
   );
-}
+};
