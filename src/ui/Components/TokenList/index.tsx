@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@material-ui/core/styles';
 import { getUDTsByLockHash } from '@utils/apis';
 import { aggregateUDT } from '@utils/token';
@@ -7,16 +8,12 @@ import TokenListComponent from './component';
 const useStyles = makeStyles({
   root: {},
   loading: {
-    height: 200,
+    height: 30,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
 });
-
-interface AppProps {
-  udtsCapacity: any[];
-}
 
 export default () => {
   const [tokenList, setTokenList] = React.useState([]);
@@ -37,17 +34,27 @@ export default () => {
       const udtsWithCapacity = await getUDTsByLockHash({
         lockHash,
       });
-      console.log('udtsWithCapacity: ', udtsWithCapacity);
       setTokenList(udtsWithCapacity.udts);
     }
     getUDTs();
   }, []);
 
-  if (loading) return <div className={classes.loading}>Loading Token List...</div>;
-  if (tokenList.length === 0) return null;
+  if (loading) {
+    return (
+      <div className={classes.loading}>
+        <FormattedMessage id="Loading UDT..." />
+      </div>
+    );
+  }
+  if (tokenList.length === 0) {
+    return (
+      <div className={classes.loading}>
+        <FormattedMessage id="No UDT found" />
+      </div>
+    );
+  }
+
   const udtsCapacity = aggregateUDT(tokenList);
-  console.log('udtsCapacity: ', udtsCapacity);
-  console.log('udtsMeta: ', udtsMeta);
 
   const resultElem = <TokenListComponent udtsCapacity={udtsCapacity} udtsMeta={udtsMeta} />;
 
