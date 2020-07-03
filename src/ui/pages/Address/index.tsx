@@ -54,6 +54,10 @@ const useStyles = makeStyles({
   addressText: {
     'text-transform': 'none',
   },
+  capacityBtn: {
+    fontSize: '1.5rem',
+    'text-transform': 'none',
+  },
 });
 
 const BootstrapButton = withStyles({
@@ -117,9 +121,10 @@ export default function (props: AppProps) {
   const [disableFlg, setDisableFlg] = React.useState(false);
   const [tooltipMsg, setTooltipMsg] = React.useState('Copy to clipboard');
   const [name, setName] = React.useState('');
+  const [lockHash, setLockHash] = React.useState('');
 
-  const updateCapacity = async (lockHash: string) => {
-    const { capacity: addressCapacity } = await getAddressInfo(lockHash);
+  const updateCapacity = async (lockHashStr: string) => {
+    const { capacity: addressCapacity } = await getAddressInfo(lockHashStr);
     setCapacity(shannonToCKBFormatter(addressCapacity));
     setLoading(false);
   };
@@ -142,6 +147,7 @@ export default function (props: AppProps) {
         setDisableFlg(false);
       }
       setType(lockType);
+      setLockHash(lock);
       updateCapacity(lock);
 
       chrome.runtime.sendMessage({
@@ -203,9 +209,17 @@ export default function (props: AppProps) {
       <FormattedMessage id="Loading..." />
     </div>
   ) : (
-    <div className="capacity" data-testid="capacity">
-      {capacity}
-      <span> CKB</span>
+    <div>
+      <Tooltip title={<FormattedMessage id="Refresh" />} arrow placement="top">
+        <Button
+          size="large"
+          className={classes.capacityBtn}
+          onClick={() => updateCapacity(lockHash)}
+        >
+          {capacity}
+          <span> CKB</span>
+        </Button>
+      </Tooltip>
     </div>
   );
 
@@ -301,7 +315,7 @@ export default function (props: AppProps) {
         <br />
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <Box textAlign="center" fontSize={22}>
+            <Box textAlign="center" fontSize={12}>
               {capacityNode}
               {showMoreNode}
             </Box>
