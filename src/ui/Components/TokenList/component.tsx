@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
+import { List } from '@material-ui/core';
 import TokenListItem, { TTokenInfo } from '../TokenListItem';
 
 const useStyles = makeStyles({
@@ -22,7 +22,6 @@ interface AppProps {
 export default (props: AppProps) => {
   const classes = useStyles();
   const { udtsCapacity, udtsMeta } = props;
-
   const addressesElem = Object.keys(udtsCapacity).map((typeHash) => {
     const meta = _.find(udtsMeta, { typeHash });
     const itemProps: TTokenInfo = {
