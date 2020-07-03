@@ -4,15 +4,12 @@ import { getUnspentCells } from '@utils/apis';
 
 export default async (port, data) => {
   const { currentWallet } = await browser.storage.local.get(['currentWallet']);
-  const { lockHash = currentWallet.lock, isEmpty, capacity } = data;
+  const { lockHash = currentWallet.lock } = data;
 
   let cells = [];
+
   if (currentWallet) {
-    const params = {
-      capacity,
-      hasData: isEmpty,
-    };
-    cells = await getUnspentCells(lockHash, params);
+    cells = await getUnspentCells(lockHash, data);
   }
 
   port.postMessage({

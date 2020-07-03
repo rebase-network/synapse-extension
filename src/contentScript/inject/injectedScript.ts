@@ -30,9 +30,9 @@ interface SignTXRequest {
 }
 
 interface QueryCellsParams {
-  lockHash?: string;
-  isEmpty?: boolean;
-  capacity?: number;
+  lockHash: string;
+  limit?: string;
+  hasData?: string;
 }
 
 const promisedMessageHandler = (requestMessage: RequestMessage) => {
@@ -65,6 +65,7 @@ window.ckb = {
       requestId: 'getAddressInfoRequestId',
     },
   ) => promisedMessageHandler(requestMessage),
+
   getLiveCells: async (request: QueryCellsParams) => {
     const requestMessage = {
       type: MESSAGE_TYPE.EXTERNAL_GET_LIVE_CELLS,
