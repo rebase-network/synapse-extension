@@ -4,11 +4,13 @@ import { configService } from '../config';
 // Add a response interceptor
 Axios.interceptors.response.use(
   (response) => {
+    // console.log('response', response);
     // Do something with response data
     return response.data;
   },
   (error) => {
     // Do something with response error
+    console.log('error', error);
     return Promise.reject(error);
   },
 );
@@ -30,6 +32,8 @@ export interface UnspentCellsParams {
 // https://github.com/rebase-network/ckb-cache-layer/blob/master/doc.md
 export const getUnspentCells = async (
   lockHash: string,
+  limit?: string,
+  typeHash?: string,
   { limit, typeHash, capacity, hasData }: UnspentCellsParams,
 ) => {
   const params = {
@@ -42,6 +46,8 @@ export const getUnspentCells = async (
   const result = await Axios.get(`${configService.CACHE_LAYER_ENDPOINT}/cell/getUnspentCells/`, {
     params,
   });
+  console.log(/result/, JSON.stringify(result));
+
   return result.data;
 };
 

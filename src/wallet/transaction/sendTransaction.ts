@@ -22,7 +22,7 @@ export const generateTx = async (
   toDataHex?,
 ) => {
   const params = {
-    capacity: toAmount,
+    capacity: BigInt(toAmount).toString(),
   };
   const unspentCells = await getUnspentCells(lockHash, params);
   function getTotalCapity(total, cell) {
@@ -205,7 +205,7 @@ export const sendTransaction = async (
   const toLockHash = ckb.utils.scriptToHash(toLockScript);
 
   // get anypay wallet
-  let unspentWalletCells = '';
+  let unspentWalletCells = [];
   if (toLockType === 'AnyPay') {
     const params = {
       limit: '10',
