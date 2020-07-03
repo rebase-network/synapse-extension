@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
+import QrCode from 'qrcode.react';
 import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
 import { Grid, Button, Dialog, IconButton, Link, Tooltip, Divider, Box } from '@material-ui/core';
@@ -16,8 +17,6 @@ import { truncateAddress, shannonToCKBFormatter } from '@utils/formatters';
 import { getAddressInfo } from '@utils/apis';
 import TxList from '@ui/Components/TxList';
 import TokenList from '@ui/Components/TokenList';
-
-const QrCode = require('qrcode.react');
 
 const useStyles = makeStyles({
   container: {
