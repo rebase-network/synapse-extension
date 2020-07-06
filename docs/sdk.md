@@ -78,7 +78,7 @@ interface QueryCellsParams {
     hasData: string;
 }
 
-limit : require (count of transaction of address)
+limit : transaction counts
 capacity: capacity needed to be transfer
 hasData: "true"|"false"| Not exist
          "true" : get cell contains outputdata not equal to "0x";
