@@ -72,7 +72,19 @@ will output:
 ```js
 ckb.getLiveCells;
 
-const liveCells = await ckb.getLiveCells();
+interface QueryCellsParams {
+    capacity: string;
+    limit: string;
+    hasData: string;
+}
+
+limit : require (count of transaction of address)
+hasData: "true"|"false"| Not exist
+         "true" : get cell contains outputdata not equal to "0x";
+         "false": get cell contains outputdata equal to "0x";
+         Not exist: get all cell
+
+const liveCells = await ckb.getLiveCells(params: QueryCellsParams);
 ```
 
 ### Return value
@@ -111,7 +123,8 @@ interface Cell {
 ### Example
 
 ```js
-const liveCells = await ckb.getLiveCells();
+await window.ckb.getLiveCells({ limit: '10', hasData: 'true' });
+await window.ckb.getLiveCells({ capacity: '200', hasData: 'false' });
 console.log('live cells: ', liveCells);
 ```
 
@@ -137,7 +150,11 @@ will output:
       outputData: '0x',
       outputDataLen: '0x0',
       capacity: '0x535a743210',
-      type: null,
+      type: {
+          codeHash: null,
+          hashType: null,
+          args: null
+      },
       dataHash: '0x0000000000000000000000000000000000000000000000000000000000000000',
       status: 'live',
     },
