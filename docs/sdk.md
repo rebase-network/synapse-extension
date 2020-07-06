@@ -79,6 +79,7 @@ interface QueryCellsParams {
 }
 
 limit : require (count of transaction of address)
+capacity: capacity needed to be transfer
 hasData: "true"|"false"| Not exist
          "true" : get cell contains outputdata not equal to "0x";
          "false": get cell contains outputdata equal to "0x";
@@ -123,6 +124,8 @@ interface Cell {
 ### Example
 
 ```js
+await window.ckb.getLiveCells({ limit: '10' });
+await window.ckb.getLiveCells({ capacity: '200' });
 await window.ckb.getLiveCells({ limit: '10', hasData: 'true' });
 await window.ckb.getLiveCells({ capacity: '200', hasData: 'false' });
 console.log('live cells: ', liveCells);
