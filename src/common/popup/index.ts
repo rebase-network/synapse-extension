@@ -10,7 +10,13 @@ const defaultOptions = {
 const createPopup = async (options = {}) => {
   const finalParams = { ...defaultOptions, ...options };
   const popupWindow = await browser.windows.create(finalParams);
+  await browser.storage.local.set({ lastWindowId: popupWindow.id });
   return new Popup(popupWindow);
+};
+
+export const getLastWindowId = async () => {
+  const { lastWindowId } = await browser.storage.local.get('lastWindowId');
+  return lastWindowId;
 };
 
 export default createPopup;
