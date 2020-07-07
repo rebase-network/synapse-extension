@@ -64,4 +64,5 @@ export default {
   'Hide UDT': 'Hide UDT',
   'No UDT found': 'No UDT found',
   'Loading UDT...': 'Loading UDT...',
+  'lack of capacity':'lack of capacity',
 };

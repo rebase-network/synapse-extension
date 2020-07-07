@@ -371,6 +371,16 @@ chrome.runtime.onMessage.addListener(async (request) => {
         toData,
       );
 
+      if (sendTxHash.errCode !== undefined && sendTxHash.errCode !== 0) {
+        const responseEorrorMsg = {
+          type: MESSAGE_TYPE.SEND_TX_ERROR,
+          success: true,
+          message: sendTxHash.errMsg,
+          data: '',
+        };
+        chrome.runtime.sendMessage(responseEorrorMsg);
+        return;
+      }
       responseMsg.data.hash = sendTxHash;
       responseMsg.data.tx.hash = sendTxHash;
       responseMsg.success = true;

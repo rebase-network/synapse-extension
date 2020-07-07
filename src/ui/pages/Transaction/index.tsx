@@ -228,15 +228,17 @@ export default () => {
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener((message) => {
       const messageHandled = _.has(message, 'success');
-
       if (messageHandled && message.type === MESSAGE_TYPE.SEND_TX_OVER) {
         setSending(false);
-
         if (message.success) {
           onSelectTx(message?.data?.tx);
         } else {
-          setErrMsg('TX failed to send, please try again later');
+          setErrMsg('The transaction failed to send, please try again later');
         }
+      }
+
+      if (messageHandled && message.type === MESSAGE_TYPE.SEND_TX_ERROR) {
+        setErrMsg(message.message);
       }
     });
     // setLoading(true);
@@ -282,11 +284,7 @@ export default () => {
 
   if (errMsg) {
     sendingNode = null;
-    errNode = (
-      <div className={classes.error}>
-        {intl.formatMessage({ id: 'The transaction failed to send, please try again later' })}
-      </div>
-    );
+    errNode = <div className={classes.error}>{intl.formatMessage({ id: errMsg })}</div>;
   }
 
   let validateNode = null;

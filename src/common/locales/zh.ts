@@ -64,4 +64,5 @@ export default {
   'Hide UDT': '隐藏UDT',
   'No UDT found': '没有UDT',
   'Loading UDT...': '加载UDT...',
+  'lack of capacity':'capacity不足',
 };

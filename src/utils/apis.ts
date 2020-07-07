@@ -6,16 +6,17 @@ Axios.interceptors.response.use(
   (response) => {
     // console.log('response', response);
     // Do something with response data
-    const result = response.data
-    if(result.errCode !== 0){
-        console.log(/result error/, JSON.stringify(result));
-    }
+    // const result = response.data;
+    // if (result.errCode !== 0) {
+    //   console.log(/axios result error/, JSON.stringify(result));
+    // }
     return response.data;
   },
   (error) => {
     // Do something with response error
-    console.log('error', error);
-    return Promise.reject(error);
+    console.log('Axios error : ===> ', error);
+    // return Promise.reject(error);
+    throw error;
   },
 );
 
@@ -45,10 +46,19 @@ export const getUnspentCells = async (
     capacity,
     hasData,
   };
-  const result = await Axios.get(`${configService.CACHE_LAYER_ENDPOINT}/cell/getUnspentCells/`, {
-    params,
-  });
-  return result.data;
+  try {
+    const result = await Axios.get(`${configService.CACHE_LAYER_ENDPOINT}/cell/getUnspentCells/`, {
+      params,
+    });
+    if (result.errCode !== 0) {
+      console.log(/result error/, JSON.stringify(result));
+      return result;
+    }
+    return result.data;
+  } catch (error) {
+    console.log('result error', error);
+    return error;
+  }
 };
 
 export const getTxHistories = async (scriptObj): Promise<any> => {

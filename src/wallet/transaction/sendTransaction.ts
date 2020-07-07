@@ -25,6 +25,14 @@ export const generateTx = async (
     capacity: BigInt(toAmount).toString(),
   };
   const unspentCells = await getUnspentCells(lockHash, params);
+  // Error handling
+  console.log(/unspentCells/, unspentCells.errCode);
+  if (unspentCells.errCode !== undefined && unspentCells.errCode !== 0) {
+    console.log(/111/, '111');
+    return unspentCells;
+  }
+  console.log(/222/, '222');
+
   function getTotalCapity(total, cell) {
     return BigInt(total) + BigInt(cell.capacity);
   }
@@ -198,7 +206,7 @@ export const sendTransaction = async (
   } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.AnyPay) {
     toLockType = 'AnyPay';
   }
-  let rawTransaction = {};
+  let rawTransaction: any;
 
   // wallet cells check
   const toLockScript = addressToScript(toAddress);
@@ -252,7 +260,10 @@ export const sendTransaction = async (
     );
     config = { index: 1, length: 1 };
   }
-
+  // Error handling
+  if (rawTransaction.errCode !== undefined && rawTransaction.errCode !== 0) {
+    return rawTransaction;
+  }
   const signedTx = await signTx(lockHash, password, rawTransaction, config, publicKey);
   try {
     realTxHash = await ckb.rpc.sendTransaction(signedTx);
