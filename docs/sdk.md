@@ -651,7 +651,7 @@ Dapp could use `signSend` method to sign and send tx, it will bring up a notific
 ### Method:
 
 ```js
-ckb.sign;
+ckb.signSend;
 
 const result = await signSend(params);
 ```
