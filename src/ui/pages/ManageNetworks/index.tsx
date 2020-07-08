@@ -96,33 +96,33 @@ const innerForm = (props: FormikProps<FormValues>) => {
 export default () => {
   const classes = useStyles();
   const intl = useIntl();
-  const [networksItems, setNetworksItems] = React.useState([]);
+  const [networkItems, setNetworkItems] = React.useState([]);
   const [networkAmount, setNetworkAmount] = React.useState(0);
 
   const onSubmit = async (values, { resetForm }) => {
     const { name, nodeURL, cacheURL } = values;
     const networkObj = { name, nodeURL, cacheURL };
     const newNetworkList = NetworkManager.createNetwork(networkObj);
-    setNetworksItems(newNetworkList);
+    setNetworkItems(newNetworkList);
     setNetworkAmount(newNetworkList.length);
-    console.log(/networksList/, newNetworkList);
+    console.log(/networkList/, newNetworkList);
 
     resetForm();
   };
 
   React.useEffect(() => {
     const networkList = NetworkManager.getNetworkList();
-    setNetworksItems(networkList);
+    setNetworkItems(networkList);
     setNetworkAmount(networkList.length);
   }, [networkAmount]);
 
   const removeItem = async (event, name) => {
     const newNetworkList = NetworkManager.removeNetwork(name);
     setNetworkAmount(newNetworkList.length);
-    setNetworksItems(newNetworkList);
+    setNetworkItems(newNetworkList);
   };
 
-  const networksElem = networksItems.map((item) => {
+  const networkListElem = networkItems.map((item) => {
     const secondaryItem = (
       <span>
         <span className={classes.item}>{item.cacheURL}</span>
@@ -130,7 +130,7 @@ export default () => {
       </span>
     );
     return (
-      <List component="nav" aria-label="networks List" key={`item-${item.nodeURL}`}>
+      <List component="nav" aria-label="Network List" key={`item-${item.nodeURL}`}>
         <ListItem>
           <ListItemText primary={item.name} secondary={secondaryItem} />
           <ListItemSecondaryAction>
@@ -146,13 +146,13 @@ export default () => {
       </List>
     );
   });
-  console.log(/ ======= networksList/, networksItems);
+  console.log(/ ======= networkList/, networkItems);
 
   return (
     <div>
       <PageNav to="/setting" title="Manage Networks" />
       <div className={classes.container}>
-        {networksElem}
+        {networkListElem}
         <Formik
           initialValues={{ name: '', nodeURL: '', cacheURL: '' }}
           onSubmit={onSubmit}
