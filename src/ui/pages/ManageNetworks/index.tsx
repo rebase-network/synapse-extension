@@ -109,7 +109,6 @@ export default () => {
 
   React.useEffect(() => {
     NetworkManager.getNetworkList().then((networkList) => {
-      console.log('&&&&& networkList: ', networkList, networkList.length);
       if (Array.isArray(networkList) && networkList.length > 0) {
         setNetworkItems(networkList);
       }
@@ -145,7 +144,6 @@ export default () => {
       </List>
     );
   });
-  console.log(/ ======= networkList/, networkItems);
 
   return (
     <div>

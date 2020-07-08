@@ -5,7 +5,6 @@ import userEvent from '@testing-library/user-event';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
-import NetworkManager from '@common/networkManager';
 import App from './index';
 
 jest.mock('react-router-dom', () => {
@@ -22,9 +21,6 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('Manage networks page', () => {
-  beforeAll(() => {
-    NetworkManager.initNetworks();
-  });
   beforeEach(() => {
     render(
       <IntlProvider locale="en" messages={en}>
