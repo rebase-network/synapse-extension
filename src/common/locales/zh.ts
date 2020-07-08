@@ -65,4 +65,7 @@ export default {
   'No UDT found': '没有UDT',
   'Loading UDT...': '加载UDT...',
   'lack of capacity':'capacity不足',
+  'Manage Networks': '管理网络',
+  'CKB Node URL': 'CKB Node URL',
+  'CKB Cache Layer URL': 'CKB Cache Layer URL',
 };

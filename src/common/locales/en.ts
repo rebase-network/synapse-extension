@@ -65,4 +65,7 @@ export default {
   'No UDT found': 'No UDT found',
   'Loading UDT...': 'Loading UDT...',
   'lack of capacity':'lack of capacity',
+  'Manage Networks': 'Manage Networks',
+  'CKB Node URL': 'CKB Node URL',
+  'CKB Cache Layer URL': 'CKB Cache Layer URL',
 };
