@@ -26,12 +26,9 @@ export const generateTx = async (
   };
   const unspentCells = await getUnspentCells(lockHash, params);
   // Error handling
-  console.log(/unspentCells/, unspentCells.errCode);
   if (unspentCells.errCode !== undefined && unspentCells.errCode !== 0) {
-    console.log(/111/, '111');
     return unspentCells;
   }
-  console.log(/222/, '222');
 
   function getTotalCapity(total, cell) {
     return BigInt(total) + BigInt(cell.capacity);
@@ -78,6 +75,11 @@ export const generateAnyPayTx = async (
     capacity: toAmount,
   };
   const unspentCells = await getUnspentCells(lockHash, params);
+  // Error handling
+  if (unspentCells.errCode !== undefined && unspentCells.errCode !== 0) {
+    return unspentCells;
+  }
+
   function getTotalCapity(total, cell) {
     return BigInt(total) + BigInt(cell.capacity);
   }
@@ -92,6 +94,11 @@ export const generateAnyPayTx = async (
     capacity: toAmount,
   };
   const unspentWalletCells = await getUnspentCells(toLockHash, params2);
+  // Error handling
+  if (unspentWalletCells.errCode !== undefined && unspentWalletCells.errCode !== 0) {
+    return unspentCells;
+  }
+
   function getWalletTotalCapity(total, cell) {
     return BigInt(total) + BigInt(cell.capacity);
   }
@@ -131,6 +138,10 @@ export const generateUpdateDataTx = async (
     capacity: cellDataCapacity.toString(),
   };
   const unspentCells = await getUnspentCells(lockHash, params);
+  // Error handling
+  if (unspentCells.errCode !== undefined && unspentCells.errCode !== 0) {
+    return unspentCells;
+  }
 
   let inputDataHex = '';
   let inputDataLength = 0;
@@ -213,12 +224,16 @@ export const sendTransaction = async (
   const toLockHash = ckb.utils.scriptToHash(toLockScript);
 
   // get anypay wallet
-  let unspentWalletCells = [];
+  let unspentWalletCells: any;
   if (toLockType === 'AnyPay') {
     const params = {
       limit: '10',
     };
     unspentWalletCells = await getUnspentCells(toLockHash, params);
+    // Error handling
+    if (unspentWalletCells.errCode !== undefined && unspentWalletCells.errCode !== 0) {
+      return unspentWalletCells;
+    }
   }
 
   let realTxHash;
