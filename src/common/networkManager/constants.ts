@@ -1,15 +1,18 @@
 export const networks = [
   {
     name: 'Mainnet',
-    url: 'mainnet.com',
+    nodeURL: 'nodeURL.mainnet.com',
+    cacheURL: 'cacheURL.mainnet.com',
   },
   {
     name: 'Testnet',
-    url: 'testnet.com',
+    nodeURL: 'nodeURL.testnet.com',
+    cacheURL: 'cacheURL.testnet.com',
   },
   {
     name: 'Local',
-    url: 'local.com',
+    nodeURL: 'nodeURL.local.com',
+    cacheURL: 'cacheURL.local.com',
   },
 ];
 
