@@ -23,7 +23,7 @@ const useStyles = makeStyles({
 
 interface FormValues {
   name: string;
-  ckbNodeURL: string;
+  nodeURL: string;
   cacheURL: string;
 }
 
@@ -56,18 +56,18 @@ const innerForm = (props: FormikProps<FormValues>) => {
       />
       <TextField
         label={intl.formatMessage({ id: 'CKB Node URL' })}
-        id="ckbNodeURL"
-        name="ckbNodeURL"
+        id="nodeURL"
+        name="nodeURL"
         type="text"
         fullWidth
-        value={values.ckbNodeURL}
+        value={values.nodeURL}
         onChange={handleChange}
         onBlur={handleBlur}
-        error={!!errors.ckbNodeURL}
-        helperText={errors.ckbNodeURL && touched.ckbNodeURL && errors.ckbNodeURL}
+        error={!!errors.nodeURL}
+        helperText={errors.nodeURL && touched.nodeURL && errors.nodeURL}
         margin="normal"
         variant="outlined"
-        data-testid="field-ckbNodeURL"
+        data-testid="field-nodeURL"
       />
       <TextField
         label={intl.formatMessage({ id: 'CKB Cache Layer URL' })}
@@ -98,14 +98,14 @@ export default () => {
 
   const onSubmit = async (values, { resetForm }) => {
     let networksList = [];
-    const { name, ckbNodeURL, cacheURL } = values;
+    const { name, nodeURL, cacheURL } = values;
     const networksStorage = await browser.storage.local.get('networks');
     if (Array.isArray(networksStorage.networks)) {
       networksList = networksStorage.networks;
     }
-    const networkObj = { name, ckbNodeURL, cacheURL };
+    const networkObj = { name, nodeURL, cacheURL };
     const modNetworksIndex = _.findIndex(networksList, function findItemIndex(networkItem) {
-      return networkItem.ckbNodeURL === ckbNodeURL;
+      return networkItem.nodeURL === nodeURL;
     });
     if (modNetworksIndex === -1) {
       networksList.push(networkObj);
@@ -127,13 +127,13 @@ export default () => {
     });
   }, []);
 
-  const removeItem = async (event, ckbNodeURL) => {
+  const removeItem = async (event, nodeURL) => {
     let networksObj = [];
     const networksStorage = await browser.storage.local.get('networks');
     if (Array.isArray(networksStorage.networks)) {
       networksObj = networksStorage.networks;
     }
-    _.remove(networksObj, { ckbNodeURL });
+    _.remove(networksObj, { nodeURL });
     setNetworksItems(networksObj);
     await browser.storage.local.set({ networks: networksObj });
   };
@@ -142,18 +142,18 @@ export default () => {
     const secondaryItem = (
       <div>
         <div>{item.cacheURL}</div>
-        <div>{item.ckbNodeURL}</div>
+        <div>{item.nodeURL}</div>
       </div>
     );
     return (
-      <List component="nav" aria-label="networks List" key={`item-${item.ckbNodeURL}`}>
+      <List component="nav" aria-label="networks List" key={`item-${item.nodeURL}`}>
         <ListItem>
           <ListItemText primary={truncateHash(item.name)} secondary={secondaryItem} />
           <ListItemSecondaryAction>
             <IconButton
               edge="end"
               aria-label="delete"
-              onClick={(event) => removeItem(event, item.ckbNodeURL)}
+              onClick={(event) => removeItem(event, item.nodeURL)}
             >
               <DeleteIcon />
             </IconButton>
@@ -169,11 +169,11 @@ export default () => {
       <div className={classes.container}>
         {networksElem}
         <Formik
-          initialValues={{ name: '', ckbNodeURL: '', cacheURL: '' }}
+          initialValues={{ name: '', nodeURL: '', cacheURL: '' }}
           onSubmit={onSubmit}
           validationSchema={Yup.object().shape({
             name: Yup.string().required(intl.formatMessage({ id: 'Required' })),
-            ckbNodeURL: Yup.string().required(intl.formatMessage({ id: 'Required' })),
+            nodeURL: Yup.string().required(intl.formatMessage({ id: 'Required' })),
             cacheURL: Yup.string().required(intl.formatMessage({ id: 'Required' })),
           })}
         >

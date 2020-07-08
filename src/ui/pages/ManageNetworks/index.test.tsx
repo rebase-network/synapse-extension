@@ -50,17 +50,17 @@ describe('Manage networks page', () => {
     });
   });
 
-  it('should change form fields: ckbNodeURL', async () => {
-    const ckbNodeURL = screen.getByLabelText('CKB Node URL');
+  it('should change form fields: nodeURL', async () => {
+    const nodeURL = screen.getByLabelText('CKB Node URL');
     const expectedValue = 'https://rpc.mainnet.com';
 
-    expect(ckbNodeURL).toBeInTheDocument();
-    expect(ckbNodeURL).toBeEmpty();
+    expect(nodeURL).toBeInTheDocument();
+    expect(nodeURL).toBeEmpty();
 
-    await userEvent.type(ckbNodeURL, expectedValue);
+    await userEvent.type(nodeURL, expectedValue);
 
     expect(screen.getByRole('form')).toHaveFormValues({
-      ckbNodeURL: expectedValue,
+      nodeURL: expectedValue,
     });
   });
 
