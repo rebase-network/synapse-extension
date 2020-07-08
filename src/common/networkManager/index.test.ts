@@ -1,5 +1,5 @@
 import networkManager from './index';
-import { networks } from './fixture';
+import { networks } from './constants';
 
 describe('network manager', () => {
   it('should return initial networks', () => {

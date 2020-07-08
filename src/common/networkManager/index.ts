@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { networks } from './fixture';
+import { networks } from './constants';
 
 interface INetwork {
   name: string;
