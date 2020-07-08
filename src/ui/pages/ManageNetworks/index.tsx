@@ -10,8 +10,6 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { truncateHash } from '@utils/formatters';
-import _ from 'lodash';
 import * as Yup from 'yup';
 import NetworkManager from '@common/networkManager';
 
@@ -19,6 +17,9 @@ const useStyles = makeStyles({
   container: {
     margin: 30,
     fontSize: 12,
+  },
+  item: {
+    display: 'block',
   },
 });
 
@@ -96,55 +97,37 @@ export default () => {
   const classes = useStyles();
   const intl = useIntl();
   const [networksItems, setNetworksItems] = React.useState([]);
+  const [networkAmount, setNetworkAmount] = React.useState(0);
 
   const onSubmit = async (values, { resetForm }) => {
-    let networksList = [];
     const { name, nodeURL, cacheURL } = values;
-    const networksStorage = await browser.storage.local.get('networks');
-    if (Array.isArray(networksStorage.networks)) {
-      networksList = networksStorage.networks;
-    }
     const networkObj = { name, nodeURL, cacheURL };
-    const modNetworksIndex = _.findIndex(networksList, function findItemIndex(networkItem) {
-      return networkItem.nodeURL === nodeURL;
-    });
-    if (modNetworksIndex === -1) {
-      networksList.push(networkObj);
-    } else {
-      networksList[modNetworksIndex] = networkObj;
-    }
-    setNetworksItems(networksList);
-    console.log(/networksList/, JSON.stringify(networksList));
-    await browser.storage.local.set({ networks: networksList });
+    const newNetworkList = NetworkManager.createNetwork(networkObj);
+    setNetworksItems(newNetworkList);
+    setNetworkAmount(newNetworkList.length);
+    console.log(/networksList/, newNetworkList);
 
     resetForm();
   };
 
   React.useEffect(() => {
-    browser.storage.local.get('networks').then((result) => {
-      if (Array.isArray(result.networks)) {
-        setNetworksItems(result.networks);
-      }
-    });
-  }, []);
+    const networkList = NetworkManager.getNetworkList();
+    setNetworksItems(networkList);
+    setNetworkAmount(networkList.length);
+  }, [networkAmount]);
 
-  const removeItem = async (event, nodeURL) => {
-    let networksObj = [];
-    const networksStorage = await browser.storage.local.get('networks');
-    if (Array.isArray(networksStorage.networks)) {
-      networksObj = networksStorage.networks;
-    }
-    _.remove(networksObj, { nodeURL });
-    setNetworksItems(networksObj);
-    await browser.storage.local.set({ networks: networksObj });
+  const removeItem = async (event, name) => {
+    const newNetworkList = NetworkManager.removeNetwork(name);
+    setNetworkAmount(newNetworkList.length);
+    setNetworksItems(newNetworkList);
   };
 
   const networksElem = networksItems.map((item) => {
     const secondaryItem = (
-      <div>
-        <div>{item.cacheURL}</div>
-        <div>{item.nodeURL}</div>
-      </div>
+      <span>
+        <span className={classes.item}>{item.cacheURL}</span>
+        <span className={classes.item}>{item.nodeURL}</span>
+      </span>
     );
     return (
       <List component="nav" aria-label="networks List" key={`item-${item.nodeURL}`}>
@@ -154,7 +137,7 @@ export default () => {
             <IconButton
               edge="end"
               aria-label="delete"
-              onClick={(event) => removeItem(event, item.nodeURL)}
+              onClick={(event) => removeItem(event, item.name)}
             >
               <DeleteIcon />
             </IconButton>
@@ -163,6 +146,7 @@ export default () => {
       </List>
     );
   });
+  console.log(/ ======= networksList/, networksItems);
 
   return (
     <div>
