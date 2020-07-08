@@ -13,6 +13,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { truncateHash } from '@utils/formatters';
 import _ from 'lodash';
 import * as Yup from 'yup';
+import NetworkManager from '@common/networkManager';
 
 const useStyles = makeStyles({
   container: {
@@ -148,7 +149,7 @@ export default () => {
     return (
       <List component="nav" aria-label="networks List" key={`item-${item.nodeURL}`}>
         <ListItem>
-          <ListItemText primary={truncateHash(item.name)} secondary={secondaryItem} />
+          <ListItemText primary={item.name} secondary={secondaryItem} />
           <ListItemSecondaryAction>
             <IconButton
               edge="end"
