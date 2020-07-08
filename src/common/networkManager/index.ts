@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { networks } from './constants';
+import { networks as presetNetworks } from './constants';
 
 interface INetwork {
   name: string;
@@ -7,31 +7,43 @@ interface INetwork {
   cacheURL: string;
 }
 
-let currentNetwork = networks[0];
+let currentNetwork = presetNetworks[0];
 
 const NetworkManager = {
   // constructor(networks) {
   //   this.networks = networks;
   // }
-  createNetwork(network: INetwork) {
+  async initNetworks() {
+    await browser.storage.local.set({ networks: presetNetworks });
+  },
+  async createNetwork(network: INetwork) {
+    const networks = await NetworkManager.getNetworkList();
     networks.push(network);
+    await browser.storage.local.set({ networks });
+
     return NetworkManager.getNetworkList();
   },
-  removeNetwork(name: string) {
+  async removeNetwork(name: string) {
+    const networks = await NetworkManager.getNetworkList();
     _.remove(networks, { name });
+    await browser.storage.local.set({ networks });
+
     return NetworkManager.getNetworkList();
   },
-  getNetworkList() {
+  async getNetworkList() {
+    const { networks = [] } = await browser.storage.local.get('networks');
     return networks;
   },
-  getNetwork(name: string) {
+  async getNetwork(name: string) {
+    const networks = await NetworkManager.getNetworkList();
     return _.find(networks, { name });
   },
-  getCurrentNetwork() {
-    return currentNetwork;
+  async getCurrentNetwork() {
+    const networks = await NetworkManager.getNetworkList();
+    return currentNetwork || networks[0];
   },
-  setCurrentNetwork(name: string) {
-    currentNetwork = NetworkManager.getNetwork(name);
+  async setCurrentNetwork(name: string) {
+    currentNetwork = await NetworkManager.getNetwork(name);
   },
 };
 

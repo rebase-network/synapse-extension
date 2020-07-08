@@ -102,7 +102,7 @@ export default () => {
   const onSubmit = async (values, { resetForm }) => {
     const { name, nodeURL, cacheURL } = values;
     const networkObj = { name, nodeURL, cacheURL };
-    const newNetworkList = NetworkManager.createNetwork(networkObj);
+    const newNetworkList = await NetworkManager.createNetwork(networkObj);
     setNetworkItems(newNetworkList);
     setNetworkAmount(newNetworkList.length);
     console.log(/networkList/, newNetworkList);
@@ -111,13 +111,15 @@ export default () => {
   };
 
   React.useEffect(() => {
-    const networkList = NetworkManager.getNetworkList();
-    setNetworkItems(networkList);
-    setNetworkAmount(networkList.length);
+    NetworkManager.getNetworkList().then((networkList) => {
+      console.log('&&&&& networkList: ', networkList, networkList.length);
+      setNetworkItems(networkList);
+      setNetworkAmount(networkList.length);
+    });
   }, [networkAmount]);
 
   const removeItem = async (event, name) => {
-    const newNetworkList = NetworkManager.removeNetwork(name);
+    const newNetworkList = await NetworkManager.removeNetwork(name);
     setNetworkAmount(newNetworkList.length);
     setNetworkItems(newNetworkList);
   };
