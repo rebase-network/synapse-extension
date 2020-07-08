@@ -91,11 +91,10 @@ const innerForm = (props: FormikProps<FormValues>) => {
   );
 };
 
-export default function initFunction(props: AppProps, state: AppState) {
+export default () => {
   const classes = useStyles();
   const intl = useIntl();
   const [networksItems, setNetworksItems] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(true);
 
   const onSubmit = async (values, { resetForm }) => {
     let networksList = [];
@@ -128,15 +127,13 @@ export default function initFunction(props: AppProps, state: AppState) {
     });
   }, []);
 
-  const handleListItemClick = async (event, ckbNodeURL) => {
+  const removeItem = async (event, ckbNodeURL) => {
     let networksObj = [];
     const networksStorage = await browser.storage.local.get('networks');
     if (Array.isArray(networksStorage.networks)) {
       networksObj = networksStorage.networks;
     }
-    _.remove(networksObj, function removeItem(contact) {
-      return contact.ckbNodeURL === ckbNodeURL;
-    });
+    _.remove(networksObj, { ckbNodeURL });
     setNetworksItems(networksObj);
     await browser.storage.local.set({ networks: networksObj });
   };
@@ -151,7 +148,7 @@ export default function initFunction(props: AppProps, state: AppState) {
             <IconButton
               edge="end"
               aria-label="delete"
-              onClick={(event) => handleListItemClick(event, item.ckbNodeURL)}
+              onClick={(event) => removeItem(event, item.ckbNodeURL)}
             >
               <DeleteIcon />
             </IconButton>
