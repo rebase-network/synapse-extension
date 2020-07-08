@@ -29,7 +29,7 @@ interface FormValues {
   cacheURL: string;
 }
 
-const innerForm = (props: FormikProps<FormValues>) => {
+const innerForm = (props: FormikProps<FormValues>): React.ReactElement => {
   const intl = useIntl();
 
   const { values, touched, errors, handleChange, handleBlur, handleSubmit } = props;
