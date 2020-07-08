@@ -21,7 +21,7 @@ jest.mock('react-router-dom', () => {
   };
 });
 
-describe('export mnemonic page', () => {
+describe('Manage UDTs page', () => {
   beforeAll(() => {
     window.chrome = chrome;
   });
