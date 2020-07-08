@@ -23,6 +23,12 @@ describe('network manager', () => {
     expect(result).toBe(networks[1]);
   });
 
+  it('should able to remove a network', () => {
+    const tobeRemoved = networkManager.getNetwork('Testnet');
+    const result = networkManager.removeNetwork('Testnet');
+    expect(result[0]).toBe(tobeRemoved);
+  });
+
   it('should able to set current network', () => {
     const result = networkManager.getCurrentNetwork();
     expect(result).toBe(networks[0]);

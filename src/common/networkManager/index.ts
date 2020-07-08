@@ -16,6 +16,9 @@ const NetworkManager = {
     networks.push(network);
     return true;
   },
+  removeNetwork(name: string) {
+    return _.remove(networks, { name });
+  },
   getNetworkList() {
     return networks;
   },
