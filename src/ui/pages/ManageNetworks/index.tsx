@@ -97,15 +97,12 @@ export default () => {
   const classes = useStyles();
   const intl = useIntl();
   const [networkItems, setNetworkItems] = React.useState([]);
-  const [networkAmount, setNetworkAmount] = React.useState(0);
 
   const onSubmit = async (values, { resetForm }) => {
     const { name, nodeURL, cacheURL } = values;
     const networkObj = { name, nodeURL, cacheURL };
     const newNetworkList = await NetworkManager.createNetwork(networkObj);
     setNetworkItems(newNetworkList);
-    setNetworkAmount(newNetworkList.length);
-    console.log(/networkList/, newNetworkList);
 
     resetForm();
   };
@@ -114,13 +111,11 @@ export default () => {
     NetworkManager.getNetworkList().then((networkList) => {
       console.log('&&&&& networkList: ', networkList, networkList.length);
       setNetworkItems(networkList);
-      setNetworkAmount(networkList.length);
     });
-  }, [networkAmount]);
+  }, []);
 
   const removeItem = async (event, name) => {
     const newNetworkList = await NetworkManager.removeNetwork(name);
-    setNetworkAmount(newNetworkList.length);
     setNetworkItems(newNetworkList);
   };
 
