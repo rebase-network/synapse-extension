@@ -3,7 +3,8 @@ import { networks } from './constants';
 
 interface INetwork {
   name: string;
-  url: string;
+  nodeURL: string;
+  cacheURL: string;
 }
 
 let currentNetwork = networks[0];
@@ -14,10 +15,11 @@ const NetworkManager = {
   // }
   createNetwork(network: INetwork) {
     networks.push(network);
-    return true;
+    return NetworkManager.getNetworkList();
   },
   removeNetwork(name: string) {
-    return _.remove(networks, { name });
+    _.remove(networks, { name });
+    return NetworkManager.getNetworkList();
   },
   getNetworkList() {
     return networks;

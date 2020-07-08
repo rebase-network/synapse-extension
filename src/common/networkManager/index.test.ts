@@ -10,12 +10,11 @@ describe('network manager', () => {
   it('should able to create a network', () => {
     const result = networkManager.createNetwork({
       name: 'my network',
-      url: 'testtest.com',
+      nodeURL: 'testtest.com',
+      cacheURL: 'testtest.com',
     });
-    expect(result).toBe(true);
 
-    const networkList = networkManager.getNetworkList();
-    expect(networkList).toHaveLength(4);
+    expect(result).toHaveLength(4);
   });
 
   it('should able to get network info', () => {
@@ -24,9 +23,8 @@ describe('network manager', () => {
   });
 
   it('should able to remove a network', () => {
-    const tobeRemoved = networkManager.getNetwork('Testnet');
     const result = networkManager.removeNetwork('Testnet');
-    expect(result[0]).toBe(tobeRemoved);
+    expect(result).toHaveLength(3);
   });
 
   it('should able to set current network', () => {
