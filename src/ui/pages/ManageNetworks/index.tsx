@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Button, TextField } from '@material-ui/core';
-import { Formik, Form } from 'formik';
+import { Formik, Form, FormikProps } from 'formik';
 import { makeStyles } from '@material-ui/core/styles';
 import PageNav from '@ui/Components/PageNav';
 import List from '@material-ui/core/List';
@@ -21,14 +21,16 @@ const useStyles = makeStyles({
   },
 });
 
-interface AppProps {}
+interface FormValues {
+  name: string;
+  ckbNodeURL: string;
+  cacheURL: string;
+}
 
-interface AppState {}
-
-export const innerForm = (props) => {
+const innerForm = (props: FormikProps<FormValues>) => {
   const intl = useIntl();
 
-  const { values, touched, errors, handleChange, handleBlur, handleSubmit, handleReset } = props;
+  const { values, touched, errors, handleChange, handleBlur, handleSubmit } = props;
 
   return (
     <Form
