@@ -138,12 +138,17 @@ export default () => {
     await browser.storage.local.set({ networks: networksObj });
   };
 
-  const networksElem = networksItems.map((item, index) => {
-    const secondaryItem = `${item.name} - ${item.cacheURL} - ${item.ckbNodeURL}`;
+  const networksElem = networksItems.map((item) => {
+    const secondaryItem = (
+      <div>
+        <div>{item.cacheURL}</div>
+        <div>{item.ckbNodeURL}</div>
+      </div>
+    );
     return (
       <List component="nav" aria-label="networks List" key={`item-${item.ckbNodeURL}`}>
         <ListItem>
-          <ListItemText primary={truncateHash(item.ckbNodeURL)} secondary={secondaryItem} />
+          <ListItemText primary={truncateHash(item.name)} secondary={secondaryItem} />
           <ListItemSecondaryAction>
             <IconButton
               edge="end"
@@ -177,4 +182,4 @@ export default () => {
       </div>
     </div>
   );
-}
+};
