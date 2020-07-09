@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { MenuItem, FormControl, Select } from '@material-ui/core';
 import NetworkManager from '@common/networkManager';
@@ -24,7 +25,7 @@ interface AppProps {
 
 export default (props: AppProps) => {
   const classes = useStyles();
-  const [network, setNetwork] = React.useState('testnet');
+  const [network, setNetwork] = React.useState('');
   const [networkItems, setNetworkItems] = React.useState([]);
 
   React.useEffect(() => {
@@ -35,13 +36,34 @@ export default (props: AppProps) => {
     });
   }, []);
 
+  React.useEffect(() => {
+    NetworkManager.getCurrentNetwork().then((currentNetwork) => {
+      if (!_.isEmpty(currentNetwork)) {
+        setNetwork(currentNetwork.name);
+      }
+    });
+  }, []);
+
   const handleChange = (event: React.ChangeEvent<{ value: string }>) => {
     setNetwork(event.target.value);
     props.handleNetworkChange(event.target.value);
+    NetworkManager.setCurrentNetwork(event.target.value);
+  };
+
+  const handleOpen = () => {
+    NetworkManager.getNetworkList().then((networkList) => {
+      if (Array.isArray(networkList) && networkList.length > 0) {
+        setNetworkItems(networkList);
+      }
+    });
   };
 
   const menuItems = networkItems.map((item) => {
-    return <MenuItem value={item.name}>{item.name}</MenuItem>;
+    return (
+      <MenuItem value={item.name} key={`${item.name}-${item.nodeURL}`}>
+        {item.name}
+      </MenuItem>
+    );
   });
 
   return (
@@ -53,6 +75,7 @@ export default (props: AppProps) => {
           id="network-select"
           value={network}
           onChange={handleChange}
+          onOpen={handleOpen}
           className={classes.select}
         >
           {menuItems}
