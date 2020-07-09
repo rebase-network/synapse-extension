@@ -39,7 +39,7 @@ const NetworkManager = {
     return NetworkManager.getNetworkList();
   },
   async getNetworkList() {
-    const { networks = [] } = await browser.storage.local.get('networks');
+    const { networks = presetNetworks } = await browser.storage.local.get('networks');
     return networks;
   },
   async getNetwork(name: string) {
