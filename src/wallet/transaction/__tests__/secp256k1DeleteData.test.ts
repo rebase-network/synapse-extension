@@ -7,7 +7,7 @@ import { bobAddresses } from '../../../test/fixture/address';
 import { secp256k1Dep } from '../../../test/fixture/deps';
 
 describe('Transaction test', () => {
-  const ckb = new CKB(configService.get('CKB_RPC_ENDPOINT'));
+  const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
 
   it('createRawTx test secp256k1', async () => {
     const deps = [secp256k1Dep];

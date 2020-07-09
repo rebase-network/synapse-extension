@@ -10,7 +10,7 @@ import { anypayDep } from '../../../test/fixture/deps';
 jest.mock('@utils/apis');
 
 describe('Transaction test', () => {
-  const ckb = new CKB(configService.get('CKB_RPC_ENDPOINT'));
+  const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
 
   it('send transaction from anypay to secp256k1', async () => {
     const { privateKey } = bobAddresses;

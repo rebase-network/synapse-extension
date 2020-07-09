@@ -22,9 +22,7 @@ Axios.interceptors.response.use(
 
 export const getAddressInfo = async (lockHash: string): Promise<{ capacity: string }> => {
   // call api
-  const result = await Axios.get(
-    `${configService.get('CACHE_LAYER_ENDPOINT')}/address/${lockHash}`,
-  );
+  const result = await Axios.get(`${configService.CACHE_LAYER_ENDPOINT}/address/${lockHash}`);
   return result.data;
 };
 
@@ -49,12 +47,9 @@ export const getUnspentCells = async (
     hasData,
   };
   try {
-    const result = await Axios.get(
-      `${configService.get('CACHE_LAYER_ENDPOINT')}/cell/getUnspentCells/`,
-      {
-        params,
-      },
-    );
+    const result = await Axios.get(`${configService.CACHE_LAYER_ENDPOINT}/cell/getUnspentCells/`, {
+      params,
+    });
     if (result.errCode !== 0) {
       console.log(/result error/, JSON.stringify(result));
       return result;
@@ -67,7 +62,7 @@ export const getUnspentCells = async (
 };
 
 export const getTxHistories = async (scriptObj): Promise<any> => {
-  const url = `${configService.get('CACHE_LAYER_ENDPOINT')}/cell/getTxHistoriesByIndexer`;
+  const url = `${configService.CACHE_LAYER_ENDPOINT}/cell/getTxHistoriesByIndexer`;
   const result = await Axios.post(url, scriptObj);
 
   return result.data;
@@ -79,7 +74,7 @@ interface TLockAndTypeScripts {
 }
 
 export const getUDTsByLockHash = async (params: TLockAndTypeScripts): Promise<any> => {
-  const url = `${configService.get('CACHE_LAYER_ENDPOINT')}/cell/getCellsByLockHashAndTypeScripts`;
+  const url = `${configService.CACHE_LAYER_ENDPOINT}/cell/getCellsByLockHashAndTypeScripts`;
 
   const result = await Axios.post(url, params);
   return result.data;

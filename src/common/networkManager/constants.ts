@@ -8,8 +8,8 @@ export const networks = [
   // },
   {
     name: 'Aggron Testnet',
-    nodeURL: configService.get('CKB_RPC_ENDPOINT'),
-    cacheURL: configService.get('CACHE_LAYER_ENDPOINT'),
+    nodeURL: configService.CKB_RPC_ENDPOINT,
+    cacheURL: configService.CACHE_LAYER_ENDPOINT,
   },
   {
     name: 'Local',

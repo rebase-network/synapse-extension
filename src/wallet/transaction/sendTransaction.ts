@@ -10,7 +10,7 @@ import configService from '@src/config';
 import { createRawTx, createAnyPayRawTx, createUpdateDataRawTx } from './txGenerator';
 import { signTx } from '../addKeyperWallet';
 
-const ckb = new CKB(configService.get('CKB_RPC_ENDPOINT'));
+const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
 
 export const generateTx = async (
   fromAddress,

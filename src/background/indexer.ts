@@ -2,7 +2,7 @@ import CKB from '@nervosnetwork/ckb-sdk-core';
 import _ from 'lodash';
 import configService from '@src/config';
 
-const ckb = new CKB(configService.get('CKB_RPC_ENDPOINT'));
+const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
 
 export const createIndexerByLockHash = async (lockHash: string, indexFrom: string = '0x0') => {
   const indexer = await ckb.rpc.indexLockHash(lockHash, indexFrom);

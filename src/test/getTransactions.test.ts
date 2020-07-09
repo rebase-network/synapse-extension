@@ -2,7 +2,7 @@ import CKB from '@nervosnetwork/ckb-sdk-core';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 import configService from '@src/config';
 
-const ckb = new CKB(configService.get('CKB_RPC_ENDPOINT'));
+const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
 export const EMPTY_TX_HASH = '0x0000000000000000000000000000000000000000000000000000000000000000';
 
 const txListObjects = [
