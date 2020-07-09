@@ -1,4 +1,4 @@
-import { hexToDecimal } from '@utils/index';
+import { parseSUDT } from '@utils/index';
 
 export interface UDTInfo {
   typeHash: string;
@@ -16,7 +16,7 @@ export const aggregateUDT = (udtArr: UDTInfo[]) => {
         udt: 0,
       };
     }
-    result[cur.typeHash].udt += hexToDecimal(cur.outputdata, false);
+    result[cur.typeHash].udt += parseSUDT(cur.outputdata);
     result[cur.typeHash].ckb += parseInt(cur.capacity, 10);
     return result;
   }, {});
