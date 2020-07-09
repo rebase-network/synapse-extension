@@ -22,7 +22,10 @@ const NetworkManager = {
     const networks = await NetworkManager.getNetworkList();
     _.remove(networks, { name });
     await browser.storage.local.set({ networks });
-
+    const currentNetork = await NetworkManager.getCurrentNetwork();
+    if (currentNetork.name === name) {
+      await NetworkManager.setCurrentNetwork(networks[0]?.name);
+    }
     return NetworkManager.getNetworkList();
   },
   async getNetworkList() {
@@ -39,6 +42,7 @@ const NetworkManager = {
     return currentNetwork;
   },
   async setCurrentNetwork(name: string) {
+    if (!name) return;
     const network = await NetworkManager.getNetwork(name);
     await browser.storage.local.set({ currentNetwork: network });
   },
