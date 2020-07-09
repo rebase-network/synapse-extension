@@ -66,4 +66,7 @@ export default {
   'Loading UDT...': 'Loading UDT...',
   'lack of capacity':'Capacity is insufficient to trade',
   'the rest capacity is less than 61, it will be destroyed':'the rest capacity is less than 61, it will be destroyed',
+  'Manage Networks': 'Manage Networks',
+  'CKB Node URL': 'CKB Node URL',
+  'CKB Cache Layer URL': 'CKB Cache Layer URL',
 };

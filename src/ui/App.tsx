@@ -18,6 +18,7 @@ import ExportMnemonicSecond from '@ui/pages/ExportMnemonicSecond';
 import AppBar from '@ui/Components/AppBar';
 import ManageContacts from '@ui/pages/ManageContacts';
 import ManageUDTs from '@ui/pages/ManageUDTs';
+import ManageNetworks from '@ui/pages/ManageNetworks';
 
 import './styles/global.scss';
 
@@ -79,6 +80,9 @@ export default function App() {
             </Route>
             <Route path="/manage-udts">
               <ManageUDTs />
+            </Route>
+            <Route path="/manage-networks">
+              <ManageNetworks />
             </Route>
             <Route path="/setting">
               <Setting />

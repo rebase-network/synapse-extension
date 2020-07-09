@@ -1,12 +1,11 @@
 import React from 'react';
-import App from './index';
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect';
-import chrome from 'sinon-chrome';
+import userEvent from '@testing-library/user-event';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
+import App from './index';
 
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
@@ -21,11 +20,7 @@ jest.mock('react-router-dom', () => {
   };
 });
 
-describe('Manage UDTs page', () => {
-  beforeAll(() => {
-    window.chrome = chrome;
-  });
-
+describe('Manage networks page', () => {
   beforeEach(() => {
     render(
       <IntlProvider locale="en" messages={en}>
@@ -42,54 +37,44 @@ describe('Manage UDTs page', () => {
   });
 
   it('should change form fields: name', async () => {
-    const name = screen.getByLabelText('UDT Name');
+    const name = screen.getByLabelText('Name');
+    const expectedValue = 'Mainnet';
 
     expect(name).toBeInTheDocument();
     expect(name).toBeEmpty();
 
-    await userEvent.type(name, 'simpleUDT');
+    await userEvent.type(name, expectedValue);
 
     expect(screen.getByRole('form')).toHaveFormValues({
-      name: 'simpleUDT',
+      name: expectedValue,
     });
   });
 
-  it('should change form fields: typeHash', async () => {
-    const typeHash = screen.getByLabelText('UDT Hash');
+  it('should change form fields: nodeURL', async () => {
+    const nodeURL = screen.getByLabelText('CKB Node URL');
+    const expectedValue = 'https://rpc.mainnet.com';
 
-    expect(typeHash).toBeInTheDocument();
-    expect(typeHash).toBeEmpty();
+    expect(nodeURL).toBeInTheDocument();
+    expect(nodeURL).toBeEmpty();
 
-    await userEvent.type(
-      typeHash,
-      '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
-    );
+    await userEvent.type(nodeURL, expectedValue);
 
     expect(screen.getByRole('form')).toHaveFormValues({
-      typeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+      nodeURL: expectedValue,
     });
   });
 
-  it('should change form fields: symbol', async () => {
-    const symbol = screen.getByLabelText('Symbol');
+  it('should change form fields: cacheURL', async () => {
+    const cacheURL = screen.getByLabelText('CKB Cache Layer URL');
+    const expectedValue = 'https://cache.mainnet.com';
 
-    expect(symbol).toBeInTheDocument();
-    expect(symbol).toBeEmpty();
+    expect(cacheURL).toBeInTheDocument();
+    expect(cacheURL).toBeEmpty();
 
-    await userEvent.type(symbol, 'UDT');
-
-    expect(screen.getByRole('form')).toHaveFormValues({
-      symbol: 'UDT',
-    });
-  });
-
-  it('should change form fields: decimals', async () => {
-    const decimal = screen.getByLabelText('Decimal');
-
-    expect(decimal).toBeInTheDocument();
+    await userEvent.type(cacheURL, expectedValue);
 
     expect(screen.getByRole('form')).toHaveFormValues({
-      decimal: '8',
+      cacheURL: expectedValue,
     });
   });
 });

@@ -66,4 +66,7 @@ export default {
   'Loading UDT...': '加载UDT...',
   'lack of capacity':'可交易的capacity不足',
   'the rest capacity is less than 61, it will be destroyed':'剩余capacity不足61，将会销毁。',
+  'Manage Networks': '管理网络',
+  'CKB Node URL': 'CKB Node URL',
+  'CKB Cache Layer URL': 'CKB Cache Layer URL',
 };

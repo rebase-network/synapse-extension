@@ -1,14 +1,13 @@
-import CKB from '@nervosnetwork/ckb-sdk-core';
-import { configService } from '../config';
-
-const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
+import getCKB from '@utils/ckb';
 
 export const getStatusByTxHash = async (txHash) => {
+  const ckb = await getCKB();
   const result = await ckb.rpc.getTransaction(txHash);
   return result.txStatus.status;
 };
 
 export const getBlockNumberByTxHash = async (txHash) => {
+  const ckb = await getCKB();
   const result = await ckb.rpc.getTransaction(txHash);
   if (result.txStatus.blockHash == null) {
     return BigInt(0);
@@ -20,5 +19,6 @@ export const getBlockNumberByTxHash = async (txHash) => {
 };
 
 export const sendSignedTx = async (signedTx) => {
+  const ckb = await getCKB();
   return ckb.rpc.sendTransaction(signedTx);
 };
