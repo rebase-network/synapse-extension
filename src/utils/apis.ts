@@ -80,9 +80,28 @@ export const getUDTsByLockHash = async (params: TLockAndTypeScripts): Promise<an
   return result.data;
 };
 
+export const getUnspentCapacity = async (lockHash: string) => {
+  try {
+    const params = { lockHash };
+    const result = await Axios.get(
+      `${configService.CACHE_LAYER_ENDPOINT}/cell/getUnspentCapacity/`,
+      { params },
+    );
+    if (result.errCode !== 0) {
+      console.log(/result error/, JSON.stringify(result));
+      return result;
+    }
+    return result.data;
+  } catch (error) {
+    console.log('result error', error);
+    return error;
+  }
+};
+
 export default {
   getAddressInfo,
   getUnspentCells,
   getTxHistories,
   getUDTsByLockHash,
+  getUnspentCapacity,
 };

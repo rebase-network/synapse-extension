@@ -10,7 +10,7 @@ import Keychain from '@src/wallet/keychain';
 import { sendTransaction } from '@src/wallet/transaction/sendTransaction';
 import Address from '@src/wallet/address';
 import { createScriptObj, signTxFromMsg } from '@background/transaction';
-import { getTxHistories } from '@utils/apis';
+import { getTxHistories, getUnspentCapacity } from '@utils/apis';
 import {
   addKeyperWallet,
   getAddressesList,
@@ -26,7 +26,7 @@ import {
   findInAddressesListByPublicKey,
 } from '@utils/wallet';
 import { getStatusByTxHash, getBlockNumberByTxHash, sendSignedTx } from '@utils/transaction';
-import { MESSAGE_TYPE } from '@utils/constants';
+import { MESSAGE_TYPE, CKB_TOKEN_DECIMALS } from '@utils/constants';
 import addExternalMessageListener from '@background/messageHandlers';
 import { WEB_PAGE } from '@src/utils/message/constants';
 import { sendToWebPage } from '@background/messageHandlers/proxy';
@@ -319,12 +319,12 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
   // send transactioin
   if (request.type === MESSAGE_TYPE.REQUEST_SEND_TX) {
-    const _currentWallet = await browser.storage.local.get('currentWallet');
-    const _wallets = await browser.storage.local.get('wallets');
+    const cwStorage = await browser.storage.local.get('currentWallet');
+    const walletsStorage = await browser.storage.local.get('wallets');
 
     const toAddress = request.address.trim();
-    const capacity = request.capacity * 10 ** 8;
-    const fee = request.fee * 10 ** 8;
+    const capacity = request.capacity * CKB_TOKEN_DECIMALS;
+    const fee = request.fee * CKB_TOKEN_DECIMALS;
     const password = request.password.trim();
     const toData = request.data.trim();
 
@@ -333,12 +333,34 @@ chrome.runtime.onMessage.addListener(async (request) => {
       publicKey,
       lock: lockHash,
       type: lockType,
-    } = _currentWallet.currentWallet;
+    } = cwStorage.currentWallet;
 
-    const wallet = findInWalletsByPublicKey(publicKey, _wallets.wallets);
+    const wallet = findInWalletsByPublicKey(publicKey, walletsStorage.wallets);
     const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
     const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
     const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
+
+    const unspentCapacity = await getUnspentCapacity(lockHash);
+    if (unspentCapacity !== undefined) {
+      let errorMsg = null;
+      if (unspentCapacity < capacity) {
+        errorMsg = 'lack of capacity';
+      }
+      const chargeCapacity = unspentCapacity - capacity;
+      if (chargeCapacity > 1 * CKB_TOKEN_DECIMALS && chargeCapacity < 61 * CKB_TOKEN_DECIMALS) {
+        errorMsg = 'the rest capacity is less than 61, it will be destroyed';
+      }
+      if (errorMsg !== null) {
+        const responseEorrorMsg = {
+          type: MESSAGE_TYPE.SEND_TX_ERROR,
+          success: true,
+          message: errorMsg,
+          data: '',
+        };
+        chrome.runtime.sendMessage(responseEorrorMsg);
+        return;
+      }
+    }
 
     const responseMsg = {
       type: MESSAGE_TYPE.SEND_TX_OVER,
@@ -417,10 +439,10 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
   // export-private-key check
   if (request.type === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK) {
-    const currentWalletStorage = await browser.storage.local.get('currentWallet');
+    const cwStorage = await browser.storage.local.get('currentWallet');
     const walletsStorage = await browser.storage.local.get('wallets');
     const { password } = request;
-    const { publicKey } = currentWalletStorage.currentWallet;
+    const { publicKey } = cwStorage.currentWallet;
 
     const wallet = findInWalletsByPublicKey(publicKey, walletsStorage.wallets);
     const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
@@ -459,10 +481,10 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
   // export-mneonic check
   if (request.type === MESSAGE_TYPE.EXPORT_MNEONIC_CHECK) {
-    const currentWalletStorage = await browser.storage.local.get('currentWallet');
+    const cwStorage = await browser.storage.local.get('currentWallet');
     const walletsStorage = await browser.storage.local.get('wallets');
     const { password } = request;
-    const { publicKey } = currentWalletStorage.currentWallet;
+    const { publicKey } = cwStorage.currentWallet;
     const wallet = findInWalletsByPublicKey(publicKey, walletsStorage.wallets);
     const { entropyKeystore } = wallet;
     if (_.isEmpty(entropyKeystore)) {
