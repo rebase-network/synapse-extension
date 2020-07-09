@@ -1,7 +1,7 @@
 import CKB from '@nervosnetwork/ckb-sdk-core';
-import { configService } from '../config';
+import configService from '@src/config';
 
-const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
+const ckb = new CKB(configService.get('CKB_RPC_ENDPOINT'));
 
 export const getStatusByTxHash = async (txHash) => {
   const result = await ckb.rpc.getTransaction(txHash);

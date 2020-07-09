@@ -2,15 +2,15 @@ import { BN } from 'bn.js';
 import { addressToScript } from '@keyper/specs';
 import CKB from '@nervosnetwork/ckb-sdk-core';
 import { getUnspentCells } from '@utils/apis';
+import configService from '@src/config';
 import { createRawTx } from '../txGenerator';
-import { configService } from '../../../config';
 import { bobAddresses, aliceAddresses } from '../../../test/fixture/address';
 import { anypayDep } from '../../../test/fixture/deps';
 
 jest.mock('@utils/apis');
 
 describe('Transaction test', () => {
-  const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
+  const ckb = new CKB(configService.get('CKB_RPC_ENDPOINT'));
 
   it('createRawTx test anyonepay', async () => {
     const { privateKey } = bobAddresses;
