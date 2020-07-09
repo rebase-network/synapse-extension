@@ -15,11 +15,18 @@ const NetworkManager = {
       networks: presetNetworks,
       currentNetwork: presetNetworks[0],
     });
-    await browser.storage.local.set({ isNetworkSet: true });
+    await NetworkManager.setNetworkStatus(true);
   },
   async isNetworkSet() {
     const { isNetworkSet } = await browser.storage.local.get('isNetworkSet');
     return isNetworkSet;
+  },
+  async setNetworkStatus(isSet: boolean) {
+    await browser.storage.local.set({ isNetworkSet: isSet });
+  },
+  async reset() {
+    await NetworkManager.setNetworkStatus(false);
+    await NetworkManager.initNetworks();
   },
   async createNetwork(network: INetwork) {
     const networks = await NetworkManager.getNetworkList();
