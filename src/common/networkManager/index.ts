@@ -32,8 +32,8 @@ const NetworkManager = {
     const networks = await NetworkManager.getNetworkList();
     _.remove(networks, { name });
     await browser.storage.local.set({ networks });
-    const currentNetork = await NetworkManager.getCurrentNetwork();
-    if (currentNetork.name === name) {
+    const currentNetwork = await NetworkManager.getCurrentNetwork();
+    if (currentNetwork.name === name) {
       await NetworkManager.setCurrentNetwork(networks[0]?.name);
     }
     return NetworkManager.getNetworkList();
