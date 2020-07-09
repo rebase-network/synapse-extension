@@ -1,18 +1,20 @@
+import configService from '@src/config';
+
 export const networks = [
+  // {
+  //   name: 'Mainnet',
+  //   nodeURL: configService.get('CKB_RPC_ENDPOINT_MAINNET'),
+  //   cacheURL: configService.get('CACHE_LAYER_ENDPOINT_MAINNET'),
+  // },
   {
-    name: 'Mainnet',
-    nodeURL: 'nodeURL.mainnet.com',
-    cacheURL: 'cacheURL.mainnet.com',
-  },
-  {
-    name: 'Testnet',
-    nodeURL: 'nodeURL.testnet.com',
-    cacheURL: 'cacheURL.testnet.com',
+    name: 'Aggron Testnet',
+    nodeURL: configService.get('CKB_RPC_ENDPOINT'),
+    cacheURL: configService.get('CACHE_LAYER_ENDPOINT'),
   },
   {
     name: 'Local',
-    nodeURL: 'nodeURL.local.com',
-    cacheURL: 'cacheURL.local.com',
+    nodeURL: 'http://127.0.0.1:8114',
+    cacheURL: 'http://127.0.0.1:3000',
   },
 ];
 
