@@ -1,6 +1,12 @@
 class ConfigService {
+  env: any;
+
+  constructor() {
+    this.env = process.env;
+  }
+
   private getValue(key: string, throwOnMissing = true): string {
-    const value = process.env[key];
+    const value = this.env[key];
     if (!value && throwOnMissing) {
       throw new Error(`config error - missing env.${key}`);
     }
@@ -12,13 +18,12 @@ class ConfigService {
     return this.getValue(key, true);
   }
 
-  // FIXME: cannot get process.env values
   get CKB_RPC_ENDPOINT(): string {
-    return process.env.CKB_RPC_ENDPOINT;
+    return this.env.CKB_RPC_ENDPOINT;
   }
 
   get CACHE_LAYER_ENDPOINT(): string {
-    return process.env.CACHE_LAYER_ENDPOINT;
+    return this.env.CACHE_LAYER_ENDPOINT;
   }
 
   public ensureValues(keys: string[]) {
@@ -36,10 +41,11 @@ class ConfigService {
   }
 }
 
-const configService = new ConfigService();
-// .ensureValues([
-//   'CKB_RPC_ENDPOINT',
-//   'CACHE_LAYER_ENDPOINT',
-// ])
+const configService = new ConfigService().ensureValues([
+  'CKB_RPC_ENDPOINT',
+  'CACHE_LAYER_ENDPOINT',
+]);
 
 export { configService };
+
+export default configService;
