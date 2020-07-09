@@ -7,8 +7,6 @@ interface INetwork {
   cacheURL: string;
 }
 
-let currentNetwork = presetNetworks[0];
-
 const NetworkManager = {
   async initNetworks() {
     await browser.storage.local.set({ networks: presetNetworks });
@@ -37,10 +35,12 @@ const NetworkManager = {
   },
   async getCurrentNetwork() {
     const networks = await NetworkManager.getNetworkList();
-    return currentNetwork || networks[0];
+    const { currentNetwork = networks[0] } = await browser.storage.local.get('currentNetwork');
+    return currentNetwork;
   },
   async setCurrentNetwork(name: string) {
-    currentNetwork = await NetworkManager.getNetwork(name);
+    const network = await NetworkManager.getNetwork(name);
+    await browser.storage.local.set({ currentNetwork: network });
   },
 };
 

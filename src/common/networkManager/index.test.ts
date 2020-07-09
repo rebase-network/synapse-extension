@@ -2,39 +2,48 @@ import NetworkManager from './index';
 import { networks } from './constants';
 
 describe('network manager', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     NetworkManager.initNetworks();
   });
+
+  afterEach(() => {
+    browser.storage.local.clear();
+  });
+
   it('should return initial networks', async () => {
-    const result = await await NetworkManager.getNetworkList();
-    expect(result).toHaveLength(3);
+    console.log('---------', networks);
+    const result = await NetworkManager.getNetworkList();
+    expect(result).toHaveLength(networks.length);
+  });
+
+  it('should able to set current network', async () => {
+    const result = await NetworkManager.getCurrentNetwork();
+    console.log('---------', networks);
+    expect(result).toBe(networks[0]);
+    await NetworkManager.setCurrentNetwork(networks[0].name);
+    expect(await NetworkManager.getCurrentNetwork()).toBe(networks[0]);
   });
 
   it('should able to create a network', async () => {
-    const result = await await NetworkManager.createNetwork({
+    console.log('---------', networks);
+    const result = await NetworkManager.createNetwork({
       name: 'my network',
       nodeURL: 'testtest.com',
       cacheURL: 'testtest.com',
     });
 
-    expect(result).toHaveLength(4);
+    expect(result).toHaveLength(networks.length);
   });
 
   it('should able to get network info', async () => {
-    const result = await NetworkManager.getNetwork('Testnet');
-    expect(result).toBe(networks[1]);
+    console.log('---------', networks);
+    const result = await NetworkManager.getNetwork('Aggron Testnet');
+    expect(result).toBe(networks[0]);
   });
 
   it('should able to remove a network', async () => {
-    const result = await NetworkManager.removeNetwork('Testnet');
-    expect(result).toHaveLength(3);
-  });
-
-  it('should able to set current network', async () => {
-    const result = await NetworkManager.getCurrentNetwork();
-    expect(result).toBe(networks[0]);
-
-    await NetworkManager.setCurrentNetwork(networks[1].name);
-    expect(await NetworkManager.getCurrentNetwork()).toBe(networks[1]);
+    console.log('---------', networks);
+    const result = await NetworkManager.removeNetwork('Aggron Testnet');
+    expect(result).toHaveLength(networks.length);
   });
 });
