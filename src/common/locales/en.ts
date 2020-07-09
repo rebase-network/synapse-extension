@@ -64,5 +64,6 @@ export default {
   'Hide UDT': 'Hide UDT',
   'No UDT found': 'No UDT found',
   'Loading UDT...': 'Loading UDT...',
-  'lack of capacity':'lack of capacity',
+  'lack of capacity':'Capacity is insufficient to trade',
+  'the rest capacity is less than 61, it will be destroyed':'the rest capacity is less than 61, it will be destroyed',
 };

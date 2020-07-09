@@ -64,5 +64,6 @@ export default {
   'Hide UDT': '隐藏UDT',
   'No UDT found': '没有UDT',
   'Loading UDT...': '加载UDT...',
-  'lack of capacity':'capacity不足',
+  'lack of capacity':'可交易的capacity不足',
+  'the rest capacity is less than 61, it will be destroyed':'剩余capacity不足61，将会销毁。',
 };
