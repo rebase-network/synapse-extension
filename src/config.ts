@@ -18,21 +18,9 @@ class ConfigService {
     return this.getValue(key, true);
   }
 
-  get CKB_RPC_ENDPOINT(): string {
-    return this.env.CKB_RPC_ENDPOINT;
-  }
-
-  get CACHE_LAYER_ENDPOINT(): string {
-    return this.env.CACHE_LAYER_ENDPOINT;
-  }
-
   public ensureValues(keys: string[]) {
     keys.forEach((k) => this.getValue(k, true));
     return this;
-  }
-
-  public getPort() {
-    return this.getValue('PORT', true);
   }
 
   public isProduction() {
@@ -45,7 +33,5 @@ const configService = new ConfigService().ensureValues([
   'CKB_RPC_ENDPOINT',
   'CACHE_LAYER_ENDPOINT',
 ]);
-
-export { configService };
 
 export default configService;
