@@ -9,7 +9,17 @@ interface INetwork {
 
 const NetworkManager = {
   async initNetworks() {
-    await browser.storage.local.set({ networks: presetNetworks });
+    const isNetworkSet = await NetworkManager.isNetworkSet();
+    if (isNetworkSet) return;
+    await browser.storage.local.set({
+      networks: presetNetworks,
+      currentNetwork: presetNetworks[0],
+    });
+    await browser.storage.local.set({ isNetworkSet: true });
+  },
+  async isNetworkSet() {
+    const { isNetworkSet } = await browser.storage.local.get('isNetworkSet');
+    return isNetworkSet;
   },
   async createNetwork(network: INetwork) {
     const networks = await NetworkManager.getNetworkList();
