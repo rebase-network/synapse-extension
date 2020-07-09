@@ -128,7 +128,7 @@ export default () => {
       </span>
     );
     return (
-      <List component="nav" aria-label="Network List" key={`item-${item.nodeURL}`}>
+      <List component="nav" aria-label="Network List" key={`${item.name}-${item.nodeURL}`}>
         <ListItem>
           <ListItemText primary={item.name} secondary={secondaryItem} />
           <ListItemSecondaryAction>
