@@ -1,10 +1,7 @@
 import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import { MenuItem, FormControl, Select } from '@material-ui/core';
+import NetworkManager from '@common/networkManager';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,16 +22,27 @@ interface AppProps {
   handleNetworkChange: Function;
 }
 
-interface AppState {}
-
-export default function (props: AppProps, state: AppState) {
+export default (props: AppProps) => {
   const classes = useStyles();
   const [network, setNetwork] = React.useState('testnet');
+  const [networkItems, setNetworkItems] = React.useState([]);
+
+  React.useEffect(() => {
+    NetworkManager.getNetworkList().then((networkList) => {
+      if (Array.isArray(networkList) && networkList.length > 0) {
+        setNetworkItems(networkList);
+      }
+    });
+  }, []);
 
   const handleChange = (event: React.ChangeEvent<{ value: string }>) => {
     setNetwork(event.target.value);
     props.handleNetworkChange(event.target.value);
   };
+
+  const menuItems = networkItems.map((item) => {
+    return <MenuItem value={item.name}>{item.name}</MenuItem>;
+  });
 
   return (
     <div>
@@ -47,10 +55,9 @@ export default function (props: AppProps, state: AppState) {
           onChange={handleChange}
           className={classes.select}
         >
-          <MenuItem value={'testnet'}>Aggron Testnet</MenuItem>
-          {/* <MenuItem value={'mainnet'}>Mainnet</MenuItem> */}
+          {menuItems}
         </Select>
       </FormControl>
     </div>
   );
-}
+};
