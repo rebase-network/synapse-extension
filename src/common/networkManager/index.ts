@@ -10,9 +10,6 @@ interface INetwork {
 let currentNetwork = presetNetworks[0];
 
 const NetworkManager = {
-  // constructor(networks) {
-  //   this.networks = networks;
-  // }
   async initNetworks() {
     await browser.storage.local.set({ networks: presetNetworks });
   },
