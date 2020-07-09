@@ -5,12 +5,9 @@ import { textToHex, textToBytesLength } from '@utils/index';
 import _ from 'lodash';
 import { getDepFromLockType } from '@utils/deps';
 import { getUnspentCells } from '@utils/apis';
-import CKB from '@nervosnetwork/ckb-sdk-core';
-import configService from '@src/config';
+import getCKB from '@utils/ckb';
 import { createRawTx, createAnyPayRawTx, createUpdateDataRawTx } from './txGenerator';
 import { signTx } from '../addKeyperWallet';
-
-const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
 
 export const generateTx = async (
   fromAddress,
@@ -67,6 +64,7 @@ export const generateAnyPayTx = async (
   fromLockType,
   toLockType,
 ) => {
+  const ckb = await getCKB();
   const fromLockScript = addressToScript(fromAddress);
   const toLockScript = addressToScript(toAddress);
   const toLockHash = ckb.utils.scriptToHash(toLockScript);
@@ -130,6 +128,7 @@ export const generateUpdateDataTx = async (
   lockHash,
   inputData,
 ) => {
+  const ckb = await getCKB();
   const fromLockScript = addressToScript(fromAddress);
   const dataCell = await ckb.rpc.getLiveCell(inputOutPoint, true);
   const cellDataCapacity = BigInt(dataCell.cell.output.capacity);
@@ -191,6 +190,7 @@ export const sendUpdateDataTransaction = async (
   const config = { index: 0, length: -1 };
   const signedTx = await signTx(lockHash, password, rawTransaction, config, publicKey);
 
+  const ckb = await getCKB();
   const realTxHash = await ckb.rpc.sendTransaction(signedTx);
   return realTxHash;
 };
@@ -207,6 +207,7 @@ export const sendTransaction = async (
   publicKey,
   toData = '0x',
 ) => {
+  const ckb = await getCKB();
   const toDataHex = textToHex(toData || '0x');
   const toAddressScript = addressToScript(toAddress);
   let toLockType = '';
