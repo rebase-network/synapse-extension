@@ -14,6 +14,5 @@ describe('React testing library', () => {
   it('should render title', async () => {
     const elem = container.querySelector('#network-select');
     expect(container).toContainElement(elem);
-    expect(elem).not.toHaveTextContent('Aggron');
   });
 });
