@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import { configService } from '../config';
+import configService from '@src/config';
 
 // Add a response interceptor
 Axios.interceptors.response.use(

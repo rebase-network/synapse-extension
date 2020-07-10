@@ -30,9 +30,10 @@ import { MESSAGE_TYPE, CKB_TOKEN_DECIMALS } from '@utils/constants';
 import addExternalMessageListener from '@background/messageHandlers';
 import { WEB_PAGE } from '@src/utils/message/constants';
 import { sendToWebPage } from '@background/messageHandlers/proxy';
-
+import NetworkManager from '@common/networkManager';
 import { indexerAddresses, getTipBlockNumber } from '@background/indexer';
 
+NetworkManager.initNetworks();
 /**
  * Listen messages from popup
  */

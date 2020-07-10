@@ -1,5 +1,4 @@
 import React from 'react';
-import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import { Link, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
@@ -71,6 +70,11 @@ const settingItems = [
     link: '/manage-udts',
     text: <FormattedMessage id="Manage UDTs" />,
     testId: 'ManageUDTs',
+  },
+  {
+    link: '/manage-networks',
+    text: <FormattedMessage id="Manage Networks" />,
+    testId: 'ManageNetworks',
   },
 ];
 

@@ -1,8 +1,8 @@
 import { BN } from 'bn.js';
 import { addressToScript } from '@keyper/specs';
 import CKB from '@nervosnetwork/ckb-sdk-core';
+import configService from '@src/config';
 import { createRawTxDeleteData } from '../txGenerator';
-import { configService } from '../../../config';
 import { bobAddresses } from '../../../test/fixture/address';
 import { secp256k1Dep } from '../../../test/fixture/deps';
 

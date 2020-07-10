@@ -4,8 +4,8 @@ import { textToHex, textToBytesLength } from '@utils/index';
 import { getUnspentCells } from '@utils/apis';
 import _ from 'lodash';
 import CKB from '@nervosnetwork/ckb-sdk-core';
+import configService from '@src/config';
 import { createRawTxUpdateData, createUpdateDataRawTx } from '../txGenerator';
-import { configService } from '../../../config';
 import { bobAddresses } from '../../../test/fixture/address';
 import { secp256k1Dep } from '../../../test/fixture/deps';
 

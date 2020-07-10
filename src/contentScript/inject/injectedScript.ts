@@ -56,7 +56,7 @@ if (typeof window.ckb !== 'undefined') {
 }
 
 window.ckb = {
-  // rpc: new CKB(configService.CKB_RPC_ENDPOINT),
+  // rpc: new CKB(configService.get('CKB_RPC_ENDPOINT')),
   getAddressInfo: async (
     requestMessage: RequestMessage = {
       type: MESSAGE_TYPE.EXTERNAL_GET_ADDRESS_INFO,
