@@ -66,4 +66,6 @@ export default {
   'Loading UDT...': '加载UDT...',
   'lack of capacity':'可交易的capacity不足',
   'the rest capacity is less than 61, it will be destroyed':'剩余capacity不足61，将会销毁。',
+  'lack of capacity, available capacity is':'capacity不足, 可交易的capacity是',
+  'the remaining capacity is less than 61, if continue it will be destroyed, remaining capacity is':'剩余capacity小于61,如果继续，剩余的将被销毁, 剩余的capacity是',
 };

@@ -339,28 +339,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
     const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
 
-    const unspentCapacity = await getUnspentCapacity(lockHash);
-    if (unspentCapacity !== undefined) {
-      let errorMsg = null;
-      if (unspentCapacity < capacity) {
-        errorMsg = 'lack of capacity';
-      }
-      const chargeCapacity = unspentCapacity - capacity;
-      if (chargeCapacity > 1 * CKB_TOKEN_DECIMALS && chargeCapacity < 61 * CKB_TOKEN_DECIMALS) {
-        errorMsg = 'the rest capacity is less than 61, it will be destroyed';
-      }
-      if (errorMsg !== null) {
-        const responseEorrorMsg = {
-          type: MESSAGE_TYPE.SEND_TX_ERROR,
-          success: true,
-          message: errorMsg,
-          data: '',
-        };
-        chrome.runtime.sendMessage(responseEorrorMsg);
-        return;
-      }
-    }
-
     const responseMsg = {
       type: MESSAGE_TYPE.SEND_TX_OVER,
       success: false,

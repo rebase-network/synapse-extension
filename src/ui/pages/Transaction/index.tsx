@@ -8,12 +8,13 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { AppContext } from '@ui/utils/context';
-import { MESSAGE_TYPE, MIN_CELL_CAPACITY } from '@utils/constants';
+import { MESSAGE_TYPE, MIN_CELL_CAPACITY, CKB_TOKEN_DECIMALS } from '@utils/constants';
 import PageNav from '@ui/Components/PageNav';
 import Modal from '@ui/Components/Modal';
 import TxDetail from '@ui/Components/TxDetail';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { truncateAddress } from '@utils/formatters';
+import { truncateAddress, shannonToCKBFormatter } from '@utils/formatters';
+import { getUnspentCapacity } from '@src/utils/apis';
 
 const useStyles = makeStyles({
   container: {
@@ -56,6 +57,8 @@ export const innerForm = (props: AppProps) => {
   const classes = useStyles();
   const intl = useIntl();
   const [contacts, setContacts] = React.useState([]);
+  const [checkMsg, setCheckMsg] = React.useState('');
+  const [unspentCapacity, setUnspentCapacity] = React.useState(-1);
 
   React.useEffect(() => {
     browser.storage.local.get('contacts').then((result) => {
@@ -75,6 +78,43 @@ export const innerForm = (props: AppProps) => {
     handleSubmit,
     setFieldValue,
   } = props;
+
+  React.useEffect(() => {
+    browser.storage.local.get('currentWallet').then(async (result) => {
+      const lockHash = result.currentWallet.lock;
+      const unspentCapacityResult = await getUnspentCapacity(lockHash);
+      setUnspentCapacity(unspentCapacityResult);
+    });
+  }, []);
+
+  let errMsg = errors.capacity && touched.capacity && errors.capacity;
+  if (errMsg === undefined) {
+    if (checkMsg !== '') {
+      errMsg = checkMsg;
+    }
+  }
+
+  const handleChangeCapacity = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCheckMsg('');
+    handleChange(event);
+
+    const capacity = event.target.value;
+    if (unspentCapacity > -1) {
+      if (unspentCapacity < Number(capacity) * CKB_TOKEN_DECIMALS) {
+        const checkMsgId = 'lack of capacity, available capacity is';
+        const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
+        setCheckMsg(checkMsgI18n + shannonToCKBFormatter(unspentCapacity.toString()));
+        return;
+      }
+      const chargeCapacity = unspentCapacity - Number(capacity) * CKB_TOKEN_DECIMALS;
+      if (chargeCapacity < 61 * CKB_TOKEN_DECIMALS) {
+        const checkMsgId =
+          'the remaining capacity is less than 61, if continue it will be destroyed, remaining capacity is';
+        const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
+        setCheckMsg(checkMsgI18n + shannonToCKBFormatter(chargeCapacity.toString()));
+      }
+    }
+  };
 
   return (
     <Form className="form-mnemonic" id="form-mnemonic" onSubmit={handleSubmit}>
@@ -116,10 +156,10 @@ export const innerForm = (props: AppProps) => {
         fullWidth
         className={classes.textField}
         value={values.capacity}
-        onChange={handleChange}
+        onChange={handleChangeCapacity}
         onBlur={handleBlur}
         error={!!errors.capacity}
-        helperText={errors.capacity && touched.capacity && errors.capacity}
+        helperText={errMsg}
         margin="normal"
         variant="outlined"
         data-testid="field-capacity"
