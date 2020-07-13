@@ -139,6 +139,7 @@ export const udtsLiveCells = [
       hashType: 'data',
     },
   },
+  { typeHash: null, capacity: '6800000000', outputdata: '0x73796e61707365', type: null },
 ];
 
 // aggregate result from tokens
@@ -150,6 +151,10 @@ export const udtsCapacity = {
   '0x663265381e55af0f9789d2b0c9bd38525358b40c29bd6254c0b0c9b2926c6844': {
     ckb: 28400000000,
     udt: 900,
+  },
+  null: {
+    ckb: 6800000000,
+    udt: 0,
   },
 };
 

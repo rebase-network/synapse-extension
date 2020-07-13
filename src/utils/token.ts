@@ -16,7 +16,9 @@ export const aggregateUDT = (udtArr: UDTInfo[]) => {
         udt: 0,
       };
     }
-    result[cur.typeHash].udt += parseSUDT(cur.outputdata);
+    if (cur.typeHash) {
+      result[cur.typeHash].udt += parseSUDT(cur.outputdata);
+    }
     result[cur.typeHash].ckb += parseInt(cur.capacity, 10);
     return result;
   }, {});
