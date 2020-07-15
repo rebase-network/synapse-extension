@@ -1,8 +1,6 @@
 const windowCrypto = require('window-crypto');
 const crypto = require('crypto');
 
-require('expect-puppeteer');
-
 require('jest-webextension-mock');
 
 require('dotenv').config({

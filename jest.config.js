@@ -15,10 +15,11 @@ module.exports = {
     '^.+\\.scss$': '<rootDir>/config/jest/cssTransform.js',
   },
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$',
+  modulePathIgnorePatterns: ['e2e'],
+  // watchPathIgnorePatterns: ['e2e'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  preset: '<rootDir>/config/jest',
+  preset: 'ts-jest',
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: '<rootDir>/',
   }),
-  testEnvironment: 'jsdom', // jest-puppeteer will modify it, so we need to explicitly specify it although it's the default value
 };
