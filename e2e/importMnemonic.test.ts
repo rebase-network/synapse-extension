@@ -22,8 +22,8 @@ describe('Import Mnemonic', () => {
 
   beforeAll(async () => {
     browser = await puppeteer.launch({
-      headless: false,
-      // headless: true,
+      // headless: false,
+      headless: true,
       slowMo: 250,
       devtools: true,
       args: puppeteerArgs,
@@ -65,7 +65,6 @@ describe('Import Mnemonic', () => {
     await page.type('[name="confirmPassword"]', '111111');
 
     await page.click('#submit-button');
-    // await page.toClick('button', { text: 'Import' })
   });
 
   it('should go to address page', async () => {
