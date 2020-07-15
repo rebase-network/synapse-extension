@@ -192,8 +192,21 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const address = _currentWallet.currentWallet ? _currentWallet.currentWallet.address : undefined;
     const { publicKey, type } = _currentWallet.currentWallet;
 
-    const typeScript = createScriptObj(publicKey, type, address);
-    const txs = address ? await getTxHistories(typeScript) : [];
+    const lockScriptObj = createScriptObj(publicKey, type, address);
+    let hashType = null;
+    if (lockScriptObj.script.hash_type === 'data') {
+      hashType = 'data';
+    }
+    if (lockScriptObj.script.hash_type === 'type') {
+      hashType = 'type';
+    }
+    const lockScript: CKBComponents.Script = {
+      args: lockScriptObj.script.args,
+      codeHash: lockScriptObj.script.code_hash,
+      hashType,
+    };
+    const lockHash = ckbUtils.scriptToHash(lockScript);
+    const txs = address ? await getTxHistories({ lockHash }) : [];
     chrome.runtime.sendMessage({
       txs,
       type: MESSAGE_TYPE.SEND_TX_HISTORY,

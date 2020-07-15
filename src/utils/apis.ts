@@ -62,7 +62,8 @@ export const getUnspentCells = async (
 };
 
 export const getTxHistories = async (scriptObj): Promise<any> => {
-  const url = `${configService.CACHE_LAYER_ENDPOINT}/cell/getTxHistoriesByIndexer`;
+  //   const url = `${configService.CACHE_LAYER_ENDPOINT}/cell/getTxHistoriesByIndexer`;
+  const url = `${configService.CACHE_LAYER_ENDPOINT}/cell/getTxHistoriesByLockHash`;
   const result = await Axios.post(url, scriptObj);
 
   return result.data;
