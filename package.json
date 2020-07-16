@@ -11,6 +11,7 @@
     "test:watch": "jest --watch --runInBand",
     "test": "jest --runInBand",
     "test:e2e": "jest --runInBand --config jest.e2e.config.js",
+    "test:cov": "codecov",
     "release": "./scripts/release.sh"
   },
   "author": "Rebase Team",
@@ -32,6 +33,7 @@
     "@types/webpack": "^4.41.17",
     "@types/yup": "^0.26.33",
     "@typescript-eslint/eslint-plugin": "^3.2.0",
+    "codecov": "^3.7.0",
     "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.4.2",
     "dotenv": "^8.2.0",

@@ -107,7 +107,9 @@ typings/
 tmp/
 temp/
 # End of https://www.gitignore.io/api/node
-    
+
 .jsbeautifyrc
 
 synapse-extension*
+
+codecov.yml
