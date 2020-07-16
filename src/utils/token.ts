@@ -1,4 +1,5 @@
 import { parseSUDT } from '@utils/index';
+import _ from 'lodash';
 
 export interface UDTInfo {
   typeHash: string;
@@ -10,7 +11,8 @@ export interface UDTInfo {
 export const aggregateUDT = (udtArr: UDTInfo[]) => {
   return udtArr.reduce((pre, cur) => {
     const result = pre;
-    if (!Object.prototype.hasOwnProperty.call(pre, cur.typeHash)) {
+    const shouldAddItsTypeHash = !_.has(pre, cur.typeHash);
+    if (shouldAddItsTypeHash) {
       result[cur.typeHash] = {
         ckb: 0,
         udt: 0,

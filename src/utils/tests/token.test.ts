@@ -1,5 +1,5 @@
 import { aggregateUDT, UDTInfo } from '../token';
-import { udtsLiveCells, udtsCapacity } from '../fixtures/token';
+import { udtsLiveCells, udtsCapacity } from './fixtures/token';
 
 describe('utils: token', () => {
   it('should aggregate udts correctly', () => {
