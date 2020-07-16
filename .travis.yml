@@ -17,6 +17,9 @@ script:
   - yarn test
   - yarn build
 
+after_success: # after build succeeds
+  - yarn test:cov
+
 notifications:
   email:
     recipients:
