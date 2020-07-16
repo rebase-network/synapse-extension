@@ -27,6 +27,7 @@ export default (props: AppProps) => {
     const itemProps: TTokenInfo = {
       ...udtsCapacity[typeHash],
       ...meta,
+      typeHash,
     };
     return (
       <List component="nav" aria-label="Token List" key={`tokenInfo-${typeHash}`}>

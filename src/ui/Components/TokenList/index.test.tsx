@@ -15,6 +15,6 @@ describe('token list', () => {
   });
   it('should have correct amount of Love Lina Token', () => {
     const elems = screen.getAllByRole('listitem');
-    expect(elems).toHaveLength(3);
+    expect(elems).toHaveLength(5);
   });
 });
