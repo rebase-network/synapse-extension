@@ -86,7 +86,7 @@
     "formik": "^2.1.4",
     "global": "^4.4.0",
     "keccak": "^3.0.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "moment": "^2.25.3",
     "qrcode.react": "^1.0.0",
     "query-string": "^6.12.1",
