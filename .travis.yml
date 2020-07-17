@@ -32,7 +32,7 @@ notifications:
     on_failure: always # default: always
 
 before_deploy:
-  - yarn test:e2e # run end to end tests
+  # - yarn test:e2e # run end to end tests
   - mv dist synapse-extension
   - rm -f synapse-extension.zip synapse-extension.asc # 保持clean的env
   - zip -q -r synapse-extension.zip synapse-extension # 打包压缩
