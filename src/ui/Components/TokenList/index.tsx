@@ -1,8 +1,10 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@material-ui/core/styles';
+import { ListItem, ListItemText } from '@material-ui/core';
 import { getUDTsByLockHash } from '@utils/apis';
 import { aggregateUDT } from '@utils/token';
+import { shannonToCKBFormatter } from '@utils/formatters';
 import TokenListComponent from './component';
 
 const useStyles = makeStyles({
@@ -13,12 +15,19 @@ const useStyles = makeStyles({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  token: {
+    'text-align': 'right',
+  },
+  ckb: {
+    'border-bottom': '1px solid #ccc',
+  },
 });
 
 export default () => {
   const [tokenList, setTokenList] = React.useState([]);
   const [udtsMeta, setUdtsMeta] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [emptyCapacity, setEmptyCapacity] = React.useState('0');
   const classes = useStyles();
   React.useEffect(() => {
     browser.storage.local.get('udts').then((result) => {
@@ -35,6 +44,7 @@ export default () => {
         lockHash,
       });
       setTokenList(udtsWithCapacity.udts);
+      setEmptyCapacity(shannonToCKBFormatter(udtsWithCapacity.capacity));
     }
     getUDTs();
   }, []);
@@ -58,5 +68,13 @@ export default () => {
 
   const resultElem = <TokenListComponent udtsCapacity={udtsCapacity} udtsMeta={udtsMeta} />;
 
-  return <div className={classes.root}>{resultElem}</div>;
+  return (
+    <div className={classes.root}>
+      <ListItem className={classes.ckb}>
+        <ListItemText primary="CKB" />
+        <ListItemText primary={`${emptyCapacity} CKB`} className={classes.token} />
+      </ListItem>
+      {resultElem}
+    </div>
+  );
 };
