@@ -1,11 +1,25 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
+import { ListItem, ListItemText, Tooltip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { ListItem, ListItemText } from '@material-ui/core';
+import { HelpOutline } from '@material-ui/icons';
 import { shannonToCKBFormatter } from '@utils/formatters';
 
 const useStyles = makeStyles({
   token: {
     'text-align': 'right',
+  },
+  ckbFull: {
+    display: 'flex',
+    'align-items': 'center',
+  },
+  ckbFullText: {
+    'margin-right': 8,
+  },
+  helpIcon: {
+    'font-size': '1.2rem',
+    color: 'gray',
   },
 });
 
@@ -22,24 +36,34 @@ interface AppProps {
   tokenInfo: TTokenInfo;
 }
 
-interface AppState {}
-
 export default (props: AppProps) => {
   const classes = useStyles();
   const {
     tokenInfo: { name, udt, ckb, decimal = '8', symbol = '', typeHash },
   } = props;
-  let displayName = name;
+  let displayName: any = name;
+
   if (!name) {
     if (typeHash === 'null') {
-      displayName = 'CKB (Full)';
+      displayName = (
+        <Tooltip
+          title={<FormattedMessage id="CKB with data inside, it's not UDT" />}
+          arrow
+          placement="top"
+        >
+          <div className={classes.ckbFull}>
+            <span className={classes.ckbFullText}>CKB (Full)</span>
+            <HelpOutline className={classes.helpIcon} />
+          </div>
+        </Tooltip>
+      );
     } else {
-      displayName = typeHash.substr(0, 10);
+      displayName = <Link to="/manage-udts">{typeHash.substr(0, 10)}</Link>;
     }
   }
   const decimalInt = parseInt(decimal, 10);
   const ckbStr = ckb.toString();
-  console.log('tokenlist item: props: ', props);
+
   return (
     <ListItem>
       <ListItemText primary={displayName} />

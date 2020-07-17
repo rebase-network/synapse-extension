@@ -71,4 +71,5 @@ export default {
   'Manage Networks': 'Manage Networks',
   'CKB Node URL': 'CKB Node URL',
   'CKB Cache Layer URL': 'CKB Cache Layer URL',
+  "CKB with data inside, it's not UDT": "CKB with data inside, it's not UDT",
 };

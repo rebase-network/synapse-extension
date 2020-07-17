@@ -71,4 +71,5 @@ export default {
   'Manage Networks': '管理网络',
   'CKB Node URL': 'CKB Node URL',
   'CKB Cache Layer URL': 'CKB Cache Layer URL',
+  "CKB with data inside, it's not UDT": '带有数据的 CKB, 不属于 UDT',
 };
