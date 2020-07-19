@@ -102,19 +102,37 @@ export const generateAnyPayTx = async (
   }
   const walletTotalCapity = unspentWalletCells.reduce(getWalletTotalCapity, 0);
 
-  const depObj = getDepFromLockType(fromLockType);
-  const anypayDepObj = getDepFromLockType(toLockType);
+  const fromDepObj = getDepFromLockType(fromLockType);
+  const toDepObj = getDepFromLockType(toLockType);
 
-  const rawObj = createAnyPayRawTx(
-    new BN(toAmount),
-    toLockScript,
-    inputCells,
-    fromLockScript,
-    [depObj, anypayDepObj],
-    new BN(fee),
-    unspentWalletCells,
-    walletTotalCapity,
-  );
+  const fromCodeHash = fromLockScript.codeHash;
+  const toCodeHash = toLockScript.codeHash;
+  // anypay to anypay deps = 1
+  let rawObj = {};
+  if (fromCodeHash === toCodeHash) {
+    rawObj = createAnyPayRawTx(
+      new BN(toAmount),
+      toLockScript,
+      inputCells,
+      fromLockScript,
+      [toDepObj],
+      new BN(fee),
+      unspentWalletCells,
+      walletTotalCapity,
+    );
+  } else {
+    rawObj = createAnyPayRawTx(
+      new BN(toAmount),
+      toLockScript,
+      inputCells,
+      fromLockScript,
+      [fromDepObj, toDepObj],
+      new BN(fee),
+      unspentWalletCells,
+      walletTotalCapity,
+    );
+  }
+
   const rawTransaction = rawObj.tx;
 
   return rawTransaction;
