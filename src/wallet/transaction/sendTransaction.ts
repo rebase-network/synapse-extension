@@ -89,7 +89,7 @@ export const generateAnyPayTx = async (
 
   // Wallet Cell
   const params2 = {
-    capacity: toAmount,
+    limit: '10',
   };
   const unspentWalletCells = await getUnspentCells(toLockHash, params2);
   // Error handling
@@ -250,9 +250,19 @@ export const sendTransaction = async (
       lockType,
       toDataHex,
     );
-  }
-
-  if (toLockType === 'Secp256k1') {
+    config = { index: 0, length: -1 };
+  } else if (toLockType === 'AnyPay') {
+    rawTransaction = await generateAnyPayTx(
+      fromAddress,
+      toAddress,
+      toAmount,
+      fee,
+      lockHash,
+      lockType,
+      toLockType,
+    );
+    config = { index: 1, length: 1 };
+  } else if (toLockType === 'Secp256k1') {
     rawTransaction = await generateTx(
       fromAddress,
       toAddress,
@@ -264,18 +274,7 @@ export const sendTransaction = async (
     );
     config = { index: 0, length: -1 };
   }
-  if (toLockType === 'AnyPay') {
-    rawTransaction = await generateAnyPayTx(
-      fromAddress,
-      toAddress,
-      toAmount,
-      fee,
-      lockHash,
-      lockType,
-      toLockType,
-    );
-    config = { index: 1, length: 1 };
-  }
+
   // Error handling
   if (rawTransaction.errCode !== undefined && rawTransaction.errCode !== 0) {
     return rawTransaction;

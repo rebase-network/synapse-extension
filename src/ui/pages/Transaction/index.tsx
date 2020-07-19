@@ -287,6 +287,7 @@ export default () => {
   // check the current network and address
   const validateAddress = (address, networkType) => {
     if (address.length !== 46) {
+      // ckt1qjr2r35c0f9vhcdgslx2fjwa9tylevr5qka7mfgmscd33wlhfykyhje4pv0kjjeza2drrsyyw3sjs9mezstcs8t5txy
       setValAddress(false);
       return;
     }
@@ -301,8 +302,8 @@ export default () => {
 
   const onSubmit = async (values) => {
     setSending(true);
-    const toAddress = values.address;
-    validateAddress(toAddress, network);
+    // const toAddress = values.address;
+    // validateAddress(toAddress, network); BUG anypay的地址95位
 
     chrome.runtime.sendMessage({
       ...values,
