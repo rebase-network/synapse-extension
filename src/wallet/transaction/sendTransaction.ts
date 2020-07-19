@@ -108,7 +108,11 @@ export const generateAnyPayTx = async (
   const fromCodeHash = fromLockScript.codeHash;
   const toCodeHash = toLockScript.codeHash;
   // anypay to anypay deps = 1
-  let rawObj = {};
+  let rawObj = {
+    target: '',
+    tx: {},
+  };
+
   if (fromCodeHash === toCodeHash) {
     rawObj = createAnyPayRawTx(
       new BN(toAmount),
