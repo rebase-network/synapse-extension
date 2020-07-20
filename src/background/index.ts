@@ -343,6 +343,13 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
     const wallet = findInWalletsByPublicKey(publicKey, walletsStorage.wallets);
     const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
+    if (privateKeyBuffer === null) {
+      //   chrome.runtime.sendMessage({
+      //     // 'password incorrect',
+      //     type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR,
+      //   });
+      return;
+    }
     const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
     const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
 
@@ -430,6 +437,13 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
     const wallet = findInWalletsByPublicKey(publicKey, walletsStorage.wallets);
     const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
+    if (privateKeyBuffer === null) {
+      //   chrome.runtime.sendMessage({
+      //     // 'password incorrect',
+      //     type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR,
+      //   });
+      return;
+    }
     const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
     const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
 
@@ -442,7 +456,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
     }
 
     const keystore = WalletKeystore.encrypt(privateKeyBuffer.data, password);
-
     chrome.runtime.sendMessage({
       isValidatePassword: true,
       keystore,
@@ -482,7 +495,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     // check the password
     const entropy = await PasswordKeystore.decrypt(entropyKeystore, password);
     // send the check result to the page
-    if (_.isEmpty(entropy)) {
+    if (entropy === null) {
       chrome.runtime.sendMessage({
         isValidateEntropy: true,
         isValidatePassword: false,
@@ -506,8 +519,14 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const { entropyKeystore } = request.message;
 
     const entropy = await PasswordKeystore.decrypt(entropyKeystore, password);
+    if (entropy === null) {
+      //   chrome.runtime.sendMessage({
+      //     // 'password incorrect',
+      //     type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR,
+      //   });
+      return;
+    }
     const mnemonic = entropyToMnemonic(entropy);
-
     chrome.runtime.sendMessage({
       // mnemonic: JSON.stringify(mnemonic),
       mnemonic,
@@ -610,6 +629,13 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
     // 03 - get the private by input keystore
     const privateKey = await WalletKeystore.decrypt(keystore, kPassword);
+    if (privateKey === null) {
+      //   chrome.runtime.sendMessage({
+      //     // 'password incorrect',
+      //     type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR,
+      //   });
+      return;
+    }
     const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
     // check the keystore exist or not by the publicKey
     const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
