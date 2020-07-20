@@ -28,10 +28,6 @@ describe('encrypt checkpassword decrypt test', () => {
     privateKeyDecrypt = Keystore.decrypt(keystoreString, password);
   });
 
-  it('encrypt', async () => {
-    console.log('keystore ===> ', keystore);
-  });
-
   it('decrypt', () => {
     expect(privateKeyDecrypt).toEqual(privateKey);
   });

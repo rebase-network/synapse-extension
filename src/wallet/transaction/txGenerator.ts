@@ -257,7 +257,6 @@ export function createRawTxUpdateData(
       rawTx.outputsData.push('0x');
     }
   } else {
-    // console.log('oldDataCapacity < newDataCapacity + fee');
     const freeTotalCapacity = unspentCells.reduce(getTotalCapity, 0);
 
     // inputs - 001 - data cell
@@ -343,7 +342,6 @@ export function createUpdateDataRawTx(
   function getTotalCapity(total, cell) {
     return BigInt(total) + BigInt(cell.capacity);
   }
-  // console.log('oldDataCapacity < newDataCapacity + fee');
   const unspentTotalCapacity = unspentCells.reduce(getTotalCapity, 0);
 
   // inputs - 001 - data cell

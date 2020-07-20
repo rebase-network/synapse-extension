@@ -133,7 +133,6 @@ export default function initFunction(props: AppProps, state: AppState) {
       udtsList[modUdtsIndex] = udtObj;
     }
     setUdtsItems(udtsList);
-    console.log(/udtsList/, JSON.stringify(udtsList));
     await browser.storage.local.set({ udts: udtsList });
 
     resetForm();

@@ -56,7 +56,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     // 验证助记词有效性
     const isValidateMnemonic = validateMnemonic(mnemonic);
     if (!isValidateMnemonic) {
-      chrome.runtime.sendMessage(MESSAGE_TYPE.IS_NOT_VALIDATE_MNEMONIC);
+      chrome.runtime.sendMessage(MESSAGE_TYPE.IS_INVALID_MNEMONIC);
       return;
     }
 
@@ -127,7 +127,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const isValidateMnemonic = validateMnemonic(mnemonic);
 
     if (!isValidateMnemonic) {
-      chrome.runtime.sendMessage(MESSAGE_TYPE.IS_NOT_VALIDATE_MNEMONIC);
+      chrome.runtime.sendMessage(MESSAGE_TYPE.IS_INVALID_MNEMONIC);
       return;
     }
 

@@ -110,7 +110,7 @@ export default function ImportMnemonic(props: AppProps, state: AppState) {
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
-      if (msg === MESSAGE_TYPE.IS_NOT_VALIDATE_MNEMONIC) {
+      if (msg === MESSAGE_TYPE.IS_INVALID_MNEMONIC) {
         setValidate(false);
       } else if (msg === MESSAGE_TYPE.VALIDATE_PASS) {
         setValidate(true);

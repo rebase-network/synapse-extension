@@ -4,18 +4,9 @@ import configService from '@src/config';
 // Add a response interceptor
 Axios.interceptors.response.use(
   (response) => {
-    // console.log('response', response);
-    // Do something with response data
-    // const result = response.data;
-    // if (result.errCode !== 0) {
-    //   console.log(/axios result error/, JSON.stringify(result));
-    // }
     return response.data;
   },
   (error) => {
-    // Do something with response error
-    console.log('Axios error : ===> ', error);
-    // return Promise.reject(error);
     throw error;
   },
 );
@@ -89,12 +80,10 @@ export const getUnspentCapacity = async (lockHash: string) => {
       { params },
     );
     if (result.errCode !== 0) {
-      console.log(/result error/, JSON.stringify(result));
       return result;
     }
     return result.data;
   } catch (error) {
-    console.log('result error', error);
     return error;
   }
 };
