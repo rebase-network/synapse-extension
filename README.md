@@ -2,10 +2,10 @@
 
 An extension wallet and Keyper agency for Nervos CKB
 
-| Service  | Master   |
-| -------- | -------- |
-| Travis   | [![Build Status](https://travis-ci.com/rebase-network/synapse-extension.svg?branch=master)](https://travis-ci.com/rebase-network/synapse-extension)  |
-| Coverage | [![codecov](https://codecov.io/gh/rebase-network/synapse-extension/branch/master/graph/badge.svg)](https://codecov.io/gh/rebase-network/synapse-extension)|
+| Service  | Master                                                                                                                                                     |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Travis   | [![Build Status](https://travis-ci.com/rebase-network/synapse-extension.svg?branch=master)](https://travis-ci.com/rebase-network/synapse-extension)        |
+| Coverage | [![codecov](https://codecov.io/gh/rebase-network/synapse-extension/branch/master/graph/badge.svg)](https://codecov.io/gh/rebase-network/synapse-extension) |
 
 [![License](https://img.shields.io/github/license/rebase-network/synapse-extension)](./LICENSE)
 
@@ -15,9 +15,10 @@ An extension wallet and Keyper agency for Nervos CKB
    or
    `git clone https://github.com/rebase-network/synapse-extension.git`
 2. `yarn`
-3. `yarn dev` to compile once or `yarn watch` to run the dev task in watch mode
-4. `yarn build` to build a production (minified) version
-5. `yarn test` to run test
+3. `cp .env.example .env`
+4. `yarn dev` to compile once or `yarn watch` to run the dev task in watch mode
+5. `yarn build` to build a production (minified) version
+6. `yarn test` to run test
 
 ## Lint
 
