@@ -74,4 +74,7 @@ export default {
   "CKB with data inside, it's not UDT": '带有数据的 CKB, 不属于 UDT',
   'INVALID_PASSWORD':'无效的密码',
   'INVALID_PRIVATEKEY':'无效的私钥',
+  'INVALID_KEYSTORE_PASSWORD':'无效的Keystore密码',
+  'INVALID_WALLET_PASSWORD':'无效的Wallet密码',
+  'INVALID_KEYSTORE':'无效的Keystore',
 };

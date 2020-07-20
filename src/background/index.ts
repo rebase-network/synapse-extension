@@ -551,7 +551,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const currKeystore = currWallet.keystore;
     const privateKeyObj = await PasswordKeystore.decrypt(currKeystore, password);
     if (privateKeyObj === null) {
-      console.log(/password/, 'error');
       browser.runtime.sendMessage({
         message: 'INVALID_PASSWORD',
         type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR,
@@ -606,10 +605,23 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const uPassword = request.userPassword.trim();
 
     // 02- check the keystore by the keystorePassword
-    if (!WalletKeystore.checkPasswd(keystore, kPassword)) {
-      chrome.runtime.sendMessage({
+    let isValidPassword = false;
+    try {
+      isValidPassword = WalletKeystore.checkPasswd(keystore, kPassword);
+    } catch (error) {
+      console.log(/isValidPassword/, '1234');
+      browser.runtime.sendMessage({
+        message: 'INVALID_KEYSTORE',
+        type: MESSAGE_TYPE.IMPORT_KEYSTORE_ERR,
+      });
+      return;
+    }
+
+    if (!isValidPassword) {
+      browser.runtime.sendMessage({
         // 'password incorrect',
-        type: MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_KPASSWORD,
+        message: 'INVALID_KEYSTORE_PASSWORD',
+        type: MESSAGE_TYPE.IMPORT_KEYSTORE_ERR,
       });
       return;
     }
@@ -622,8 +634,8 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
     if (privateKeyObj === null) {
       browser.runtime.sendMessage({
-        // 'password incorrect',
-        type: MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_UPASSWORD,
+        message: 'INVALID_WALLET_PASSWORD',
+        type: MESSAGE_TYPE.IMPORT_KEYSTORE_ERR,
       });
       return;
     }

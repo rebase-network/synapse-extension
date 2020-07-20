@@ -74,4 +74,7 @@ export default {
   "CKB with data inside, it's not UDT": "CKB with data inside, it's not UDT",
   'INVALID_PASSWORD':'Invalid Password',
   'INVALID_PRIVATEKEY':'Invalid PrivateKey',
+  'INVALID_KEYSTORE_PASSWORD':'Invalid Keystore Password',
+  'INVALID_WALLET_PASSWORD':'Invalid Wallet Password',
+  'INVALID_KEYSTORE':'Invalid  Keystore',
 };

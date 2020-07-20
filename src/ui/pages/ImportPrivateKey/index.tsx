@@ -42,15 +42,14 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
         msg.type === MESSAGE_TYPE.IMPORT_KEYSTORE_OK
       ) {
         history.push('/address');
-      } else if (msg.type === MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR) {
-        setShowMsg(msg.message);
-      } else if (msg.type === MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_KPASSWORD) {
-        setShowMsg(msg.message);
-      } else if (msg.type === MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_UPASSWORD) {
+      } else if (
+        msg.type === MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR ||
+        msg.type === MESSAGE_TYPE.IMPORT_KEYSTORE_ERR
+      ) {
         setShowMsg(msg.message);
       }
     });
-  }, []);
+  }, [history, showMsg]);
 
   const onSubmit = async (values) => {
     if (!isHidePrivate) {
