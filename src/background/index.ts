@@ -347,7 +347,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       const responseEorrorMsg = {
         type: MESSAGE_TYPE.SEND_TX_ERROR,
         success: true,
-        message: 'IS_INVALID_PASSWORD',
+        message: 'INVALID_PASSWORD',
         data: '',
       };
       browser.runtime.sendMessage(responseEorrorMsg);
@@ -441,10 +441,10 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const wallet = findInWalletsByPublicKey(publicKey, walletsStorage.wallets);
     const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
     if (privateKeyBuffer === null) {
-      //   chrome.runtime.sendMessage({
-      //     // 'password incorrect',
-      //     type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR,
-      //   });
+      chrome.runtime.sendMessage({
+        isValidatePassword: false,
+        type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
+      });
       return;
     }
     const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);

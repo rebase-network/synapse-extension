@@ -70,11 +70,16 @@ export default function (props: AppProps, state: AppState) {
   const classes = useStyles();
   const history = useHistory();
   const intl = useIntl();
+  const [showMsg, setShowMsg] = React.useState(
+    'It may take 1 minute for the generation of keystore',
+  );
 
   const onSubmit = async (values) => {
     // background.ts check the password
     chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK });
   };
+
+  //   setShowMsg(intl.formatMessage({ id: 'It may take 1 minute for the generation of keystore' }));
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
@@ -88,16 +93,20 @@ export default function (props: AppProps, state: AppState) {
           type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND,
         });
       }
+      if (
+        message.type === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT &&
+        !message.isValidatePassword
+      ) {
+        setShowMsg('INVALID_PASSWORD');
+      }
     });
-  }, []);
+  }, [history, showMsg]);
 
   return (
     <div>
       <PageNav to="/setting" title={<FormattedMessage id="Export Private Key / Keystore" />} />
       <div className={classes.container}>
-        <div>
-          {intl.formatMessage({ id: 'It may take 1 minute for the generation of keystore' })}
-        </div>
+        <div>{intl.formatMessage({ id: showMsg })}</div>
         <Formik
           initialValues={{ password: '' }}
           onSubmit={onSubmit}
