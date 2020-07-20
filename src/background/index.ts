@@ -510,28 +510,16 @@ chrome.runtime.onMessage.addListener(async (request) => {
     chrome.runtime.sendMessage({
       isValidateEntropy: true,
       isValidatePassword: true,
-      password,
-      entropyKeystore,
+      entropy,
       type: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT,
     });
   }
 
   // export-mneonic-second check
   if (request.type === MESSAGE_TYPE.EXPORT_MNEONIC_SECOND) {
-    const { password } = request.message;
-    const { entropyKeystore } = request.message;
-
-    const entropy = await PasswordKeystore.decrypt(entropyKeystore, password);
-    if (entropy === null) {
-      //   chrome.runtime.sendMessage({
-      //     // 'password incorrect',
-      //     type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR,
-      //   });
-      return;
-    }
+    const { entropy } = request.message;
     const mnemonic = entropyToMnemonic(entropy);
     chrome.runtime.sendMessage({
-      // mnemonic: JSON.stringify(mnemonic),
       mnemonic,
       type: MESSAGE_TYPE.EXPORT_MNEONIC_SECOND_RESULT,
     });
