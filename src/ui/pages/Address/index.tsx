@@ -206,6 +206,7 @@ export default (props: AppProps) => {
 
   if (!isLogin) {
     history.push('./mnemonic-setting');
+    return;
   }
 
   const capacityNode = loading ? (
