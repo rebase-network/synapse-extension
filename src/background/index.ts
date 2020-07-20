@@ -441,7 +441,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const wallet = findInWalletsByPublicKey(publicKey, walletsStorage.wallets);
     const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
     if (privateKeyBuffer === null) {
-      chrome.runtime.sendMessage({
+      browser.runtime.sendMessage({
         isValidatePassword: false,
         type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
       });
@@ -499,7 +499,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const entropy = await PasswordKeystore.decrypt(entropyKeystore, password);
     // send the check result to the page
     if (entropy === null) {
-      chrome.runtime.sendMessage({
+      browser.runtime.sendMessage({
         isValidateEntropy: true,
         isValidatePassword: false,
         type: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT,
@@ -527,23 +527,33 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
   // import private key
   if (request.type === MESSAGE_TYPE.IMPORT_PRIVATE_KEY) {
-    const _currentWallet = await browser.storage.local.get('currentWallet');
-    const _wallets = await browser.storage.local.get('wallets');
+    const cwStorage = await browser.storage.local.get('currentWallet');
+    const walletStorage = await browser.storage.local.get('wallets');
 
     let privateKey: string = request.privateKey.trim();
     privateKey = privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`;
-    const publicKey = ckbUtils.privateKeyToPublicKey(privateKey);
+    let publicKey = '';
+    try {
+      publicKey = ckbUtils.privateKeyToPublicKey(privateKey);
+    } catch (error) {
+      browser.runtime.sendMessage({
+        message: 'INVALID_PRIVATEKEY',
+        type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR,
+      });
+      return;
+    }
+
     const password = request.password.trim();
 
     // get the current keystore and check the password
-    const currentPublicKey = _currentWallet.currentWallet.publicKey;
-    const currWallet = findInWalletsByPublicKey(currentPublicKey, _wallets.wallets);
+    const currentPublicKey = cwStorage.currentWallet.publicKey;
+    const currWallet = findInWalletsByPublicKey(currentPublicKey, walletStorage.wallets);
     const currKeystore = currWallet.keystore;
     const privateKeyObj = await PasswordKeystore.decrypt(currKeystore, password);
-
     if (privateKeyObj === null) {
-      chrome.runtime.sendMessage({
-        // 'password incorrect',
+      console.log(/password/, 'error');
+      browser.runtime.sendMessage({
+        message: 'INVALID_PASSWORD',
         type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR,
       });
       return;
@@ -611,7 +621,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const privateKeyObj = await PasswordKeystore.decrypt(currKeystore, uPassword);
 
     if (privateKeyObj === null) {
-      chrome.runtime.sendMessage({
+      browser.runtime.sendMessage({
         // 'password incorrect',
         type: MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_UPASSWORD,
       });

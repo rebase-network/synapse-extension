@@ -30,12 +30,10 @@ interface AppState {}
 
 export default function ImportPrivateKey(props: AppProps, state: AppState) {
   const { network } = React.useContext(AppContext);
-  const [success, setSuccess] = React.useState(true);
-  const [isValidateKPassword, setIsValidateKPassword] = React.useState(true);
-  const [isValidateUPassword, setIsValidateUPassword] = React.useState(true);
   const history = useHistory();
   const [isHidePrivate, setIsHidePrivate] = React.useState(false);
   const [value, setValue] = React.useState('1');
+  const [showMsg, setShowMsg] = React.useState(null);
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
@@ -44,13 +42,12 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
         msg.type === MESSAGE_TYPE.IMPORT_KEYSTORE_OK
       ) {
         history.push('/address');
-        setSuccess(true);
       } else if (msg.type === MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR) {
-        setSuccess(false);
+        setShowMsg(msg.message);
       } else if (msg.type === MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_KPASSWORD) {
-        setIsValidateKPassword(false);
+        setShowMsg(msg.message);
       } else if (msg.type === MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_UPASSWORD) {
-        setIsValidateUPassword(false);
+        setShowMsg(msg.message);
       }
     });
   }, []);
@@ -70,21 +67,8 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
     } else {
       setIsHidePrivate(false);
     }
-    setSuccess(true);
-    setIsValidateKPassword(true);
-    setIsValidateUPassword(true);
   };
 
-  let errowShowNode = null;
-  if (!success) {
-    errowShowNode = <div>Incorrect password</div>;
-  }
-  if (!isValidateKPassword) {
-    errowShowNode = <div>Incorrect keystorePassword</div>;
-  }
-  if (!isValidateUPassword) {
-    errowShowNode = <div>Incorrect userPassword</div>;
-  }
   const classes = useStyles();
   const intl = useIntl();
 
@@ -257,7 +241,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
     <div>
       <PageNav to="/setting" title={<FormattedMessage id="Import Private Key / Keystore" />} />
       <div className={classes.container}>
-        {errowShowNode}
+        {showMsg ? intl.formatMessage({ id: showMsg }) : null}
         <RadioGroup row value={value} onChange={handleRadioChange} className={classes.radioGroup}>
           <FormControlLabel
             value="1"

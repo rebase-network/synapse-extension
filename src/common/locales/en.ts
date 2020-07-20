@@ -73,4 +73,5 @@ export default {
   'CKB Cache Layer URL': 'CKB Cache Layer URL',
   "CKB with data inside, it's not UDT": "CKB with data inside, it's not UDT",
   'INVALID_PASSWORD':'Invalid Password',
+  'INVALID_PRIVATEKEY':'Invalid PrivateKey',
 };
