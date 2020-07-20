@@ -609,7 +609,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
     try {
       isValidPassword = WalletKeystore.checkPasswd(keystore, kPassword);
     } catch (error) {
-      console.log(/isValidPassword/, '1234');
       browser.runtime.sendMessage({
         message: 'INVALID_KEYSTORE',
         type: MESSAGE_TYPE.IMPORT_KEYSTORE_ERR,
@@ -642,13 +641,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
     // 03 - get the private by input keystore
     const privateKey = await WalletKeystore.decrypt(keystore, kPassword);
-    if (privateKey === null) {
-      //   chrome.runtime.sendMessage({
-      //     // 'password incorrect',
-      //     type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR,
-      //   });
-      return;
-    }
     const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
     // check the keystore exist or not by the publicKey
     const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
