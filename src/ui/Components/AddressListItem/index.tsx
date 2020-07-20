@@ -66,7 +66,7 @@ export default function (props: AppProps, state: AppState) {
       setCapacity(shannonToCKBFormatter(capacity));
     };
     fetchData();
-  }, [capacity]);
+  }, [lock]);
 
   React.useEffect(() => {
     (async () => {
@@ -80,7 +80,7 @@ export default function (props: AppProps, state: AppState) {
         setName(contacts[contactIndex].name);
       }
     })();
-  }, [name]);
+  }, [address]);
 
   const handleListItemClick = (event, addressInfo: TAddressInfo) => {
     const currentWallet = _.clone(addressInfo);

@@ -31,7 +31,7 @@ export default function (props: AppProps, state: AppState) {
       if (!result.addressesList) return;
       setAddressesList(result.addressesList);
     });
-  }, [addressesList]);
+  }, []);
 
   if (loading) return <div className={classes.loading}>Loading Address List...</div>;
 

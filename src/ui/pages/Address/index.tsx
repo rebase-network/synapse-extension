@@ -291,7 +291,7 @@ export default (props: AppProps) => {
         setName(contacts[contactIndex].name);
       }
     })();
-  }, [name]);
+  }, []);
 
   return (
     <div className={classes.container}>
