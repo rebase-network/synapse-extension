@@ -13,11 +13,3 @@ export async function decrypt(input: string, password: string) {
     return null;
   }
 }
-
-export async function checkByPassword(input: string, password: string) {
-  try {
-    return await passworder.decrypt(password, input);
-  } catch (error) {
-    return null;
-  }
-}

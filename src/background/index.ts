@@ -529,9 +529,9 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const currentPublicKey = _currentWallet.currentWallet.publicKey;
     const currWallet = findInWalletsByPublicKey(currentPublicKey, _wallets.wallets);
     const currKeystore = currWallet.keystore;
-    const privateKeyObj = await PasswordKeystore.checkByPassword(currKeystore, password);
+    const privateKeyObj = await PasswordKeystore.decrypt(currKeystore, password);
 
-    if (privateKeyObj == null) {
+    if (privateKeyObj === null) {
       chrome.runtime.sendMessage({
         // 'password incorrect',
         type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_ERR,
@@ -598,9 +598,9 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const currentPublicKey = _currentWallet.currentWallet.publicKey;
     const currWallet = findInWalletsByPublicKey(currentPublicKey, _wallets.wallets);
     const currKeystore = currWallet.keystore;
-    const privateKeyObj = await PasswordKeystore.checkByPassword(currKeystore, uPassword);
+    const privateKeyObj = await PasswordKeystore.decrypt(currKeystore, uPassword);
 
-    if (privateKeyObj == null) {
+    if (privateKeyObj === null) {
       chrome.runtime.sendMessage({
         // 'password incorrect',
         type: MESSAGE_TYPE.IMPORT_KEYSTORE_ERROR_UPASSWORD,
@@ -646,9 +646,9 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const currentPublicKey = _currentWallet.currentWallet.publicKey;
     const currWallet = findInWalletsByPublicKey(currentPublicKey, _wallets.wallets);
     const currKeystore = currWallet.keystore;
-    const privKeyObj = await PasswordKeystore.checkByPassword(currKeystore, password);
+    const privKeyObj = await PasswordKeystore.decrypt(currKeystore, password);
 
-    if (_.isEmpty(privKeyObj)) {
+    if (privKeyObj === null) {
       browser.runtime.sendMessage({
         type: MESSAGE_TYPE.DELETE_WALLET_ERR,
       });
