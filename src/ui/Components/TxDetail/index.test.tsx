@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import chrome from 'sinon-chrome';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -45,19 +45,6 @@ describe('txDetail page', () => {
     const amount = getByTestId('amount');
     expect(container).toContainElement(amount);
     expect(amount).toHaveTextContent((tx.amount / 10 ** 8).toString());
-  });
-
-  it.skip('should render inputs', async () => {
-    const inputs = getByTestId('inputs');
-    expect(container).toContainElement(inputs);
-    expect(inputs).toHaveTextContent('inputs');
-  });
-
-  it.skip('should render outputs', async () => {
-    const outputs = getByTestId('outputs');
-    expect(container).toContainElement(outputs);
-    // expect(outputs).toHaveTextContent("ckt1qyqr79tnk3pp34xp92gerxjc4p3mus2690psf0dd70")
-    expect(outputs).toHaveTextContent('outputs');
   });
 
   it('should render TxHash', async () => {
