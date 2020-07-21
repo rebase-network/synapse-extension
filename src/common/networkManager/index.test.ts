@@ -16,9 +16,9 @@ describe('network manager', () => {
 
   it('should able to set current network', async () => {
     const result = await NetworkManager.getCurrentNetwork();
-    expect(result).toBe(networks[1]);
-    await NetworkManager.setCurrentNetwork(networks[1].name);
-    expect(await NetworkManager.getCurrentNetwork()).toBe(networks[1]);
+    expect(result).toBe(networks[0]);
+    await NetworkManager.setCurrentNetwork(networks[0].name);
+    expect(await NetworkManager.getCurrentNetwork()).toBe(networks[0]);
   });
 
   it('should able to create a network', async () => {
@@ -33,7 +33,7 @@ describe('network manager', () => {
 
   it('should able to get network info', async () => {
     const result = await NetworkManager.getNetwork('Aggron Testnet');
-    expect(result).toBe(networks[1]);
+    expect(result).toBe(networks[0]);
   });
 
   it('should able to remove a network', async () => {
