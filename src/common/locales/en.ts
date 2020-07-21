@@ -55,6 +55,7 @@ export default {
   'Add':'Add',
   'Address':'Address',
   'Name':'Name',
+  'NetWorkName':'NetWork Name',
   'UDT Name':'UDT Name',
   'UDT Hash':'UDT Hash',
   'Decimal':'Decimal',

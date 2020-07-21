@@ -1,11 +1,11 @@
 import configService from '@src/config';
 
 export const networks = [
-  // {
-  //   name: 'Mainnet',
-  //   nodeURL: configService.get('CKB_RPC_ENDPOINT_MAINNET'),
-  //   cacheURL: configService.get('CACHE_LAYER_ENDPOINT_MAINNET'),
-  // },
+  {
+    name: 'Mainnet',
+    nodeURL: configService.CKB_RPC_ENDPOINT_MAINNET,
+    cacheURL: configService.CACHE_LAYER_ENDPOINT_MAINNET,
+  },
   {
     name: 'Aggron Testnet',
     nodeURL: configService.CKB_RPC_ENDPOINT,

@@ -28,10 +28,9 @@
   "permissions": [
     "storage",
     "notifications",
-    "http://106.13.40.34:8114/",
     "http://106.13.40.34:8117/",
     "http://106.13.40.34:2333/",
-    "https://synapse-api.rebase.network/",
+    "https://getsynapse.io",
     "http://localhost:3000/"
   ],
   "manifest_version": 2,

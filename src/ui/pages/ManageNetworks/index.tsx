@@ -42,7 +42,7 @@ const innerForm = (props: FormikProps<FormValues>): React.ReactElement => {
       aria-label="form"
     >
       <TextField
-        label={intl.formatMessage({ id: 'Name' })}
+        label={intl.formatMessage({ id: 'NetWorkName' })}
         id="name"
         name="name"
         type="text"

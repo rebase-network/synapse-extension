@@ -55,6 +55,7 @@ export default {
   'Add':'添加',
   'Address':'地址',
   'Name':'联系人',
+  'NetWorkName':'网络名称',
   'UDT Name':'UDT 名称',
   'UDT Hash':'UDT 哈希',
   'Decimal':'位数',
