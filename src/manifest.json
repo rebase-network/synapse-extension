@@ -30,7 +30,8 @@
     "notifications",
     "http://106.13.40.34:8117/",
     "http://106.13.40.34:2333/",
-    "https://getsynapse.io",
+    "https://api.getsynapse.io",
+    "https://rpc.getsynapse.io",
     "http://localhost:3000/"
   ],
   "manifest_version": 2,
