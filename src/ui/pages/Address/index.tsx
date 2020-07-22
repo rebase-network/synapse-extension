@@ -105,7 +105,9 @@ const BootstrapButton = withStyles({
   },
 })(Button);
 
-interface AppProps {}
+interface AppProps {
+  isLogin: boolean;
+}
 
 interface AppState {}
 
@@ -113,7 +115,7 @@ export default (props: AppProps) => {
   const classes = useStyles();
   const history = useHistory();
   const addressFromUrl = _.get(props, 'match.params.address', '');
-
+  const { isLogin } = props;
   const [showMore, setShowMore] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [address, setAddress] = React.useState(addressFromUrl);
@@ -201,8 +203,6 @@ export default (props: AppProps) => {
       }
     })();
   }, [open, address]);
-
-  const isLogin = localStorage.getItem('IS_LOGIN') === 'YES';
 
   if (!isLogin) {
     history.push('./mnemonic-setting');

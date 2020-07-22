@@ -34,7 +34,7 @@ describe('Address page', () => {
     tree = render(
       <IntlProvider locale="en" messages={en}>
         <Router>
-          <App />
+          <App isLogin={true} />
         </Router>
       </IntlProvider>,
     );
