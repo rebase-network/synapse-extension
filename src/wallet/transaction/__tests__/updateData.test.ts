@@ -14,6 +14,8 @@ jest.mock('@utils/apis');
 describe('send Transaction test', () => {
   const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
 
+  // TODO
+  // skip => mock
   it.skip('update output data ', async () => {
     const deps = [secp256k1Dep];
 
