@@ -29,8 +29,6 @@ export default function App() {
     setNetwork(value);
   };
 
-  const isLogin = localStorage.getItem('IS_LOGIN') === 'YES';
-
   return (
     <Router>
       <AppContext.Provider
@@ -43,7 +41,10 @@ export default function App() {
           {/* A <Switch> looks through its children <Route>s and
               renders the first one that matches the current URL. */}
           <Switch>
-            <Route path="/address/:address" render={(routeProps) => <Address {isLogin, ...routeProps} />} />
+            <Route
+              path="/address/:address"
+              render={(routeProps) => <Address match={routeProps.match} />}
+            />
             <Route path="/import-mnemonic">
               <ImportMnemonic />
             </Route>
