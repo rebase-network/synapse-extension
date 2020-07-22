@@ -5,7 +5,7 @@ import chrome from 'sinon-chrome';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
-import App from './index';
+import App from './Address';
 
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
@@ -34,7 +34,7 @@ describe('Address page', () => {
     tree = render(
       <IntlProvider locale="en" messages={en}>
         <Router>
-          <App isLogin={true} />
+          <App />
         </Router>
       </IntlProvider>,
     );
