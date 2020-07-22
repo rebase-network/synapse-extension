@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import queryString from 'query-string';
 import { makeStyles } from '@material-ui/core/styles';
 import PageNav from '@ui/Components/PageNav';
+import RawTxDetail from '@ui/Components/PrettyPrintJson/Accordion';
 
 const useStyles = makeStyles({
   container: {
@@ -63,11 +64,11 @@ export default () => {
   const classes = useStyles();
   const intl = useIntl();
   const searchParams = queryString.parse(location.search);
-
+  const data = JSON.parse(searchParams.data as string);
   const onSubmit = async (values) => {
     const requestMsg = { ...values };
     if (searchParams?.data && searchParams?.type) {
-      requestMsg.data = JSON.parse(searchParams.data as string);
+      requestMsg.data = data;
       requestMsg.type = searchParams.type;
       browser.runtime.sendMessage(requestMsg);
     }
@@ -76,6 +77,7 @@ export default () => {
   return (
     <div>
       <PageNav to="/setting" title={<FormattedMessage id="Auth" />} />
+      <RawTxDetail tx={data?.tx} />
       <div className={classes.container}>
         <Formik
           initialValues={{ password: '' }}

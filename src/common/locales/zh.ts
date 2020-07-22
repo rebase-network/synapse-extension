@@ -78,4 +78,5 @@ export default {
   'INVALID_KEYSTORE_PASSWORD':'无效的Keystore密码',
   'INVALID_WALLET_PASSWORD':'无效的Wallet密码',
   'INVALID_KEYSTORE':'无效的Keystore',
+  'Message to be signed': '签名消息',
 };

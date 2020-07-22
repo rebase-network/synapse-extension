@@ -78,4 +78,5 @@ export default {
   'INVALID_KEYSTORE_PASSWORD':'Invalid Keystore Password',
   'INVALID_WALLET_PASSWORD':'Invalid Wallet Password',
   'INVALID_KEYSTORE':'Invalid  Keystore',
+  'Message to be signed': 'Message to be signed',
 };
