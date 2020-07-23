@@ -15,8 +15,8 @@ export const networks = [
   },
   {
     name: 'Mainnet',
-    nodeURL: 'http://rpc.getsynapse.io',
-    cacheURL: 'http://api.getsynapse.io',
+    nodeURL: configService.CKB_RPC_ENDPOINT_MAINNET,
+    cacheURL: configService.CACHE_LAYER_ENDPOINT_MAINNET,
     prefix: 'ckb',
   },
 ];

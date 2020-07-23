@@ -187,22 +187,23 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const cwStorage = await browser.storage.local.get('currentWallet');
 
     const address = cwStorage.currentWallet ? cwStorage.currentWallet.address : undefined;
-    const { publicKey, type } = cwStorage.currentWallet;
+    const lockHash = cwStorage.currentWallet ? cwStorage.currentWallet.lock : undefined;
+    // const { publicKey, type } = cwStorage.currentWallet;
 
-    const lockScriptObj = createScriptObj(publicKey, type, address);
-    let hashType = null;
-    if (lockScriptObj.script.hash_type === 'data') {
-      hashType = 'data';
-    }
-    if (lockScriptObj.script.hash_type === 'type') {
-      hashType = 'type';
-    }
-    const lockScript: CKBComponents.Script = {
-      args: lockScriptObj.script.args,
-      codeHash: lockScriptObj.script.code_hash,
-      hashType,
-    };
-    const lockHash = ckbUtils.scriptToHash(lockScript);
+    // const lockScriptObj = createScriptObj(publicKey, type, address);
+    // let hashType = null;
+    // if (lockScriptObj.script.hash_type === 'data') {
+    //   hashType = 'data';
+    // }
+    // if (lockScriptObj.script.hash_type === 'type') {
+    //   hashType = 'type';
+    // }
+    // const lockScript: CKBComponents.Script = {
+    //   args: lockScriptObj.script.args,
+    //   codeHash: lockScriptObj.script.code_hash,
+    //   hashType,
+    // };
+    // const lockHash = ckbUtils.scriptToHash(lockScript);
     const txs = address ? await getTxHistories(lockHash) : [];
     chrome.runtime.sendMessage({
       txs,
