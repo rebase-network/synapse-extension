@@ -91,13 +91,13 @@ const generateByPrivateKey = async (privateKey, password) => {
   return ks;
 };
 
-const accounts = async () => {
+const accounts = async (networkPrefix: string) => {
   const scripts = await container.getAllLockHashesAndMeta();
   const result = [];
   for (let i = 0; i < scripts.length; i++) {
     const script = scripts[i];
     result.push({
-      address: scriptToAddress(script.meta.script, { networkPrefix: 'ckt', short: true }),
+      address: scriptToAddress(script.meta.script, { networkPrefix, short: true }),
       type: script.meta.name,
       lock: script.hash,
       amount: 0,

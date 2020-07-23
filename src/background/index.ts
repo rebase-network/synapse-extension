@@ -47,6 +47,15 @@ let addressesList = [];
 addExternalMessageListener();
 
 chrome.runtime.onMessage.addListener(async (request) => {
+  const currentNetwork = await NetworkManager.getCurrentNetwork();
+
+  let networkPrefix = '';
+  if (currentNetwork.name === 'Mainnet') {
+    networkPrefix = 'ckb';
+  } else {
+    networkPrefix = 'ckt';
+  }
+
   // IMPORT_MNEMONIC
   if (request.type === MESSAGE_TYPE.IMPORT_MNEMONIC) {
     // call import mnemonic method
@@ -95,7 +104,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       };
     } else {
       // Add Keyper to Synapse
-      await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
+      await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore, networkPrefix);
 
       wallets = getWallets();
       addressesList = getAddressesList();
@@ -199,7 +208,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       hashType,
     };
     const lockHash = ckbUtils.scriptToHash(lockScript);
-    const txs = address ? await getTxHistories({ lockHash }) : [];
+    const txs = address ? await getTxHistories(lockHash) : [];
     chrome.runtime.sendMessage({
       txs,
       type: MESSAGE_TYPE.SEND_TX_HISTORY,

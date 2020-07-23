@@ -10,7 +10,13 @@ let currentWallet = {};
 const addressesList = [];
 
 // privateKey No '0x'
-export async function addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore) {
+export async function addKeyperWallet(
+  privateKey,
+  password,
+  entropyKeystore,
+  rootKeystore,
+  networkPrefix,
+) {
   await KeyperWallet.init();
 
   const keystore = await KeyperWallet.generateKeystore(privateKey, password);
@@ -20,7 +26,7 @@ export async function addKeyperWallet(privateKey, password, entropyKeystore, roo
   KeyperWallet.setUpContainer(publicKey.substr(2));
 
   // Keyper accounts
-  const accounts = await KeyperWallet.accounts();
+  const accounts = await KeyperWallet.accounts(networkPrefix);
 
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
   await saveWallets(privateKey, keystore, accounts, entropyKeystore, rootKeystore);
