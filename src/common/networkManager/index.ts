@@ -3,6 +3,7 @@ import { networks as presetNetworks } from './constants';
 
 interface INetwork {
   name: string;
+  prefix: string;
   nodeURL: string;
   cacheURL: string;
 }

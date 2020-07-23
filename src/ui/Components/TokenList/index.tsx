@@ -56,7 +56,7 @@ export default () => {
       </div>
     );
   }
-  if (tokenList.length === 0) {
+  if (tokenList === undefined || tokenList.length === 0) {
     return (
       <div className={classes.loading}>
         <FormattedMessage id="No UDT found" />
