@@ -25,15 +25,7 @@
     }
   ],
   "web_accessible_resources": ["js/injectedScript.js"],
-  "permissions": [
-    "storage",
-    "notifications",
-    "http://106.13.40.34:8117/",
-    "http://106.13.40.34:2333/",
-    "http://api.getsynapse.io/",
-    "http://rpc.getsynapse.io/",
-    "http://localhost:3000/"
-  ],
+  "permissions": ["storage", "notifications"],
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
