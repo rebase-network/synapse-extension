@@ -1,15 +1,15 @@
 import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
-import NetworkSelector from '../NetworkSelector';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Drawer from '@material-ui/core/Drawer';
 import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import AddressList from '../AddressList';
 import SettingsIcon from '@material-ui/icons/Settings';
+import AddressList from '../AddressList';
 import PageNav from '../PageNav';
+import NetworkSelector from '../NetworkSelector';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       flexGrow: 1,
+    },
+    logo: {
+      width: 28,
     },
     link: {
       display: 'flex',
@@ -48,7 +51,7 @@ interface AppProps {
   handleNetworkChange: Function;
 }
 
-export default function (props: AppProps) {
+export default (props: AppProps) => {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
@@ -57,6 +60,8 @@ export default function (props: AppProps) {
     bottom: false,
     right: false,
   });
+
+  const { handleNetworkChange } = props;
 
   type Anchor = 'top' | 'left' | 'bottom' | 'right';
   const toggleDrawer = (anchor: Anchor, open: boolean) => (
@@ -72,14 +77,14 @@ export default function (props: AppProps) {
     setState({ ...state, [anchor]: open });
   };
 
+  const logoElem = <img src="logo-32.svg" alt="logo" className={classes.logo} />;
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            Synapse
-          </Typography>
-          <NetworkSelector handleNetworkChange={props.handleNetworkChange} />
+          <div className={classes.title}>{logoElem}</div>
+          <NetworkSelector handleNetworkChange={handleNetworkChange} />
           <IconButton
             onClick={toggleDrawer('right', true)}
             edge="start"
@@ -90,7 +95,7 @@ export default function (props: AppProps) {
           >
             <MenuIcon />
           </IconButton>
-          <Drawer anchor={'right'} open={state['right']} onClose={toggleDrawer('right', false)}>
+          <Drawer anchor="right" open={state.right} onClose={toggleDrawer('right', false)}>
             <div className={classes.drawerInner}>
               <PageNav to="#" position="right" onClickRight={setState} title="My Addresses" />
 
@@ -108,4 +113,4 @@ export default function (props: AppProps) {
       </AppBar>
     </div>
   );
-}
+};
