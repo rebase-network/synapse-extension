@@ -27,11 +27,13 @@ export const getAddressInfo = async (lockHash: string): Promise<{ capacity: stri
     const currentNetwork = await NetworkManager.getCurrentNetwork();
     const { cacheURL } = currentNetwork;
     const result = await Axios.get(`${cacheURL}/locks/${lockHash}/capacity`);
+    console.log(/result/, result);
+
     if (result.errCode !== 0) {
       console.log(/result error/, JSON.stringify(result));
       return result;
     }
-    return result.data.capacity;
+    return result.data;
   } catch (error) {
     console.log('result error', error);
     return error;
