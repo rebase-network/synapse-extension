@@ -70,7 +70,7 @@ const innerForm = (props: FormikProps<FormValues>): React.ReactElement => {
           }}
         >
           <option value="ckt">TestNet</option>
-          <option value="ckb">MainNet</option>
+          {/* <option value="ckb">MainNet</option> */}
         </NativeSelect>
       </FormControl>
       <TextField
