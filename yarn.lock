@@ -2373,10 +2373,10 @@ code-point-at@^1.0.0:
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
   integrity sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=
 
-codecov@^3.7.0:
-  version "3.7.0"
-  resolved "https://registry.npm.taobao.org/codecov/download/codecov-3.7.0.tgz#4a09939cde24447a43f36d068e8b4e0188dc3f27"
-  integrity sha1-SgmTnN4kRHpD820GjotOAYjcPyc=
+codecov@^3.7.2:
+  version "3.7.2"
+  resolved "https://registry.npm.taobao.org/codecov/download/codecov-3.7.2.tgz?cache=0&sync_timestamp=1595385815624&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcodecov%2Fdownload%2Fcodecov-3.7.2.tgz#998e68c8c1ef4b55cfcf11cd456866d35e13d693"
+  integrity sha1-mY5oyMHvS1XPzxHNRWhm014T1pM=
   dependencies:
     argv "0.0.2"
     ignore-walk "3.0.3"
