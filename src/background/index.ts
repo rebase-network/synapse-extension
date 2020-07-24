@@ -48,7 +48,6 @@ addExternalMessageListener();
 
 chrome.runtime.onMessage.addListener(async (request) => {
   const currentNetwork = await NetworkManager.getCurrentNetwork();
-  console.log(/currentNetwork/, currentNetwork);
   const { prefix } = currentNetwork;
 
   // IMPORT_MNEMONIC
