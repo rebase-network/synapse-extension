@@ -25,10 +25,9 @@ describe('React testing library', () => {
     getByTestId = tree.getByTestId;
   });
 
-  it('should render title', () => {
-    const elem = container.querySelector('h6');
+  it('should render logo', () => {
+    const elem = container.querySelector('img');
     expect(container).toContainElement(elem);
-    expect(elem).toHaveTextContent('Synapse');
   });
 
   it('should render setting icon on left side', () => {

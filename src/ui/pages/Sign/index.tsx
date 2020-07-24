@@ -64,7 +64,7 @@ export default () => {
   const classes = useStyles();
   const intl = useIntl();
   const searchParams = queryString.parse(location.search);
-  const data = JSON.parse(searchParams.data as string);
+  const data = searchParams?.data ? JSON.parse(searchParams?.data as string) : '';
   const onSubmit = async (values) => {
     const requestMsg = { ...values };
     if (searchParams?.data && searchParams?.type) {
