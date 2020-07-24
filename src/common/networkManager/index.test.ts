@@ -26,6 +26,7 @@ describe('network manager', () => {
       name: 'my network',
       nodeURL: 'testtest.com',
       cacheURL: 'testtest.com',
+      prefix: 'ckt',
     });
 
     expect(result).toHaveLength(networks.length);

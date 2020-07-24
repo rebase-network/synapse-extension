@@ -10,6 +10,8 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import FormControl from '@material-ui/core/FormControl';
+import NativeSelect from '@material-ui/core/NativeSelect';
 import * as Yup from 'yup';
 import NetworkManager from '@common/networkManager';
 
@@ -25,6 +27,7 @@ const useStyles = makeStyles({
 
 interface FormValues {
   name: string;
+  prefix: string;
   nodeURL: string;
   cacheURL: string;
 }
@@ -56,6 +59,20 @@ const innerForm = (props: FormikProps<FormValues>): React.ReactElement => {
         variant="outlined"
         data-testid="field-name"
       />
+      <FormControl>
+        <NativeSelect
+          value={values.prefix}
+          onChange={handleChange}
+          defaultValue="ckt"
+          inputProps={{
+            name: 'prefix',
+            id: 'prefix',
+          }}
+        >
+          <option value="ckt">TestNet</option>
+          <option value="ckb">MainNet</option>
+        </NativeSelect>
+      </FormControl>
       <TextField
         label={intl.formatMessage({ id: 'CKB Node URL' })}
         id="nodeURL"
@@ -99,8 +116,8 @@ export default () => {
   const [networkItems, setNetworkItems] = React.useState([]);
 
   const onSubmit = async (values, { resetForm }) => {
-    const { name, nodeURL, cacheURL } = values;
-    const networkObj = { name, nodeURL, cacheURL };
+    const { name, nodeURL, cacheURL, prefix } = values;
+    const networkObj = { name, nodeURL, cacheURL, prefix };
     const newNetworkList = await NetworkManager.createNetwork(networkObj);
     setNetworkItems(newNetworkList);
 
@@ -151,7 +168,7 @@ export default () => {
       <div className={classes.container}>
         {networkListElem}
         <Formik
-          initialValues={{ name: '', nodeURL: '', cacheURL: '' }}
+          initialValues={{ name: '', nodeURL: '', cacheURL: '', prefix: 'ckt' }}
           onSubmit={onSubmit}
           validationSchema={Yup.object().shape({
             name: Yup.string().required(intl.formatMessage({ id: 'Required' })),

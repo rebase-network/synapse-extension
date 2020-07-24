@@ -10,7 +10,7 @@ import Keychain from '@src/wallet/keychain';
 import { sendTransaction } from '@src/wallet/transaction/sendTransaction';
 import Address from '@src/wallet/address';
 import { createScriptObj, signTxFromMsg } from '@background/transaction';
-import { getTxHistories, getUnspentCapacity } from '@utils/apis';
+import { getTxHistories } from '@utils/apis';
 import {
   addKeyperWallet,
   getAddressesList,
@@ -47,6 +47,10 @@ let addressesList = [];
 addExternalMessageListener();
 
 chrome.runtime.onMessage.addListener(async (request) => {
+  const currentNetwork = await NetworkManager.getCurrentNetwork();
+  console.log(/currentNetwork/, currentNetwork);
+  const { prefix } = currentNetwork;
+
   // IMPORT_MNEMONIC
   if (request.type === MESSAGE_TYPE.IMPORT_MNEMONIC) {
     // call import mnemonic method
@@ -95,7 +99,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       };
     } else {
       // Add Keyper to Synapse
-      await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
+      await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore, prefix);
 
       wallets = getWallets();
       addressesList = getAddressesList();
@@ -165,7 +169,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       };
     } else {
       // Add Keyper to Synapse
-      await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
+      await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore, prefix);
 
       wallets = getWallets();
       addressesList = getAddressesList();
@@ -180,26 +184,27 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
   // get tx history by address
   if (request.type === MESSAGE_TYPE.GET_TX_HISTORY) {
-    const _currentWallet = await browser.storage.local.get('currentWallet');
+    const cwStorage = await browser.storage.local.get('currentWallet');
 
-    const address = _currentWallet.currentWallet ? _currentWallet.currentWallet.address : undefined;
-    const { publicKey, type } = _currentWallet.currentWallet;
+    const address = cwStorage.currentWallet ? cwStorage.currentWallet.address : undefined;
+    const lockHash = cwStorage.currentWallet ? cwStorage.currentWallet.lock : undefined;
+    // const { publicKey, type } = cwStorage.currentWallet;
 
-    const lockScriptObj = createScriptObj(publicKey, type, address);
-    let hashType = null;
-    if (lockScriptObj.script.hash_type === 'data') {
-      hashType = 'data';
-    }
-    if (lockScriptObj.script.hash_type === 'type') {
-      hashType = 'type';
-    }
-    const lockScript: CKBComponents.Script = {
-      args: lockScriptObj.script.args,
-      codeHash: lockScriptObj.script.code_hash,
-      hashType,
-    };
-    const lockHash = ckbUtils.scriptToHash(lockScript);
-    const txs = address ? await getTxHistories({ lockHash }) : [];
+    // const lockScriptObj = createScriptObj(publicKey, type, address);
+    // let hashType = null;
+    // if (lockScriptObj.script.hash_type === 'data') {
+    //   hashType = 'data';
+    // }
+    // if (lockScriptObj.script.hash_type === 'type') {
+    //   hashType = 'type';
+    // }
+    // const lockScript: CKBComponents.Script = {
+    //   args: lockScriptObj.script.args,
+    //   codeHash: lockScriptObj.script.code_hash,
+    //   hashType,
+    // };
+    // const lockHash = ckbUtils.scriptToHash(lockScript);
+    const txs = address ? await getTxHistories(lockHash) : [];
     chrome.runtime.sendMessage({
       txs,
       type: MESSAGE_TYPE.SEND_TX_HISTORY,
@@ -574,7 +579,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       if (privateKey.startsWith('0x')) {
         privateKey = privateKey.substr(2);
       }
-      await addKeyperWallet(privateKey, password, '', '');
+      await addKeyperWallet(privateKey, password, '', '', prefix);
 
       wallets = getWallets();
       addressesList = getAddressesList();
@@ -596,8 +601,8 @@ chrome.runtime.onMessage.addListener(async (request) => {
    * 4- create the keystore(passworder) by the privatekey
    */
   if (request.type === MESSAGE_TYPE.IMPORT_KEYSTORE) {
-    const _currentWallet = await browser.storage.local.get('currentWallet');
-    const _wallets = await browser.storage.local.get('wallets');
+    const cwStorage = await browser.storage.local.get('currentWallet');
+    const walletsStorage = await browser.storage.local.get('wallets');
 
     // 01- get the params from request
     const keystore = request.keystore.trim();
@@ -626,8 +631,8 @@ chrome.runtime.onMessage.addListener(async (request) => {
     }
 
     // 021- check the synapse password by the currentWallet Keystore
-    const currentPublicKey = _currentWallet.currentWallet.publicKey;
-    const currWallet = findInWalletsByPublicKey(currentPublicKey, _wallets.wallets);
+    const currentPublicKey = cwStorage.currentWallet.publicKey;
+    const currWallet = findInWalletsByPublicKey(currentPublicKey, walletsStorage.wallets);
     const currKeystore = currWallet.keystore;
     const privateKeyObj = await PasswordKeystore.decrypt(currKeystore, uPassword);
 
@@ -654,7 +659,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
         lock: addresses[0].lock,
       };
     } else {
-      await addKeyperWallet(privateKey, uPassword, '', '');
+      await addKeyperWallet(privateKey, uPassword, '', '', prefix);
 
       wallets = getWallets();
       addressesList = getAddressesList();
@@ -669,13 +674,13 @@ chrome.runtime.onMessage.addListener(async (request) => {
   }
 
   if (request.type === MESSAGE_TYPE.DELETE_WALLET) {
-    const _currentWallet = await browser.storage.local.get('currentWallet');
-    const _wallets = await browser.storage.local.get('wallets');
+    const cwStorage = await browser.storage.local.get('currentWallet');
+    const walletsStorage = await browser.storage.local.get('wallets');
 
     const password = request.password.trim();
 
-    const currentPublicKey = _currentWallet.currentWallet.publicKey;
-    const currWallet = findInWalletsByPublicKey(currentPublicKey, _wallets.wallets);
+    const currentPublicKey = cwStorage.currentWallet.publicKey;
+    const currWallet = findInWalletsByPublicKey(currentPublicKey, walletsStorage.wallets);
     const currKeystore = currWallet.keystore;
     const privKeyObj = await PasswordKeystore.decrypt(currKeystore, password);
 

@@ -45,6 +45,7 @@ export default (props: AppProps) => {
   }, []);
 
   const handleChange = (event: React.ChangeEvent<{ value: string }>) => {
+    console.log(/event.target.value/, event.target.value);
     setNetwork(event.target.value);
     props.handleNetworkChange(event.target.value);
     NetworkManager.setCurrentNetwork(event.target.value);

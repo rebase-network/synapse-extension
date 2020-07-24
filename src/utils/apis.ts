@@ -1,20 +1,41 @@
 import Axios from 'axios';
 import configService from '@src/config';
+import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils';
+import NetworkManager from '@src/common/networkManager';
 
 // Add a response interceptor
 Axios.interceptors.response.use(
   (response) => {
+    // console.log('response', response);
+    // Do something with response data
+    // const result = response.data;
+    // if (result.errCode !== 0) {
+    //   console.log(/axios result error/, JSON.stringify(result));
+    // }
     return response.data;
   },
   (error) => {
+    // Do something with response error
+    console.log('Axios error : ===> ', error);
+    // return Promise.reject(error);
     throw error;
   },
 );
 
 export const getAddressInfo = async (lockHash: string): Promise<{ capacity: string }> => {
-  // call api
-  const result = await Axios.get(`${configService.CACHE_LAYER_ENDPOINT}/address/${lockHash}`);
-  return result.data;
+  try {
+    const currentNetwork = await NetworkManager.getCurrentNetwork();
+    const { cacheURL } = currentNetwork;
+    const result = await Axios.get(`${cacheURL}/locks/${lockHash}/capacity`);
+    if (result.errCode !== 0) {
+      console.log(/result error/, JSON.stringify(result));
+      return result;
+    }
+    return result.data.capacity;
+  } catch (error) {
+    console.log('result error', error);
+    return error;
+  }
 };
 
 export interface UnspentCellsParams {
@@ -38,7 +59,9 @@ export const getUnspentCells = async (
     hasData,
   };
   try {
-    const result = await Axios.get(`${configService.CACHE_LAYER_ENDPOINT}/cell/getUnspentCells/`, {
+    const currentNetwork = await NetworkManager.getCurrentNetwork();
+    const { cacheURL } = currentNetwork;
+    const result = await Axios.get(`${cacheURL}/locks/${lockHash}/cells/unspent`, {
       params,
     });
     if (result.errCode !== 0) {
@@ -52,10 +75,11 @@ export const getUnspentCells = async (
   }
 };
 
-export const getTxHistories = async (scriptObj): Promise<any> => {
-  //   const url = `${configService.CACHE_LAYER_ENDPOINT}/cell/getTxHistoriesByIndexer`;
-  const url = `${configService.CACHE_LAYER_ENDPOINT}/cell/getTxHistoriesByLockHash`;
-  const result = await Axios.post(url, scriptObj);
+export const getTxHistories = async (lockHash): Promise<any> => {
+  const currentNetwork = await NetworkManager.getCurrentNetwork();
+  const { cacheURL } = currentNetwork;
+  const url = `${cacheURL}/locks/${lockHash}/txs`;
+  const result = await Axios.get(url);
 
   return result.data;
 };
@@ -66,24 +90,40 @@ interface TLockAndTypeScripts {
 }
 
 export const getUDTsByLockHash = async (params: TLockAndTypeScripts): Promise<any> => {
-  const url = `${configService.CACHE_LAYER_ENDPOINT}/cell/getCellsByLockHashAndTypeScripts`;
+  const currentNetwork = await NetworkManager.getCurrentNetwork();
+  const { cacheURL } = currentNetwork;
 
-  const result = await Axios.post(url, params);
+  const { lockHash } = params;
+  const pTypeScripts = params.typeScripts;
+  const typeHashes: string[] = [];
+  if (pTypeScripts !== undefined) {
+    for (let i = 0; i < pTypeScripts.length; i++) {
+      const typeScript = pTypeScripts[i];
+      const typeHash = scriptToHash(typeScript);
+      typeHashes.join(typeHash);
+    }
+  }
+  let url = `${cacheURL}/locks/${lockHash}/tokens`;
+
+  for (let index = 0; index < typeHashes.length; index++) {
+    url += `${typeHashes}`;
+  }
+  const result = await Axios.get(url);
   return result.data;
 };
 
 export const getUnspentCapacity = async (lockHash: string) => {
   try {
-    const params = { lockHash };
-    const result = await Axios.get(
-      `${configService.CACHE_LAYER_ENDPOINT}/cell/getUnspentCapacity/`,
-      { params },
-    );
+    const currentNetwork = await NetworkManager.getCurrentNetwork();
+    const { cacheURL } = currentNetwork;
+    const result = await Axios.get(`${cacheURL}/locks/${lockHash}/capacity`);
     if (result.errCode !== 0) {
+      console.log(/result error/, JSON.stringify(result));
       return result;
     }
-    return result.data;
+    return result.data.emptyCapacity;
   } catch (error) {
+    console.log('result error', error);
     return error;
   }
 };
