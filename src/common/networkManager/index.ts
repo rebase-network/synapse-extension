@@ -2,7 +2,8 @@ import _ from 'lodash';
 import { networks as presetNetworks } from './constants';
 
 interface INetwork {
-  name: string;
+  title: string;
+  networkType: string;
   prefix: string;
   nodeURL: string;
   cacheURL: string;
@@ -12,6 +13,7 @@ const NetworkManager = {
   async initNetworks() {
     const isNetworkSet = await NetworkManager.isNetworkSet();
     if (isNetworkSet) return;
+
     await browser.storage.local.set({
       networks: presetNetworks,
       currentNetwork: presetNetworks[0],
@@ -36,13 +38,13 @@ const NetworkManager = {
 
     return NetworkManager.getNetworkList();
   },
-  async removeNetwork(name: string) {
+  async removeNetwork(title: string) {
     const networks = await NetworkManager.getNetworkList();
-    _.remove(networks, { name });
+    _.remove(networks, { title });
     await browser.storage.local.set({ networks });
     const currentNetwork = await NetworkManager.getCurrentNetwork();
-    if (currentNetwork.name === name) {
-      await NetworkManager.setCurrentNetwork(networks[0]?.name);
+    if (currentNetwork.title === title) {
+      await NetworkManager.setCurrentNetwork(networks[0]?.title);
     }
     return NetworkManager.getNetworkList();
   },
@@ -50,18 +52,18 @@ const NetworkManager = {
     const { networks = [] } = await browser.storage.local.get('networks');
     return networks;
   },
-  async getNetwork(name: string) {
+  async getNetwork(title: string) {
     const networks = await NetworkManager.getNetworkList();
-    return _.find(networks, { name });
+    return _.find(networks, { title });
   },
   async getCurrentNetwork() {
     const networks = await NetworkManager.getNetworkList();
     const { currentNetwork = networks[0] } = await browser.storage.local.get('currentNetwork');
     return currentNetwork;
   },
-  async setCurrentNetwork(name: string) {
-    if (!name) return;
-    const network = await NetworkManager.getNetwork(name);
+  async setCurrentNetwork(title: string) {
+    if (!title) return;
+    const network = await NetworkManager.getNetwork(title);
     await browser.storage.local.set({ currentNetwork: network });
   },
 };

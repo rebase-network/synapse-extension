@@ -17,16 +17,17 @@ describe('network manager', () => {
   it('should able to set current network', async () => {
     const result = await NetworkManager.getCurrentNetwork();
     expect(result).toBe(networks[0]);
-    await NetworkManager.setCurrentNetwork(networks[0].name);
+    await NetworkManager.setCurrentNetwork(networks[0].title);
     expect(await NetworkManager.getCurrentNetwork()).toBe(networks[0]);
   });
 
   it('should able to create a network', async () => {
     const result = await NetworkManager.createNetwork({
-      name: 'my network',
+      title: 'my network',
+      networkType: 'testnet',
+      prefix: 'ckt',
       nodeURL: 'testtest.com',
       cacheURL: 'testtest.com',
-      prefix: 'ckt',
     });
 
     expect(result).toHaveLength(networks.length);
