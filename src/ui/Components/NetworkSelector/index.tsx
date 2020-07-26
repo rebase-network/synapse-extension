@@ -39,7 +39,7 @@ export default (props: AppProps) => {
   React.useEffect(() => {
     NetworkManager.getCurrentNetwork().then((currentNetwork) => {
       if (!_.isEmpty(currentNetwork)) {
-        setNetwork(currentNetwork.name);
+        setNetwork(currentNetwork.title);
       }
     });
   }, []);
@@ -60,8 +60,8 @@ export default (props: AppProps) => {
 
   const menuItems = networkItems.map((item) => {
     return (
-      <MenuItem value={item.name} key={`${item.name}-${item.nodeURL}`}>
-        {item.name}
+      <MenuItem value={item.title} key={`${item.title}-${item.nodeURL}`}>
+        {item.title}
       </MenuItem>
     );
   });
