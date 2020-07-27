@@ -12,11 +12,17 @@ import {
 } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import { MESSAGE_TYPE, EXPLORER_URL, LockType } from '@utils/constants';
+import {
+  MESSAGE_TYPE,
+  MAINNET_EXPLORER_URL,
+  TESTNET_EXPLORER_URL,
+  LockType,
+} from '@utils/constants';
 import { truncateAddress, shannonToCKBFormatter } from '@utils/formatters';
 import { getAddressInfo } from '@utils/apis';
 import TxList from '@ui/Components/TxList';
 import TokenList from '@ui/Components/TokenList';
+import { showAddressHelper } from '@utils/wallet';
 
 const useStyles = makeStyles({
   container: {
@@ -125,6 +131,7 @@ export default (props: AppProps) => {
   const [tooltipMsg, setTooltipMsg] = React.useState('Copy to clipboard');
   const [name, setName] = React.useState('');
   const [lockHash, setLockHash] = React.useState('');
+  const [explorerUrl, setExplorerUrl] = React.useState('');
 
   const updateCapacity = async (lockHashStr: string) => {
     const { capacity: addressCapacity } = await getAddressInfo(lockHashStr);
@@ -140,23 +147,34 @@ export default (props: AppProps) => {
   React.useEffect(() => {
     setTxs([]); // clean tx data
 
-    chrome.storage.local.get(['currentWallet'], async ({ currentWallet }) => {
-      if (_.isEmpty(currentWallet)) return;
-      const { address: currentAddress, type: lockType, lock } = currentWallet;
-      setAddress(currentAddress);
-      if (lockType === LockType.Keccak256) {
-        setDisableFlg(true);
-      } else {
-        setDisableFlg(false);
-      }
-      setType(lockType);
-      setLockHash(lock);
-      updateCapacity(lock);
+    chrome.storage.local.get(
+      ['currentWallet', 'currentNetwork'],
 
-      chrome.runtime.sendMessage({
-        type: MESSAGE_TYPE.GET_TX_HISTORY,
-      });
-    });
+      async ({ currentWallet, currentNetwork }) => {
+        if (_.isEmpty(currentWallet)) return;
+        const { type: lockType, lock, script } = currentWallet;
+
+        const _prefix = currentNetwork.prefix;
+        const newAddr = showAddressHelper(_prefix, script);
+
+        setExplorerUrl(_prefix === 'ckb' ? MAINNET_EXPLORER_URL : TESTNET_EXPLORER_URL);
+
+        setAddress(newAddr);
+
+        if (lockType === LockType.Keccak256) {
+          setDisableFlg(true);
+        } else {
+          setDisableFlg(false);
+        }
+        setType(lockType);
+        setLockHash(lock);
+        updateCapacity(lock);
+
+        chrome.runtime.sendMessage({
+          type: MESSAGE_TYPE.GET_TX_HISTORY,
+        });
+      },
+    );
 
     setLoading(true);
 
@@ -263,27 +281,26 @@ export default (props: AppProps) => {
     ) : (
       <TxList txList={txs} />
     );
+
   // init name of  address
   React.useEffect(() => {
     (async () => {
-      const currentWalletStorage = await browser.storage.local.get('currentWallet');
-      const currentAddress = currentWalletStorage?.currentWallet?.address;
       const contactStorage = await browser.storage.local.get('contacts');
+      const { contacts } = contactStorage;
+
+      const currentAddress = address;
 
       if (_.isEmpty(contactStorage)) {
         return;
       }
 
-      const { contacts } = contactStorage;
-      const contactIndex = _.findIndex(contacts, (contactItem) => {
-        return contactItem.address === currentAddress;
+      _.find(contacts, (ele) => {
+        if (ele.address === currentAddress) {
+          setName(ele.name);
+        }
       });
-
-      if (contactIndex > -1) {
-        setName(contacts[contactIndex].name);
-      }
     })();
-  }, []);
+  }, [address]);
 
   return (
     <div className={classes.container}>
@@ -353,7 +370,7 @@ export default (props: AppProps) => {
           <h3>
             <FormattedMessage id="Latest 20 Transactions" />
           </h3>
-          <Link rel="noreferrer" target="_blank" href={`${EXPLORER_URL}/address/${address}`}>
+          <Link rel="noreferrer" target="_blank" href={`${explorerUrl}/address/${address}`}>
             <Tooltip title={<FormattedMessage id="View on Explorer" />} placement="top">
               <CallMadeIcon />
             </Tooltip>

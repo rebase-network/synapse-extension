@@ -1,7 +1,8 @@
 import React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
-import AddressListItem from '../AddressListItem';
+import AddressListItem from '@ui/Components/AddressListItem';
+import { showAddressHelper } from '@utils/wallet';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,25 +23,34 @@ interface AppState {}
 
 export default function (props: AppProps, state: AppState) {
   const [addressesList, setAddressesList] = React.useState([]);
+  const [prefix, setPrefix] = React.useState('');
+
   const [loading, setLoading] = React.useState(true);
   const classes = useStyles();
 
   React.useEffect(() => {
-    browser.storage.local.get('addressesList').then((result) => {
-      setLoading(false);
-      if (!result.addressesList) return;
-      setAddressesList(result.addressesList);
-    });
+    chrome.storage.local.get(
+      ['addressesList', 'currentNetwork'],
+      async ({ addressesList, currentNetwork }) => {
+        setPrefix(currentNetwork.prefix);
+
+        setLoading(false);
+        if (!addressesList) return;
+        setAddressesList(addressesList);
+      },
+    );
   }, []);
 
   if (loading) return <div className={classes.loading}>Loading Address List...</div>;
 
-  const addressesElem = addressesList.map((addressesObj, index) => {
-    return addressesObj.addresses.map((item, index) => {
+  const addressesElem = addressesList.map((addressesObj) => {
+    return addressesObj.addresses.map((item) => {
+      const newAddr = showAddressHelper(prefix, item.script);
+
       return (
-        <List component="nav" aria-label="Address List" key={`item-${item.address}`}>
+        <List component="nav" aria-label="Address List" key={`item-${newAddr}`}>
           <AddressListItem
-            key={`item-${item.address}`}
+            key={`item-${newAddr}`}
             addressInfo={{ ...item, publicKey: addressesObj.publicKey }}
             onSelectAddress={props.onSelectAddress}
           />

@@ -82,7 +82,8 @@ export const KEYSTORE_TYPE = {
   PRIVATEKEY_TO_KEYSTORE: '3',
 };
 
-export const EXPLORER_URL = 'https://explorer.nervos.org/aggron';
+export const TESTNET_EXPLORER_URL = 'https://explorer.nervos.org/aggron';
+export const MAINNET_EXPLORER_URL = 'https://explorer.nervos.org';
 
 export const MIN_CELL_CAPACITY = 61;
 

@@ -94,15 +94,17 @@ const generateByPrivateKey = async (privateKey, password) => {
 const accounts = async (networkPrefix: string) => {
   const scripts = await container.getAllLockHashesAndMeta();
   const result = [];
-  for (let i = 0; i < scripts.length; i++) {
-    const script = scripts[i];
+
+  for (const script of scripts) {
     result.push({
       address: scriptToAddress(script.meta.script, { networkPrefix, short: true }),
+      script: script.meta.script,
       type: script.meta.name,
       lock: script.hash,
       amount: 0,
     });
   }
+
   return result;
 };
 

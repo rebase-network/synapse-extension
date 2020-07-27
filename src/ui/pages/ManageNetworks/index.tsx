@@ -116,8 +116,8 @@ export default () => {
   const [networkItems, setNetworkItems] = React.useState([]);
 
   const onSubmit = async (values, { resetForm }) => {
-    const { name, nodeURL, cacheURL, prefix } = values;
-    const networkObj = { name, nodeURL, cacheURL, prefix };
+    const { title, networkType, nodeURL, cacheURL, prefix } = values;
+    const networkObj = { title, networkType, nodeURL, cacheURL, prefix };
     const newNetworkList = await NetworkManager.createNetwork(networkObj);
     setNetworkItems(newNetworkList);
 
@@ -132,8 +132,8 @@ export default () => {
     });
   }, []);
 
-  const removeItem = async (event, name) => {
-    const newNetworkList = await NetworkManager.removeNetwork(name);
+  const removeItem = async (event, title) => {
+    const newNetworkList = await NetworkManager.removeNetwork(title);
     setNetworkItems(newNetworkList);
   };
 

@@ -17,28 +17,29 @@ describe('network manager', () => {
   it('should able to set current network', async () => {
     const result = await NetworkManager.getCurrentNetwork();
     expect(result).toBe(networks[0]);
-    await NetworkManager.setCurrentNetwork(networks[0].name);
+    await NetworkManager.setCurrentNetwork(networks[0].title);
     expect(await NetworkManager.getCurrentNetwork()).toBe(networks[0]);
   });
 
   it('should able to create a network', async () => {
     const result = await NetworkManager.createNetwork({
-      name: 'my network',
-      nodeURL: 'testtest.com',
-      cacheURL: 'testtest.com',
-      prefix: 'ckt',
+      title: 'Lina Mainnet',
+      networkType: 'mainnet',
+      prefix: 'ckb',
+      nodeURL: 'http://mainnet.getsynapse.io/rpc',
+      cacheURL: 'http://mainnet.getsynapse.io/api',
     });
 
     expect(result).toHaveLength(networks.length);
   });
 
   it('should able to get network info', async () => {
-    const result = await NetworkManager.getNetwork('Aggron Testnet');
+    const result = await NetworkManager.getNetwork('Lina Mainnet');
     expect(result).toBe(networks[0]);
   });
 
   it('should able to remove a network', async () => {
-    const result = await NetworkManager.removeNetwork('Aggron Testnet');
+    const result = await NetworkManager.removeNetwork('Lina Mainnet');
     expect(result).toHaveLength(networks.length);
   });
 });

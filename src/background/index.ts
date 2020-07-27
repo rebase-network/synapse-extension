@@ -52,11 +52,10 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
   // IMPORT_MNEMONIC
   if (request.type === MESSAGE_TYPE.IMPORT_MNEMONIC) {
-    // call import mnemonic method
     const mnemonic = request.mnemonic.trim();
     const password = request.password.trim();
 
-    // 验证助记词有效性
+    // check mnemonic
     const isValidateMnemonic = validateMnemonic(mnemonic);
     if (!isValidateMnemonic) {
       chrome.runtime.sendMessage(MESSAGE_TYPE.IS_INVALID_MNEMONIC);
@@ -67,7 +66,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const entropy = mnemonicToEntropy(mnemonic);
     const entropyKeystore = await PasswordKeystore.encrypt(Buffer.from(entropy, 'hex'), password);
 
-    // words 是否在助记词表中
+    // check words
     const seed = mnemonicToSeedSync(mnemonic);
     const masterKeychain = Keychain.fromSeed(seed);
     const extendedKey = new ExtendedPrivateKey(
@@ -90,8 +89,10 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
     if (!_.isEmpty(addressesObj)) {
       const { addresses } = addressesObj;
+
       currentWallet = {
         publicKey,
+        script: addresses[0].script,
         address: addresses[0].address,
         type: addresses[0].type,
         lock: addresses[0].lock,
@@ -162,6 +163,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       const { addresses } = addressesObj;
       currentWallet = {
         publicKey,
+        script: addresses[0].script,
         address: addresses[0].address,
         type: addresses[0].type,
         lock: addresses[0].lock,
@@ -569,6 +571,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
       currentWallet = {
         publicKey,
+        script: addresses[0].script,
         address: addresses[0].address,
         type: addresses[0].type,
         lock: addresses[0].lock,
@@ -653,6 +656,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
       currentWallet = {
         publicKey,
+        script: addresses[0].script,
         address: addresses[0].address,
         type: addresses[0].type,
         lock: addresses[0].lock,

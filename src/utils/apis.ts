@@ -16,7 +16,7 @@ Axios.interceptors.response.use(
   },
   (error) => {
     // Do something with response error
-    console.log('Axios error : ===> ', error);
+    console.log('Axios error: ', error);
     // return Promise.reject(error);
     throw error;
   },
