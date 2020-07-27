@@ -65,7 +65,7 @@ export default function (props: AppProps, state: AppState) {
   const history = useHistory();
   const { addressInfo } = props;
 
-  const { address, type, lock, script } = addressInfo;
+  const { type, lock, script } = addressInfo;
   const [capacity, setCapacity] = React.useState('0');
   const [name, setName] = React.useState('');
   const [newAddr, setNewAddr] = React.useState('');
@@ -82,23 +82,22 @@ export default function (props: AppProps, state: AppState) {
   React.useEffect(() => {
     (async () => {
       const contactStorage = await browser.storage.local.get('contacts');
+      const currNetworkStorage = await browser.storage.local.get('currentNetwork');
 
-      const currentNetwork = await browser.storage.local.get('currentNetwork');
-      const newAddr = showAddressHelper(currentNetwork.prefix, script);
-      setNewAddr(newAddr);
+      const addr = showAddressHelper(currNetworkStorage.currentNetwork.prefix, script);
+      setNewAddr(addr);
 
       if (_.isEmpty(contactStorage)) return;
 
       const { contacts } = contactStorage;
-      const contactIndex = _.findIndex(contacts, function (contactItem) {
-        return contactItem.address === address;
-      });
 
-      if (contactIndex > -1) {
-        setName(contacts[contactIndex].name);
-      }
+      _.find(contacts, (ele) => {
+        if (ele.address === addr) {
+          setName(ele.name);
+        }
+      });
     })();
-  }, [address]);
+  }, []);
 
   const handleListItemClick = (event, addressInfo: TAddressInfo) => {
     const currentWallet = _.clone(addressInfo);
@@ -114,7 +113,7 @@ export default function (props: AppProps, state: AppState) {
     <ThemeProvider theme={listItemTheme}>
       <ListItem
         button
-        key={`item-${address}`}
+        key={`item-${newAddr}`}
         onClick={(event) => handleListItemClick(event, addressInfo)}
       >
         <ListItemText
@@ -130,8 +129,7 @@ export default function (props: AppProps, state: AppState) {
                 {`${capacity} CKB`}
               </Typography>
               <br />
-              {type}
-              {name}
+              {`${type}  ${name}`}
             </>
           }
         />
