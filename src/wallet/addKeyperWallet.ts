@@ -58,9 +58,11 @@ export async function saveWallets(
   const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
 
   wallets = await getWalletsInStorage();
+
   if (_.isEmpty(wallets)) {
     wallets = [];
   }
+
   const walletCommon = {
     publicKey,
     blake160,
@@ -69,16 +71,19 @@ export async function saveWallets(
     keystore,
     keystoreType: KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE,
   };
+
   wallets.push(walletCommon);
 
   const addressesObj = {
     publicKey,
     addresses: accounts,
   };
+
   addressesList.push(addressesObj);
 
   const currentAddress = {
     publicKey,
+    script: accounts[0].script,
     address: accounts[0].address,
     type: accounts[0].type,
     lock: accounts[0].lock,
