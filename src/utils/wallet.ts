@@ -1,3 +1,5 @@
+import { scriptToAddress } from '@keyper/specs/lib/address';
+
 export function saveToStorage(wallets, currentWallet, addressesList) {
   browser.storage.local.set({
     wallets,
@@ -26,4 +28,8 @@ export function findInAddressesListByPublicKey(publicKey, addressesList) {
   }
   const addresses = addressesList.find(findAddresses);
   return addresses;
+}
+
+export function showAddressHelper(networkPrefix: string, script) {
+  return scriptToAddress(script, { networkPrefix, short: true })
 }
