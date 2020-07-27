@@ -23,7 +23,7 @@ import ManageNetworks from '@ui/pages/ManageNetworks';
 import './styles/global.scss';
 
 export default function App() {
-  const [network, setNetwork] = React.useState('testnet');
+  const [network, setNetwork] = React.useState('');
 
   const handleNetworkChange = (value: string) => {
     setNetwork(value);

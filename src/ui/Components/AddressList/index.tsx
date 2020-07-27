@@ -43,14 +43,14 @@ export default function (props: AppProps, state: AppState) {
 
   if (loading) return <div className={classes.loading}>Loading Address List...</div>;
 
-  const addressesElem = addressesList.map((addressesObj, index) => {
-    return addressesObj.addresses.map((item, index) => {
+  const addressesElem = addressesList.map((addressesObj) => {
+    return addressesObj.addresses.map((item) => {
       const newAddr = showAddressHelper(prefix, item.script);
 
       return (
-        <List component="nav" aria-label="Address List" key={`item-${item.address}`}>
+        <List component="nav" aria-label="Address List" key={`item-${newAddr}`}>
           <AddressListItem
-            key={`item-${item.address}`}
+            key={`item-${newAddr}`}
             addressInfo={{ ...item, publicKey: addressesObj.publicKey }}
             onSelectAddress={props.onSelectAddress}
           />
