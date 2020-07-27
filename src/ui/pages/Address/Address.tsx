@@ -17,6 +17,7 @@ import { truncateAddress, shannonToCKBFormatter } from '@utils/formatters';
 import { getAddressInfo } from '@utils/apis';
 import TxList from '@ui/Components/TxList';
 import TokenList from '@ui/Components/TokenList';
+import { showAddressHelper } from '@utils/wallet';
 
 const useStyles = makeStyles({
   container: {
@@ -140,23 +141,30 @@ export default (props: AppProps) => {
   React.useEffect(() => {
     setTxs([]); // clean tx data
 
-    chrome.storage.local.get(['currentWallet'], async ({ currentWallet }) => {
-      if (_.isEmpty(currentWallet)) return;
-      const { address: currentAddress, type: lockType, lock } = currentWallet;
-      setAddress(currentAddress);
-      if (lockType === LockType.Keccak256) {
-        setDisableFlg(true);
-      } else {
-        setDisableFlg(false);
-      }
-      setType(lockType);
-      setLockHash(lock);
-      updateCapacity(lock);
+    chrome.storage.local.get(
+      ['currentWallet', 'currentNetwork'],
 
-      chrome.runtime.sendMessage({
-        type: MESSAGE_TYPE.GET_TX_HISTORY,
-      });
-    });
+      async ({ currentWallet, currentNetwork }) => {
+        if (_.isEmpty(currentWallet)) return;
+        const { type: lockType, lock, script } = currentWallet;
+        const newAddr = showAddressHelper(currentNetwork.prefix, script);
+
+        setAddress(newAddr);
+
+        if (lockType === LockType.Keccak256) {
+          setDisableFlg(true);
+        } else {
+          setDisableFlg(false);
+        }
+        setType(lockType);
+        setLockHash(lock);
+        updateCapacity(lock);
+
+        chrome.runtime.sendMessage({
+          type: MESSAGE_TYPE.GET_TX_HISTORY,
+        });
+      },
+    );
 
     setLoading(true);
 
@@ -263,6 +271,7 @@ export default (props: AppProps) => {
     ) : (
       <TxList txList={txs} />
     );
+
   // init name of  address
   React.useEffect(() => {
     (async () => {

@@ -12,6 +12,7 @@ import {
 import { ListItem, ListItemText, Typography } from '@material-ui/core';
 import { truncateAddress, shannonToCKBFormatter } from '@utils/formatters';
 import { getAddressInfo } from '@utils/apis';
+import { showAddressHelper } from '@utils/wallet';
 
 const useStylesTheme = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,11 +38,18 @@ const listItemTheme = createMuiTheme({
   },
 });
 
+type TScript = {
+  codeHash: string;
+  hashType: string;
+  args: string;
+};
+
 type TAddressInfo = {
   address: string;
   amount: number;
   lock: string;
   type: string;
+  script: TScript;
   publicKey: string;
 };
 
@@ -56,26 +64,36 @@ export default function (props: AppProps, state: AppState) {
   const classes = useStylesTheme();
   const history = useHistory();
   const { addressInfo } = props;
-  const { address, type, lock } = addressInfo;
+
+  const { address, type, lock, script } = addressInfo;
   const [capacity, setCapacity] = React.useState('0');
   const [name, setName] = React.useState('');
+  const [newAddr, setNewAddr] = React.useState('');
 
   React.useEffect(() => {
     const fetchData = async () => {
       const { capacity } = await getAddressInfo(lock);
       setCapacity(shannonToCKBFormatter(capacity));
     };
+
     fetchData();
   }, [lock]);
 
   React.useEffect(() => {
     (async () => {
       const contactStorage = await browser.storage.local.get('contacts');
+
+      const currentNetwork = await browser.storage.local.get('currentNetwork');
+      const newAddr = showAddressHelper(currentNetwork.prefix, script);
+      setNewAddr(newAddr);
+
       if (_.isEmpty(contactStorage)) return;
+
       const { contacts } = contactStorage;
       const contactIndex = _.findIndex(contacts, function (contactItem) {
         return contactItem.address === address;
       });
+
       if (contactIndex > -1) {
         setName(contacts[contactIndex].name);
       }
@@ -100,7 +118,7 @@ export default function (props: AppProps, state: AppState) {
         onClick={(event) => handleListItemClick(event, addressInfo)}
       >
         <ListItemText
-          primary={truncateAddress(address)}
+          primary={truncateAddress(newAddr)}
           secondary={
             <>
               <Typography
@@ -112,7 +130,7 @@ export default function (props: AppProps, state: AppState) {
                 {`${capacity} CKB`}
               </Typography>
               <br />
-              {`${type} `}
+              {type}
               {name}
             </>
           }

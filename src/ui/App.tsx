@@ -27,6 +27,7 @@ export default function App() {
 
   const handleNetworkChange = (value: string) => {
     setNetwork(value);
+    location.replace('/popup.html');
   };
 
   return (
