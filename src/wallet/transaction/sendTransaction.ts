@@ -7,7 +7,7 @@ import { getDepFromLockType } from '@utils/deps';
 import { getUnspentCells } from '@utils/apis';
 import getCKB from '@utils/ckb';
 import { createRawTx, createAnyPayRawTx, createUpdateDataRawTx } from './txGenerator';
-import { signTx } from '../addKeyperWallet';
+import { signTx } from '@src/wallet/addKeyperWallet';
 
 export const generateTx = async (
   fromAddress,
@@ -18,10 +18,13 @@ export const generateTx = async (
   lockType,
   toDataHex?,
 ) => {
+
   const params = {
     capacity: BigInt(toAmount).toString(),
   };
+
   const unspentCells = await getUnspentCells(lockHash, params);
+
   // Error handling
   if (unspentCells.errCode !== undefined && unspentCells.errCode !== 0) {
     return unspentCells;
@@ -30,6 +33,7 @@ export const generateTx = async (
   function getTotalCapity(total, cell) {
     return BigInt(total) + BigInt(cell.capacity);
   }
+
   const totalCapity = unspentCells.reduce(getTotalCapity, 0);
   const inputCells = {
     cells: unspentCells,
@@ -50,6 +54,7 @@ export const generateTx = async (
     new BN(fee),
     toDataHex,
   );
+
   const rawTransaction = rawObj.tx;
 
   return rawTransaction;
@@ -233,6 +238,7 @@ export const sendTransaction = async (
   const toDataHex = textToHex(toData || '0x');
   const toAddressScript = addressToScript(toAddress);
   let toLockType = '';
+
   if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
     toLockType = 'Secp256k1';
   } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Keccak256) {
@@ -240,6 +246,7 @@ export const sendTransaction = async (
   } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.AnyPay) {
     toLockType = 'AnyPay';
   }
+
   let rawTransaction: any;
 
   // wallet cells check
@@ -252,6 +259,7 @@ export const sendTransaction = async (
     const params = {
       limit: '10',
     };
+
     unspentWalletCells = await getUnspentCells(toLockHash, params);
     // Error handling
     if (unspentWalletCells.errCode !== undefined && unspentWalletCells.errCode !== 0) {
@@ -273,6 +281,7 @@ export const sendTransaction = async (
       toDataHex,
     );
     config = { index: 0, length: -1 };
+
   } else if (toLockType === 'AnyPay') {
     rawTransaction = await generateAnyPayTx(
       fromAddress,
@@ -284,6 +293,7 @@ export const sendTransaction = async (
       toLockType,
     );
     config = { index: 1, length: 1 };
+
   } else if (toLockType === 'Secp256k1') {
     rawTransaction = await generateTx(
       fromAddress,
@@ -301,11 +311,14 @@ export const sendTransaction = async (
   if (rawTransaction.errCode !== undefined && rawTransaction.errCode !== 0) {
     return rawTransaction;
   }
+
   const signedTx = await signTx(lockHash, password, rawTransaction, config, publicKey);
+
   try {
     realTxHash = await ckb.rpc.sendTransaction(signedTx);
   } catch (error) {
     console.error(`Failed to send tx: ${error}`);
   }
+
   return realTxHash;
 };

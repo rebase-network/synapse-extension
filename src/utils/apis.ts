@@ -68,7 +68,7 @@ export const getUnspentCells = async (
     }
     return result.data;
   } catch (error) {
-    console.log('result error', error);
+    console.error('result error', error);
     return error;
   }
 };

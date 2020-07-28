@@ -31,6 +31,7 @@ import addExternalMessageListener from '@background/messageHandlers';
 import { WEB_PAGE } from '@src/utils/message/constants';
 import { sendToWebPage } from '@background/messageHandlers/proxy';
 import NetworkManager from '@common/networkManager';
+import { showAddressHelper } from '@utils/wallet';
 
 NetworkManager.initNetworks();
 /**
@@ -333,6 +334,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
   if (request.type === MESSAGE_TYPE.REQUEST_SEND_TX) {
     const cwStorage = await browser.storage.local.get('currentWallet');
     const walletsStorage = await browser.storage.local.get('wallets');
+    const currNetworkStorage = await browser.storage.local.get('currentNetwork');
 
     const toAddress = request.address.trim();
     const capacity = request.capacity * CKB_TOKEN_DECIMALS;
@@ -341,11 +343,13 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const toData = request.data.trim();
 
     const {
-      address: fromAddress,
+      script,
       publicKey,
       lock: lockHash,
       type: lockType,
     } = cwStorage.currentWallet;
+
+    const fromAddress = showAddressHelper(currNetworkStorage.currentNetwork.prefix, script)
 
     const wallet = findInWalletsByPublicKey(publicKey, walletsStorage.wallets);
     const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
