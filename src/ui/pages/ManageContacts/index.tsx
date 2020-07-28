@@ -84,22 +84,27 @@ export default function initFunction(props: AppProps, state: AppState) {
   const [contactItems, setContactItems] = React.useState([]);
 
   const onSubmit = async (values, { resetForm }) => {
-    // chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.MANAGE_CONTACTS_ADD });
     let contactsObj = [];
     const { address, name } = values;
     const contactsStorage = await browser.storage.local.get('contacts');
     if (Array.isArray(contactsStorage.contacts)) {
       contactsObj = contactsStorage.contacts;
     }
+
     const contactObj = { address, name };
-    const modContactIndex = _.findIndex(contactsObj, function (contactItem) {
-      return contactItem.address === address;
-    });
-    if (modContactIndex === -1) {
+
+    if (contactsObj.length == 0) {
       contactsObj.push(contactObj);
     } else {
-      contactsObj[modContactIndex].name = name;
+      _.find(contactsObj, (contactItem) => {
+        if (contactItem.address === address) {
+          contactItem.name = name;
+        } else {
+          contactsObj.push(contactObj);
+        }
+      });
     }
+
     setContactItems(contactsObj);
     await browser.storage.local.set({ contacts: contactsObj });
 

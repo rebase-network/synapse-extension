@@ -124,14 +124,19 @@ export default function initFunction(props: AppProps, state: AppState) {
       udtsList = udtsStorage.udts;
     }
     const udtObj = { name, typeHash, decimal, symbol };
-    const modUdtsIndex = _.findIndex(udtsList, function findItemIndex(udtItem) {
-      return udtItem.typeHash === typeHash;
-    });
-    if (modUdtsIndex === -1) {
+
+    if (udtsList.length === 0) {
       udtsList.push(udtObj);
     } else {
-      udtsList[modUdtsIndex] = udtObj;
+      _.find(udtsList, (udtItem) => {
+        if (udtItem.typeHash === typeHash) {
+          udtItem = udtObj;
+        } else {
+          udtsList.push(udtObj);
+        }
+      });
     }
+
     setUdtsItems(udtsList);
     await browser.storage.local.set({ udts: udtsList });
 
