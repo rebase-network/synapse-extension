@@ -24,6 +24,7 @@ import {
   saveToStorage,
   findInWalletsByPublicKey,
   findInAddressesListByPublicKey,
+  showAddressHelper,
 } from '@utils/wallet';
 import { getStatusByTxHash, getBlockNumberByTxHash, sendSignedTx } from '@utils/transaction';
 import { MESSAGE_TYPE, CKB_TOKEN_DECIMALS } from '@utils/constants';
@@ -31,7 +32,6 @@ import addExternalMessageListener from '@background/messageHandlers';
 import { WEB_PAGE } from '@src/utils/message/constants';
 import { sendToWebPage } from '@background/messageHandlers/proxy';
 import NetworkManager from '@common/networkManager';
-import { showAddressHelper } from '@utils/wallet';
 
 NetworkManager.initNetworks();
 /**
@@ -190,22 +190,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
     const address = cwStorage.currentWallet ? cwStorage.currentWallet.address : undefined;
     const lockHash = cwStorage.currentWallet ? cwStorage.currentWallet.lock : undefined;
-    // const { publicKey, type } = cwStorage.currentWallet;
-
-    // const lockScriptObj = createScriptObj(publicKey, type, address);
-    // let hashType = null;
-    // if (lockScriptObj.script.hash_type === 'data') {
-    //   hashType = 'data';
-    // }
-    // if (lockScriptObj.script.hash_type === 'type') {
-    //   hashType = 'type';
-    // }
-    // const lockScript: CKBComponents.Script = {
-    //   args: lockScriptObj.script.args,
-    //   codeHash: lockScriptObj.script.code_hash,
-    //   hashType,
-    // };
-    // const lockHash = ckbUtils.scriptToHash(lockScript);
     const txs = address ? await getTxHistories(lockHash) : [];
     chrome.runtime.sendMessage({
       txs,
@@ -342,14 +326,9 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const password = request.password.trim();
     const toData = request.data.trim();
 
-    const {
-      script,
-      publicKey,
-      lock: lockHash,
-      type: lockType,
-    } = cwStorage.currentWallet;
+    const { script, publicKey, lock: lockHash, type: lockType } = cwStorage.currentWallet;
 
-    const fromAddress = showAddressHelper(currNetworkStorage.currentNetwork.prefix, script)
+    const fromAddress = showAddressHelper(currNetworkStorage.currentNetwork.prefix, script);
 
     const wallet = findInWalletsByPublicKey(publicKey, walletsStorage.wallets);
     const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);

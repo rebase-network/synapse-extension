@@ -3,13 +3,12 @@ import moment from 'moment';
 import { Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-import SyncIcon from '@material-ui/icons/Sync';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Typography from '@material-ui/core/Typography';
 import { FormattedMessage } from 'react-intl';
 import PageNav from '@ui/Components/PageNav';
+import { BN } from 'bn.js';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,27 +39,21 @@ export default function (props: AppProps, state: AppState) {
     status = 'Confirmed',
     amount: capacity,
     fee,
-    inputs,
-    outputs,
+    // inputs,
+    // outputs,
     hash: txHash,
     blockNum,
     timestamp,
+    income,
   } = props.data;
+
+  let transferAmount = capacity;
+  if (income !== null && income === false) {
+    transferAmount = new BN(capacity) - new BN(fee);
+  }
 
   const txDateTime = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
 
-  let statusIconNode = (
-    <Box textAlign="center" fontSize={40}>
-      <SyncIcon />
-    </Box>
-  );
-  if (status == 'finished') {
-    statusIconNode = (
-      <Box textAlign="center" fontSize={40}>
-        <CheckCircleIcon />
-      </Box>
-    );
-  }
   return (
     <div>
       <PageNav to="/address" title="Address" />
@@ -85,7 +78,7 @@ export default function (props: AppProps, state: AppState) {
             </Typography>
           </Grid>
           <Grid item xs data-testid="amount">
-            <Typography>{capacity / 10 ** 8} CKB</Typography>
+            <Typography> {transferAmount / 10 ** 8} CKB</Typography>
           </Grid>
         </Grid>
         <Grid container wrap="nowrap" spacing={2}>
@@ -95,7 +88,7 @@ export default function (props: AppProps, state: AppState) {
             </Typography>
           </Grid>
           <Grid item xs>
-            <Typography>{fee / 10 ** 8} CKB </Typography>
+            <Typography> {fee / 10 ** 8} CKB </Typography>
           </Grid>
         </Grid>
 
