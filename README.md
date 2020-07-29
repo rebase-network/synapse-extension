@@ -1,6 +1,6 @@
 # Synapse Extension
 
-An extension wallet and Keyper agency for Nervos CKB
+An extension wallet for Nervos CKB.
 
 | Service  | Master                                                                                                                                                     |
 | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
