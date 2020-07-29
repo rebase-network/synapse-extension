@@ -13,7 +13,7 @@ describe('TxList', () => {
   beforeAll(() => {
     tree = render(
       <IntlProvider locale="en" messages={en}>
-        <TxList txList={txList} />
+        <TxList txList={txList} explorerUrl={''} />
       </IntlProvider>,
     );
     container = tree.container;

@@ -279,7 +279,7 @@ export default (props: AppProps) => {
         <FormattedMessage id="Go ahead to send your first transaction" />
       </div>
     ) : (
-      <TxList txList={txs} />
+      <TxList txList={txs} explorerUrl={explorerUrl} />
     );
 
   // init name of  address

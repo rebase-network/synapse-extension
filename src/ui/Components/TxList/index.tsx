@@ -18,15 +18,16 @@ const useStyles = makeStyles({
 
 interface AppProps {
   txList: any;
+  explorerUrl: string;
 }
 
 export default (props: AppProps) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [selectedTxHash, setSelectedTxHash] = React.useState('');
-  const [explorerUrl, setExplorerUrl] = React.useState('');
 
-  const { txList } = props;
+  const { txList, explorerUrl } = props;
+
   const toggleModal = () => {
     setOpen(!open);
   };
@@ -39,15 +40,6 @@ export default (props: AppProps) => {
     toggleModal();
     setSelectedTxHash(hash);
   };
-
-  React.useEffect(() => {
-    async () => {
-      const currNetworkStorage = await browser.storage.local.get('currentNetwork');
-      const _prefix = currNetworkStorage.currentNetwork.prefix;
-
-      setExplorerUrl(_prefix === 'ckb' ? MAINNET_EXPLORER_URL : TESTNET_EXPLORER_URL);
-    };
-  }, []);
 
   const txListElem = txList.map((item) => (
     <List onClick={() => onSelectTx(item.hash)} key={item.hash} className={classes.list}>
