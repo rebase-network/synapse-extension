@@ -7,8 +7,10 @@ describe('setup keyper', () => {
     setupKeyper();
     const manager = ContainerManager.getInstance();
     const containers = manager.getAllContainers();
-    const containerNetworks = Object.keys(containers);
+    const containerNetworks = manager.names;
+
     expect(containerNetworks).toEqual(networks);
+
     containerNetworks.forEach((network) => {
       expect(containers[network].lockScriptSize()).toEqual(3);
     });
