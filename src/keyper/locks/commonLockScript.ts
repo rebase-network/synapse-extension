@@ -1,6 +1,6 @@
 import { ScriptHashType, CellDep, SignatureAlgorithm, SignProvider, DepType } from '@keyper/specs';
-// https://basarat.gitbook.io/typescript/type-system/mixins
 
+// https://basarat.gitbook.io/typescript/type-system/mixins
 // Needed for all mixins
 type Constructor<T = {}> = new (...args: any[]) => T;
 
@@ -15,7 +15,7 @@ export default function CommonLockScript<TBase extends Constructor>(Base: TBase)
 
     private hashType: ScriptHashType = 'type';
 
-    private provider: SignProvider = null;
+    private provider: SignProvider;
 
     private algo: SignatureAlgorithm = SignatureAlgorithm.secp256k1;
 
