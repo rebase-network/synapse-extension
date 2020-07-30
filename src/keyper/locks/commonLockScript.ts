@@ -1,6 +1,4 @@
-import { LockScript } from '@keyper/container';
-import { SignatureAlgorithm } from '@keyper/specs';
-
+import { ScriptHashType, CellDep, SignatureAlgorithm, SignProvider, DepType } from '@keyper/specs';
 // https://basarat.gitbook.io/typescript/type-system/mixins
 
 // Needed for all mixins
@@ -9,19 +7,19 @@ type Constructor<T = {}> = new (...args: any[]) => T;
 // a mixin that adds a property and methods
 export default function CommonLockScript<TBase extends Constructor>(Base: TBase) {
   return class extends Base {
-    txHash: string;
+    private txHash: string;
 
-    depType = 'code';
+    private depType: DepType = 'code';
 
-    index = '0x0';
+    private index: string = '0x0';
 
-    hashType = 'type';
+    private hashType: ScriptHashType = 'type';
 
-    provider = null;
+    private provider: SignProvider = null;
 
-    algo = SignatureAlgorithm.secp256k1;
+    private algo: SignatureAlgorithm = SignatureAlgorithm.secp256k1;
 
-    deps() {
+    public deps(): CellDep[] {
       return [
         {
           outPoint: {
@@ -33,11 +31,11 @@ export default function CommonLockScript<TBase extends Constructor>(Base: TBase)
       ];
     }
 
-    signatureAlgorithm() {
+    public signatureAlgorithm(): SignatureAlgorithm {
       return this.algo;
     }
 
-    setProvider(provider) {
+    public setProvider(provider: SignProvider) {
       this.provider = provider;
     }
   };

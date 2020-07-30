@@ -10,7 +10,6 @@ import {
   Config,
   SignProvider,
   SignContext,
-  LockScript,
 } from '@keyper/specs';
 import CommonLockScript from './commonLockScript';
 

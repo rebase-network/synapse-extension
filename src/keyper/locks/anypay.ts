@@ -28,7 +28,7 @@ class ItsLockScript {
     this.txHash = txHash;
   }
 
-  script(publicKey) {
+  public script(publicKey: string): Script {
     const args = utils.blake160(publicKey);
     return {
       codeHash: this.codeHash,
@@ -37,7 +37,11 @@ class ItsLockScript {
     };
   }
 
-  async sign(context, rawTxParam, configParam = { index: 0, length: -1 }) {
+  public async sign(
+    context: SignContext,
+    rawTxParam: RawTransaction,
+    configParam: Config = { index: 0, length: -1 },
+  ) {
     const rawTx = _.cloneDeep(rawTxParam);
     const config = _.cloneDeep(configParam);
     const txHash = utils.rawTransactionToHash(rawTx);
