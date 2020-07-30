@@ -85,8 +85,6 @@ export const KEYSTORE_TYPE = {
 export const TESTNET_EXPLORER_URL = 'https://explorer.nervos.org/aggron';
 export const MAINNET_EXPLORER_URL = 'https://explorer.nervos.org';
 
-export const MIN_CELL_CAPACITY = 61;
-
 export const ADDRESS_TYPE_CODEHASH = {
   Secp256k1: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
   AnyPay: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
@@ -99,6 +97,10 @@ export const enum LockType {
   Keccak256 = 'Keccak256',
 }
 
+export const MIN_CELL_CAPACITY = 61;
 export const EMPTY_TX_HASH = '0x0000000000000000000000000000000000000000000000000000000000000000';
 export const EMPTY_DATA_HASH = EMPTY_TX_HASH;
 export const CKB_TOKEN_DECIMALS = 10 ** 8;
+export const MIN_FEE_RATE = '1000';
+export const EMPTY_WITNESS =
+  '0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';

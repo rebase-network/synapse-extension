@@ -1,6 +1,7 @@
 import { BN } from 'bn.js';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils/lib';
 import _ from 'lodash';
+import calculateTxFee from './calculateFee';
 
 export function createRawTx(
   toAmount,
@@ -47,7 +48,8 @@ export function createRawTx(
     rawTx.outputsData.push('0x');
   }
 
-  const totalConsumed = toAmount.add(fee);
+  //   const totalConsumed = toAmount.add(fee);
+  const totalConsumed = toAmount;
   if (
     inputCells.total.gt(totalConsumed) &&
     inputCells.total.sub(totalConsumed).gt(new BN('6100000000'))
@@ -58,10 +60,11 @@ export function createRawTx(
     });
     rawTx.outputsData.push('0x');
   }
-
+  // calculate fee and reconstructor transaction
+  const reRawTx = calculateTxFee(rawTx);
   const signObj = {
     target: scriptToHash(fromLockScript),
-    tx: rawTx,
+    tx: reRawTx,
   };
 
   return signObj;
