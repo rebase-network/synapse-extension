@@ -15,7 +15,7 @@ describe('keyper container manager', () => {
       },
     ]);
     const manager = ContainerManager.getInstance();
-    manager.addContainer({ network: 'testnet', container });
+    manager.addContainer({ name: 'testnet', container });
     const result = manager.getContainer('testnet');
     expect(result).toEqual(container);
   });

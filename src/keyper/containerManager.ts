@@ -1,12 +1,13 @@
 import { Container } from '@keyper/container';
+import { SignatureAlgorithm, LockScript } from '@keyper/specs';
 
 export interface INetworkContainer {
-  network: string;
+  name: string;
   container: Container;
 }
 
 interface IContainer {
-  [network: string]: Container;
+  [name: string]: Container;
 }
 
 export default class Singleton {
@@ -25,14 +26,33 @@ export default class Singleton {
   }
 
   public addContainer(container: INetworkContainer) {
-    this.containers[container.network] = container.container;
+    this.containers[container.name] = container.container;
   }
 
-  public getContainer(network: string) {
-    return this.containers[network];
+  public getContainer(name: string) {
+    return this.containers[name];
   }
 
   public getAllContainers() {
     return this.containers;
+  }
+
+  public get names(): string[] {
+    return Object.keys(this.containers);
+  }
+
+  public addPublicKeyForAllContainers(publicKey: string) {
+    this.names.forEach((name: string) => {
+      this.containers[name].addPublicKey({
+        payload: `0x${publicKey}`,
+        algorithm: SignatureAlgorithm.secp256k1,
+      });
+    });
+  }
+
+  public addLockScriptForAllContainers(lockScript: LockScript) {
+    this.names.forEach((name: string) => {
+      this.containers[name].addLockScript(lockScript);
+    });
   }
 }
