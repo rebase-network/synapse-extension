@@ -28,20 +28,21 @@ function mergeTypedArraysUnsafe(a, b) {
   return c;
 }
 
-class Keccak256LockScript {
+class ItsLockScript {
   public readonly name: string = 'Keccak256';
 
   protected codeHash: string;
 
   protected txHash: string;
 
-  protected hashType: ScriptHashType = 'type';
+  protected hashType: ScriptHashType;
 
-  protected provider: SignProvider = null;
+  protected provider: SignProvider;
 
-  constructor(codeHash: string, txHash: string) {
+  constructor(codeHash: string, txHash: string, hashType: ScriptHashType = 'type') {
     this.codeHash = codeHash;
     this.txHash = txHash;
+    this.hashType = hashType;
   }
 
   public script(publicKey: string): Script {
@@ -119,7 +120,7 @@ class Keccak256LockScript {
   }
 }
 
-const withMixin = CommonLockScript(Keccak256LockScript);
+const withMixin = CommonLockScript(ItsLockScript);
 
 export default withMixin;
 export { withMixin as Keccak256LockScript };

@@ -19,13 +19,14 @@ class ItsLockScript {
 
   protected txHash: string;
 
-  protected hashType: ScriptHashType = 'type';
+  protected hashType: ScriptHashType;
 
-  protected provider: SignProvider = null;
+  protected provider: SignProvider;
 
-  constructor(codeHash: string, txHash: string) {
+  constructor(codeHash: string, txHash: string, hashType: ScriptHashType = 'type') {
     this.codeHash = codeHash;
     this.txHash = txHash;
+    this.hashType = hashType;
   }
 
   public script(publicKey: string): Script {
