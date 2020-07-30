@@ -1,6 +1,6 @@
 import Keccak256LockScript from '../locks/keccak256';
 
-describe('secp256k1 lockscript', () => {
+describe('keccak lockscript', () => {
   const codeHash = '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8';
   const txHash = '0x25635bf587adacf95c9ad302113648f89ecddc2acfe1ea358ea99f715219c4c5';
   const index = '0x0';

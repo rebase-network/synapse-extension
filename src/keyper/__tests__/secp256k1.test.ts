@@ -1,8 +1,15 @@
+import { Secp256k1LockScript as Secp256k1LockScriptOriginal } from '@keyper/container/lib/locks/secp256k1';
 import Secp256k1LockScript from '../locks/secp256k1';
+import LOCKS_INFO from '../locksInfo';
 
 describe('secp256k1 lockscript', () => {
   test('basic', () => {
-    const lock = new Secp256k1LockScript();
+    const lock = new Secp256k1LockScript(
+      LOCKS_INFO.testnet.secp256k1.codeHash,
+      LOCKS_INFO.testnet.secp256k1.txHash,
+      LOCKS_INFO.testnet.secp256k1.hashType,
+      new Secp256k1LockScriptOriginal(),
+    );
     const script = lock.script(
       '0x020ea44dd70b0116ab44ade483609973adf5ce900d7365d988bc5f352b68abe50b',
     );

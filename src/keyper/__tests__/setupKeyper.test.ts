@@ -10,8 +10,7 @@ describe('setup keyper', () => {
     const containerNetworks = Object.keys(containers);
     expect(containerNetworks).toEqual(networks);
     containerNetworks.forEach((network) => {
-      // secp256k1 is included in keyper
-      expect(containers[network].lockScriptSize()).toEqual(2);
+      expect(containers[network].lockScriptSize()).toEqual(3);
     });
   });
 });
