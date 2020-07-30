@@ -3,6 +3,15 @@ import numberToBN from 'number-to-bn';
 import secp256k1 from 'secp256k1';
 import createKeccakHash from 'keccak';
 import * as utils from '@nervosnetwork/ckb-sdk-utils/lib';
+import {
+  ScriptHashType,
+  Script,
+  RawTransaction,
+  Config,
+  SignProvider,
+  SignContext,
+  LockScript,
+} from '@keyper/specs';
 import CommonLockScript from './commonLockScript';
 
 function hashMessage(message) {
@@ -21,22 +30,22 @@ function mergeTypedArraysUnsafe(a, b) {
 }
 
 class Keccak256LockScript {
-  name = 'Keccak256';
+  public readonly name: string = 'Keccak256';
 
-  codeHash: string;
+  protected codeHash: string;
 
-  txHash: string;
+  protected txHash: string;
 
-  hashType = 'type';
+  protected hashType: ScriptHashType = 'type';
 
-  provider = null;
+  protected provider: SignProvider = null;
 
   constructor(codeHash: string, txHash: string) {
     this.codeHash = codeHash;
     this.txHash = txHash;
   }
 
-  script(publicKey) {
+  public script(publicKey: string): Script {
     let pubKey = Buffer.from(utils.hexToBytes(publicKey));
     if (pubKey.length !== 64) {
       pubKey = secp256k1.publicKeyConvert(pubKey, false).slice(1);
@@ -50,7 +59,11 @@ class Keccak256LockScript {
     };
   }
 
-  async sign(context, rawTxParam, configParam = { index: 0, length: -1 }) {
+  public async sign(
+    context: SignContext,
+    rawTxParam: RawTransaction,
+    configParam: Config = { index: 0, length: -1 },
+  ) {
     const rawTx = _.cloneDeep(rawTxParam);
     const config = _.cloneDeep(configParam);
     const txHash = utils.rawTransactionToHash(rawTx);
