@@ -2,8 +2,8 @@ import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 import _ from 'lodash';
 import { KEYSTORE_TYPE } from '../utils/constants';
 import Address, { AddressPrefix } from './address';
-
-const KeyperWallet = require('../keyper/keyperwallet');
+// FIXME
+import KeyperWallet from '../keyper/keyperwallet';
 
 let wallets = [];
 let currentWallet = {};

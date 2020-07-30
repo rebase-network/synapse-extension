@@ -5,6 +5,7 @@ import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 
 import _ from 'lodash';
 import * as Keystore from '../wallet/passwordEncryptor';
+// FIXME
 import { getKeystoreFromWallets } from '../wallet/addKeyperWallet';
 import { getDepFromLockType } from '../utils/deps';
 import { ADDRESS_TYPE_CODEHASH } from '../utils/constants';
@@ -133,7 +134,7 @@ const getAllLockHashesAndMeta = async () => {
   return container.getAllLockHashesAndMeta();
 };
 
-module.exports = {
+export default {
   init,
   generateByPrivateKey,
   accounts,
