@@ -9,14 +9,30 @@ interface IContainer {
   [network: string]: Container;
 }
 
-export default class {
-  containers: IContainer = {};
+export default class Singleton {
+  private static instance: Singleton;
 
-  addContainer(networkContainer: INetworkContainer) {
-    this.containers[networkContainer.network] = networkContainer.container;
+  private containers: IContainer = {};
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  private constructor() {}
+
+  static getInstance(): Singleton {
+    if (!Singleton.instance) {
+      Singleton.instance = new Singleton();
+    }
+    return Singleton.instance;
   }
 
-  getContainer(network: string) {
+  public addContainer(container: INetworkContainer) {
+    this.containers[container.network] = container.container;
+  }
+
+  public getContainer(network: string) {
     return this.containers[network];
+  }
+
+  public getAllContainers() {
+    return this.containers;
   }
 }

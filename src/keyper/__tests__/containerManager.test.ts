@@ -1,6 +1,6 @@
 import { Container } from '@keyper/container';
 import { SignatureAlgorithm } from '@keyper/specs';
-import ContainerManager, { INetworkContainer } from '../ContainerManager';
+import ContainerManager from '../containerManager';
 
 describe('keyper container manager', () => {
   it('should able to add a container', () => {
@@ -14,7 +14,7 @@ describe('keyper container manager', () => {
         },
       },
     ]);
-    const manager = new ContainerManager();
+    const manager = ContainerManager.getInstance();
     manager.addContainer({ network: 'testnet', container });
     const result = manager.getContainer('testnet');
     expect(result).toEqual(container);
