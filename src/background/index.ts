@@ -34,17 +34,11 @@ import { sendToWebPage } from '@background/messageHandlers/proxy';
 import NetworkManager from '@common/networkManager';
 
 NetworkManager.initNetworks();
-/**
- * Listen messages from popup
- */
 
 let wallets = [];
 let currentWallet = {};
 let addressesList = [];
 
-/**
- * Listen messages from popup
- */
 addExternalMessageListener();
 
 chrome.runtime.onMessage.addListener(async (request) => {
@@ -128,7 +122,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const password = request.password.trim();
     // const confirmPassword = request.confirmPassword.trim();
 
-    // 助记词有效性的验证
     const isValidateMnemonic = validateMnemonic(mnemonic);
 
     if (!isValidateMnemonic) {
