@@ -1,32 +1,31 @@
-// const numberToBN = require("number-to-bn");
-// const utils = require("@nervosnetwork/ckb-sdk-utils/lib");
-// const {
-//   SignatureAlgorithm
-// } = require("@keyper/specs/lib");
-
+import _ from 'lodash';
 import numberToBN from 'number-to-bn';
 import * as utils from '@nervosnetwork/ckb-sdk-utils/lib';
-import { SignatureAlgorithm } from '@keyper/specs/lib';
+import {
+  ScriptHashType,
+  Script,
+  RawTransaction,
+  Config,
+  SignProvider,
+  SignContext,
+} from '@keyper/specs';
+import CommonLockScript from './commonLockScript';
 
-class AnyPayLockScript {
-  name = 'AnyPay';
+class ItsLockScript {
+  public readonly name: string = 'AnyPay';
 
-  codeHash = '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b';
+  // codeHash = '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b';
+  protected codeHash: string;
 
-  hashType = 'type';
+  protected txHash: string;
 
-  provider = null;
+  protected hashType: ScriptHashType = 'type';
 
-  deps() {
-    return [
-      {
-        outPoint: {
-          txHash: '0x4f32b3e39bd1b6350d326fdfafdfe05e5221865c3098ae323096f0bfc69e0a8c',
-          index: '0x0',
-        },
-        depType: 'depGroup',
-      },
-    ];
+  protected provider: SignProvider = null;
+
+  constructor(codeHash: string, txHash: string) {
+    this.codeHash = codeHash;
+    this.txHash = txHash;
   }
 
   script(publicKey) {
@@ -38,15 +37,9 @@ class AnyPayLockScript {
     };
   }
 
-  signatureAlgorithm() {
-    return SignatureAlgorithm.secp256k1;
-  }
-
-  async setProvider(provider) {
-    this.provider = provider;
-  }
-
-  async sign(context, rawTx, config = { index: 0, length: -1 }) {
+  async sign(context, rawTxParam, configParam = { index: 0, length: -1 }) {
+    const rawTx = _.cloneDeep(rawTxParam);
+    const config = _.cloneDeep(configParam);
     const txHash = utils.rawTransactionToHash(rawTx);
 
     if (config.length === -1) {
@@ -101,4 +94,7 @@ class AnyPayLockScript {
   }
 }
 
-module.exports = AnyPayLockScript;
+const withMixin = CommonLockScript(ItsLockScript);
+
+export default withMixin;
+export { withMixin as AnypayLockScript };
