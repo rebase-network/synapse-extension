@@ -1,59 +1,15 @@
 import { SignatureAlgorithm } from '@keyper/specs/lib';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils/lib';
 import { scriptToAddress } from '@keyper/specs/lib/address';
-import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
-
-import _ from 'lodash';
 import * as Keystore from '../wallet/passwordEncryptor';
-// FIXME
-import { getKeystoreFromWallets } from '../wallet/addKeyperWallet';
-import { getDepFromLockType } from '../utils/deps';
-import { ADDRESS_TYPE_CODEHASH } from '../utils/constants';
-import { sign as signBySecp256k1 } from './sign';
 
-const { Container } = require('@keyper/container/lib');
-const { Secp256k1LockScript } = require('@keyper/container/lib/locks/secp256k1');
-const { AnyPayLockScript } = require('@keyper/container/lib/locks/anyone-can-pay');
-const Keccak256LockScript = require('./locks/keccak256');
+import init from './setupKeyper';
 
 // eslint-disable-next-line import/order
 const EC = require('elliptic').ec;
 
 let container;
 const addRules = [];
-
-const init = () => {
-  container = new Container([
-    {
-      algorithm: SignatureAlgorithm.secp256k1,
-      provider: {
-        async sign(context, message) {
-          const key = await getKeystoreFromWallets(context.publicKey);
-          if (!key) {
-            throw new Error(`no key for address: ${context.address}`);
-          }
-          const privateKeyBuffer = await Keystore.decrypt(key, context.password);
-          const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
-          const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
-
-          const signature = signBySecp256k1(privateKey, message);
-          return signature;
-        },
-      },
-    },
-  ]);
-  container.addLockScript(
-    new Secp256k1LockScript(
-      ADDRESS_TYPE_CODEHASH.Secp256k1,
-      'type',
-      getDepFromLockType('Secp256k1'),
-    ),
-  );
-  container.addLockScript(new Keccak256LockScript());
-  container.addLockScript(
-    new AnyPayLockScript(ADDRESS_TYPE_CODEHASH.AnyPay, 'type', getDepFromLockType('AnyPay')),
-  );
-};
 
 const generateKeystore = async (privateKey, password) => {
   const privateKeyBuffer = Buffer.from(privateKey, 'hex');
@@ -109,16 +65,7 @@ const accounts = async (networkPrefix: string) => {
   return result;
 };
 
-async function reCreateCurrentContainer(publicKey) {
-  init();
-  setUpContainer(publicKey);
-}
-
-const signTx = async (lockHash, password, rawTx, config, publicKey) => {
-  if (_.isEmpty(container)) {
-    await reCreateCurrentContainer(publicKey);
-  }
-
+const signTx = async (lockHash, password, rawTx, config) => {
   const tx = await container.sign(
     {
       lockHash,
