@@ -124,6 +124,6 @@ export async function getKeystoreFromWallets(publicKey) {
   return ks;
 }
 
-export async function signTx(lockHash, password, rawTransaction, config, publicKey) {
-  return KeyperWallet.signTx(lockHash, password, rawTransaction, config, publicKey);
+export async function signTx(lockHash, password, rawTransaction, config) {
+  return KeyperWallet.signTx(lockHash, password, rawTransaction, config);
 }
