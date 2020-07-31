@@ -14,8 +14,11 @@ import { getTxHistories } from '@utils/apis';
 import {
   addKeyperWallet,
   getAddressesList,
-  getCurrentWallet,
   getWallets,
+  getCurrentWallet,
+  setCurrentWallet,
+  setWallets,
+  setAddressesList,
 } from '@src/keyper/keyperwallet';
 import * as WalletKeystore from '@src/wallet/keystore';
 import * as PasswordKeystore from '@src/wallet/passwordEncryptor';
@@ -33,10 +36,6 @@ import { sendToWebPage } from '@background/messageHandlers/proxy';
 import NetworkManager from '@common/networkManager';
 
 NetworkManager.initNetworks();
-
-let wallets = [];
-let currentWallet = {};
-let addressesList = [];
 
 addExternalMessageListener();
 
@@ -77,27 +76,24 @@ chrome.runtime.onMessage.addListener(async (request) => {
       .derivePath(Address.pathForReceiving(0))
       .privateKey.toString('hex');
     const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
-
+    const addressesList = await getAddressesList();
     // check the keystore exist or not
     const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
     if (!_.isEmpty(addressesObj)) {
       const { addresses } = addressesObj;
 
-      currentWallet = {
+      const currentWallet = {
         publicKey,
         script: addresses[0].script,
         address: addresses[0].address,
         type: addresses[0].type,
         lock: addresses[0].lock,
       };
+      await setCurrentWallet(currentWallet);
     } else {
-      // Add Keyper to Synapse
+      // Add Keyper
       await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore, prefix);
-
-      wallets = await getWallets();
-      addressesList = await getAddressList();
-      currentWallet = await getCurrentWallet();
     }
 
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
@@ -147,25 +143,23 @@ chrome.runtime.onMessage.addListener(async (request) => {
       .privateKey.toString('hex');
     const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
 
+    const addressesList = await getAddressesList();
     // check the keystore exist or not
     const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
 
     if (!_.isEmpty(addressesObj)) {
       const { addresses } = addressesObj;
-      currentWallet = {
+      const currentWallet = {
         publicKey,
         script: addresses[0].script,
         address: addresses[0].address,
         type: addresses[0].type,
         lock: addresses[0].lock,
       };
+      await setCurrentWallet(currentWallet);
     } else {
-      // Add Keyper to Synapse
+      // Add Keyper
       await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore, prefix);
-
-      wallets = await getWallets();
-      addressesList = await getAddressList();
-      currentWallet = await getCurrentWallet();
     }
 
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
@@ -534,28 +528,26 @@ chrome.runtime.onMessage.addListener(async (request) => {
       return;
     }
 
+    const addressesList = await getAddressesList();
     // check the keystore exist or not by publicKey
     const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
     if (!_.isEmpty(addressesObj)) {
       const { addresses } = addressesObj;
 
-      currentWallet = {
+      const currentWallet = {
         publicKey,
         script: addresses[0].script,
         address: addresses[0].address,
         type: addresses[0].type,
         lock: addresses[0].lock,
       };
+      await setCurrentWallet(currentWallet);
     } else {
       // 'No '0x'
       if (privateKey.startsWith('0x')) {
         privateKey = privateKey.substr(2);
       }
       await addKeyperWallet(privateKey, password, '', '', prefix);
-
-      wallets = await getWallets();
-      addressesList = await getAddressList();
-      currentWallet = await getCurrentWallet();
     }
 
     chrome.runtime.sendMessage({
@@ -617,24 +609,22 @@ chrome.runtime.onMessage.addListener(async (request) => {
     // 03 - get the private by input keystore
     const privateKey = await WalletKeystore.decrypt(keystore, kPassword);
     const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
+    const addressesList = await getAddressesList();
     // check the keystore exist or not by the publicKey
     const addressesObj = findInAddressesListByPublicKey(publicKey, addressesList);
     if (!_.isEmpty(addressesObj)) {
       const { addresses } = addressesObj;
 
-      currentWallet = {
+      const currentWallet = {
         publicKey,
         script: addresses[0].script,
         address: addresses[0].address,
         type: addresses[0].type,
         lock: addresses[0].lock,
       };
+      await setCurrentWallet(currentWallet);
     } else {
       await addKeyperWallet(privateKey, uPassword, '', '', prefix);
-
-      wallets = await getWallets();
-      addressesList = await getAddressList();
-      currentWallet = await getCurrentWallet();
     }
 
     chrome.runtime.sendMessage({
