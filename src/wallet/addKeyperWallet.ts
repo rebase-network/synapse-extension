@@ -4,6 +4,7 @@ import { KEYSTORE_TYPE } from '../utils/constants';
 import Address, { AddressPrefix } from './address';
 // FIXME
 import KeyperWallet from '../keyper/keyperwallet';
+import init from '../keyper/setupKeyper';
 
 let wallets = [];
 let currentWallet = {};
@@ -17,7 +18,7 @@ export async function addKeyperWallet(
   rootKeystore,
   networkPrefix,
 ) {
-  await KeyperWallet.init();
+  init();
 
   const keystore = await KeyperWallet.generateKeystore(privateKey, password);
   // prefix '0x'
