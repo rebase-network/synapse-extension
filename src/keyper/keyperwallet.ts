@@ -8,9 +8,7 @@ import ContainerManager from './containerManager';
 import init from './setupKeyper';
 
 import { KEYSTORE_TYPE } from '../utils/constants';
-import Address, { AddressPrefix } from './address';
-// FIXME
-import KeyperWallet from './keyperwallet';
+import Address, { AddressPrefix } from '../wallet/address';
 
 // eslint-disable-next-line import/order
 const EC = require('elliptic').ec;
@@ -59,7 +57,7 @@ const generateByPrivateKey = (privateKey, password) => {
   return ks;
 };
 
-const accounts = async (networkPrefix: string) => {
+const getAccounts = async (networkPrefix: string) => {
   const scripts = await container.getAllLockHashesAndMeta();
   const result = [];
 
@@ -103,7 +101,7 @@ async function addKeyperWallet(privateKey, password, entropyKeystore, rootKeysto
   setUpContainer(publicKey.substr(2));
 
   // Keyper accounts
-  const accounts = await accounts(networkPrefix);
+  const accounts = await getAccounts(networkPrefix);
 
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
   await saveWallets(privateKey, keystore, accounts, entropyKeystore, rootKeystore);
