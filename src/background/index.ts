@@ -96,7 +96,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       // Add Keyper to Synapse
       await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore, prefix);
 
-      wallets = getWallets();
+      wallets = await getWallets();
       addressesList = getAddressesList();
       currentWallet = getCurrentWallet();
     }
@@ -166,7 +166,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       // Add Keyper to Synapse
       await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore, prefix);
 
-      wallets = getWallets();
+      wallets = await getWallets();
       addressesList = getAddressesList();
       currentWallet = getCurrentWallet();
     }
@@ -559,7 +559,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       }
       await addKeyperWallet(privateKey, password, '', '', prefix);
 
-      wallets = getWallets();
+      wallets = await getWallets();
       addressesList = getAddressesList();
       currentWallet = getCurrentWallet();
     }
@@ -640,7 +640,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     } else {
       await addKeyperWallet(privateKey, uPassword, '', '', prefix);
 
-      wallets = getWallets();
+      wallets = await getWallets();
       addressesList = getAddressesList();
       currentWallet = getCurrentWallet();
     }

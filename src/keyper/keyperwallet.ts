@@ -2,7 +2,6 @@ import { SignatureAlgorithm } from '@keyper/specs/lib';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils/lib';
 import { scriptToAddress } from '@keyper/specs/lib/address';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
-import _ from 'lodash';
 import * as Keystore from '../wallet/passwordEncryptor';
 import ContainerManager from './containerManager';
 import init from './setupKeyper';
@@ -10,7 +9,6 @@ import init from './setupKeyper';
 import { KEYSTORE_TYPE } from '../utils/constants';
 import Address, { AddressPrefix } from '../wallet/address';
 
-let wallets = [];
 let currentWallet = {};
 const addressesList = [];
 
@@ -90,13 +88,10 @@ async function addKeyperWallet(privateKey, password, entropyKeystore, rootKeysto
   return accounts;
 }
 
-async function getWalletsInStorage() {
+async function getWallets() {
   const walletsObj = await browser.storage.local.get('wallets');
 
-  if (Array.isArray(walletsObj.wallets)) {
-    wallets = walletsObj.wallets;
-  }
-  return wallets;
+  return walletsObj.wallets || [];
 }
 
 // privateKey Not contain '0x'prefix
@@ -112,11 +107,7 @@ async function saveWallets(
   const blake160 = addressObj.getBlake160(); // publicKeyHash
   const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
 
-  wallets = await getWalletsInStorage();
-
-  if (_.isEmpty(wallets)) {
-    wallets = [];
-  }
+  const oldWallets = await getWallets();
 
   const walletCommon = {
     publicKey,
@@ -127,7 +118,10 @@ async function saveWallets(
     keystoreType: KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE,
   };
 
-  wallets.push(walletCommon);
+  const newWallets = oldWallets.push(walletCommon);
+  await browser.storage.local.set({
+    wallets: newWallets,
+  });
 
   const addressesObj = {
     publicKey,
@@ -145,10 +139,6 @@ async function saveWallets(
   };
 
   currentWallet = currentAddress;
-}
-
-function getWallets() {
-  return wallets;
 }
 
 function getAddressesList() {
