@@ -1,5 +1,4 @@
 import { SignatureAlgorithm } from '@keyper/specs/lib';
-import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils/lib';
 import { scriptToAddress } from '@keyper/specs/lib/address';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 import * as Keystore from '../wallet/passwordEncryptor';
@@ -10,7 +9,6 @@ import Address, { AddressPrefix } from '../wallet/address';
 
 // FIXME: need to add mainnet support
 const container = ContainerManager.getInstance().getContainer('testnet');
-const addRules = [];
 
 const generateKeystore = async (privateKey, password) => {
   const privateKeyBuffer = Buffer.from(privateKey, 'hex');
@@ -22,19 +20,6 @@ const setUpContainer = (publicKey) => {
   container.addPublicKey({
     payload: `0x${publicKey}`,
     algorithm: SignatureAlgorithm.secp256k1,
-  });
-
-  const scripts = container.getScripsByPublicKey({
-    payload: `0x${publicKey}`,
-    algorithm: SignatureAlgorithm.secp256k1,
-  });
-
-  scripts.forEach((script) => {
-    const addRule = {
-      name: 'LockHash',
-      data: scriptToHash(script),
-    };
-    addRules.push(addRule);
   });
 };
 
