@@ -1,17 +1,18 @@
 import setupKeyper from '../setupKeyper';
 import ContainerManager from '../containerManager';
+import { NETWORKS } from '../locksInfo';
 
 describe('setup keyper', () => {
-  const networks = ['testnet', 'mainnet'];
   it('should be able to setup keyper for mainnet and testnet', () => {
     setupKeyper();
+
     const manager = ContainerManager.getInstance();
     const containers = manager.getAllContainers();
-    const containerNetworks = manager.names;
+    const containerNames = manager.names;
 
-    expect(containerNetworks).toEqual(networks);
+    expect(containerNames).toEqual(NETWORKS);
 
-    containerNetworks.forEach((network) => {
+    containerNames.forEach((network) => {
       expect(containers[network].lockScriptSize()).toEqual(3);
     });
   });

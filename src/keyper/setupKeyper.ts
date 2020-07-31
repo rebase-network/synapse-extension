@@ -7,7 +7,7 @@ import { Keccak256LockScript, AnypayLockScript, Secp256k1LockScript } from './lo
 import LOCKS_INFO, { NETWORKS } from './locksInfo';
 import { getKeystoreFromWallets } from '../wallet/addKeyperWallet';
 import * as Keystore from '../wallet/passwordEncryptor';
-import { sign as signBySecp256k1 } from './sign';
+import { sign as signWithSecp256k1 } from './sign';
 
 const containerFactory = {
   createContainer: () => {
@@ -24,7 +24,7 @@ const containerFactory = {
             const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
             const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
 
-            const signature = signBySecp256k1(privateKey, message);
+            const signature = signWithSecp256k1(privateKey, message);
             return signature;
           },
         },
