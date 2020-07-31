@@ -13,8 +13,9 @@ export default {
       depType: 'depGroup',
     },
     keccak256: {
-      codeHash: '0x0',
+      codeHash: '0xa5b896894539829f5e7c5902f0027511f94c70fa2406d509e7c6d1df76b06f08',
       hashType: 'code' as ScriptHashType,
+      // TODO
       txHash: '0x0',
       depType: 'depGroup',
     },
@@ -33,8 +34,9 @@ export default {
       depType: 'depGroup',
     },
     keccak256: {
-      codeHash: '0x0',
+      codeHash: '0xa5b896894539829f5e7c5902f0027511f94c70fa2406d509e7c6d1df76b06f08',
       hashType: 'code' as ScriptHashType,
+      // TODO
       txHash: '0x0',
       depType: 'code',
     },
