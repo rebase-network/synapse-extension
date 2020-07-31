@@ -3,7 +3,7 @@ import { scriptToAddress } from '@keyper/specs/lib/address';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 import * as Keystore from '../wallet/passwordEncryptor';
 import ContainerManager from './containerManager';
-import init from './setupKeyper';
+import setupKeyper from './setupKeyper';
 import { KEYSTORE_TYPE } from '../utils/constants';
 import Address, { AddressPrefix } from '../wallet/address';
 
@@ -52,7 +52,7 @@ const signTx = async (lockHash, password, rawTx, config) => {
 
 // privateKey No '0x'
 async function addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore, networkPrefix) {
-  init();
+  setupKeyper();
 
   const keystore = await generateKeystore(privateKey, password);
   // prefix '0x'
