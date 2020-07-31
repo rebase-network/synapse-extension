@@ -4,7 +4,7 @@ import { SignatureAlgorithm } from '@keyper/specs';
 import * as Keystore from '../wallet/passwordEncryptor';
 import { sign as signWithSecp256k1 } from './sign';
 
-async function getWalletsInStorage() {
+export async function getWalletsInStorage() {
   const walletsObj = await browser.storage.local.get('wallets');
 
   if (Array.isArray(walletsObj.wallets)) {

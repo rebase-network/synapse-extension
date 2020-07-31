@@ -1,7 +1,7 @@
-import { getWalletsInStorage } from '../addKeyperWallet';
-import { wallets as walletsSample } from '../fixtures/wallets';
+import { getWalletsInStorage } from '../containerFactory';
+import { wallets as walletsSample } from '../../wallet/fixtures/wallets';
 
-describe('add keyper wallet', () => {
+describe('keyper container factory', () => {
   it('should be able to set wallets to storage', async () => {
     const { wallets } = await browser.storage.local.get('wallets');
 
