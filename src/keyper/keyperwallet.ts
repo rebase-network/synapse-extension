@@ -9,7 +9,6 @@ import init from './setupKeyper';
 import { KEYSTORE_TYPE } from '../utils/constants';
 import Address, { AddressPrefix } from '../wallet/address';
 
-let currentWallet = {};
 const addressesList = [];
 
 // FIXME: need to add mainnet support
@@ -130,7 +129,7 @@ async function saveWallets(
 
   addressesList.push(addressesObj);
 
-  const currentAddress = {
+  const currentWallet = {
     publicKey,
     script: accounts[0].script,
     address: accounts[0].address,
@@ -138,15 +137,17 @@ async function saveWallets(
     lock: accounts[0].lock,
   };
 
-  currentWallet = currentAddress;
+  await browser.storage.local.set({
+    currentWallet,
+  });
 }
 
 function getAddressesList() {
   return addressesList;
 }
 
-function getCurrentWallet() {
-  return currentWallet;
+async function getCurrentWallet() {
+  return browser.storage.local.get('currentWallet');
 }
 
 export { signTx, addKeyperWallet, getWallets, getAddressesList, getCurrentWallet };

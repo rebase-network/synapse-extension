@@ -98,7 +98,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
       wallets = await getWallets();
       addressesList = getAddressesList();
-      currentWallet = getCurrentWallet();
+      currentWallet = await getCurrentWallet();
     }
 
     saveToStorage(wallets, currentWallet, addressesList);
@@ -168,7 +168,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
       wallets = await getWallets();
       addressesList = getAddressesList();
-      currentWallet = getCurrentWallet();
+      currentWallet = await getCurrentWallet();
     }
 
     // 002-saveToStorage
@@ -561,7 +561,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
       wallets = await getWallets();
       addressesList = getAddressesList();
-      currentWallet = getCurrentWallet();
+      currentWallet = await getCurrentWallet();
     }
 
     saveToStorage(wallets, currentWallet, addressesList);
@@ -642,7 +642,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
       wallets = await getWallets();
       addressesList = getAddressesList();
-      currentWallet = getCurrentWallet();
+      currentWallet = await getCurrentWallet();
     }
     // 002-
     saveToStorage(wallets, currentWallet, addressesList);
