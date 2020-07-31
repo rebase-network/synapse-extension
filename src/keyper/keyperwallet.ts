@@ -122,7 +122,7 @@ async function saveWallets(
   const blake160 = addressObj.getBlake160(); // publicKeyHash
   const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
 
-  const oldWallets = await getWallets();
+  const wallets = await getWallets();
 
   const walletCommon = {
     publicKey,
@@ -133,16 +133,16 @@ async function saveWallets(
     keystoreType: KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE,
   };
 
-  const wallets = oldWallets.push(walletCommon);
+  wallets.push(walletCommon);
 
   const addressesObj = {
     publicKey,
     addresses: accounts,
   };
 
-  const oldAddressesList = await getAddressesList();
+  const addressesList = await getAddressesList();
 
-  const addressesList = oldAddressesList.push(addressesObj);
+  addressesList.push(addressesObj);
 
   const currentWallet = {
     publicKey,
