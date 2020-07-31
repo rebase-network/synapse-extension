@@ -13,7 +13,7 @@ import { createScriptObj, signTxFromMsg } from '@background/transaction';
 import { getTxHistories } from '@utils/apis';
 import {
   addKeyperWallet,
-  getAddressList,
+  getAddressesList,
   getCurrentWallet,
   getWallets,
 } from '@src/keyper/keyperwallet';

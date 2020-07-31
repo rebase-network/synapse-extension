@@ -90,7 +90,7 @@ async function getWallets() {
   return walletsObj.wallets || [];
 }
 
-async function getAddressList() {
+async function getAddressesList() {
   const { addressesList = [] } = await browser.storage.local.get('addressesList');
   return addressesList;
 }
@@ -134,9 +134,9 @@ async function saveWallets(
     addresses: accounts,
   };
 
-  const oldAddressList = await getAddressList();
+  const oldAddressesList = await getAddressesList();
 
-  const addressesList = oldAddressList.push(addressesObj);
+  const addressesList = oldAddressesList.push(addressesObj);
 
   browser.storage.local.set({
     addressesList,
@@ -155,4 +155,4 @@ async function saveWallets(
   });
 }
 
-export { signTx, addKeyperWallet, getWallets, getAddressList, getCurrentWallet };
+export { signTx, addKeyperWallet, getWallets, getAddressesList, getCurrentWallet };
