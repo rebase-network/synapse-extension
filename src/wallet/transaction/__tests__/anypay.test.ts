@@ -3,9 +3,9 @@ import { addressToScript } from '@keyper/specs';
 import CKB from '@nervosnetwork/ckb-sdk-core';
 import { getUnspentCells } from '@utils/apis';
 import configService from '@src/config';
+import { bobAddresses, aliceAddresses } from '@src/test/fixture/address';
+import { anypayDep } from '@src/test/fixture/deps';
 import { createRawTx } from '../txGenerator';
-import { bobAddresses, aliceAddresses } from '../../../test/fixture/address';
-import { anypayDep } from '../../../test/fixture/deps';
 
 jest.mock('@utils/apis');
 
