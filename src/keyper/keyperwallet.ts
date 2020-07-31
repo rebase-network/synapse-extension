@@ -1,4 +1,3 @@
-import { SignatureAlgorithm } from '@keyper/specs/lib';
 import { scriptToAddress } from '@keyper/specs/lib/address';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 import * as Keystore from '../wallet/passwordEncryptor';
@@ -67,9 +66,13 @@ export async function addKeyperWallet(
 }
 
 export const getWallets = async () => {
-  const walletsObj = await browser.storage.local.get('wallets');
+  const { wallets = [] } = await browser.storage.local.get('wallets');
+  return wallets;
+};
 
-  return walletsObj.wallets || [];
+export const getPublicKeys = async () => {
+  const { publicKeys = [] } = await browser.storage.local.get('publicKeys');
+  return publicKeys;
 };
 
 export const getAddressesList = async () => {
@@ -82,11 +85,6 @@ export const getCurrentWallet = async () => {
   return currentWallet;
 };
 
-export const setWallets = async (wallets) => {
-  await browser.storage.local.set({
-    wallets,
-  });
-};
 export const setCurrentWallet = async (currentWallet) => {
   await browser.storage.local.set({
     currentWallet,
@@ -111,8 +109,12 @@ async function saveWallets(
   const blake160 = addressObj.getBlake160(); // publicKeyHash
   const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
 
-  const wallets = await getWallets();
+  // public key
+  const publicKeys = await getPublicKeys();
+  publicKeys.push(publicKey);
 
+  // wallets
+  const wallets = await getWallets();
   const walletCommon = {
     publicKey,
     blake160,
@@ -121,18 +123,17 @@ async function saveWallets(
     keystore,
     keystoreType: KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE,
   };
-
   wallets.push(walletCommon);
 
+  // addresses
   const addressesObj = {
     publicKey,
     addresses: accounts,
   };
-
   const addressesList = await getAddressesList();
-
   addressesList.push(addressesObj);
 
+  // current wallet
   const currentWallet = {
     publicKey,
     script: accounts[0].script,
@@ -141,7 +142,9 @@ async function saveWallets(
     lock: accounts[0].lock,
   };
 
+  // save all to storage
   browser.storage.local.set({
+    publicKeys,
     wallets,
     addressesList,
     currentWallet,
