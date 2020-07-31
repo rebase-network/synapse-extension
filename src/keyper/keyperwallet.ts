@@ -10,13 +10,11 @@ import init from './setupKeyper';
 import { KEYSTORE_TYPE } from '../utils/constants';
 import Address, { AddressPrefix } from '../wallet/address';
 
-// eslint-disable-next-line import/order
-const EC = require('elliptic').ec;
-
 let wallets = [];
 let currentWallet = {};
 const addressesList = [];
 
+// FIXME: need to add mainnet support
 const container = ContainerManager.getInstance().getContainer('testnet');
 const addRules = [];
 
@@ -46,17 +44,6 @@ const setUpContainer = (publicKey) => {
   });
 };
 
-const generateByPrivateKey = (privateKey, password) => {
-  const ec = new EC('secp256k1');
-  const key = ec.keyFromPrivate(privateKey);
-  const publicKey = Buffer.from(key.getPublic().encodeCompressed()).toString('hex');
-  const ks = generateKeystore(privateKey, password);
-
-  setUpContainer(publicKey);
-
-  return ks;
-};
-
 const getAccounts = async (networkPrefix: string) => {
   const scripts = await container.getAllLockHashesAndMeta();
   const result = [];
@@ -84,10 +71,6 @@ const signTx = async (lockHash, password, rawTx, config) => {
     config,
   );
   return tx;
-};
-
-const getAllLockHashesAndMeta = async () => {
-  return container.getAllLockHashesAndMeta();
 };
 
 // privateKey No '0x'
