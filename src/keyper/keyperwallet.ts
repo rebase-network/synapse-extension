@@ -28,7 +28,7 @@ const setUpContainer = (publicKey) => {
     algorithm: SignatureAlgorithm.secp256k1,
   });
 
-  scripts.forEach(async (script) => {
+  scripts.forEach((script) => {
     const addRule = {
       name: 'LockHash',
       data: scriptToHash(script),
@@ -37,7 +37,7 @@ const setUpContainer = (publicKey) => {
   });
 };
 
-const generateByPrivateKey = async (privateKey, password) => {
+const generateByPrivateKey = (privateKey, password) => {
   const ec = new EC('secp256k1');
   const key = ec.keyFromPrivate(privateKey);
   const publicKey = Buffer.from(key.getPublic().encodeCompressed()).toString('hex');
