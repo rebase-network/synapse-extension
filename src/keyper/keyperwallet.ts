@@ -2,13 +2,13 @@ import { SignatureAlgorithm } from '@keyper/specs/lib';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils/lib';
 import { scriptToAddress } from '@keyper/specs/lib/address';
 import * as Keystore from '../wallet/passwordEncryptor';
-
+import ContainerManager from './containerManager';
 import init from './setupKeyper';
 
 // eslint-disable-next-line import/order
 const EC = require('elliptic').ec;
 
-let container;
+const container = ContainerManager.getInstance().getContainer('testnet');
 const addRules = [];
 
 const generateKeystore = async (privateKey, password) => {
