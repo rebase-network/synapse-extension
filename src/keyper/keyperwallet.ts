@@ -84,21 +84,37 @@ async function addKeyperWallet(privateKey, password, entropyKeystore, rootKeysto
   return accounts;
 }
 
-async function getWallets() {
+const getWallets = async () => {
   const walletsObj = await browser.storage.local.get('wallets');
 
   return walletsObj.wallets || [];
-}
+};
 
-async function getAddressesList() {
+const getAddressesList = async () => {
   const { addressesList = [] } = await browser.storage.local.get('addressesList');
   return addressesList;
-}
+};
 
-async function getCurrentWallet() {
+const getCurrentWallet = async () => {
   const { currentWallet = {} } = await browser.storage.local.get('currentWallet');
   return currentWallet;
-}
+};
+
+const setWallets = async (wallets) => {
+  await browser.storage.local.set({
+    wallets,
+  });
+};
+const setCurrentWallet = async (currentWallet) => {
+  await browser.storage.local.set({
+    currentWallet,
+  });
+};
+const setAddressesList = async (addressesList) => {
+  await browser.storage.local.set({
+    addressesList,
+  });
+};
 
 // privateKey Not contain '0x'prefix
 async function saveWallets(
@@ -125,9 +141,6 @@ async function saveWallets(
   };
 
   const wallets = oldWallets.push(walletCommon);
-  browser.storage.local.set({
-    wallets,
-  });
 
   const addressesObj = {
     publicKey,
@@ -138,10 +151,6 @@ async function saveWallets(
 
   const addressesList = oldAddressesList.push(addressesObj);
 
-  browser.storage.local.set({
-    addressesList,
-  });
-
   const currentWallet = {
     publicKey,
     script: accounts[0].script,
@@ -151,8 +160,19 @@ async function saveWallets(
   };
 
   browser.storage.local.set({
+    wallets,
+    addressesList,
     currentWallet,
   });
 }
 
-export { signTx, addKeyperWallet, getWallets, getAddressesList, getCurrentWallet };
+export {
+  signTx,
+  addKeyperWallet,
+  getWallets,
+  getAddressesList,
+  getCurrentWallet,
+  setWallets,
+  setCurrentWallet,
+  setAddressesList,
+};
