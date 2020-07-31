@@ -6,7 +6,7 @@ import _ from 'lodash';
 import { getDepFromLockType } from '@utils/deps';
 import { getUnspentCells } from '@utils/apis';
 import getCKB from '@utils/ckb';
-import { signTx } from '@src/wallet/addKeyperWallet';
+import { signTx } from '@src/keyper/keyperwallet';
 import { createRawTx, createAnyPayRawTx, createUpdateDataRawTx } from './txGenerator';
 
 export const generateTx = async (

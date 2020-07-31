@@ -16,7 +16,7 @@ import {
   getAddressesList,
   getCurrentWallet,
   getWallets,
-} from '@src/wallet/addKeyperWallet';
+} from '@src/keyper/keyperwallet';
 import * as WalletKeystore from '@src/wallet/keystore';
 import * as PasswordKeystore from '@src/wallet/passwordEncryptor';
 import _ from 'lodash';

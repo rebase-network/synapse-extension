@@ -1,4 +1,4 @@
-import { signTx } from '@src/wallet/addKeyperWallet';
+import { signTx } from '@src/keyper/keyperwallet';
 
 const { Secp256k1LockScript } = require('@keyper/container/lib/locks/secp256k1');
 const Keccak256LockScript = require('../keyper/locks/keccak256');

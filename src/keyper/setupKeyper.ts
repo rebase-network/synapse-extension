@@ -5,7 +5,7 @@ import { Secp256k1LockScript as Secp256k1LockScriptOriginal } from '@keyper/cont
 import ContainerManager from './containerManager';
 import { Keccak256LockScript, AnypayLockScript, Secp256k1LockScript } from './locks';
 import LOCKS_INFO, { NETWORKS } from './locksInfo';
-import { getKeystoreFromWallets } from '../wallet/addKeyperWallet';
+import { getKeystoreFromWallets } from './keyperwallet';
 import * as Keystore from '../wallet/passwordEncryptor';
 import { sign as signWithSecp256k1 } from './sign';
 
