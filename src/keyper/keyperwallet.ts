@@ -39,7 +39,7 @@ const getAccounts = async (networkPrefix: string) => {
   return result;
 };
 
-const signTx = async (lockHash, password, rawTx, config) => {
+export const signTx = async (lockHash, password, rawTx, config) => {
   const container = await containerManager.getCurrentContainer();
   const tx = await container.sign(
     {
@@ -53,14 +53,20 @@ const signTx = async (lockHash, password, rawTx, config) => {
 };
 
 // privateKey No '0x'
-async function addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore, networkPrefix) {
+export async function addKeyperWallet(
+  privateKey,
+  password,
+  entropyKeystore,
+  rootKeystore,
+  networkPrefix,
+) {
   setupKeyper();
 
   const keystore = await generateKeystore(privateKey, password);
   // prefix '0x'
   const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
   // params publicKey No '0x'
-  setUpContainer(publicKey.substr(2));
+  await setUpContainer(publicKey.substr(2));
 
   // Keyper accounts
   const accounts = await getAccounts(networkPrefix);
@@ -71,33 +77,33 @@ async function addKeyperWallet(privateKey, password, entropyKeystore, rootKeysto
   return accounts;
 }
 
-const getWallets = async () => {
+export const getWallets = async () => {
   const walletsObj = await browser.storage.local.get('wallets');
 
   return walletsObj.wallets || [];
 };
 
-const getAddressesList = async () => {
+export const getAddressesList = async () => {
   const { addressesList = [] } = await browser.storage.local.get('addressesList');
   return addressesList;
 };
 
-const getCurrentWallet = async () => {
+export const getCurrentWallet = async () => {
   const { currentWallet = {} } = await browser.storage.local.get('currentWallet');
   return currentWallet;
 };
 
-const setWallets = async (wallets) => {
+export const setWallets = async (wallets) => {
   await browser.storage.local.set({
     wallets,
   });
 };
-const setCurrentWallet = async (currentWallet) => {
+export const setCurrentWallet = async (currentWallet) => {
   await browser.storage.local.set({
     currentWallet,
   });
 };
-const setAddressesList = async (addressesList) => {
+export const setAddressesList = async (addressesList) => {
   await browser.storage.local.set({
     addressesList,
   });
@@ -152,14 +158,3 @@ async function saveWallets(
     currentWallet,
   });
 }
-
-export {
-  signTx,
-  addKeyperWallet,
-  getWallets,
-  getAddressesList,
-  getCurrentWallet,
-  setWallets,
-  setCurrentWallet,
-  setAddressesList,
-};
