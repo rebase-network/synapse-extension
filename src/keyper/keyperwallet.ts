@@ -46,17 +46,15 @@ const setUpContainer = (publicKey) => {
 
 const getAccounts = async (networkPrefix: string) => {
   const scripts = await container.getAllLockHashesAndMeta();
-  const result = [];
-
-  for (const script of scripts) {
-    result.push({
+  const result = scripts.map((script) => {
+    return {
       address: scriptToAddress(script.meta.script, { networkPrefix, short: true }),
       script: script.meta.script,
       type: script.meta.name,
       lock: script.hash,
       amount: 0,
-    });
-  }
+    };
+  });
 
   return result;
 };
