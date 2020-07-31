@@ -9,7 +9,7 @@ export default {
     secp256k1: {
       codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
       hashType: 'type' as ScriptHashType,
-      txHash: '0x84dcb061adebff4ef93d57c975ba9058a9be939d79ea12ee68003f6492448890',
+      txHash: '0xf8de3bb47d055cdf460d93a2a6e1b05f7432f9777c8c474abf4eec1d4aee5d37',
       depType: 'depGroup',
     },
     keccak256: {
