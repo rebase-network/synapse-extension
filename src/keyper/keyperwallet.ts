@@ -118,7 +118,6 @@ async function getWalletsInStorage() {
   return wallets;
 }
 
-// 3- Type
 // privateKey Not contain '0x'prefix
 async function saveWallets(
   privateKey,
@@ -179,26 +178,6 @@ function getCurrentWallet() {
   return currentWallet;
 }
 
-// eslint-disable-next-line no-shadow
-function findKeystoreInWallets(wallets, publicKey) {
-  function findKeystore(wallet) {
-    return wallet.publicKey === publicKey;
-  }
-  const wallet = wallets.find(findKeystore);
-  return wallet.keystore;
-}
-
-async function getKeystoreFromWallets(publicKey) {
-  let nPublicKey = publicKey;
-  if (!publicKey.startsWith('0x')) {
-    nPublicKey = `0x${publicKey}`;
-  }
-  wallets = await getWalletsInStorage();
-  const ks = findKeystoreInWallets(wallets, nPublicKey);
-  // keys[nPublicKey]
-  return ks;
-}
-
 export {
   init,
   generateByPrivateKey,
@@ -208,10 +187,8 @@ export {
   setUpContainer,
   container,
   addKeyperWallet,
-  getWalletsInStorage,
   saveWallets,
   getWallets,
   getAddressesList,
   getCurrentWallet,
-  getKeystoreFromWallets,
 };
