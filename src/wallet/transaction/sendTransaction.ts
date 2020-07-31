@@ -6,8 +6,8 @@ import _ from 'lodash';
 import { getDepFromLockType } from '@utils/deps';
 import { getUnspentCells } from '@utils/apis';
 import getCKB from '@utils/ckb';
-import { createRawTx, createAnyPayRawTx, createUpdateDataRawTx } from './txGenerator';
 import { signTx } from '@src/wallet/addKeyperWallet';
+import { createRawTx, createAnyPayRawTx, createUpdateDataRawTx } from './txGenerator';
 
 export const generateTx = async (
   fromAddress,
@@ -18,7 +18,6 @@ export const generateTx = async (
   lockType,
   toDataHex?,
 ) => {
-
   const params = {
     capacity: BigInt(toAmount).toString(),
   };
@@ -215,7 +214,7 @@ export const sendUpdateDataTransaction = async (
   );
 
   const config = { index: 0, length: -1 };
-  const signedTx = await signTx(lockHash, password, rawTransaction, config, publicKey);
+  const signedTx = await signTx(lockHash, password, rawTransaction, config);
 
   const ckb = await getCKB();
   const realTxHash = await ckb.rpc.sendTransaction(signedTx);
@@ -281,7 +280,6 @@ export const sendTransaction = async (
       toDataHex,
     );
     config = { index: 0, length: -1 };
-
   } else if (toLockType === 'AnyPay') {
     rawTransaction = await generateAnyPayTx(
       fromAddress,
@@ -293,7 +291,6 @@ export const sendTransaction = async (
       toLockType,
     );
     config = { index: 1, length: 1 };
-
   } else if (toLockType === 'Secp256k1') {
     rawTransaction = await generateTx(
       fromAddress,
@@ -312,7 +309,7 @@ export const sendTransaction = async (
     return rawTransaction;
   }
 
-  const signedTx = await signTx(lockHash, password, rawTransaction, config, publicKey);
+  const signedTx = await signTx(lockHash, password, rawTransaction, config);
 
   try {
     realTxHash = await ckb.rpc.sendTransaction(signedTx);

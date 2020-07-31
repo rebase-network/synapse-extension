@@ -56,12 +56,6 @@ export const signTxFromMsg = async (request) => {
     password,
   } = request;
   const config = meta?.config || { index: 0, length: -1 };
-  const signedTx = await signTx(
-    currentWallet?.lock,
-    password.trim(),
-    rawTx,
-    config,
-    currentWallet?.publicKey?.replace('0x', ''),
-  );
+  const signedTx = await signTx(currentWallet?.lock, password.trim(), rawTx, config);
   return signedTx;
 };
