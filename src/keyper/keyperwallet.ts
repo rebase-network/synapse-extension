@@ -178,17 +178,4 @@ function getCurrentWallet() {
   return currentWallet;
 }
 
-export {
-  init,
-  generateByPrivateKey,
-  signTx,
-  getAllLockHashesAndMeta,
-  generateKeystore,
-  setUpContainer,
-  container,
-  addKeyperWallet,
-  saveWallets,
-  getWallets,
-  getAddressesList,
-  getCurrentWallet,
-};
+export { signTx, addKeyperWallet, getWallets, getAddressesList, getCurrentWallet };
