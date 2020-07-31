@@ -5,7 +5,7 @@ export default {
   'Generate Mnemonic': '生成助记词',
   Setting: '设置',
   Data: '数据',
-  Fee: '交易费率',
+  Fee: '手续费',
   'Tx Hash': '交易哈希',
   Block: '区块',
   'View on Explorer': '在区块浏览器上查看',
