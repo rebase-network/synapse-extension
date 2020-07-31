@@ -21,7 +21,6 @@ import * as WalletKeystore from '@src/wallet/keystore';
 import * as PasswordKeystore from '@src/wallet/passwordEncryptor';
 import _ from 'lodash';
 import {
-  saveToStorage,
   findInWalletsByPublicKey,
   findInAddressesListByPublicKey,
   showAddressHelper,
@@ -101,8 +100,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
       currentWallet = await getCurrentWallet();
     }
 
-    saveToStorage(wallets, currentWallet, addressesList);
-
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
   }
 
@@ -170,9 +167,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
       addressesList = await getAddressList();
       currentWallet = await getCurrentWallet();
     }
-
-    // 002-saveToStorage
-    saveToStorage(wallets, currentWallet, addressesList);
 
     chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
   }
@@ -564,8 +558,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
       currentWallet = await getCurrentWallet();
     }
 
-    saveToStorage(wallets, currentWallet, addressesList);
-
     chrome.runtime.sendMessage({
       type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK,
     });
@@ -644,8 +636,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
       addressesList = await getAddressList();
       currentWallet = await getCurrentWallet();
     }
-    // 002-
-    saveToStorage(wallets, currentWallet, addressesList);
 
     chrome.runtime.sendMessage({
       type: MESSAGE_TYPE.IMPORT_KEYSTORE_OK,
