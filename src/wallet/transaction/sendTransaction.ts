@@ -202,7 +202,6 @@ export const sendUpdateDataTransaction = async (
   lockHash,
   inputData,
   password,
-  publicKey,
 ) => {
   const rawTransaction = await generateUpdateDataTx(
     deps,
