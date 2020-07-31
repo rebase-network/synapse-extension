@@ -5,11 +5,8 @@ import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 import * as Keystore from '../wallet/passwordEncryptor';
 import ContainerManager from './containerManager';
 import init from './setupKeyper';
-
 import { KEYSTORE_TYPE } from '../utils/constants';
 import Address, { AddressPrefix } from '../wallet/address';
-
-const addressesList = [];
 
 // FIXME: need to add mainnet support
 const container = ContainerManager.getInstance().getContainer('testnet');
@@ -93,6 +90,16 @@ async function getWallets() {
   return walletsObj.wallets || [];
 }
 
+async function getAddressList() {
+  const { addressesList = [] } = await browser.storage.local.get('addressesList');
+  return addressesList;
+}
+
+async function getCurrentWallet() {
+  const { currentWallet = {} } = await browser.storage.local.get('currentWallet');
+  return currentWallet;
+}
+
 // privateKey Not contain '0x'prefix
 async function saveWallets(
   privateKey,
@@ -117,9 +124,9 @@ async function saveWallets(
     keystoreType: KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE,
   };
 
-  const newWallets = oldWallets.push(walletCommon);
-  await browser.storage.local.set({
-    wallets: newWallets,
+  const wallets = oldWallets.push(walletCommon);
+  browser.storage.local.set({
+    wallets,
   });
 
   const addressesObj = {
@@ -127,7 +134,13 @@ async function saveWallets(
     addresses: accounts,
   };
 
-  addressesList.push(addressesObj);
+  const oldAddressList = await getAddressList();
+
+  const addressesList = oldAddressList.push(addressesObj);
+
+  browser.storage.local.set({
+    addressesList,
+  });
 
   const currentWallet = {
     publicKey,
@@ -137,17 +150,9 @@ async function saveWallets(
     lock: accounts[0].lock,
   };
 
-  await browser.storage.local.set({
+  browser.storage.local.set({
     currentWallet,
   });
 }
 
-function getAddressesList() {
-  return addressesList;
-}
-
-async function getCurrentWallet() {
-  return browser.storage.local.get('currentWallet');
-}
-
-export { signTx, addKeyperWallet, getWallets, getAddressesList, getCurrentWallet };
+export { signTx, addKeyperWallet, getWallets, getAddressList, getCurrentWallet };

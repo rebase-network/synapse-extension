@@ -13,7 +13,7 @@ import { createScriptObj, signTxFromMsg } from '@background/transaction';
 import { getTxHistories } from '@utils/apis';
 import {
   addKeyperWallet,
-  getAddressesList,
+  getAddressList,
   getCurrentWallet,
   getWallets,
 } from '@src/keyper/keyperwallet';
@@ -97,7 +97,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore, prefix);
 
       wallets = await getWallets();
-      addressesList = getAddressesList();
+      addressesList = await getAddressList();
       currentWallet = await getCurrentWallet();
     }
 
@@ -167,7 +167,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore, prefix);
 
       wallets = await getWallets();
-      addressesList = getAddressesList();
+      addressesList = await getAddressList();
       currentWallet = await getCurrentWallet();
     }
 
@@ -560,7 +560,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       await addKeyperWallet(privateKey, password, '', '', prefix);
 
       wallets = await getWallets();
-      addressesList = getAddressesList();
+      addressesList = await getAddressList();
       currentWallet = await getCurrentWallet();
     }
 
@@ -641,7 +641,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       await addKeyperWallet(privateKey, uPassword, '', '', prefix);
 
       wallets = await getWallets();
-      addressesList = getAddressesList();
+      addressesList = await getAddressList();
       currentWallet = await getCurrentWallet();
     }
     // 002-
