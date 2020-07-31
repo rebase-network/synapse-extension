@@ -15,7 +15,7 @@ const generateKeystore = async (privateKey, password) => {
   return ks;
 };
 
-const setUpContainer = (publicKey) => {
+const setUpContainer = async (publicKey) => {
   const container = await containerManager.getCurrentContainer();
   container.addPublicKey({
     payload: `0x${publicKey}`,
