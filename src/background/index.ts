@@ -9,17 +9,9 @@ import { generateMnemonic, ExtendedPrivateKey } from '@src/wallet/key';
 import Keychain from '@src/wallet/keychain';
 import { sendTransaction } from '@src/wallet/transaction/sendTransaction';
 import Address from '@src/wallet/address';
-import { createScriptObj, signTxFromMsg } from '@background/transaction';
+import { signTxFromMsg } from '@background/transaction';
 import { getTxHistories } from '@utils/apis';
-import {
-  addKeyperWallet,
-  getAddressesList,
-  getWallets,
-  getCurrentWallet,
-  setCurrentWallet,
-  setWallets,
-  setAddressesList,
-} from '@src/keyper/keyperwallet';
+import { addKeyperWallet, getAddressesList, setCurrentWallet } from '@src/keyper/keyperwallet';
 import setupKeyper from '@src/keyper/setupKeyper';
 import * as WalletKeystore from '@src/wallet/keystore';
 import * as PasswordKeystore from '@src/wallet/passwordEncryptor';
