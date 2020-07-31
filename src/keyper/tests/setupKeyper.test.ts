@@ -1,10 +1,16 @@
+import wallets from '@src/wallet/fixtures/wallets';
 import setupKeyper from '../setupKeyper';
 import ContainerManager from '../containerManager';
 import { NETWORKS } from '../locksInfo';
 
 describe('setup keyper', () => {
-  it('should be able to setup keyper for mainnet and testnet', () => {
-    setupKeyper();
+  const publicKeys = wallets.map((wallet) => wallet.publicKey);
+  it('should be able to setup keyper for mainnet and testnet', async () => {
+    await browser.storage.local.set({
+      publicKeys,
+    });
+
+    await setupKeyper();
 
     const manager = ContainerManager.getInstance();
     const containers = manager.getAllContainers();
@@ -14,6 +20,7 @@ describe('setup keyper', () => {
 
     containerNames.forEach((network) => {
       expect(containers[network].lockScriptSize()).toEqual(3);
+      expect(containers[network].publicKeySize()).toEqual(3);
     });
   });
 });
