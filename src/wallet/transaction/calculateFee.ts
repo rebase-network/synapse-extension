@@ -5,7 +5,11 @@ import {
 import { BN } from 'bn.js';
 import { MIN_FEE_RATE, EMPTY_WITNESS } from '@src/utils/constants';
 
-const calculateTxFee = (transaction, feeRate = BigInt(1000)) => {
+export interface CalculateTxFeeResult {
+  tx: CKBComponents.RawTransaction;
+  fee: string;
+}
+const calculateTxFee = (transaction, feeRate = BigInt(1000)): CalculateTxFeeResult => {
   const { version, cellDeps, headerDeps, inputs, outputs, outputsData, witnesses } = transaction;
 
   const calculateTx = {
@@ -26,6 +30,7 @@ const calculateTxFee = (transaction, feeRate = BigInt(1000)) => {
     txFee = MIN_FEE_RATE;
   }
   const chargeOutput = outputs[1];
+  console.log(/chargeOutput/, JSON.stringify(chargeOutput));
   const chargeCapacity = BigInt(chargeOutput.capacity) - BigInt(txFee);
   chargeOutput.capacity = `0x${new BN(chargeCapacity).toString(16)}`;
   outputs[1] = chargeOutput;
@@ -38,6 +43,7 @@ const calculateTxFee = (transaction, feeRate = BigInt(1000)) => {
     outputsData,
     witnesses,
   };
+  console.log(/returnTx/, JSON.stringify(returnTx));
   const calculateTxResult = {
     tx: returnTx,
     fee: txFee,

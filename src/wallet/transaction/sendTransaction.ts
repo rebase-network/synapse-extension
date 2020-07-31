@@ -9,6 +9,11 @@ import getCKB from '@utils/ckb';
 import { signTx } from '@src/wallet/addKeyperWallet';
 import { createRawTx, createAnyPayRawTx, createUpdateDataRawTx } from './txGenerator';
 
+export interface GenerateTxResult {
+  tx: CKBComponents.RawTransaction;
+  fee: string;
+}
+
 export const generateTx = async (
   fromAddress,
   toAddress,
@@ -17,7 +22,7 @@ export const generateTx = async (
   lockHash,
   lockType,
   toDataHex?,
-) => {
+): Promise<GenerateTxResult> => {
   const params = {
     capacity: BigInt(toAmount).toString(),
     hasData: 'false',
@@ -69,7 +74,7 @@ export const generateAnyPayTx = async (
   lockHash,
   fromLockType,
   toLockType,
-) => {
+): Promise<GenerateTxResult> => {
   const ckb = await getCKB();
   const fromLockScript = addressToScript(fromAddress);
   const toLockScript = addressToScript(toAddress);
@@ -119,7 +124,7 @@ export const generateAnyPayTx = async (
   let rawObj = {
     target: '',
     fee: '',
-    tx: {},
+    tx: null,
   };
 
   if (fromCodeHash === toCodeHash) {

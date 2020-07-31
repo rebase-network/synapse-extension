@@ -3,6 +3,12 @@ import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils/lib';
 import _ from 'lodash';
 import calculateTxFee from './calculateFee';
 
+export interface CreateRawTxResult {
+  tx: CKBComponents.RawTransaction;
+  fee: string;
+  target: string;
+}
+
 export function createRawTx(
   toAmount,
   toLockScript: CKBComponents.Script,
@@ -11,7 +17,7 @@ export function createRawTx(
   deps,
   fee,
   toDataHex?,
-) {
+): CreateRawTxResult {
   const rawTx = {
     version: '0x0',
     cellDeps: deps,
@@ -80,7 +86,7 @@ export function createAnyPayRawTx(
   fee,
   walletCells,
   walletTotalCapity,
-) {
+): CreateRawTxResult {
   const rawTx = {
     version: '0x0',
     cellDeps: deps,
