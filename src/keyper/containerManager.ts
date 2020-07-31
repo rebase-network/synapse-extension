@@ -50,7 +50,7 @@ export default class Singleton {
   public addPublicKeyForAllContainers(publicKey: string) {
     this.names.forEach((name: string) => {
       this.containers[name].addPublicKey({
-        payload: `0x${publicKey}`,
+        payload: publicKey,
         algorithm: SignatureAlgorithm.secp256k1,
       });
     });

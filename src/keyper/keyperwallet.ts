@@ -14,14 +14,6 @@ const generateKeystore = async (privateKey, password) => {
   return ks;
 };
 
-const setUpContainer = async (publicKey) => {
-  const container = await containerManager.getCurrentContainer();
-  container.addPublicKey({
-    payload: `0x${publicKey}`,
-    algorithm: SignatureAlgorithm.secp256k1,
-  });
-};
-
 const getAccounts = async (networkPrefix: string) => {
   const container = await containerManager.getCurrentContainer();
   const scripts = await container.getAllLockHashesAndMeta();
@@ -60,10 +52,10 @@ export async function addKeyperWallet(
   networkPrefix,
 ) {
   const keystore = await generateKeystore(privateKey, password);
-  // prefix '0x'
+  // has prefix '0x'
   const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
-  // params publicKey No '0x'
-  await setUpContainer(publicKey.substr(2));
+
+  containerManager.addPublicKeyForAllContainers(publicKey);
 
   // Keyper accounts
   const accounts = await getAccounts(networkPrefix);
