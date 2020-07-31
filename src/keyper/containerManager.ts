@@ -1,5 +1,6 @@
 import { Container } from '@keyper/container';
 import { SignatureAlgorithm, LockScript } from '@keyper/specs';
+import NetworkManager from '@common/networkManager';
 
 export interface INetworkContainer {
   name: string;
@@ -29,11 +30,16 @@ export default class Singleton {
     this.containers[container.name] = container.container;
   }
 
-  public getContainer(name: string) {
+  public getContainer(name: string): Container {
     return this.containers[name];
   }
 
-  public getAllContainers() {
+  public async getCurrentContainer(): Promise<Container> {
+    const currentNetwork = await NetworkManager.getCurrentNetwork();
+    return this.getContainer(currentNetwork.networkType);
+  }
+
+  public getAllContainers(): IContainer {
     return this.containers;
   }
 
