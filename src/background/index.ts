@@ -20,6 +20,7 @@ import {
   setWallets,
   setAddressesList,
 } from '@src/keyper/keyperwallet';
+import setupKeyper from '@src/keyper/setupKeyper';
 import * as WalletKeystore from '@src/wallet/keystore';
 import * as PasswordKeystore from '@src/wallet/passwordEncryptor';
 import _ from 'lodash';
@@ -36,6 +37,8 @@ import { sendToWebPage } from '@background/messageHandlers/proxy';
 import NetworkManager from '@common/networkManager';
 
 NetworkManager.initNetworks();
+
+setupKeyper();
 
 addExternalMessageListener();
 
