@@ -7,8 +7,7 @@ import setupKeyper from './setupKeyper';
 import { KEYSTORE_TYPE } from '../utils/constants';
 import Address, { AddressPrefix } from '../wallet/address';
 
-// FIXME: need to add mainnet support
-const container = ContainerManager.getInstance().getContainer('testnet');
+const containerManager = ContainerManager.getInstance();
 
 const generateKeystore = async (privateKey, password) => {
   const privateKeyBuffer = Buffer.from(privateKey, 'hex');
@@ -17,6 +16,7 @@ const generateKeystore = async (privateKey, password) => {
 };
 
 const setUpContainer = (publicKey) => {
+  const container = await containerManager.getCurrentContainer();
   container.addPublicKey({
     payload: `0x${publicKey}`,
     algorithm: SignatureAlgorithm.secp256k1,
@@ -24,6 +24,7 @@ const setUpContainer = (publicKey) => {
 };
 
 const getAccounts = async (networkPrefix: string) => {
+  const container = await containerManager.getCurrentContainer();
   const scripts = await container.getAllLockHashesAndMeta();
   const result = scripts.map((script) => {
     return {
@@ -39,6 +40,7 @@ const getAccounts = async (networkPrefix: string) => {
 };
 
 const signTx = async (lockHash, password, rawTx, config) => {
+  const container = await containerManager.getCurrentContainer();
   const tx = await container.sign(
     {
       lockHash,
