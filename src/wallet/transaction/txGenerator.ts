@@ -61,10 +61,11 @@ export function createRawTx(
     rawTx.outputsData.push('0x');
   }
   // calculate fee and reconstructor transaction
-  const reRawTx = calculateTxFee(rawTx);
+  const calculateTx = calculateTxFee(rawTx);
   const signObj = {
     target: scriptToHash(fromLockScript),
-    tx: reRawTx,
+    tx: calculateTx.tx,
+    fee: calculateTx.fee,
   };
 
   return signObj;
@@ -122,7 +123,8 @@ export function createAnyPayRawTx(
   rawTx.outputsData.push('0x');
 
   // outpus-charge
-  const totalCost = toAmount.add(fee);
+  // const totalCost = toAmount.add(fee);
+  const totalCost = toAmount;
   if (inputCells.total.gt(totalCost) && inputCells.total.sub(totalCost).gt(new BN('6100000000'))) {
     rawTx.outputs.push({
       capacity: `0x${inputCells.total.sub(totalCost).toString(16)}`,
@@ -131,9 +133,12 @@ export function createAnyPayRawTx(
     rawTx.outputsData.push('0x');
   }
 
+  // calculate fee and reconstructor transaction
+  const calculateTx = calculateTxFee(rawTx);
   const signObj = {
     target: scriptToHash(fromLockScript),
-    tx: rawTx,
+    tx: calculateTx.tx,
+    fee: calculateTx.fee,
   };
 
   return signObj;

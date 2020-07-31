@@ -28,6 +28,7 @@ const calculateTxFee = (transaction, feeRate = BigInt(1000)) => {
   const chargeOutput = outputs[1];
   const chargeCapacity = BigInt(chargeOutput.capacity) - BigInt(txFee);
   chargeOutput.capacity = `0x${new BN(chargeCapacity).toString(16)}`;
+  outputs[1] = chargeOutput;
   const returnTx = {
     version,
     cellDeps,
@@ -37,37 +38,11 @@ const calculateTxFee = (transaction, feeRate = BigInt(1000)) => {
     outputsData,
     witnesses,
   };
-  outputs[1] = chargeOutput;
-  return returnTx;
+  const calculateTxResult = {
+    tx: returnTx,
+    fee: txFee,
+  };
+  return calculateTxResult;
 };
 
 export default calculateTxFee;
-
-// class CalculateFee {
-//   public feeRate: bigint;
-
-//   public fee: bigint;
-
-//   public transaction: CKBComponents.Transaction;
-
-//   constructor(feeRate: bigint, transaction: CKBComponents.Transaction) {
-//     this.feeRate = feeRate;
-//     this.transaction = transaction;
-//   }
-
-//   async calculateTxFee(transaction: CKBComponents.Transaction, feeRate = BigInt(1000)) {
-//     const returnTx = transaction;
-//     const transactionSize = calculateSerializedTxSizeInBlock(transaction);
-//     const txFee = calculateTransactionFee(BigInt(transactionSize), feeRate);
-
-//     const { outputs } = transaction;
-//     const chargeOutput = outputs[1];
-//     const chargeCapacity = BigInt(chargeOutput.capacity) - this.fee;
-//     chargeOutput.capacity = chargeCapacity.toString();
-//     returnTx.outputs[1] = chargeOutput;
-//     return returnTx;
-//     // return this.calculateTxFee(transaction, BigInt(txFee));
-//   }
-// }
-
-// module.exports = CalculateFee;

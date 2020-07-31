@@ -315,7 +315,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
     const toAddress = request.address.trim();
     const capacity = request.capacity * CKB_TOKEN_DECIMALS;
-    const fee = request.fee * CKB_TOKEN_DECIMALS;
+    // const fee = request.fee * CKB_TOKEN_DECIMALS;
     const password = request.password.trim();
     const toData = request.data.trim();
 
@@ -348,7 +348,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
           from: fromAddress,
           to: toAddress,
           amount: capacity.toString(),
-          fee: fee.toString(),
+          fee: 0,
           hash: '',
           status: 'Pending',
           blockNum: 'Pending',
@@ -357,12 +357,12 @@ chrome.runtime.onMessage.addListener(async (request) => {
     };
 
     try {
-      const sendTxHash = await sendTransaction(
+      const sendTxObj = await sendTransaction(
         privateKey,
         fromAddress,
         toAddress,
         BigInt(capacity),
-        BigInt(fee),
+        BigInt(0),
         lockHash,
         lockType,
         password,
@@ -370,18 +370,19 @@ chrome.runtime.onMessage.addListener(async (request) => {
         toData,
       );
 
-      if (sendTxHash.errCode !== undefined && sendTxHash.errCode !== 0) {
+      if (sendTxObj.errCode !== undefined && sendTxObj.errCode !== 0) {
         const responseEorrorMsg = {
           type: MESSAGE_TYPE.SEND_TX_ERROR,
           success: true,
-          message: sendTxHash.errMsg,
+          message: sendTxObj.errMsg,
           data: '',
         };
         chrome.runtime.sendMessage(responseEorrorMsg);
         return;
       }
-      responseMsg.data.hash = sendTxHash;
-      responseMsg.data.tx.hash = sendTxHash;
+      responseMsg.data.hash = sendTxObj.txHash;
+      responseMsg.data.tx.hash = sendTxObj.txHash;
+      responseMsg.data.tx.fee = sendTxObj.fee;
       responseMsg.success = true;
       responseMsg.message = 'TX is sent';
     } catch (error) {

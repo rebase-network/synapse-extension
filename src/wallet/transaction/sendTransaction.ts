@@ -20,6 +20,7 @@ export const generateTx = async (
 ) => {
   const params = {
     capacity: BigInt(toAmount).toString(),
+    hasData: 'false',
   };
 
   const unspentCells = await getUnspentCells(lockHash, params);
@@ -53,10 +54,11 @@ export const generateTx = async (
     new BN(fee),
     toDataHex,
   );
-
-  const rawTransaction = rawObj.tx;
-
-  return rawTransaction;
+  const resultObj = {
+    tx: rawObj.tx,
+    fee: rawObj.fee,
+  };
+  return resultObj;
 };
 
 export const generateAnyPayTx = async (
@@ -75,6 +77,7 @@ export const generateAnyPayTx = async (
   // unspentCells
   const params = {
     capacity: toAmount,
+    hasData: 'false',
   };
   const unspentCells = await getUnspentCells(lockHash, params);
   // Error handling
@@ -94,6 +97,7 @@ export const generateAnyPayTx = async (
   // Wallet Cell
   const params2 = {
     limit: '10',
+    hasData: 'false',
   };
   const unspentWalletCells = await getUnspentCells(toLockHash, params2);
   // Error handling
@@ -114,6 +118,7 @@ export const generateAnyPayTx = async (
   // anypay to anypay deps = 1
   let rawObj = {
     target: '',
+    fee: '',
     tx: {},
   };
 
@@ -141,10 +146,13 @@ export const generateAnyPayTx = async (
     );
   }
 
-  const rawTransaction = rawObj.tx;
-
-  return rawTransaction;
+  const resultObj = {
+    tx: rawObj.tx,
+    fee: rawObj.fee,
+  };
+  return resultObj;
 };
+
 export const generateUpdateDataTx = async (
   deps,
   fee,
@@ -245,7 +253,7 @@ export const sendTransaction = async (
     toLockType = 'AnyPay';
   }
 
-  let rawTransaction: any;
+  let rawTxObj: any;
 
   // wallet cells check
   const toLockScript = addressToScript(toAddress);
@@ -256,8 +264,8 @@ export const sendTransaction = async (
   if (toLockType === 'AnyPay') {
     const params = {
       limit: '10',
+      hasData: 'false',
     };
-
     unspentWalletCells = await getUnspentCells(toLockHash, params);
     // Error handling
     if (unspentWalletCells.errCode !== undefined && unspentWalletCells.errCode !== 0) {
@@ -269,7 +277,7 @@ export const sendTransaction = async (
   let config = { index: 0, length: -1 };
 
   if (toLockType === 'AnyPay' && unspentWalletCells.length === 0) {
-    rawTransaction = await generateTx(
+    rawTxObj = await generateTx(
       fromAddress,
       toAddress,
       toAmount,
@@ -280,7 +288,7 @@ export const sendTransaction = async (
     );
     config = { index: 0, length: -1 };
   } else if (toLockType === 'AnyPay') {
-    rawTransaction = await generateAnyPayTx(
+    rawTxObj = await generateAnyPayTx(
       fromAddress,
       toAddress,
       toAmount,
@@ -291,7 +299,7 @@ export const sendTransaction = async (
     );
     config = { index: 1, length: 1 };
   } else if (toLockType === 'Secp256k1') {
-    rawTransaction = await generateTx(
+    rawTxObj = await generateTx(
       fromAddress,
       toAddress,
       toAmount,
@@ -304,17 +312,21 @@ export const sendTransaction = async (
   }
 
   // Error handling
-  if (rawTransaction.errCode !== undefined && rawTransaction.errCode !== 0) {
-    return rawTransaction;
+  if (rawTxObj.errCode !== undefined && rawTxObj.errCode !== 0) {
+    return rawTxObj;
   }
 
-  const signedTx = await signTx(lockHash, password, rawTransaction, config, publicKey);
-  console.log(/signedTx/, JSON.stringify(signedTx));
+  const signedTx = await signTx(lockHash, password, rawTxObj.tx, config, publicKey);
+  const txResultObj = {
+    txHash: null,
+    fee: rawTxObj.fee,
+  };
   try {
     realTxHash = await ckb.rpc.sendTransaction(signedTx);
+    txResultObj.txHash = realTxHash;
   } catch (error) {
     console.error(`Failed to send tx: ${error}`);
   }
 
-  return realTxHash;
+  return txResultObj;
 };

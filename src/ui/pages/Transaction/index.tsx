@@ -53,7 +53,7 @@ interface AppProps {
 
 interface AppState {}
 
-export const innerForm = (props: AppProps) => {
+export const InnerForm = (props: AppProps) => {
   const classes = useStyles();
   const intl = useIntl();
   const [contacts, setContacts] = React.useState([]);
@@ -179,7 +179,7 @@ export const innerForm = (props: AppProps) => {
         margin="normal"
         variant="outlined"
       />
-      <TextField
+      {/* <TextField
         label={intl.formatMessage({ id: 'Fee' })}
         id="fee"
         name="fee"
@@ -194,7 +194,7 @@ export const innerForm = (props: AppProps) => {
         margin="normal"
         variant="outlined"
         data-testid="field-fee"
-      />
+      /> */}
       <TextField
         label={intl.formatMessage({ id: 'Password' })}
         name="password"
@@ -284,27 +284,8 @@ export default () => {
     // setLoading(true);
   });
 
-  // check the current network and address
-  const validateAddress = (address, networkType) => {
-    if (address.length !== 46) {
-      // ckt1qjr2r35c0f9vhcdgslx2fjwa9tylevr5qka7mfgmscd33wlhfykyhje4pv0kjjeza2drrsyyw3sjs9mezstcs8t5txy
-      setValAddress(false);
-      return;
-    }
-    if (networkType === 'testnet' && !address.startsWith('ckt')) {
-      setValAddress(false);
-      return;
-    }
-    if (networkType === 'mainnet' && !address.startsWith('ckb')) {
-      setValAddress(false);
-    }
-  };
-
   const onSubmit = async (values) => {
     setSending(true);
-    // const toAddress = values.address;
-    // validateAddress(toAddress, network); BUG anypay的地址95位
-
     chrome.runtime.sendMessage({
       ...values,
       network,
@@ -343,7 +324,7 @@ export default () => {
     address: '',
     capacity: '',
     data: '',
-    fee: 0.0001,
+    // fee: 0.0001,
     password: '',
     ...searchParams,
   };
@@ -369,11 +350,11 @@ export default () => {
                 MIN_CELL_CAPACITY,
                 `${intl.formatMessage({ id: 'Should be greater than ' })}${MIN_CELL_CAPACITY}`,
               ),
-            fee: Yup.string().required(intl.formatMessage({ id: 'Required' })),
+            // fee: Yup.string().required(intl.formatMessage({ id: 'Required' })),
             password: Yup.string().required(intl.formatMessage({ id: 'Required' })),
           })}
         >
-          {innerForm}
+          {InnerForm}
         </Formik>
       </div>
       {txModal}
