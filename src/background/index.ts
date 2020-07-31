@@ -315,7 +315,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
     const toAddress = request.address.trim();
     const capacity = request.capacity * CKB_TOKEN_DECIMALS;
-    // const fee = request.fee * CKB_TOKEN_DECIMALS;
+    const feeRate = request.fee;
     const password = request.password.trim();
     const toData = request.data.trim();
 
@@ -362,7 +362,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
         fromAddress,
         toAddress,
         BigInt(capacity),
-        BigInt(0),
+        BigInt(feeRate),
         lockHash,
         lockType,
         password,

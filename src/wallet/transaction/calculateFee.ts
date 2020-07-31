@@ -21,16 +21,15 @@ const calculateTxFee = (transaction, feeRate = BigInt(1000)): CalculateTxFeeResu
     outputsData,
     witnesses: [EMPTY_WITNESS],
   };
-
   const transactionSize = calculateSerializedTxSizeInBlock(calculateTx);
   let txFee = calculateTransactionFee(BigInt(transactionSize), feeRate);
+  console.log(/feeRate/, feeRate);
   if (BigInt(txFee) < BigInt(MIN_FEE_RATE)) {
     console.log(/calculate fee/, txFee);
     console.log(/min_fee_rate/, MIN_FEE_RATE);
     txFee = MIN_FEE_RATE;
   }
   const chargeOutput = outputs[1];
-  console.log(/chargeOutput/, JSON.stringify(chargeOutput));
   const chargeCapacity = BigInt(chargeOutput.capacity) - BigInt(txFee);
   chargeOutput.capacity = `0x${new BN(chargeCapacity).toString(16)}`;
   outputs[1] = chargeOutput;
@@ -43,7 +42,6 @@ const calculateTxFee = (transaction, feeRate = BigInt(1000)): CalculateTxFeeResu
     outputsData,
     witnesses,
   };
-  console.log(/returnTx/, JSON.stringify(returnTx));
   const calculateTxResult = {
     tx: returnTx,
     fee: txFee,

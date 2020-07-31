@@ -179,7 +179,7 @@ export const InnerForm = (props: AppProps) => {
         margin="normal"
         variant="outlined"
       />
-      {/* <TextField
+      <TextField
         label={intl.formatMessage({ id: 'Fee' })}
         id="fee"
         name="fee"
@@ -194,7 +194,7 @@ export const InnerForm = (props: AppProps) => {
         margin="normal"
         variant="outlined"
         data-testid="field-fee"
-      /> */}
+      />
       <TextField
         label={intl.formatMessage({ id: 'Password' })}
         name="password"
@@ -324,7 +324,7 @@ export default () => {
     address: '',
     capacity: '',
     data: '',
-    // fee: 0.0001,
+    fee: 1000,
     password: '',
     ...searchParams,
   };
@@ -350,7 +350,7 @@ export default () => {
                 MIN_CELL_CAPACITY,
                 `${intl.formatMessage({ id: 'Should be greater than ' })}${MIN_CELL_CAPACITY}`,
               ),
-            // fee: Yup.string().required(intl.formatMessage({ id: 'Required' })),
+            fee: Yup.string().required(intl.formatMessage({ id: 'Required' })),
             password: Yup.string().required(intl.formatMessage({ id: 'Required' })),
           })}
         >

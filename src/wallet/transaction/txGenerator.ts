@@ -15,7 +15,7 @@ export function createRawTx(
   inputCells,
   fromLockScript: CKBComponents.Script,
   deps,
-  fee,
+  feeRate,
   toDataHex?,
 ): CreateRawTxResult {
   const rawTx = {
@@ -67,7 +67,7 @@ export function createRawTx(
     rawTx.outputsData.push('0x');
   }
   // calculate fee and reconstructor transaction
-  const calculateTx = calculateTxFee(rawTx);
+  const calculateTx = calculateTxFee(rawTx, feeRate);
   const signObj = {
     target: scriptToHash(fromLockScript),
     tx: calculateTx.tx,
@@ -83,7 +83,7 @@ export function createAnyPayRawTx(
   inputCells,
   fromLockScript: CKBComponents.Script,
   deps,
-  fee,
+  feeRate,
   walletCells,
   walletTotalCapity,
 ): CreateRawTxResult {
@@ -140,7 +140,7 @@ export function createAnyPayRawTx(
   }
 
   // calculate fee and reconstructor transaction
-  const calculateTx = calculateTxFee(rawTx);
+  const calculateTx = calculateTxFee(rawTx, feeRate);
   const signObj = {
     target: scriptToHash(fromLockScript),
     tx: calculateTx.tx,
