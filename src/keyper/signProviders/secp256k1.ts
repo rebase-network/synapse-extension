@@ -1,6 +1,6 @@
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 import * as Keystore from '@src/wallet/passwordEncryptor';
-import { sign as signWithSecp256k1 } from '@src/keyper/sign';
+import { sign as secp256k1WithPrivateKey } from './secp256k1WithPrivateKey';
 
 export async function getWalletsInStorage() {
   const walletsObj = await browser.storage.local.get('wallets');
@@ -31,21 +31,25 @@ async function getKeystoreFromWallets(publicKey) {
   return ks;
 }
 
-const sign = async (context, message) => {
-  const key = await getKeystoreFromWallets(context.publicKey);
+const getPrivateKey = async (context) => {
+  if (context?.privateKey) return context.privateKey;
+
+  const key = await getKeystoreFromWallets(context?.publicKey);
   if (!key) {
-    throw new Error(`no key for address: ${context.address}`);
+    throw new Error(`no key for address: ${context?.address}`);
   }
-  const privateKeyBuffer = await Keystore.decrypt(key, context.password);
+  const privateKeyBuffer = await Keystore.decrypt(key, context?.password);
   const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
   const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
+  return privateKey;
+};
 
-  const signature = signWithSecp256k1(privateKey, message);
+const sign = async (context, message) => {
+  const privateKey = await getPrivateKey(context);
+  const signature = secp256k1WithPrivateKey(privateKey, message);
   return signature;
 };
 
-const signProvider = {
+export default {
   sign,
 };
-
-export default signProvider;
