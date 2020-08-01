@@ -29,16 +29,14 @@ const getAccounts = async (networkPrefix: string) => {
   return result;
 };
 
-export const signTx = async (lockHash, password, rawTx, config) => {
+export const signTx = async (lockHash, password, rawTx, config, others = {}) => {
   const container = await containerManager.getCurrentContainer();
-  const tx = await container.sign(
-    {
-      lockHash,
-      password,
-    },
-    rawTx,
-    config,
-  );
+  const context = {
+    lockHash,
+    password,
+    ...others,
+  };
+  const tx = await container.sign(context, rawTx, config);
   return tx;
 };
 
@@ -60,7 +58,7 @@ export async function addKeyperWallet(
   const accounts = await getAccounts(networkPrefix);
 
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  await saveWallets(privateKey, keystore, accounts, entropyKeystore, rootKeystore);
+  await saveWallets(privateKeyWithout0x, keystore, accounts, entropyKeystore, rootKeystore);
 
   return accounts;
 }
