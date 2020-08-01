@@ -17,7 +17,7 @@ function findKeystoreInWallets(wallets, publicKey) {
     return wallet.publicKey === publicKey;
   }
   const wallet = wallets.find(findKeystore);
-  return wallet.keystore;
+  return wallet?.keystore;
 }
 
 async function getKeystoreFromWallets(publicKey) {
@@ -39,7 +39,7 @@ const getPrivateKey = async (context) => {
     throw new Error(`no key for address: ${context?.address}`);
   }
   const privateKeyBuffer = await Keystore.decrypt(key, context?.password);
-  const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
+  const Uint8ArrayPk = new Uint8Array(privateKeyBuffer?.data);
   const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
   return privateKey;
 };
