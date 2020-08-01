@@ -1,44 +1,47 @@
-import CKB from '@nervosnetwork/ckb-sdk-core';
-import configService from '@src/config';
-import { rawTx, signedWitnesses } from '@common/fixtures/tx';
-import { bobAddresses, aliceAddresses } from '@src/test/fixture/address';
-import { secp256k1Dep } from '@src/test/fixture/deps';
+import { aliceAddresses, aliceWallet, aliceWalletPwd } from '@src/test/fixture/address';
+import setupKeyper from '@src/keyper/setupKeyper';
+import { privateKey, rawTx, signedMessage, config } from '@common/fixtures/tx';
 import { signTx } from '@src/keyper/keyperwallet';
-
-jest.mock('@utils/apis');
-
-const resultWitnesses = [
-  '0x5500000010000000550000005500000041000000ffac752f9a4da6fc3069dd8bea3caf8e8b687040e28d2ed1d71f0f32713e87b0380902cabdad79caaf7931d48ae2ee7db370e456c0546633a6d887e2f16d402d00',
-  '0x10000000100000001000000010000000',
-  '0x10000000100000001000000010000000',
-  '0x10000000100000001000000010000000',
-  '0x10000000100000001000000010000000',
-];
+import NetworkManager from '@common/networkManager';
 
 describe('Transaction test: secp256k1', () => {
-  const ckb = new CKB(configService.CKB_RPC_ENDPOINT);
-
+  const {
+    publicKey,
+    secp256k1: { lock: lockHash },
+  } = aliceAddresses;
   it('should be able to sign tx with secp256k1', async () => {
-    const { privateKey } = bobAddresses;
+    await NetworkManager.createNetwork({
+      title: 'Aggron Testnet',
+      networkType: 'testnet',
+      prefix: 'ckt',
+      nodeURL: 'http://testnet.getsynapse.io/rpc',
+      cacheURL: 'http://testnet.getsynapse.io/api',
+    });
+    await NetworkManager.createNetwork({
+      title: 'Lina Mainnet',
+      networkType: 'mainnet',
+      prefix: 'ckb',
+      nodeURL: 'http://mainnet.getsynapse.io/rpc',
+      cacheURL: 'http://mainnet.getsynapse.io/api',
+    });
 
-    // console.log('--- createRawTx tx ---', JSON.stringify(rawTx));
+    await browser.storage.local.set({
+      publicKeys: [publicKey],
+      wallets: [aliceWallet],
+    });
+    const { publicKeys, wallets } = await browser.storage.local.get(['publicKeys', 'wallets']);
 
-    const expectedTx = {
-      ...rawTx,
-      witnesses: resultWitnesses,
-    };
+    expect(publicKeys[0]).toEqual(publicKey);
+    expect(wallets[0]).toEqual(aliceWallet);
 
-    const signedTx = ckb.signTransaction(privateKey)(rawTx, []);
-    expect(signedTx.witnesses).toEqual(resultWitnesses);
-    expect(signedTx).toEqual(expectedTx);
-    // console.log('signedTx: ', JSON.stringify(signedTx));
+    await setupKeyper();
 
-    const privKey = 'xxxxx';
-    const signedTxAgain = ckb.signTransaction(privKey)(rawTx, []);
-    // const expectedTxAgain = {
-    //   ...rawTx,
-    //   witnesses: signedWitnesses,
-    // };
-    expect(signedTxAgain.witnesses[3]).toEqual(signedWitnesses[3]);
+    const signedTx = await signTx(lockHash, aliceWalletPwd, rawTx, config, {
+      privateKey,
+    });
+
+    const { witnesses } = signedTx;
+
+    expect(witnesses[3]).toEqual(signedMessage);
   });
 });
