@@ -27,6 +27,11 @@ describe('secp256k1 lockscript', () => {
     );
   });
 
+  it('should have correct depType', () => {
+    const deps = lock.deps();
+    expect(deps[0].depType).toEqual('depGroup');
+  });
+
   it('should be able to sign a tx hash', async () => {
     const signedMsg = await lock.sign({ privateKey }, rawTx, config);
     expect(signedMsg.witnesses[3]).toBe(signedMessage);

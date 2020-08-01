@@ -4,7 +4,7 @@ describe('anypay lockscript', () => {
   const codeHash = '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b';
   const txHash = '0x4f32b3e39bd1b6350d326fdfafdfe05e5221865c3098ae323096f0bfc69e0a8c';
   const index = '0x0';
-  const depType = 'code';
+  const depType = 'depGroup';
 
   it('basic', () => {
     const lock = new AnypayLockScript(codeHash, txHash);
@@ -23,6 +23,9 @@ describe('anypay lockscript', () => {
   it('deps', () => {
     const lock = new AnypayLockScript(codeHash, txHash);
     const deps = lock.deps();
+
+    expect(deps[0].depType).toEqual('depGroup');
+
     expect(deps).toEqual([
       {
         outPoint: {

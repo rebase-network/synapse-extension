@@ -9,7 +9,7 @@ export default function CommonLockScript<TBase extends Constructor>(Base: TBase)
   return class extends Base {
     private txHash: string;
 
-    private depType: DepType = 'code';
+    private depType: DepType = 'depGroup';
 
     private index: string = '0x0';
 

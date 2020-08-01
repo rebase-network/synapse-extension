@@ -4,7 +4,7 @@ describe('keccak lockscript', () => {
   const codeHash = '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8';
   const txHash = '0x25635bf587adacf95c9ad302113648f89ecddc2acfe1ea358ea99f715219c4c5';
   const index = '0x0';
-  const depType = 'code';
+  const depType = 'depGroup';
 
   it('basic', () => {
     const lock = new Keccak256LockScript(codeHash, txHash);
@@ -23,6 +23,9 @@ describe('keccak lockscript', () => {
   it('deps', () => {
     const lock = new Keccak256LockScript(codeHash, txHash);
     const deps = lock.deps();
+
+    expect(deps[0].depType).toEqual('depGroup');
+
     expect(deps).toEqual([
       {
         outPoint: {
