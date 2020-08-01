@@ -48,9 +48,10 @@ export async function addKeyperWallet(
   rootKeystore,
   networkPrefix,
 ) {
-  const keystore = await generateKeystore(privateKey, password);
+  const privateKeyWithout0x = privateKey.startsWith('0x') ? privateKey.substr(2) : privateKey;
+  const keystore = await generateKeystore(privateKeyWithout0x, password);
   // has prefix '0x'
-  const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
+  const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKeyWithout0x}`);
 
   containerManager.addPublicKeyForAllContainers(publicKey);
 
