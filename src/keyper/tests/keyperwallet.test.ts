@@ -4,9 +4,6 @@ import { rawTx, signedWitnesses } from '@common/fixtures/tx';
 import { bobAddresses, aliceAddresses } from '@src/test/fixture/address';
 import { secp256k1Dep } from '@src/test/fixture/deps';
 import { signTx } from '@src/keyper/keyperwallet';
-import { Secp256k1LockScript as Secp256k1LockScriptOriginal } from '@keyper/container/lib/locks/secp256k1';
-import signProvider from '@src/keyper/signProviders/secp256k1';
-import { LockScript } from '@keyper/specs';
 
 jest.mock('@utils/apis');
 
@@ -23,8 +20,6 @@ describe('Transaction test: secp256k1', () => {
 
   it('should be able to sign tx with secp256k1', async () => {
     const { privateKey } = bobAddresses;
-    const lockScript: LockScript = new Secp256k1LockScriptOriginal();
-    lockScript.setProvider(signProvider);
 
     // console.log('--- createRawTx tx ---', JSON.stringify(rawTx));
 
@@ -38,13 +33,12 @@ describe('Transaction test: secp256k1', () => {
     expect(signedTx).toEqual(expectedTx);
     // console.log('signedTx: ', JSON.stringify(signedTx));
 
-    // const privKey = 'xxxxx';
-    // const context = {
-    //   lockHash: 'aaa',
+    const privKey = 'xxxxx';
+    const signedTxAgain = ckb.signTransaction(privKey)(rawTx, []);
+    // const expectedTxAgain = {
+    //   ...rawTx,
+    //   witnesses: signedWitnesses,
     // };
-    // const config = { index: 3, length: 2 };
-
-    // const signedTxAgain = lockScript.sign(context, rawTx, config);
-    // expect(signedTxAgain.witnesses[3]).toEqual(signedWitnesses[3]);
+    expect(signedTxAgain.witnesses[3]).toEqual(signedWitnesses[3]);
   });
 });
