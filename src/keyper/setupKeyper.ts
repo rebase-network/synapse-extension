@@ -20,7 +20,6 @@ export default async () => {
     });
   });
   const containers = containerManager.getAllContainers();
-  console.log('setup keyper, containers: ', containers);
 
   // add lock script for all containers
   Object.keys(containers).forEach((name) => {
@@ -54,7 +53,6 @@ export default async () => {
     container.addLockScript(secp256k1LockScript);
     container.addLockScript(keccak256LockScript);
     container.addLockScript(anypayLockScript);
-    console.log('setup keyper, publicKeys: ', publicKeys);
     publicKeys.forEach((publicKey) => {
       container.addPublicKey({
         payload: publicKey,
