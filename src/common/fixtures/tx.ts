@@ -1,5 +1,5 @@
 // https://explorer.nervos.org/aggron/transaction/0x44f543d59974cb9dac09323008a162beebaa19e6d7d0dbf91507947f678e612c
-const rawTx = {
+const rawTx: CKBComponents.RawTransactionToSign = {
   cellDeps: [
     {
       depType: 'depGroup',
@@ -213,7 +213,7 @@ const signedWitnesses = [
     lock: '',
     outputType: '',
   },
-  // The value will be different with different private key to sign. The signed witness position/index should unchange (3)
+  // The value will be different depends on the private key to sign. The signed witness position/index should unchange (3)
   '0x550000001000000055000000550000004100000074c3fdb53d5fae16ccf09bb35ed5877e74fc7f54ab8066a80a9a3e827c1d06c902ba365a972da3d1a2f5431a459dd746f3c6ebd7b41f344f9bff47c1db86253000',
   {
     inputType: '',
@@ -222,4 +222,13 @@ const signedWitnesses = [
   },
 ];
 
-export { rawTx, rawTxWithMeta, signedWitnesses };
+const signedWitnessesSerialized = [
+  '0x10000000100000001000000010000000',
+  '0x10000000100000001000000010000000',
+  '0x10000000100000001000000010000000',
+  // The value will be different depends on the private key to sign. The signed witness position/index should unchange (3)
+  '0x550000001000000055000000550000004100000074c3fdb53d5fae16ccf09bb35ed5877e74fc7f54ab8066a80a9a3e827c1d06c902ba365a972da3d1a2f5431a459dd746f3c6ebd7b41f344f9bff47c1db86253000',
+  '0x10000000100000001000000010000000',
+];
+
+export { rawTx, rawTxWithMeta, signedWitnesses, signedWitnessesSerialized };
