@@ -1,7 +1,8 @@
 import { LockHashWithMeta, PublicKey } from '@keyper/container';
 import { SignatureAlgorithm, Script } from '@keyper/specs';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
-import * as Keystore from '../wallet/passwordEncryptor';
+import PublicKeyClass from '@src/keyper/publicKey';
+import * as Keystore from '@src/wallet/passwordEncryptor';
 import ContainerManager from './containerManager';
 import { KEYSTORE_TYPE } from '../utils/constants';
 
@@ -25,13 +26,11 @@ export const getWallets = async () => {
 
 export const getPublicKeys = async () => {
   const { publicKeys = [] } = await browser.storage.local.get('publicKeys');
-  console.log('getPublicKeys ---> : ', publicKeys);
   return publicKeys;
 };
 
 export const addPublicKey = async (publicKey: string) => {
   const { publicKeys = [] } = await browser.storage.local.get('publicKeys');
-  console.log('addPublicKey ---> before: ', publicKeys);
   if (!publicKeys.includes(publicKey)) {
     publicKeys.push(publicKey);
     await browser.storage.local.set({
@@ -44,30 +43,6 @@ export const addPublicKey = async (publicKey: string) => {
 export const getCurrentWallet = async () => {
   const { currentWallet = {} } = await browser.storage.local.get('currentWallet');
   return currentWallet;
-};
-
-export const setCurrentWallet = async (publicKey: string) => {
-  const container = await containerManager.getCurrentContainer();
-  const lockHashWithMetas: LockHashWithMeta[] = await container.getAllLockHashesAndMeta();
-  const {
-    hash: lockHash,
-    meta: { name, script },
-  } = lockHashWithMetas[0];
-
-  // current wallet
-  const currentWallet = {
-    publicKey,
-    type: name,
-    script,
-    lock: lockHash,
-    lockHash,
-  };
-
-  console.log('saveWallets ---> currentWallet: ', currentWallet);
-
-  await browser.storage.local.set({
-    currentWallet,
-  });
 };
 
 export const setAddressesList = async (addressesList) => {
@@ -117,47 +92,68 @@ const getAddressesList = async () => {
   return result;
 };
 
-const updateAddressesList = async () => {
+const getWalletInfoByPublicKey = async (publicKey: string) => {
   const container = await containerManager.getCurrentContainer();
-  const publicKeys = await getPublicKeys();
   const lockHashWithMetas: LockHashWithMeta[] = await container.getAllLockHashesAndMeta();
-  console.log(' updateAddressesList ====> publicKeys: ', publicKeys);
-  console.log(' updateAddressesList ====> lockHashWithMetas: ', lockHashWithMetas);
-
-  const addressesList = publicKeys.map((publicKey) => {
-    const publicKeyWrapper: PublicKey = {
-      payload: publicKey,
-      algorithm: SignatureAlgorithm.secp256k1,
-    };
-    const scripts: Script[] = container.getScripsByPublicKey(publicKeyWrapper);
-    const addresses = scripts.map((script) => {
-      const lockHashWithMeta = lockHashWithMetas.find((item) => {
-        const { meta } = item;
-        return script.codeHash === meta.script.codeHash;
-      });
-      console.log(' ------- lockHashWithMeta: ', lockHashWithMeta);
-      const {
-        hash: lockHash,
-        meta: { name },
-      } = lockHashWithMeta;
-      return {
-        script,
-        type: name,
-        lock: lockHash,
-        amount: 0,
-        lockHash,
-      };
+  console.log(' ====  getWalletInfoByPublicKey, lockHashWithMetas: ', lockHashWithMetas);
+  const publicKeyInstance = new PublicKeyClass(publicKey);
+  const publicKeyWrapper: PublicKey = {
+    payload: publicKey,
+    algorithm: SignatureAlgorithm.secp256k1,
+  };
+  const scripts: Script[] = container.getScripsByPublicKey(publicKeyWrapper);
+  const addresses = scripts.map((script) => {
+    const lockHash = publicKeyInstance.getLockHash(script);
+    console.log(' ------- lockHash: ', lockHash);
+    const lockHashWithMeta = lockHashWithMetas.find((item: LockHashWithMeta) => {
+      return lockHash === item.hash;
     });
+    console.log(' ------- lockHashWithMeta: ', lockHashWithMeta);
 
-    console.log(' aaaaa  getAllLockHashesAndMeta, addresses: ', addresses);
     return {
-      publicKey,
-      addresses,
+      type: lockHashWithMeta?.meta?.name,
+      script,
+      lock: lockHash,
+      lockHash,
+      amount: 0,
     };
   });
 
+  console.log(' aaaaa  getWalletInfoByPublicKey, addresses: ', addresses);
+  return {
+    publicKey,
+    addresses,
+  };
+};
+
+const updateAddressesList = async () => {
+  const publicKeys = await getPublicKeys();
+  console.log(' updateAddressesList ====> publicKeys: ', publicKeys);
+
+  const addressesListPromise = publicKeys.map((publicKey) => {
+    return getWalletInfoByPublicKey(publicKey);
+  });
+  const addressesList = await Promise.all(addressesListPromise);
+  console.log(' updateAddressesList ====> addressesList: ', addressesList);
+
   await browser.storage.local.set({
     addressesList,
+  });
+};
+
+export const setCurrentWallet = async (publicKey: string) => {
+  const { addresses } = await getWalletInfoByPublicKey(publicKey);
+  const { type, script, lock, lockHash } = addresses[0];
+  const currentWallet = {
+    publicKey,
+    type,
+    script,
+    lock,
+    lockHash,
+  };
+
+  await browser.storage.local.set({
+    currentWallet,
   });
 };
 
