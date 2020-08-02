@@ -58,17 +58,14 @@ interface AppProps {
   addressInfo: TAddressInfo;
 }
 
-interface AppState {}
-
-export default function (props: AppProps, state: AppState) {
+export default (props: AppProps) => {
   const classes = useStylesTheme();
   const history = useHistory();
   const { addressInfo } = props;
 
-  const { type, lock, script } = addressInfo;
+  const { type, lock, script, address } = addressInfo;
   const [capacity, setCapacity] = React.useState('0');
   const [name, setName] = React.useState('');
-  const [newAddr, setNewAddr] = React.useState('');
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -82,17 +79,13 @@ export default function (props: AppProps, state: AppState) {
   React.useEffect(() => {
     (async () => {
       const contactStorage = await browser.storage.local.get('contacts');
-      const currNetworkStorage = await browser.storage.local.get('currentNetwork');
-
-      const addr = showAddressHelper(currNetworkStorage.currentNetwork.prefix, script);
-      setNewAddr(addr);
 
       if (_.isEmpty(contactStorage)) return;
 
       const { contacts } = contactStorage;
 
       _.find(contacts, (ele) => {
-        if (ele.address === addr) {
+        if (ele.address === address) {
           setName(ele.name);
         }
       });
@@ -106,18 +99,18 @@ export default function (props: AppProps, state: AppState) {
 
     browser.storage.local.set({ currentWallet });
 
-    history.push(`/address/${addressInfo.address}`);
+    history.push(`/address/${address}`);
   };
 
   return (
     <ThemeProvider theme={listItemTheme}>
       <ListItem
         button
-        key={`item-${newAddr}`}
+        key={`item-${address}`}
         onClick={(event) => handleListItemClick(event, addressInfo)}
       >
         <ListItemText
-          primary={truncateAddress(newAddr)}
+          primary={truncateAddress(address)}
           secondary={
             <>
               <Typography
@@ -136,4 +129,4 @@ export default function (props: AppProps, state: AppState) {
       </ListItem>
     </ThemeProvider>
   );
-}
+};
