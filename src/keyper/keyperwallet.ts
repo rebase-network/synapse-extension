@@ -142,7 +142,7 @@ async function saveWallets(
   };
 
   // save all to storage
-  browser.storage.local.set({
+  await browser.storage.local.set({
     publicKeys,
     wallets,
     addressesList,
