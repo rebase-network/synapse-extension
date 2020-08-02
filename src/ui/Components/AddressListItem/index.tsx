@@ -1,29 +1,19 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
-import {
-  makeStyles,
-  Theme,
-  createStyles,
-  withStyles,
-  createMuiTheme,
-  ThemeProvider,
-} from '@material-ui/core/styles';
+import { makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { ListItem, ListItemText, Typography } from '@material-ui/core';
 import { truncateAddress, shannonToCKBFormatter } from '@utils/formatters';
 import { getAddressInfo } from '@utils/apis';
-import { showAddressHelper } from '@utils/wallet';
 
-const useStylesTheme = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      margin: 30,
-    },
-    inline: {
-      display: 'inline',
-    },
-  }),
-);
+const useStylesTheme = makeStyles({
+  container: {
+    margin: 30,
+  },
+  inline: {
+    display: 'inline',
+  },
+});
 
 const listItemTheme = createMuiTheme({
   overrides: {
@@ -63,7 +53,7 @@ export default (props: AppProps) => {
   const history = useHistory();
   const { addressInfo } = props;
 
-  const { type, lock, script, address } = addressInfo;
+  const { type, lock, address } = addressInfo;
   const [capacity, setCapacity] = React.useState('0');
   const [name, setName] = React.useState('');
 
