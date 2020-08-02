@@ -1,6 +1,5 @@
 export const wallets = [
   {
-    blake160: '0x0b0e4d2cc5e30122496736049ac211e2262abb94',
     entropyKeystore: '',
     keystore:
       '{"data":"Eoi8blI4DkqV6gFboXf5fFrEEFT6Ruyati2jPmuSDIIQ0JUY564yj6tIn6ZeNeHyF07/50redPryklzb4+ik7lHIHk0iwqhoa2AXl6huQNF9djAqCUWlnxmmKrRtTp5lqBvuSl4ISxLyL+S1H6GBzu1bo9qTo7+3delmDAlYaIv9RQXaxYQxaRq7zodEZr4KGmkDHEGZRm8mIDt3bw==","iv":"haB4bkup1m6eEMeuL702Ww==","salt":"3Mxo4KRTrX7HgLzjy2ZHsKXoWnmq0MibKsahtA3CYpc="}',
@@ -9,7 +8,6 @@ export const wallets = [
     rootKeystore: '',
   },
   {
-    blake160: '0x72c2cc1c4ded3f412fd244ff742b0ce667b7fe56',
     entropyKeystore:
       '{"data":"ZPTUv6QOX7hRg4T9gRYXTXk4gDfqBwdcsY0UaFup8YP26oa8qX6lpeqckU1EOyqQ0POzZtw8HqyQ1yQ4nmRn7GXh/QJdVNi4FjGE9y6g34Gg37qPvaqtSicQByzQqsA=","iv":"l8h6u6znz/BUEleBNBEmMQ==","salt":"tBKFIWuOQ7vEjAKkAQuPfyMZLa3jJnPNGEbHFx94cMk="}',
     keystore:
@@ -20,7 +18,6 @@ export const wallets = [
       '{"data":"z0jQgUbx9Mf2n6vUpepgqSa9xnuoxakLa4LEwpYkCN/yc/08++y3n8ce1W8eHMFb1WYtYD6Hv7rrGH93AX4RWPrfumDCEzvTwgLX2+Xit7JVdtI9C0bzAGcsNzhcM64W/6I1orkze/JEisYdeHpcuU92W0hEUI4v6PlB9SuWsCmunkLMK24FtFGZxY/zRYhkLi64nifEE1I1S2fgPg6tQFC6OEJGVRAWriITYoNagqdplEzYSAlJhCNv789lni1njVyzFtgI5W1qCNQ8kXJop6ndlo65Hs4+L1f3LTxkW0Uw18nt5Ln2zP5DAGzqemQBuSNcH1ObMGjf79zha5PySOpBSNkS8JprZD2hK2yL","iv":"lG6FZ92rSV9CUsoZJMD2zQ==","salt":"JR4QmFQ48RuvfYrqxkmJM7qIcQu9I6NaMTAMTxyKKdM="}',
   },
   {
-    blake160: '0x0cfa67e35069ac4923ee86a0a83de9a72e5da33c',
     entropyKeystore: '',
     keystore:
       '{"data":"tKn7P2kil4TFs3PBkrIYkA8uDBA5lILh1BBNvpIMrtslOH/QzvqYF7CzzAK46ng8taC9/p/28Poq338eUiWHr4eiF0KGMusvtHjvXFKTsiErlPuHM1Jq+K2uww0Pq9EPuvOYYi9pvpwZehmJcKIoe0/jbroH+o0jQ4WJmFv9dJFSOhhyO0iiT6MofKdMur3+3WIxBYxPMvtDKciiccXm","iv":"c5LY1XJe8smRcfUXrMGqjg==","salt":"WIFviei/JGvbLIQp/rybWh+tkXI37CemnPVc9miVdKM="}',

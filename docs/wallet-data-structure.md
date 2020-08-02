@@ -5,7 +5,6 @@
 ```js
 const walletCommon = {
   publicKey: 'addressObj.path',
-  blake160: 'blake160',
   entropyKeystore: 'entropyKeystore',
   rootKeystore: 'rootKeystore',
   keystore: '_obj',
@@ -84,7 +83,6 @@ const addressesList = [
     "currWallet":{
       "index":1,
       "path":"", // 可为空
-      "blake160":"xx",
       "mainnetAddr":"ckb....",
       "testnetAddr":"ckt.....",
       "lockHash":".....",

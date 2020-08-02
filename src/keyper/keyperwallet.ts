@@ -168,8 +168,6 @@ export const addWallet = async (privateKeyWithout0x, keystore, entropyKeystore, 
   const wallets = await getWallets();
   const walletCommon = {
     publicKey,
-    // REFACTOR: should be removed
-    // blake160,
     entropyKeystore,
     rootKeystore,
     keystore,

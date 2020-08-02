@@ -51,7 +51,6 @@ export const aliceAddresses = {
 };
 
 export const aliceWallet = {
-  blake160: '0xf3e72cf1890c060a84cdefac1b1ba49e05291606',
   entropyKeystore: '',
   keystore:
     '{"data":"8S/gbtiyjFYpQKwSG9fDZUJga+adVC0iBr3q7tQMhI4M0f6LZUPdxRL2P7jN/Qf/VBY1wFcKmE3oFInc6C2SHUY+TI1+IH4hqDcGmsAMd1tj3Gl7PjfQYgkVisP+9SAOQrYBfvcSA+9jh721b9qknaICH7LwO3B2LI0/LaJ6laU43C6hODJoiMrHVhMyKq6aSwyL5dKJefu2NCS35A==","iv":"5AcdqtHlQJeUROVzuo+/FA==","salt":"TF2qk4O7ongXFZoz8JCGXtZaVPA4D/BkT0iCJrUxfWw="}',
