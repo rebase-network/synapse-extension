@@ -29,6 +29,38 @@ const getAccounts = async (networkPrefix: string) => {
   return result;
 };
 
+export const getWallets = async () => {
+  const { wallets = [] } = await browser.storage.local.get('wallets');
+  return wallets;
+};
+
+export const getPublicKeys = async () => {
+  const { publicKeys = [] } = await browser.storage.local.get('publicKeys');
+  return publicKeys;
+};
+
+export const getAddressesList = async () => {
+  const { addressesList = [] } = await browser.storage.local.get('addressesList');
+  return addressesList;
+};
+
+export const getCurrentWallet = async () => {
+  const { currentWallet = {} } = await browser.storage.local.get('currentWallet');
+  return currentWallet;
+};
+
+export const setCurrentWallet = async (currentWallet) => {
+  await browser.storage.local.set({
+    currentWallet,
+  });
+};
+
+export const setAddressesList = async (addressesList) => {
+  await browser.storage.local.set({
+    addressesList,
+  });
+};
+
 export const signTx = async (lockHash, password, rawTx, config, others = {}) => {
   const container = await containerManager.getCurrentContainer();
   const context = {
@@ -63,37 +95,6 @@ export async function addKeyperWallet(
 
   return accounts;
 }
-
-export const getWallets = async () => {
-  const { wallets = [] } = await browser.storage.local.get('wallets');
-  return wallets;
-};
-
-export const getPublicKeys = async () => {
-  const { publicKeys = [] } = await browser.storage.local.get('publicKeys');
-  return publicKeys;
-};
-
-export const getAddressesList = async () => {
-  const { addressesList = [] } = await browser.storage.local.get('addressesList');
-  return addressesList;
-};
-
-export const getCurrentWallet = async () => {
-  const { currentWallet = {} } = await browser.storage.local.get('currentWallet');
-  return currentWallet;
-};
-
-export const setCurrentWallet = async (currentWallet) => {
-  await browser.storage.local.set({
-    currentWallet,
-  });
-};
-export const setAddressesList = async (addressesList) => {
-  await browser.storage.local.set({
-    addressesList,
-  });
-};
 
 // privateKey Not contain '0x'prefix
 async function saveWallets(
