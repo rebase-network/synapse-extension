@@ -162,11 +162,12 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
   // get tx history by address
   if (request.type === MESSAGE_TYPE.GET_TX_HISTORY) {
-    const cwStorage = await browser.storage.local.get('currentWallet');
-
-    const address = cwStorage.currentWallet ? cwStorage.currentWallet.address : undefined;
-    const lockHash = cwStorage.currentWallet ? cwStorage.currentWallet.lock : undefined;
-    const txs = address ? await getTxHistories(lockHash) : [];
+    const { currentWallet } = await browser.storage.local.get('currentWallet');
+    const lockHash = currentWallet?.lock;
+    let txs = [];
+    if (currentWallet?.lockHash) {
+      txs = await getTxHistories(lockHash);
+    }
     chrome.runtime.sendMessage({
       txs,
       type: MESSAGE_TYPE.SEND_TX_HISTORY,
