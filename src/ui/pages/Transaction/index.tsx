@@ -324,7 +324,7 @@ export default () => {
     address: '',
     capacity: '',
     data: '',
-    fee: 1000,
+    fee: 0.00001,
     password: '',
     ...searchParams,
   };

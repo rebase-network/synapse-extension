@@ -315,7 +315,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
     const toAddress = request.address.trim();
     const capacity = request.capacity * CKB_TOKEN_DECIMALS;
-    const feeRate = request.fee;
+    const fee = request.fee * CKB_TOKEN_DECIMALS;
     const password = request.password.trim();
     const toData = request.data.trim();
 
@@ -348,7 +348,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
           from: fromAddress,
           to: toAddress,
           amount: capacity.toString(),
-          fee: 0,
+          fee,
           hash: '',
           status: 'Pending',
           blockNum: 'Pending',
@@ -357,12 +357,13 @@ chrome.runtime.onMessage.addListener(async (request) => {
     };
 
     try {
+      console.log(/444/);
       const sendTxObj = await sendTransaction(
         privateKey,
         fromAddress,
         toAddress,
-        BigInt(capacity),
-        BigInt(feeRate),
+        capacity,
+        fee,
         lockHash,
         lockType,
         password,
@@ -382,7 +383,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       }
       responseMsg.data.hash = sendTxObj.txHash;
       responseMsg.data.tx.hash = sendTxObj.txHash;
-      responseMsg.data.tx.fee = sendTxObj.fee;
+      responseMsg.data.tx.fee = fee;
       responseMsg.success = true;
       responseMsg.message = 'TX is sent';
     } catch (error) {

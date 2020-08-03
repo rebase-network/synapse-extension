@@ -1,13 +1,13 @@
 import { BN } from 'bn.js';
 import { addressToScript } from '@keyper/specs';
 import { ADDRESS_TYPE_CODEHASH } from '@utils/constants';
-import { textToHex, textToBytesLength } from '@utils/index';
+import { textToHex } from '@utils/index';
 import _ from 'lodash';
 import { getDepFromLockType } from '@utils/deps';
 import { getUnspentCells } from '@utils/apis';
 import getCKB from '@utils/ckb';
 import { signTx } from '@src/wallet/addKeyperWallet';
-import { createRawTx, createAnyPayRawTx, createUpdateDataRawTx } from './txGenerator';
+import { createRawTx, createAnyPayRawTx } from './txGenerator';
 
 export interface GenerateTxResult {
   tx: CKBComponents.RawTransaction;
@@ -18,7 +18,7 @@ export const generateTx = async (
   fromAddress,
   toAddress,
   toAmount,
-  feeRate,
+  fee,
   lockHash,
   lockType,
   toDataHex?,
@@ -56,7 +56,7 @@ export const generateTx = async (
     inputCells,
     fromLockScript,
     [depObj],
-    feeRate,
+    new BN(fee),
     toDataHex,
   );
   const resultObj = {
@@ -70,7 +70,7 @@ export const generateAnyPayTx = async (
   fromAddress,
   toAddress,
   toAmount,
-  feeRate,
+  fee,
   lockHash,
   fromLockType,
   toLockType,
@@ -134,7 +134,7 @@ export const generateAnyPayTx = async (
       inputCells,
       fromLockScript,
       [toDepObj],
-      feeRate,
+      new BN(fee),
       unspentWalletCells,
       walletTotalCapity,
     );
@@ -145,7 +145,7 @@ export const generateAnyPayTx = async (
       inputCells,
       fromLockScript,
       [fromDepObj, toDepObj],
-      feeRate,
+      new BN(fee),
       unspentWalletCells,
       walletTotalCapity,
     );
@@ -158,87 +158,12 @@ export const generateAnyPayTx = async (
   return resultObj;
 };
 
-export const generateUpdateDataTx = async (
-  deps,
-  fee,
-  fromAddress,
-  inputOutPoint: CKBComponents.OutPoint,
-  lockHash,
-  inputData,
-) => {
-  const ckb = await getCKB();
-  const fromLockScript = addressToScript(fromAddress);
-  const dataCell = await ckb.rpc.getLiveCell(inputOutPoint, true);
-  const cellDataCapacity = BigInt(dataCell.cell.output.capacity);
-
-  const params = {
-    capacity: cellDataCapacity.toString(),
-  };
-  const unspentCells = await getUnspentCells(lockHash, params);
-  // Error handling
-  if (unspentCells.errCode !== undefined && unspentCells.errCode !== 0) {
-    return unspentCells;
-  }
-
-  let inputDataHex = '';
-  let inputDataLength = 0;
-  let newDataCapacity = 0;
-  if (_.isEmpty(inputData)) {
-    inputDataHex = '0x';
-  } else {
-    inputDataHex = textToHex(inputData);
-    inputDataLength = textToBytesLength(inputData);
-    newDataCapacity = inputDataLength * 10 ** 8;
-  }
-
-  const rawObj = createUpdateDataRawTx(
-    deps,
-    BigInt(fee),
-    fromLockScript,
-    inputOutPoint,
-    BigInt(cellDataCapacity),
-    unspentCells,
-    BigInt(newDataCapacity),
-    inputDataHex,
-  );
-  const rawTransaction = rawObj.tx;
-
-  return rawTransaction;
-};
-
-export const sendUpdateDataTransaction = async (
-  deps,
-  fee,
-  fromAddress,
-  inputOutPoint,
-  lockHash,
-  inputData,
-  password,
-  publicKey,
-) => {
-  const rawTransaction = await generateUpdateDataTx(
-    deps,
-    fee,
-    fromAddress,
-    inputOutPoint,
-    lockHash,
-    inputData,
-  );
-
-  const config = { index: 0, length: -1 };
-  const signedTx = await signTx(lockHash, password, rawTransaction, config, publicKey);
-
-  const ckb = await getCKB();
-  const realTxHash = await ckb.rpc.sendTransaction(signedTx);
-  return realTxHash;
-};
-
 export const sendTransaction = async (
   privateKey,
   fromAddress,
   toAddress,
   toAmount,
-  feeRate,
+  fee,
   lockHash,
   lockType,
   password,
@@ -286,7 +211,7 @@ export const sendTransaction = async (
       fromAddress,
       toAddress,
       toAmount,
-      feeRate,
+      fee,
       lockHash,
       lockType,
       toDataHex,
@@ -297,18 +222,19 @@ export const sendTransaction = async (
       fromAddress,
       toAddress,
       toAmount,
-      feeRate,
+      fee,
       lockHash,
       lockType,
       toLockType,
     );
     config = { index: 1, length: 1 };
   } else if (toLockType === 'Secp256k1') {
+    console.log(/333/);
     rawTxObj = await generateTx(
       fromAddress,
       toAddress,
       toAmount,
-      feeRate,
+      fee,
       lockHash,
       lockType,
       toDataHex,
