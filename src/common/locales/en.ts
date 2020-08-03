@@ -68,7 +68,7 @@ export default {
   'lack of capacity':'Capacity is insufficient to trade',
   'the rest capacity is less than 61, it will be destroyed':'the rest capacity is less than 61, it will be destroyed',
   'lack of capacity, available capacity is':'lack of capacity, available capacity is',
-  'the remaining capacity is less than 61, if continue it will be destroyed, remaining capacity is':'the remaining capacity is less than 61, if continue it will be destroyed, remaining capacity is',
+  'the remaining capacity is less than 61, if continue it will be destroyed, remaining capacity is':'the remaining capacity is less than 61, if continue it will be destroyed, remaining capacity is ',
   'Manage Networks': 'Manage Networks',
   'CKB Node URL': 'CKB Node URL',
   'CKB Cache Layer URL': 'CKB Cache Layer URL',
