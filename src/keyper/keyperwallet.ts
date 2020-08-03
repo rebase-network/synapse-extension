@@ -37,7 +37,6 @@ export const addPublicKey = async (publicKey: string) => {
       publicKeys,
     });
   }
-  console.log('addPublicKey ---> after: ', publicKeys);
 };
 
 export const getCurrentWallet = async () => {
@@ -62,40 +61,9 @@ export const signTx = async (lockHash, password, rawTx, config, others = {}) => 
   return tx;
 };
 
-const getAddressesList = async () => {
-  const container = await containerManager.getCurrentContainer();
-  const publicKeys = await getPublicKeys();
-  const lockHashWithMetas: LockHashWithMeta[] = await container.getAllLockHashesAndMeta();
-  console.log(' getAddressesList ====> lockHashWithMetas: ', lockHashWithMetas);
-
-  const result = publicKeys.map((publicKey) => {
-    const addresses = lockHashWithMetas.map((lockHashWithMeta: LockHashWithMeta) => {
-      const {
-        hash: lockHash,
-        meta: { name, script },
-      } = lockHashWithMeta;
-      return {
-        script,
-        type: name,
-        lock: lockHash,
-        amount: 0,
-        lockHash,
-      };
-    });
-    console.log(' aaaaa  getAllLockHashesAndMeta, addresses: ', addresses);
-    return {
-      publicKey,
-      addresses,
-    };
-  });
-
-  return result;
-};
-
 const getWalletInfoByPublicKey = async (publicKey: string) => {
   const container = await containerManager.getCurrentContainer();
   const lockHashWithMetas: LockHashWithMeta[] = await container.getAllLockHashesAndMeta();
-  console.log(' ====  getWalletInfoByPublicKey, lockHashWithMetas: ', lockHashWithMetas);
   const publicKeyInstance = new PublicKeyClass(publicKey);
   const publicKeyWrapper: PublicKey = {
     payload: publicKey,
@@ -104,11 +72,9 @@ const getWalletInfoByPublicKey = async (publicKey: string) => {
   const scripts: Script[] = container.getScripsByPublicKey(publicKeyWrapper);
   const addresses = scripts.map((script) => {
     const lockHash = publicKeyInstance.getLockHash(script);
-    console.log(' ------- lockHash: ', lockHash);
     const lockHashWithMeta = lockHashWithMetas.find((item: LockHashWithMeta) => {
       return lockHash === item.hash;
     });
-    console.log(' ------- lockHashWithMeta: ', lockHashWithMeta);
 
     return {
       type: lockHashWithMeta?.meta?.name,
@@ -119,7 +85,6 @@ const getWalletInfoByPublicKey = async (publicKey: string) => {
     };
   });
 
-  console.log(' aaaaa  getWalletInfoByPublicKey, addresses: ', addresses);
   return {
     publicKey,
     addresses,
@@ -128,13 +93,10 @@ const getWalletInfoByPublicKey = async (publicKey: string) => {
 
 const updateAddressesList = async () => {
   const publicKeys = await getPublicKeys();
-  console.log(' updateAddressesList ====> publicKeys: ', publicKeys);
-
   const addressesListPromise = publicKeys.map((publicKey) => {
     return getWalletInfoByPublicKey(publicKey);
   });
   const addressesList = await Promise.all(addressesListPromise);
-  console.log(' updateAddressesList ====> addressesList: ', addressesList);
 
   await browser.storage.local.set({
     addressesList,
