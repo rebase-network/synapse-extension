@@ -17,7 +17,6 @@ export function createRawTx(
   fee,
   toDataHex?,
 ): CreateRawTxResult {
-  console.log(/111/);
   const rawTx = {
     version: '0x0',
     cellDeps: deps,
@@ -70,8 +69,6 @@ export function createRawTx(
     tx: rawTx,
     fee,
   };
-
-  console.log(/222/);
   return signObj;
 }
 

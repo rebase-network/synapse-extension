@@ -217,7 +217,7 @@ export const sendTransaction = async (
       toDataHex,
     );
     config = { index: 0, length: -1 };
-  } else if (toLockType === 'AnyPay') {
+  } else if (toLockType === 'AnyPay' && unspentWalletCells.length > 0) {
     rawTxObj = await generateAnyPayTx(
       fromAddress,
       toAddress,
@@ -229,7 +229,6 @@ export const sendTransaction = async (
     );
     config = { index: 1, length: 1 };
   } else if (toLockType === 'Secp256k1') {
-    console.log(/333/);
     rawTxObj = await generateTx(
       fromAddress,
       toAddress,

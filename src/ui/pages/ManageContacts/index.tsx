@@ -12,6 +12,8 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { truncateAddress } from '@utils/formatters';
 import _ from 'lodash';
+import * as Yup from 'yup';
+import { addressToScript } from '@keyper/specs';
 
 const useStyles = makeStyles({
   container: {
@@ -24,7 +26,7 @@ interface AppProps {}
 
 interface AppState {}
 
-export const innerForm = (props) => {
+export const InnerForm = (props) => {
   const intl = useIntl();
 
   const { values, touched, errors, handleChange, handleBlur, handleSubmit, handleReset } = props;
@@ -79,21 +81,31 @@ export const innerForm = (props) => {
   );
 };
 
-export default function initFunction(props: AppProps, state: AppState) {
+export default function Init(props: AppProps, state: AppState) {
   const classes = useStyles();
+  const intl = useIntl();
   const [contactItems, setContactItems] = React.useState([]);
+  const [inValidate, setInValidate] = React.useState(false);
 
-  const onSubmit = async (values, { resetForm }) => {
+  const onSubmit = async (values) => {
     let contactsObj = [];
     const { address, name } = values;
+
+    // address validate
+    setInValidate(false);
+    try {
+      addressToScript(address);
+    } catch (error) {
+      setInValidate(true);
+      return;
+    }
     const contactsStorage = await browser.storage.local.get('contacts');
     if (Array.isArray(contactsStorage.contacts)) {
       contactsObj = contactsStorage.contacts;
     }
 
     const contactObj = { address, name };
-
-    if (contactsObj.length == 0) {
+    if (contactsObj.length === 0) {
       contactsObj.push(contactObj);
     } else {
       _.find(contactsObj, (contactItem) => {
@@ -107,8 +119,6 @@ export default function initFunction(props: AppProps, state: AppState) {
 
     setContactItems(contactsObj);
     await browser.storage.local.set({ contacts: contactsObj });
-
-    resetForm();
   };
 
   React.useEffect(() => {
@@ -117,7 +127,7 @@ export default function initFunction(props: AppProps, state: AppState) {
         setContactItems(result.contacts);
       }
     });
-  }, []);
+  }, [contactItems]);
 
   const handleListItemClick = async (event, address) => {
     let contactsObj = [];
@@ -127,7 +137,7 @@ export default function initFunction(props: AppProps, state: AppState) {
       contactsObj = contactsStorage.contacts;
     }
 
-    _.remove(contactsObj, function (contact) {
+    _.remove(contactsObj, function remove(contact) {
       return contact.address === address;
     });
 
@@ -154,21 +164,26 @@ export default function initFunction(props: AppProps, state: AppState) {
     );
   });
 
+  let failureNode = null;
+  if (inValidate) {
+    failureNode = <div>{intl.formatMessage({ id: 'Invalid address' })}</div>;
+  }
   return (
     <div>
       <PageNav to="/setting" title="Manage Contacts" />
       <div className={classes.container}>
         {contactElem}
+        {failureNode}
         <Formik
           initialValues={{ address: '', name: '' }}
           onSubmit={onSubmit}
-          //   validationSchema={Yup.object().shape({
-          //     password: Yup.string()
-          //       .min(6)
-          //       .required(intl.formatMessage({ id: 'Required' })),
-          //   })}
+          validationSchema={Yup.object().shape({
+            name: Yup.string()
+              .min(6)
+              .required(intl.formatMessage({ id: 'Required' })),
+          })}
         >
-          {innerForm}
+          {InnerForm}
         </Formik>
       </div>
     </div>
