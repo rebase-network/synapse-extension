@@ -1,45 +1,57 @@
-// const numberToBN = require("number-to-bn");
-// const secp256k1 = require("secp256k1");
-// const createKeccakHash = require("keccak");
-// const utils = require("@nervosnetwork/ckb-sdk-utils/lib");
-// const {
-//   SignatureAlgorithm
-// } = require("@keyper/specs/lib");
-
+import _ from 'lodash';
 import numberToBN from 'number-to-bn';
 import secp256k1 from 'secp256k1';
 import createKeccakHash from 'keccak';
 import * as utils from '@nervosnetwork/ckb-sdk-utils/lib';
-import { SignatureAlgorithm } from '@keyper/specs/lib';
+import {
+  ScriptHashType,
+  Script,
+  RawTransaction,
+  Config,
+  SignProvider,
+  SignContext,
+} from '@keyper/specs';
+import CommonLockScript from './commonLockScript';
 
-class Keccak256LockScript {
-  name = 'Keccak256';
+function hashMessage(message) {
+  const preamble = `\x19Ethereum Signed Message:\n${message.length}`;
+  const preambleBuffer = Buffer.from(preamble);
+  const ethMessage = Buffer.concat([preambleBuffer, message]);
+  return `0x${createKeccakHash('keccak256').update(ethMessage).digest('hex')}`;
+}
 
-  codeHash = '0xa5b896894539829f5e7c5902f0027511f94c70fa2406d509e7c6d1df76b06f08';
+function mergeTypedArraysUnsafe(a, b) {
+  const c = new a.constructor(a.length + b.length);
+  c.set(a);
+  c.set(b, a.length);
 
-  hashType = 'type';
+  return c;
+}
 
-  provider = null;
+class ItsLockScript {
+  public readonly name: string = 'Keccak256';
 
-  deps() {
-    return [
-      {
-        outPoint: {
-          txHash: '0x25635bf587adacf95c9ad302113648f89ecddc2acfe1ea358ea99f715219c4c5',
-          index: '0x0',
-        },
-        depType: 'code',
-      },
-    ];
+  protected codeHash: string;
+
+  protected txHash: string;
+
+  protected hashType: ScriptHashType;
+
+  protected provider: SignProvider;
+
+  constructor(codeHash: string, txHash: string, hashType: ScriptHashType = 'type') {
+    this.codeHash = codeHash;
+    this.txHash = txHash;
+    this.hashType = hashType;
   }
 
-  script(publicKey) {
-    let pubKey = new Buffer(utils.hexToBytes(publicKey));
+  public script(publicKey: string): Script {
+    let pubKey = Buffer.from(utils.hexToBytes(publicKey));
     if (pubKey.length !== 64) {
       pubKey = secp256k1.publicKeyConvert(pubKey, false).slice(1);
     }
 
-    const args = createKeccakHash('keccak256').update(new Buffer(pubKey)).digest('hex').slice(-40);
+    const args = createKeccakHash('keccak256').update(Buffer.from(pubKey)).digest('hex').slice(-40);
     return {
       codeHash: this.codeHash,
       hashType: this.hashType,
@@ -47,30 +59,13 @@ class Keccak256LockScript {
     };
   }
 
-  signatureAlgorithm() {
-    return SignatureAlgorithm.secp256k1;
-  }
-
-  async setProvider(provider) {
-    this.provider = provider;
-  }
-
-  hashMessage(message) {
-    const preamble = `\x19Ethereum Signed Message:\n${message.length}`;
-    const preambleBuffer = Buffer.from(preamble);
-    const ethMessage = Buffer.concat([preambleBuffer, message]);
-    return `0x${createKeccakHash('keccak256').update(ethMessage).digest('hex')}`;
-  }
-
-  mergeTypedArraysUnsafe(a, b) {
-    const c = new a.constructor(a.length + b.length);
-    c.set(a);
-    c.set(b, a.length);
-
-    return c;
-  }
-
-  async sign(context, rawTx, config = { index: 0, length: -1 }) {
+  public async sign(
+    context: SignContext,
+    rawTxParam: RawTransaction,
+    configParam: Config = { index: 0, length: -1 },
+  ) {
+    const rawTx = _.cloneDeep(rawTxParam);
+    const config = _.cloneDeep(configParam);
     const txHash = utils.rawTransactionToHash(rawTx);
 
     if (config.length === -1) {
@@ -93,28 +88,28 @@ class Keccak256LockScript {
     const serialziedEmptyWitnessSize = serializedEmptyWitnessBytes.length;
 
     let hashBytes = utils.hexToBytes(txHash);
-    hashBytes = this.mergeTypedArraysUnsafe(
+    hashBytes = mergeTypedArraysUnsafe(
       hashBytes,
       utils.hexToBytes(
         utils.toHexInLittleEndian(`0x${numberToBN(serialziedEmptyWitnessSize).toString(16)}`, 8),
       ),
     );
-    hashBytes = this.mergeTypedArraysUnsafe(hashBytes, serializedEmptyWitnessBytes);
+    hashBytes = mergeTypedArraysUnsafe(hashBytes, serializedEmptyWitnessBytes);
 
     for (let i = config.index + 1; i < config.index + config.length; i++) {
       const w = rawTx.witnesses[i];
       const bytes = utils.hexToBytes(typeof w === 'string' ? w : utils.serializeWitnessArgs(w));
-      hashBytes = this.mergeTypedArraysUnsafe(
+      hashBytes = mergeTypedArraysUnsafe(
         hashBytes,
         utils.hexToBytes(
           utils.toHexInLittleEndian(`0x${numberToBN(bytes.length).toString(16)}`, 8),
         ),
       );
-      hashBytes = this.mergeTypedArraysUnsafe(hashBytes, bytes);
+      hashBytes = mergeTypedArraysUnsafe(hashBytes, bytes);
     }
 
-    const message = this.hashMessage(
-      createKeccakHash('keccak256').update(new Buffer(hashBytes)).digest(),
+    const message = hashMessage(
+      createKeccakHash('keccak256').update(Buffer.from(hashBytes)).digest(),
     );
 
     const signd = await this.provider.sign(context, message);
@@ -125,4 +120,7 @@ class Keccak256LockScript {
   }
 }
 
-module.exports = Keccak256LockScript;
+const withMixin = CommonLockScript(ItsLockScript);
+
+export default withMixin;
+export { withMixin as Keccak256LockScript };
