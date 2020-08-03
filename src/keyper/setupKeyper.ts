@@ -1,9 +1,9 @@
 import { Secp256k1LockScript as Secp256k1LockScriptOriginal } from '@keyper/container/lib/locks/secp256k1';
 import { SignatureAlgorithm } from '@keyper/specs';
+import LOCKS_INFO, { NETWORKS } from '@utils/constants/locksInfo';
 import ContainerManager from './containerManager';
 import WalletManager from './walletManager';
 import { Keccak256LockScript, AnypayLockScript, Secp256k1LockScript } from './locks';
-import LOCKS_INFO, { NETWORKS } from './locksInfo';
 import containerFactory from './containerFactory';
 import signProvider from './signProviders/secp256k1';
 
