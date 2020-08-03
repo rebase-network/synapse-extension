@@ -12,6 +12,7 @@ describe('keyper container manager', () => {
       provider: {
         async sign(context, message) {
           console.log('sign method: ', context, message);
+          return 'txhash for testing';
         },
       },
     },
