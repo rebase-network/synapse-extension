@@ -45,13 +45,13 @@ export default function (props: AppProps, state: AppState) {
 
   const addressesElem = addressesList.map((addressesObj) => {
     return addressesObj.addresses.map((item) => {
-      const newAddr = showAddressHelper(prefix, item.script);
-
+      const address = showAddressHelper(prefix, item.script);
+      const addressInfo = { ...item, publicKey: addressesObj.publicKey, address };
       return (
-        <List component="nav" aria-label="Address List" key={`item-${newAddr}`}>
+        <List component="nav" aria-label="Address List" key={`item-${address}`}>
           <AddressListItem
-            key={`item-${newAddr}`}
-            addressInfo={{ ...item, publicKey: addressesObj.publicKey }}
+            key={`item-${address}`}
+            addressInfo={addressInfo}
             onSelectAddress={props.onSelectAddress}
           />
         </List>

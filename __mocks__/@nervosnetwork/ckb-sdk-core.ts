@@ -1,3 +1,9 @@
+import configService from '@src/config';
+
+const CKBOriginal = jest.requireActual('@nervosnetwork/ckb-sdk-core').default;
+
+const CKBOriginalInstance = new CKBOriginal(configService.CKB_RPC_ENDPOINT);
+
 class CKB {
   url: string = '';
 
@@ -6,7 +12,7 @@ class CKB {
   }
 
   rpc: any = {
-    sendTransaction: () => Promise.resolve('txhash'),
+    sendTransaction: (signedTx) => Promise.resolve(signedTx),
     getLiveCell: () => {
       return {
         cell: {
@@ -19,15 +25,13 @@ class CKB {
         status: 'live',
       };
     },
-    getHeaderByNumber: (blockNumber: string) => Promise.resolve({ timestamp: '100' }),
-    getTransaction: (txHash: string) => Promise.resolve({ transaction: { outputs: [] } }),
+    getHeaderByNumber: (blockNumber: string) =>
+      Promise.resolve({ timestamp: '100', blockNumber, isMock: true }),
+    getTransaction: (txHash: string) =>
+      Promise.resolve({ isMock: true, transaction: { outputs: [] } }),
   };
 
-  signTransaction = (privateKey) => (tx) => {
-    return {
-      witnesses: ['0x100'],
-    };
-  };
+  signTransaction = CKBOriginalInstance.signTransaction;
 }
 
 export default CKB;

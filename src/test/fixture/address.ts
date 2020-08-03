@@ -50,6 +50,16 @@ export const aliceAddresses = {
   privateKey: '0x14cfae84c716f895952634c240db80ba00b11032e5ac9fd1663e3a7233c7d80e',
 };
 
+export const aliceWallet = {
+  entropyKeystore: '',
+  keystore:
+    '{"data":"8S/gbtiyjFYpQKwSG9fDZUJga+adVC0iBr3q7tQMhI4M0f6LZUPdxRL2P7jN/Qf/VBY1wFcKmE3oFInc6C2SHUY+TI1+IH4hqDcGmsAMd1tj3Gl7PjfQYgkVisP+9SAOQrYBfvcSA+9jh721b9qknaICH7LwO3B2LI0/LaJ6laU43C6hODJoiMrHVhMyKq6aSwyL5dKJefu2NCS35A==","iv":"5AcdqtHlQJeUROVzuo+/FA==","salt":"TF2qk4O7ongXFZoz8JCGXtZaVPA4D/BkT0iCJrUxfWw="}',
+  keystoreType: '3',
+  publicKey: '0x0390518e809be027269b464734ed7315959729b3f9dd6bc06572745c6d65182623',
+  rootKeystore: '',
+};
+export const aliceWalletPwd = 'aaaaaa';
+
 export const walletCellAddresses = {
   secp256k1: {
     address: 'ckt1qyqvu6y3t8j8u3s86feug0vc8dnr4pwznnaq3d8zwv',

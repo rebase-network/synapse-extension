@@ -1,5 +1,20 @@
+import { aliceAddresses } from '@src/test/fixture/address';
 // https://explorer.nervos.org/aggron/transaction/0x44f543d59974cb9dac09323008a162beebaa19e6d7d0dbf91507947f678e612c
-const rawTx = {
+
+// use alice's address rather than the real one
+const { privateKey } = aliceAddresses;
+
+const config = { index: 3, length: 2 };
+
+const message = '0x32d4365e154c064dac98ff272941be0fc716765a284c931d9a07a1fafec83dc5';
+
+const signedMessageBeforeSerialize =
+  '0x02bd47677087bd6056f2dd3737249d6c475acbe425dc7d34c97dbab434086d9d4db14676ebd29a8c392ae61291f3ee89d1a00f8792e6b51cc881d8bf5280ac7200';
+
+const signedMessage =
+  '0x550000001000000055000000550000004100000002bd47677087bd6056f2dd3737249d6c475acbe425dc7d34c97dbab434086d9d4db14676ebd29a8c392ae61291f3ee89d1a00f8792e6b51cc881d8bf5280ac7200';
+
+const rawTx: CKBComponents.RawTransactionToSign = {
   cellDeps: [
     {
       depType: 'depGroup',
@@ -213,8 +228,8 @@ const signedWitnesses = [
     lock: '',
     outputType: '',
   },
-  // The value will be different with different private key to sign. The signed witness position/index should unchange (3)
-  '0x550000001000000055000000550000004100000074c3fdb53d5fae16ccf09bb35ed5877e74fc7f54ab8066a80a9a3e827c1d06c902ba365a972da3d1a2f5431a459dd746f3c6ebd7b41f344f9bff47c1db86253000',
+  // The value will be different depends on the private key to sign. The signed witness position/index should unchange (3)
+  signedMessage,
   {
     inputType: '',
     lock: '',
@@ -222,4 +237,23 @@ const signedWitnesses = [
   },
 ];
 
-export { rawTx, rawTxWithMeta, signedWitnesses };
+const signedWitnessesSerialized = [
+  '0x10000000100000001000000010000000',
+  '0x10000000100000001000000010000000',
+  '0x10000000100000001000000010000000',
+  // The value will be different depends on the private key to sign. The signed witness position/index should unchange (3)
+  signedMessage,
+  '0x10000000100000001000000010000000',
+];
+
+export {
+  rawTx,
+  rawTxWithMeta,
+  signedWitnesses,
+  signedWitnessesSerialized,
+  privateKey,
+  config,
+  message,
+  signedMessage,
+  signedMessageBeforeSerialize,
+};

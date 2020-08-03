@@ -1,5 +1,5 @@
+import { networks } from '@utils/constants/networks';
 import NetworkManager from './index';
-import { networks } from './constants';
 
 describe('network manager', () => {
   beforeEach(async () => {
@@ -16,14 +16,19 @@ describe('network manager', () => {
 
   it('should able to set current network', async () => {
     const result = await NetworkManager.getCurrentNetwork();
+
     expect(result).toBe(networks[0]);
+
     await NetworkManager.setCurrentNetwork(networks[0].title);
     expect(await NetworkManager.getCurrentNetwork()).toBe(networks[0]);
+
+    await NetworkManager.setCurrentNetwork(networks[1].title);
+    expect(await NetworkManager.getCurrentNetwork()).toBe(networks[1]);
   });
 
   it('should able to create a network', async () => {
     const result = await NetworkManager.createNetwork({
-      title: 'Lina Mainnet',
+      title: 'Lina Mainnet 2',
       networkType: 'mainnet',
       prefix: 'ckb',
       nodeURL: 'http://mainnet.getsynapse.io/rpc',

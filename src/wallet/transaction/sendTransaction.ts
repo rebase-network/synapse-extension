@@ -6,7 +6,8 @@ import _ from 'lodash';
 import { getDepFromLockType } from '@utils/deps';
 import { getUnspentCells } from '@utils/apis';
 import getCKB from '@utils/ckb';
-import { signTx } from '@src/wallet/addKeyperWallet';
+import { signTx } from '@src/keyper/keyperwallet';
+import NetworkManager from '@common/networkManager';
 import { createRawTx, createAnyPayRawTx } from './txGenerator';
 
 export interface GenerateTxResult {
@@ -35,6 +36,10 @@ export const generateTx = async (
     return unspentCells;
   }
 
+  if (_.isEmpty(unspentCells)) {
+    throw new Error('There is not available live cells');
+  }
+
   function getTotalCapity(total, cell) {
     return BigInt(total) + BigInt(cell.capacity);
   }
@@ -48,7 +53,7 @@ export const generateTx = async (
   const fromLockScript = addressToScript(fromAddress);
   const toLockScript = addressToScript(toAddress);
 
-  const depObj = getDepFromLockType(lockType);
+  const depObj = await getDepFromLockType(lockType, NetworkManager);
 
   const rawObj = createRawTx(
     new BN(toAmount),
@@ -89,6 +94,9 @@ export const generateAnyPayTx = async (
   if (unspentCells.errCode !== undefined && unspentCells.errCode !== 0) {
     return unspentCells;
   }
+  if (_.isEmpty(unspentCells)) {
+    throw new Error('There is not available live cells');
+  }
 
   function getTotalCapity(total, cell) {
     return BigInt(total) + BigInt(cell.capacity);
@@ -115,8 +123,8 @@ export const generateAnyPayTx = async (
   }
   const walletTotalCapity = unspentWalletCells.reduce(getWalletTotalCapity, 0);
 
-  const fromDepObj = getDepFromLockType(fromLockType);
-  const toDepObj = getDepFromLockType(toLockType);
+  const fromDepObj = await getDepFromLockType(fromLockType, NetworkManager);
+  const toDepObj = await getDepFromLockType(toLockType, NetworkManager);
 
   const fromCodeHash = fromLockScript.codeHash;
   const toCodeHash = toLockScript.codeHash;
@@ -246,7 +254,7 @@ export const sendTransaction = async (
     return rawTxObj;
   }
 
-  const signedTx = await signTx(lockHash, password, rawTxObj.tx, config, publicKey);
+  const signedTx = await signTx(lockHash, password, rawTxObj.tx, config);
   const txResultObj = {
     txHash: null,
     fee: rawTxObj.fee,

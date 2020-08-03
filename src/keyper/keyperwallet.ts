@@ -1,58 +1,17 @@
-import { SignatureAlgorithm } from '@keyper/specs/lib';
-import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils/lib';
-import { scriptToAddress } from '@keyper/specs/lib/address';
+import { LockHashWithMeta, PublicKey } from '@keyper/container';
+import { SignatureAlgorithm, Script } from '@keyper/specs';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
+import PublicKeyClass from '@src/keyper/publicKey';
+import * as Keystore from '@src/wallet/passwordEncryptor';
+import { KEYSTORE_TYPE } from '@utils/constants';
+import ContainerManager from './containerManager';
 
-import _ from 'lodash';
-import * as Keystore from '../wallet/passwordEncryptor';
-import { getKeystoreFromWallets } from '../wallet/addKeyperWallet';
-import { getDepFromLockType } from '../utils/deps';
-import { ADDRESS_TYPE_CODEHASH } from '../utils/constants';
-import { sign as signBySecp256k1 } from './sign';
+interface IAddressesList {
+  publicKey: string;
+  addresses: any[];
+}
 
-const { Container } = require('@keyper/container/lib');
-const { Secp256k1LockScript } = require('@keyper/container/lib/locks/secp256k1');
-const { AnyPayLockScript } = require('@keyper/container/lib/locks/anyone-can-pay');
-const Keccak256LockScript = require('./locks/keccak256');
-
-// eslint-disable-next-line import/order
-const EC = require('elliptic').ec;
-
-let container;
-const addRules = [];
-
-const init = () => {
-  container = new Container([
-    {
-      algorithm: SignatureAlgorithm.secp256k1,
-      provider: {
-        async sign(context, message) {
-          const key = await getKeystoreFromWallets(context.publicKey);
-          if (!key) {
-            throw new Error(`no key for address: ${context.address}`);
-          }
-          const privateKeyBuffer = await Keystore.decrypt(key, context.password);
-          const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
-          const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
-
-          const signature = signBySecp256k1(privateKey, message);
-          return signature;
-        },
-      },
-    },
-  ]);
-  container.addLockScript(
-    new Secp256k1LockScript(
-      ADDRESS_TYPE_CODEHASH.Secp256k1,
-      'type',
-      getDepFromLockType('Secp256k1'),
-    ),
-  );
-  container.addLockScript(new Keccak256LockScript());
-  container.addLockScript(
-    new AnyPayLockScript(ADDRESS_TYPE_CODEHASH.AnyPay, 'type', getDepFromLockType('AnyPay')),
-  );
-};
+const containerManager = ContainerManager.getInstance();
 
 const generateKeystore = async (privateKey, password) => {
   const privateKeyBuffer = Buffer.from(privateKey, 'hex');
@@ -60,86 +19,145 @@ const generateKeystore = async (privateKey, password) => {
   return ks;
 };
 
-const setUpContainer = (publicKey) => {
-  container.addPublicKey({
-    payload: `0x${publicKey}`,
-    algorithm: SignatureAlgorithm.secp256k1,
-  });
-
-  const scripts = container.getScripsByPublicKey({
-    payload: `0x${publicKey}`,
-    algorithm: SignatureAlgorithm.secp256k1,
-  });
-
-  scripts.forEach(async (script) => {
-    const addRule = {
-      name: 'LockHash',
-      data: scriptToHash(script),
-    };
-    addRules.push(addRule);
-  });
+export const getWallets = async () => {
+  const { wallets = [] } = await browser.storage.local.get('wallets');
+  return wallets;
 };
 
-const generateByPrivateKey = async (privateKey, password) => {
-  const ec = new EC('secp256k1');
-  const key = ec.keyFromPrivate(privateKey);
-  const publicKey = Buffer.from(key.getPublic().encodeCompressed()).toString('hex');
-  const ks = generateKeystore(privateKey, password);
-
-  setUpContainer(publicKey);
-
-  return ks;
+export const getPublicKeys = async () => {
+  const { publicKeys = [] } = await browser.storage.local.get('publicKeys');
+  return publicKeys;
 };
 
-const accounts = async (networkPrefix: string) => {
-  const scripts = await container.getAllLockHashesAndMeta();
-  const result = [];
-
-  for (const script of scripts) {
-    result.push({
-      address: scriptToAddress(script.meta.script, { networkPrefix, short: true }),
-      script: script.meta.script,
-      type: script.meta.name,
-      lock: script.hash,
-      amount: 0,
+export const addPublicKey = async (publicKey: string) => {
+  const { publicKeys = [] } = await browser.storage.local.get('publicKeys');
+  if (!publicKeys.includes(publicKey)) {
+    publicKeys.push(publicKey);
+    await browser.storage.local.set({
+      publicKeys,
     });
   }
-
-  return result;
 };
 
-async function reCreateCurrentContainer(publicKey) {
-  init();
-  setUpContainer(publicKey);
-}
+export const getCurrentWallet = async () => {
+  const { currentWallet = {} } = await browser.storage.local.get('currentWallet');
+  return currentWallet;
+};
 
-const signTx = async (lockHash, password, rawTx, config, publicKey) => {
-  if (_.isEmpty(container)) {
-    await reCreateCurrentContainer(publicKey);
-  }
+export const setAddressesList = async (addressesList) => {
+  await browser.storage.local.set({
+    addressesList,
+  });
+};
 
-  const tx = await container.sign(
-    {
-      lockHash,
-      password,
-    },
-    rawTx,
-    config,
-  );
+export const signTx = async (lockHash, password, rawTx, config, others = {}) => {
+  const container = await containerManager.getCurrentContainer();
+  const context = {
+    lockHash,
+    password,
+    ...others,
+  };
+  const tx = await container.sign(context, rawTx, config);
   return tx;
 };
 
-const getAllLockHashesAndMeta = async () => {
-  return container.getAllLockHashesAndMeta();
+const getWalletInfoByPublicKey = async (publicKey: string) => {
+  const container = await containerManager.getCurrentContainer();
+  const lockHashWithMetas: LockHashWithMeta[] = await container.getAllLockHashesAndMeta();
+  const publicKeyInstance = new PublicKeyClass(publicKey);
+  const publicKeyWrapper: PublicKey = {
+    payload: publicKey,
+    algorithm: SignatureAlgorithm.secp256k1,
+  };
+  const scripts: Script[] = container.getScripsByPublicKey(publicKeyWrapper);
+  const addresses = scripts.map((script) => {
+    const lockHash = publicKeyInstance.getLockHash(script);
+    const lockHashWithMeta = lockHashWithMetas.find((item: LockHashWithMeta) => {
+      return lockHash === item.hash;
+    });
+
+    return {
+      type: lockHashWithMeta?.meta?.name,
+      script,
+      lock: lockHash,
+      lockHash,
+      amount: 0,
+    };
+  });
+
+  return {
+    publicKey,
+    addresses,
+  };
 };
 
-module.exports = {
-  init,
-  generateByPrivateKey,
-  accounts,
-  signTx,
-  getAllLockHashesAndMeta,
-  generateKeystore,
-  setUpContainer,
-  container,
+const updateAddressesList = async () => {
+  const publicKeys = await getPublicKeys();
+  const addressesListPromise = publicKeys.map((publicKey) => {
+    return getWalletInfoByPublicKey(publicKey);
+  });
+  const addressesList = await Promise.all(addressesListPromise);
+
+  await browser.storage.local.set({
+    addressesList,
+  });
 };
+
+export const setCurrentWallet = async (publicKey: string) => {
+  const { addresses } = await getWalletInfoByPublicKey(publicKey);
+  const { type, script, lock, lockHash } = addresses[0];
+  const currentWallet = {
+    publicKey,
+    type,
+    script,
+    lock,
+    lockHash,
+  };
+
+  await browser.storage.local.set({
+    currentWallet,
+  });
+};
+
+export const addWallet = async (privateKeyWithout0x, keystore, entropyKeystore, rootKeystore) => {
+  const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKeyWithout0x}`);
+
+  // wallets
+  const wallets = await getWallets();
+  const walletCommon = {
+    publicKey,
+    entropyKeystore,
+    rootKeystore,
+    keystore,
+    keystoreType: KEYSTORE_TYPE.PRIVATEKEY_TO_KEYSTORE,
+  };
+
+  wallets.push(walletCommon);
+
+  await browser.storage.local.set({
+    wallets,
+  });
+};
+
+// privateKey No '0x'
+export async function addKeyperWallet(
+  privateKey,
+  password,
+  entropyKeystore?: any,
+  rootKeystore?: any,
+) {
+  const privateKeyWithout0x = privateKey.startsWith('0x') ? privateKey.substr(2) : privateKey;
+  const keystore = await generateKeystore(privateKeyWithout0x, password);
+  // has prefix '0x'
+  const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKeyWithout0x}`);
+
+  containerManager.addPublicKeyForAllContainers(publicKey);
+
+  await addWallet(privateKey, keystore, entropyKeystore, rootKeystore);
+
+  await addPublicKey(publicKey);
+
+  await updateAddressesList();
+
+  await setCurrentWallet(publicKey);
+}
