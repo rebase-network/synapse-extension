@@ -5,7 +5,6 @@ import {
   makeStyles,
   Theme,
   createStyles,
-  withStyles,
   createMuiTheme,
   ThemeProvider,
 } from '@material-ui/core/styles';
@@ -38,24 +37,24 @@ const listItemTheme = createMuiTheme({
   },
 });
 
-type TScript = {
+interface IScript {
   codeHash: string;
   hashType: string;
   args: string;
-};
+}
 
-type TAddressInfo = {
+interface IAddressInfo {
   address: string;
   amount: number;
   lock: string;
   type: string;
-  script: TScript;
+  script: IScript;
   publicKey: string;
-};
+}
 
 interface AppProps {
   onSelectAddress: Function;
-  addressInfo: TAddressInfo;
+  addressInfo: IAddressInfo;
 }
 
 interface AppState {}
@@ -99,7 +98,7 @@ export default function (props: AppProps, state: AppState) {
     })();
   }, []);
 
-  const handleListItemClick = (event, addressInfo: TAddressInfo) => {
+  const handleListItemClick = (event, addressInfo: IAddressInfo) => {
     const currentWallet = _.clone(addressInfo);
     delete currentWallet.amount;
     props.onSelectAddress({ right: false });

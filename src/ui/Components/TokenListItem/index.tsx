@@ -23,7 +23,7 @@ const useStyles = makeStyles({
   },
 });
 
-export interface TTokenInfo {
+export interface ITokenInfo {
   name: string;
   udt: number;
   ckb: number;
@@ -33,7 +33,7 @@ export interface TTokenInfo {
 }
 
 interface AppProps {
-  tokenInfo: TTokenInfo;
+  tokenInfo: ITokenInfo;
 }
 
 export default (props: AppProps) => {
