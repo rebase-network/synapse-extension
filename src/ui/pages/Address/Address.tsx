@@ -154,18 +154,15 @@ export default (props: AppProps) => {
         if (_.isEmpty(currentWallet)) return;
         const { type: lockType, lock, script } = currentWallet;
 
-        const _prefix = currentNetwork.prefix;
-        const newAddr = showAddressHelper(_prefix, script);
+        const { prefix } = currentNetwork;
+        const newAddr = showAddressHelper(prefix, script);
+        const isMainnet = prefix === 'ckb';
+        const shouldDisableSendBtn =
+          (isMainnet && lockType === LockType.AnyPay) || lockType === LockType.Keccak256;
 
-        setExplorerUrl(_prefix === 'ckb' ? MAINNET_EXPLORER_URL : TESTNET_EXPLORER_URL);
-
+        setExplorerUrl(isMainnet ? MAINNET_EXPLORER_URL : TESTNET_EXPLORER_URL);
         setAddress(newAddr);
-
-        if (lockType === LockType.Keccak256) {
-          setDisableFlg(true);
-        } else {
-          setDisableFlg(false);
-        }
+        setDisableFlg(shouldDisableSendBtn);
         setType(lockType);
         setLockHash(lock);
         updateCapacity(lock);
