@@ -16,6 +16,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { truncateAddress, shannonToCKBFormatter } from '@utils/formatters';
 import { getUnspentCapacity } from '@src/utils/apis';
 import { addressToScript } from '@keyper/specs';
+import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils';
 
 const useStyles = makeStyles({
   container: {
@@ -103,7 +104,7 @@ export const InnerForm = (props: AppProps) => {
     }
   }
 
-  const handleBlurCapacity = (event) => {
+  const handleBlurCapacity = async (event) => {
     setCheckMsg('');
     setCheckAddressMsg('');
     handleBlur(event);
@@ -122,6 +123,7 @@ export const InnerForm = (props: AppProps) => {
     // secp256k1
     const capacity = event.target.value;
     if (address.length === 46) {
+      // every cell's capacity gt 61
       if (Number(capacity) < Number(61)) {
         const checkMsgId = "The transaction's ckb capacity cannot be less than 61 CKB";
         const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
@@ -129,6 +131,19 @@ export const InnerForm = (props: AppProps) => {
         return;
       }
     }
+    // check anypay cell's capacity
+    if (address.length === 95) {
+      const toLockScript = addressToScript(address);
+      const toLockHash = scriptToHash(toLockScript);
+      const liveCapacity = await getUnspentCapacity(toLockHash);
+      if (liveCapacity === null && Number(capacity) < Number(61)) {
+        const checkMsgId = "The transaction's ckb capacity cannot be less than 61 CKB";
+        const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
+        setCheckMsg(checkMsgI18n);
+        return;
+      }
+    }
+
     if (unspentCapacity > 0) {
       if (unspentCapacity < Number(capacity) * CKB_TOKEN_DECIMALS) {
         const checkMsgId = 'lack of capacity, available capacity is';

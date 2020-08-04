@@ -133,7 +133,6 @@ export function createAnyPayRawTx(
     rawTx.outputsData.push('0x');
   }
 
-  console.log(/rawTx/, JSON.stringify(rawTx));
   const signObj = {
     target: scriptToHash(fromLockScript),
     tx: rawTx,
