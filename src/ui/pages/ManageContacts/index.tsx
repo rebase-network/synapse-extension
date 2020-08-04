@@ -87,7 +87,7 @@ export default function Init(props: AppProps, state: AppState) {
   const [contactItems, setContactItems] = React.useState([]);
   const [inValidate, setInValidate] = React.useState(false);
 
-  const onSubmit = async (values) => {
+  const onSubmit = async (values, { resetForm }) => {
     let contactsObj = [];
     const { address, name } = values;
 
@@ -105,20 +105,19 @@ export default function Init(props: AppProps, state: AppState) {
     }
 
     const contactObj = { address, name };
-    if (contactsObj.length === 0) {
+    const modContactIndex = _.findIndex(contactsObj, function findIndex(contactItem) {
+      return contactItem.address === address;
+    });
+    if (modContactIndex === -1) {
       contactsObj.push(contactObj);
     } else {
-      _.find(contactsObj, (contactItem) => {
-        if (contactItem.address === address) {
-          contactItem.name = name;
-        } else {
-          contactsObj.push(contactObj);
-        }
-      });
+      contactsObj[modContactIndex].name = name;
     }
 
     setContactItems(contactsObj);
     await browser.storage.local.set({ contacts: contactsObj });
+
+    resetForm();
   };
 
   React.useEffect(() => {
