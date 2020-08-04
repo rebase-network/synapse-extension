@@ -8,7 +8,12 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { AppContext } from '@ui/utils/context';
-import { MESSAGE_TYPE, CKB_TOKEN_DECIMALS, MIN_TRANSFER_CELL_CAPACITY } from '@utils/constants';
+import {
+  MESSAGE_TYPE,
+  CKB_TOKEN_DECIMALS,
+  MIN_TRANSFER_CELL_CAPACITY,
+  ADDRESS_TYPE_CODEHASH,
+} from '@utils/constants';
 import PageNav from '@ui/Components/PageNav';
 import Modal from '@ui/Components/Modal';
 import TxDetail from '@ui/Components/TxDetail';
@@ -122,7 +127,8 @@ export const InnerForm = (props: AppProps) => {
 
     // secp256k1
     const capacity = event.target.value;
-    if (address.length === 46) {
+    const toLockScript = addressToScript(address);
+    if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
       // every cell's capacity gt 61
       if (Number(capacity) < Number(61)) {
         const checkMsgId = "The transaction's ckb capacity cannot be less than 61 CKB";
@@ -132,8 +138,7 @@ export const InnerForm = (props: AppProps) => {
       }
     }
     // check anypay cell's capacity
-    if (address.length === 95) {
-      const toLockScript = addressToScript(address);
+    if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.AnyPay) {
       const toLockHash = scriptToHash(toLockScript);
       const liveCapacity = await getUnspentCapacity(toLockHash);
       if (liveCapacity === null && Number(capacity) < Number(61)) {
@@ -159,9 +164,6 @@ export const InnerForm = (props: AppProps) => {
         setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter(chargeCapacity.toString())} ckb`);
       }
     }
-    // anypay
-    // else if (address.length === 95) {
-    // }
   };
 
   return (
