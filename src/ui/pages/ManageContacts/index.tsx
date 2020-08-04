@@ -168,9 +168,10 @@ export default function Init(props: AppProps, state: AppState) {
   if (inValidate) {
     failureNode = <div>{intl.formatMessage({ id: 'Invalid address' })}</div>;
   }
+
   return (
     <div>
-      <PageNav to="/setting" title="Manage Contacts" />
+      <PageNav to="/setting" title={intl.formatMessage({ id: 'Manage Contacts' })} />
       <div className={classes.container}>
         {contactElem}
         {failureNode}
@@ -179,7 +180,7 @@ export default function Init(props: AppProps, state: AppState) {
           onSubmit={onSubmit}
           validationSchema={Yup.object().shape({
             name: Yup.string()
-              .min(6)
+              .min(1)
               .required(intl.formatMessage({ id: 'Required' })),
           })}
         >
