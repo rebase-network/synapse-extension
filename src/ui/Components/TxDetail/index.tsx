@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import { FormattedMessage } from 'react-intl';
 import PageNav from '@ui/Components/PageNav';
 import { BN } from 'bn.js';
+import { MAINNET_EXPLORER_URL, TESTNET_EXPLORER_URL } from '@utils/constants';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,11 +31,10 @@ interface AppProps {
   data: any;
 }
 
-interface AppState {}
-
-export default function (props: AppProps, state: AppState) {
+export default (props: AppProps) => {
   const classes = useStyles();
-
+  const [explorerUrl, setExplorerUrl] = React.useState(TESTNET_EXPLORER_URL);
+  const { data } = props;
   const {
     status = 'Confirmed',
     amount: capacity,
@@ -45,7 +45,7 @@ export default function (props: AppProps, state: AppState) {
     blockNum,
     timestamp,
     income,
-  } = props.data;
+  } = data;
 
   let transferAmount = capacity;
   if (income !== null && income === false) {
@@ -53,6 +53,14 @@ export default function (props: AppProps, state: AppState) {
   }
 
   const txDateTime = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
+
+  React.useEffect(() => {
+    browser.storage.local.get('currentNetwork').then(({ currentNetwork }) => {
+      const { prefix } = currentNetwork;
+      const isMainnet = prefix === 'ckb';
+      setExplorerUrl(isMainnet ? MAINNET_EXPLORER_URL : TESTNET_EXPLORER_URL);
+    });
+  });
 
   return (
     <div>
@@ -102,11 +110,7 @@ export default function (props: AppProps, state: AppState) {
             </Typography>
           </div>
           <Grid item xs>
-            <Link
-              rel="noreferrer"
-              target="_blank"
-              href={`https://explorer.nervos.org/aggron/transaction/${txHash}`}
-            >
+            <Link rel="noreferrer" target="_blank" href={`${explorerUrl}/${txHash}`}>
               <Typography className={classes.typography}>{txHash}</Typography>
             </Link>
           </Grid>
@@ -124,4 +128,4 @@ export default function (props: AppProps, state: AppState) {
       </div>
     </div>
   );
-}
+};
