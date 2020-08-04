@@ -80,4 +80,5 @@ export default {
   'INVALID_KEYSTORE':'无效的Keystore',
   'Message to be signed': '签名消息',
   'Invalid address':'无效的地址，请输入有效的地址',
+  "The transaction's ckb capacity cannot be less than 61 CKB":'交易的CKB数量不能小于61 CKB',
 };

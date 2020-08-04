@@ -1,0 +1,14 @@
+{
+  "capacity": "0xe8754318",
+  "lock": {
+    "hashType": "type",
+    "codeHash": "0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b",
+    "args": "0x85e5401c52aece9eb614f997b2f2c20f9fc10a67"
+  }
+}
+
+// capacity: 8 bytes
+// code_hash: 32 bytes （64）
+// hash_type: 1 byte
+// args: 20 bytes （40）
+// 8+32+1+20 = 61；

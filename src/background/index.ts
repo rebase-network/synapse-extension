@@ -309,7 +309,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
     };
 
     try {
-      console.log(/444/);
       const sendTxObj = await sendTransaction(
         privateKey,
         fromAddress,

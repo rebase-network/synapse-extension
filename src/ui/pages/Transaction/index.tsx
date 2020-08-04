@@ -8,13 +8,14 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { AppContext } from '@ui/utils/context';
-import { MESSAGE_TYPE, MIN_CELL_CAPACITY, CKB_TOKEN_DECIMALS } from '@utils/constants';
+import { MESSAGE_TYPE, CKB_TOKEN_DECIMALS, MIN_TRANSFER_CELL_CAPACITY } from '@utils/constants';
 import PageNav from '@ui/Components/PageNav';
 import Modal from '@ui/Components/Modal';
 import TxDetail from '@ui/Components/TxDetail';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { truncateAddress, shannonToCKBFormatter } from '@utils/formatters';
 import { getUnspentCapacity } from '@src/utils/apis';
+import { addressToScript } from '@keyper/specs';
 
 const useStyles = makeStyles({
   container: {
@@ -57,6 +58,7 @@ export const InnerForm = (props: AppProps) => {
   const classes = useStyles();
   const intl = useIntl();
   const [contacts, setContacts] = React.useState([]);
+  const [checkAddressMsg, setCheckAddressMsg] = React.useState('');
   const [checkMsg, setCheckMsg] = React.useState('');
   const [unspentCapacity, setUnspentCapacity] = React.useState(-1);
 
@@ -94,16 +96,44 @@ export const InnerForm = (props: AppProps) => {
     }
   }
 
-  const handleChangeCapacity = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCheckMsg('');
-    handleChange(event);
+  let errAddressMsg = errors.address && touched.address && errors.address;
+  if (errAddressMsg === undefined) {
+    if (checkAddressMsg !== '') {
+      errAddressMsg = checkAddressMsg;
+    }
+  }
 
+  const handleBlurCapacity = (event) => {
+    setCheckMsg('');
+    setCheckAddressMsg('');
+    handleBlur(event);
+
+    const { address } = values;
+    // check address
+    try {
+      addressToScript(address);
+    } catch (error) {
+      const checkMsgId = 'Invalid address';
+      const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
+      setCheckAddressMsg(checkMsgI18n);
+      return;
+    }
+
+    // secp256k1
     const capacity = event.target.value;
-    if (unspentCapacity > -1) {
+    if (address.length === 46) {
+      if (Number(capacity) < Number(61)) {
+        const checkMsgId = "The transaction's ckb capacity cannot be less than 61 CKB";
+        const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
+        setCheckMsg(checkMsgI18n);
+        return;
+      }
+    }
+    if (unspentCapacity > 0) {
       if (unspentCapacity < Number(capacity) * CKB_TOKEN_DECIMALS) {
         const checkMsgId = 'lack of capacity, available capacity is';
         const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
-        setCheckMsg(checkMsgI18n + shannonToCKBFormatter(unspentCapacity.toString()));
+        setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter(unspentCapacity.toString())} ckb`);
         return;
       }
       const chargeCapacity = unspentCapacity - Number(capacity) * CKB_TOKEN_DECIMALS;
@@ -111,9 +141,12 @@ export const InnerForm = (props: AppProps) => {
         const checkMsgId =
           'the remaining capacity is less than 61, if continue it will be destroyed, remaining capacity is';
         const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
-        setCheckMsg(checkMsgI18n + shannonToCKBFormatter(chargeCapacity.toString()));
+        setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter(chargeCapacity.toString())} ckb`);
       }
     }
+    // anypay
+    // else if (address.length === 95) {
+    // }
   };
 
   return (
@@ -143,7 +176,7 @@ export const InnerForm = (props: AppProps) => {
             InputProps={{ ...params.InputProps, type: 'search' }}
             variant="outlined"
             error={!!errors.address}
-            helperText={errors.address && touched.address && errors.address}
+            helperText={checkAddressMsg}
           />
         )}
         style={{ width: 300 }}
@@ -152,12 +185,12 @@ export const InnerForm = (props: AppProps) => {
         label={intl.formatMessage({ id: 'Capacity' })}
         name="capacity"
         type="text"
-        placeholder={`Should be >= ${MIN_CELL_CAPACITY}`}
+        placeholder={`Should be >= ${MIN_TRANSFER_CELL_CAPACITY}`}
         fullWidth
         className={classes.textField}
         value={values.capacity}
-        onChange={handleChangeCapacity}
-        onBlur={handleBlur}
+        onChange={handleChange}
+        onBlur={handleBlurCapacity}
         error={!!errors.capacity}
         helperText={errMsg}
         margin="normal"
@@ -347,8 +380,10 @@ export default () => {
             capacity: Yup.number()
               .required(intl.formatMessage({ id: 'Required' }))
               .min(
-                MIN_CELL_CAPACITY,
-                `${intl.formatMessage({ id: 'Should be greater than ' })}${MIN_CELL_CAPACITY}`,
+                MIN_TRANSFER_CELL_CAPACITY,
+                `${intl.formatMessage({
+                  id: 'Should be greater than ',
+                })}${MIN_TRANSFER_CELL_CAPACITY}`,
               ),
             fee: Yup.string().required(intl.formatMessage({ id: 'Required' })),
             password: Yup.string().required(intl.formatMessage({ id: 'Required' })),
