@@ -55,7 +55,7 @@ export default (props: AppProps) => {
   const txDateTime = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
 
   React.useEffect(() => {
-    browser.storage.local.get('currentNetwork').then(({ currentNetwork }) => {
+    browser.storage.local.get('currentNetwork').then(({ currentNetwork = {} }) => {
       const { prefix } = currentNetwork;
       const isMainnet = prefix === 'ckb';
       setExplorerUrl(isMainnet ? MAINNET_EXPLORER_URL : TESTNET_EXPLORER_URL);

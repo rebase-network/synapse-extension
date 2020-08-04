@@ -1,7 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import chrome from 'sinon-chrome';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
@@ -24,9 +23,6 @@ jest.mock('react-router-dom', () => {
 describe('txDetail page', () => {
   let container;
   let getByTestId;
-  beforeAll(() => {
-    window.chrome = chrome;
-  });
 
   beforeEach(() => {
     const tree = render(
