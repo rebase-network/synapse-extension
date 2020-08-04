@@ -125,16 +125,14 @@ export default function initFunction(props: AppProps, state: AppState) {
     }
     const udtObj = { name, typeHash, decimal, symbol };
 
-    if (udtsList.length === 0) {
+    const udtInx = _.findIndex(udtsList, (udtItem) => {
+      return udtItem.typeHash === typeHash;
+    });
+
+    if (udtInx === -1) {
       udtsList.push(udtObj);
     } else {
-      _.find(udtsList, (udtItem) => {
-        if (udtItem.typeHash === typeHash) {
-          udtItem = udtObj;
-        } else {
-          udtsList.push(udtObj);
-        }
-      });
+      udtsList[udtInx] = udtObj;
     }
 
     setUdtsItems(udtsList);
