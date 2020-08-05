@@ -28,6 +28,7 @@ import {
 import { getUnspentCapacity } from '@src/utils/apis';
 import { addressToScript } from '@keyper/specs';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils';
+import { Slider, Tooltip } from '@material-ui/core';
 
 const useStyles = makeStyles({
   container: {
@@ -65,6 +66,12 @@ interface AppProps {
 }
 
 interface AppState {}
+
+interface TooltipProps {
+  children: React.ReactElement;
+  open: boolean;
+  value: number;
+}
 
 export const InnerForm = (props: AppProps) => {
   const classes = useStyles();
@@ -193,6 +200,7 @@ export const InnerForm = (props: AppProps) => {
     }
   };
 
+<<<<<<< HEAD
   const { name, typeHash } = values;
   let sudtElem = null;
   let dataElem = null;
@@ -238,6 +246,15 @@ export const InnerForm = (props: AppProps) => {
           <ListItemText primary="UDT Hash" secondary={truncateHash(typeHash)} />
         </ListItem>
       </div>
+=======
+  function ValueLabelComponent(props: TooltipProps) {
+    const { children, open, value } = props;
+
+    return (
+      <Tooltip open={open} enterTouchDelay={0} placement="top" title={value}>
+        {children}
+      </Tooltip>
+>>>>>>> ele
     );
   }
 
@@ -292,6 +309,26 @@ export const InnerForm = (props: AppProps) => {
       />
       {dataElem}
       <TextField
+        label={intl.formatMessage({ id: 'Data' })}
+        id="data"
+        name="data"
+        type="text"
+        fullWidth
+        className={classes.textField}
+        value={values.data}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={!!errors.data}
+        helperText={errors.data && touched.data && errors.data}
+        margin="normal"
+        variant="outlined"
+      />
+
+      <div>
+        <Slider ValueLabelComponent={ValueLabelComponent} aria-label="费率" defaultValue={50} />
+      </div>
+
+      <TextField
         label={intl.formatMessage({ id: 'Fee' })}
         id="fee"
         name="fee"
@@ -336,7 +373,6 @@ export const InnerForm = (props: AppProps) => {
       </Button>
 
       <Button
-        // type="reset"
         id="submit-button"
         disabled={isSubmitting}
         color="primary"
