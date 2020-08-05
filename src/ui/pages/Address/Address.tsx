@@ -256,7 +256,7 @@ export default (props: AppProps) => {
     );
     tokenListNode = (
       <Grid item xs={12}>
-        <TokenList />
+        <TokenList explorerUrl={explorerUrl} />
       </Grid>
     );
   }
@@ -323,8 +323,6 @@ export default (props: AppProps) => {
         </Grid>
         <br />
         <Divider variant="middle" />
-        <br />
-        <br />
         <br />
         <Grid container spacing={3}>
           <Grid item xs={12}>

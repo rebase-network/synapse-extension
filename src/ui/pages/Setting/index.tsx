@@ -67,7 +67,7 @@ const settingItems = [
     testId: 'manageContacts',
   },
   {
-    link: '/manage-udts',
+    link: '/manage-udts/null',
     text: <FormattedMessage id="Manage UDTs" />,
     testId: 'ManageUDTs',
   },

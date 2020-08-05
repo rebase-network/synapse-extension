@@ -17,11 +17,12 @@ const useStyles = makeStyles({
 interface AppProps {
   udtsCapacity: any;
   udtsMeta: any;
+  explorerUrl: any;
 }
 
 export default (props: AppProps) => {
   const classes = useStyles();
-  const { udtsCapacity, udtsMeta } = props;
+  const { udtsCapacity, udtsMeta, explorerUrl } = props;
   const addressesElem = Object.keys(udtsCapacity).map((typeHash) => {
     const meta = _.find(udtsMeta, { typeHash });
     const itemProps: ITokenInfo = {
@@ -29,9 +30,10 @@ export default (props: AppProps) => {
       ...meta,
       typeHash,
     };
+    console.log(/itemProps/, itemProps);
     return (
       <List component="nav" aria-label="Token List" key={`tokenInfo-${typeHash}`}>
-        <TokenListItem tokenInfo={itemProps} />
+        <TokenListItem tokenInfo={itemProps} explorerUrl={explorerUrl} />
       </List>
     );
   });

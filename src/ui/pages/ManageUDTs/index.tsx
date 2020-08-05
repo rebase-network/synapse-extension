@@ -1,13 +1,10 @@
 import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Button, TextField } from '@material-ui/core';
 import { Formik, Form } from 'formik';
 import { makeStyles } from '@material-ui/core/styles';
 import PageNav from '@ui/Components/PageNav';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
+import { Button, TextField, ListItem, ListItemText, List } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { truncateHash } from '@utils/formatters';
@@ -21,14 +18,18 @@ const useStyles = makeStyles({
   },
 });
 
-interface AppProps {}
+interface AppProps {
+  match?: any;
+}
 
 interface AppState {}
 
-export const innerForm = (props) => {
+export const InnerForm = (props) => {
   const intl = useIntl();
 
   const { values, touched, errors, handleChange, handleBlur, handleSubmit, handleReset } = props;
+
+  console.log(/manage Udts/);
 
   return (
     <Form
@@ -110,11 +111,19 @@ export const innerForm = (props) => {
   );
 };
 
-export default function initFunction(props: AppProps, state: AppState) {
+export default function InitFunction(props: AppProps, state: AppState) {
   const classes = useStyles();
   const intl = useIntl();
   const [udtsItems, setUdtsItems] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(true);
+
+  let initialValues = { name: '', typeHash: '', decimal: '8', symbol: '' };
+  const typeHashProps = _.get(props, 'match.params.typeHash', '');
+
+  if (typeHashProps === 'null') {
+    initialValues = { name: '', typeHash: '', decimal: '8', symbol: '' };
+  } else {
+    initialValues = { name: '', typeHash: typeHashProps, decimal: '8', symbol: '' };
+  }
 
   const onSubmit = async (values, { resetForm }) => {
     let udtsList = [];
@@ -138,6 +147,7 @@ export default function initFunction(props: AppProps, state: AppState) {
     setUdtsItems(udtsList);
     await browser.storage.local.set({ udts: udtsList });
 
+    initialValues = { name: '', typeHash: '', decimal: '8', symbol: '' };
     resetForm();
   };
 
@@ -188,7 +198,7 @@ export default function initFunction(props: AppProps, state: AppState) {
       <div className={classes.container}>
         {udtsElem}
         <Formik
-          initialValues={{ name: '', typeHash: '', decimal: '8', symbol: '' }}
+          initialValues={initialValues}
           onSubmit={onSubmit}
           validationSchema={Yup.object().shape({
             name: Yup.string().required(intl.formatMessage({ id: 'Required' })),
@@ -197,7 +207,7 @@ export default function initFunction(props: AppProps, state: AppState) {
             symbol: Yup.string().required(intl.formatMessage({ id: 'Required' })),
           })}
         >
-          {innerForm}
+          {InnerForm}
         </Formik>
       </div>
     </div>

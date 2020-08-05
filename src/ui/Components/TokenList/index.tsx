@@ -23,11 +23,17 @@ const useStyles = makeStyles({
   },
 });
 
-export default () => {
+interface AppProps {
+  explorerUrl: string;
+}
+
+export default (props: AppProps) => {
   const [tokenList, setTokenList] = React.useState([]);
   const [udtsMeta, setUdtsMeta] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [emptyCapacity, setEmptyCapacity] = React.useState('0');
+  const { explorerUrl } = props;
+
   const classes = useStyles();
   React.useEffect(() => {
     browser.storage.local.get('udts').then((result) => {
@@ -66,7 +72,9 @@ export default () => {
 
   const udtsCapacity = aggregateUDT(tokenList);
 
-  const resultElem = <TokenListComponent udtsCapacity={udtsCapacity} udtsMeta={udtsMeta} />;
+  const resultElem = (
+    <TokenListComponent udtsCapacity={udtsCapacity} udtsMeta={udtsMeta} explorerUrl={explorerUrl} />
+  );
 
   return (
     <div className={classes.root}>

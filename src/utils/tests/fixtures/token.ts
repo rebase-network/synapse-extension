@@ -142,6 +142,8 @@ export const addressInfo = {
   },
 };
 
+export const explorerUrl = 'https://explorer.nervos.org/aggron';
+
 export default {
   addressInfo,
   udtsLiveCells,

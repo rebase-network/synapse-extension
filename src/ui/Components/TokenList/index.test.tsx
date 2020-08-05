@@ -3,7 +3,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
-import { udtsCapacity, udtsMeta } from '@utils/tests/fixtures/token';
+import { udtsCapacity, udtsMeta, explorerUrl } from '@utils/tests/fixtures/token';
 import Component from './component';
 
 jest.mock('react-router-dom', () => {
@@ -25,7 +25,7 @@ describe('token list', () => {
     render(
       <IntlProvider locale="en" messages={en}>
         <Router>
-          <Component udtsCapacity={udtsCapacity} udtsMeta={udtsMeta} />
+          <Component udtsCapacity={udtsCapacity} udtsMeta={udtsMeta} explorerUrl={explorerUrl} />
         </Router>
       </IntlProvider>,
     );
