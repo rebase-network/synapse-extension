@@ -29,8 +29,6 @@ export const InnerForm = (props) => {
 
   const { values, touched, errors, handleChange, handleBlur, handleSubmit, handleReset } = props;
 
-  console.log(/manage Udts/);
-
   return (
     <Form
       className="manage-contacts"

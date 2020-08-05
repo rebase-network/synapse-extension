@@ -5,6 +5,7 @@ import { txList } from './fixture';
 import '@testing-library/jest-dom/extend-expect';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
+import { explorerUrl } from '@utils/tests/fixtures/token';
 
 describe('TxList', () => {
   let tree;
@@ -13,7 +14,7 @@ describe('TxList', () => {
   beforeAll(() => {
     tree = render(
       <IntlProvider locale="en" messages={en}>
-        <TxList txList={txList} explorerUrl={''} />
+        <TxList txList={txList} explorerUrl={explorerUrl} />
       </IntlProvider>,
     );
     container = tree.container;

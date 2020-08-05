@@ -30,7 +30,6 @@ export default (props: AppProps) => {
       ...meta,
       typeHash,
     };
-    console.log(/itemProps/, itemProps);
     return (
       <List component="nav" aria-label="Token List" key={`tokenInfo-${typeHash}`}>
         <TokenListItem tokenInfo={itemProps} explorerUrl={explorerUrl} />
