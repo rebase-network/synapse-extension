@@ -22,8 +22,6 @@ interface AppProps {
   match?: any;
 }
 
-interface AppState {}
-
 export const InnerForm = (props) => {
   const intl = useIntl();
 
@@ -109,19 +107,12 @@ export const InnerForm = (props) => {
   );
 };
 
-export default function InitFunction(props: AppProps, state: AppState) {
+export default function InitFunction(props: AppProps) {
   const classes = useStyles();
   const intl = useIntl();
   const [udtsItems, setUdtsItems] = React.useState([]);
-
-  let initialValues = { name: '', typeHash: '', decimal: '8', symbol: '' };
-  const typeHashProps = _.get(props, 'match.params.typeHash', '');
-
-  if (typeHashProps === 'null') {
-    initialValues = { name: '', typeHash: '', decimal: '8', symbol: '' };
-  } else {
-    initialValues = { name: '', typeHash: typeHashProps, decimal: '8', symbol: '' };
-  }
+  const typeHashPropsFromUrl = _.get(props, 'match.params.typeHash', '');
+  const initialValues = { name: '', typeHash: typeHashPropsFromUrl, decimal: '8', symbol: '' };
 
   const onSubmit = async (values, { resetForm }) => {
     let udtsList = [];
@@ -144,9 +135,7 @@ export default function InitFunction(props: AppProps, state: AppState) {
 
     setUdtsItems(udtsList);
     await browser.storage.local.set({ udts: udtsList });
-
-    initialValues = { name: '', typeHash: '', decimal: '8', symbol: '' };
-    resetForm();
+    resetForm({ values: { name: '', typeHash: '', decimal: '', symbol: '' } });
   };
 
   React.useEffect(() => {
