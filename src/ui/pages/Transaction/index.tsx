@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import queryString from 'query-string';
-import { Button, TextField } from '@material-ui/core';
+import { Button, TextField, ListItem, ListItemText } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -18,7 +18,7 @@ import PageNav from '@ui/Components/PageNav';
 import Modal from '@ui/Components/Modal';
 import TxDetail from '@ui/Components/TxDetail';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { truncateAddress, shannonToCKBFormatter } from '@utils/formatters';
+import { truncateAddress, shannonToCKBFormatter, truncateHash } from '@utils/formatters';
 import { getUnspentCapacity } from '@src/utils/apis';
 import { addressToScript } from '@keyper/specs';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils';
@@ -166,8 +166,40 @@ export const InnerForm = (props: AppProps) => {
     }
   };
 
+  const { name, typeHash, txHash, index, outputdata } = values;
+  //   console.log(/txHash/, txHash);
+  //   console.log(/index/, index);
+  //   console.log(/outputdata/, outputdata);
+
+  let sudtElem = null;
+  if (name === undefined && typeHash !== undefined) {
+    sudtElem = null;
+  } else if (name !== 'undefined' && typeHash !== undefined) {
+    // sudt show
+    sudtElem = (
+      <div>
+        <ListItem>
+          <ListItemText primary="UDT Name" secondary={name} />
+        </ListItem>
+        <ListItem>
+          <ListItemText primary="UDT Hash" secondary={truncateHash(typeHash)} />
+        </ListItem>
+      </div>
+    );
+  } else if (name === 'undefined' && typeHash !== undefined) {
+    // sudt show
+    sudtElem = (
+      <div>
+        <ListItem>
+          <ListItemText primary="UDT Hash" secondary={truncateHash(typeHash)} />
+        </ListItem>
+      </div>
+    );
+  }
+
   return (
     <Form className="form-mnemonic" id="form-mnemonic" onSubmit={handleSubmit}>
+      <div>{sudtElem}</div>
       <Autocomplete
         id="address"
         onChange={(event, newValue) => {

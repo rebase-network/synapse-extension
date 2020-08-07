@@ -1,6 +1,5 @@
-import { DepType, ScriptHashType, addressToScript } from '@keyper/specs';
+import { DepType, ScriptHashType } from '@keyper/specs';
 import CKB from '@nervosnetwork/ckb-sdk-core';
-import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils';
 
 jest.unmock('@nervosnetwork/ckb-sdk-core');
 

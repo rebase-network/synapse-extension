@@ -10,6 +10,7 @@ import {
   //   List,
   Link,
   //   Tooltip,
+  Button,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { HelpOutline } from '@material-ui/icons';
@@ -40,6 +41,10 @@ export interface ITokenInfo {
   decimal: string;
   symbol: string;
   typeHash: string;
+  type: any;
+  txHash: string;
+  index: string;
+  outputdata: string;
 }
 
 interface AppProps {
@@ -51,7 +56,18 @@ export default (props: AppProps) => {
   const classes = useStyles();
   const history = useHistory();
   const {
-    tokenInfo: { name, udt, ckb, decimal = '8', symbol = '', typeHash },
+    tokenInfo: {
+      name,
+      udt,
+      ckb,
+      decimal = '8',
+      symbol = '',
+      typeHash,
+      txHash,
+      index,
+      outputdata,
+      type,
+    },
     explorerUrl,
   } = props;
   let displayName: any = name;
@@ -98,19 +114,47 @@ export default (props: AppProps) => {
     history.push(`/manage-udts/${typeHashParmas}`);
   };
 
+  const handleClick = async (
+    event,
+    nameParams,
+    typeHashParams,
+    txHashParams,
+    indexParams,
+    outputdataParams,
+  ) => {
+    // const { args, codeHash, hashType } = type;
+    history.push(
+      `/send-tx?name=${nameParams}&typeHash=${typeHashParams}&txHash=${txHashParams}&index=${indexParams}&outputdata=${outputdataParams}`,
+    );
+  };
+
   return (
-    <ListItem
-      button
-      key={`item-${typeHash}`}
-      onClick={(event) => handleListItemClick(event, typeHash)}
-    >
-      <ListItemText primary={displayName} />
-      {expoloreShow}
-      <ListItemText
-        primary={`${udt / 10 ** decimalInt} ${symbol}`}
-        secondary={`${shannonToCKBFormatter(ckbStr)} CKB`}
-        className={classes.token}
-      />
-    </ListItem>
+    <div>
+      <ListItem
+        button
+        key={`item-${typeHash}`}
+        onClick={(event) => handleListItemClick(event, typeHash)}
+      >
+        <ListItemText primary={displayName} />
+        {expoloreShow}
+        <ListItemText
+          primary={`${udt / 10 ** decimalInt} ${symbol}`}
+          secondary={`${shannonToCKBFormatter(ckbStr)} CKB`}
+          className={classes.token}
+        />
+      </ListItem>
+      <div>
+        <Button
+          type="submit"
+          id="submit-button"
+          color="primary"
+          variant="contained"
+          data-testid="submit-button"
+          onClick={(event) => handleClick(event, name, typeHash, txHash, index, outputdata)}
+        >
+          <FormattedMessage id="Send" />
+        </Button>
+      </div>
+    </div>
   );
 };

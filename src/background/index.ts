@@ -308,19 +308,32 @@ chrome.runtime.onMessage.addListener(async (request) => {
       },
     };
 
+    // const typeArgs = request.args.trim();
+    // const typeCodeHash = request.codeHash.trim();
+    // const typeHashType = request.hashType.trim();
+    const { typeHash, outputdata, index, txHash } = request;
+    console.log(/typeHash/, typeHash);
     try {
-      const sendTxObj = await sendTransaction(
-        privateKey,
-        fromAddress,
-        toAddress,
-        capacity,
-        fee,
-        lockHash,
-        lockType,
-        password,
-        publicKey.replace('0x', ''),
-        toData,
-      );
+      let sendTxObj = null;
+      if (typeHash !== '') {
+        console.log(/11111/);
+        console.log(/outputdata/, outputdata);
+        console.log(/index/, index);
+        console.log(/txHash/, txHash);
+      } else {
+        sendTxObj = await sendTransaction(
+          privateKey,
+          fromAddress,
+          toAddress,
+          capacity,
+          fee,
+          lockHash,
+          lockType,
+          password,
+          publicKey.replace('0x', ''),
+          toData,
+        );
+      }
 
       if (sendTxObj.errCode !== undefined && sendTxObj.errCode !== 0) {
         const responseEorrorMsg = {

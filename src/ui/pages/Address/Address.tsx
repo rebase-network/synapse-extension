@@ -3,7 +3,18 @@ import _ from 'lodash';
 import QrCode from 'qrcode.react';
 import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
-import { Grid, Button, Dialog, IconButton, Link, Tooltip, Divider, Box } from '@material-ui/core';
+import {
+  Grid,
+  Button,
+  Dialog,
+  IconButton,
+  Link,
+  Tooltip,
+  Divider,
+  Box,
+  ListItem,
+  ListItemText,
+} from '@material-ui/core';
 import {
   Close as CloseIcon,
   CallMade as CallMadeIcon,
@@ -18,7 +29,7 @@ import {
   TESTNET_EXPLORER_URL,
   LockType,
 } from '@utils/constants';
-import { truncateAddress, shannonToCKBFormatter } from '@utils/formatters';
+import { truncateAddress, shannonToCKBFormatter, truncateHash } from '@utils/formatters';
 import { getAddressInfo } from '@utils/apis';
 import TxList from '@ui/Components/TxList';
 import TokenList from '@ui/Components/TokenList';

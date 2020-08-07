@@ -1,6 +1,19 @@
-import { DepType, ScriptHashType, addressToScript } from '@keyper/specs';
 import CKB from '@nervosnetwork/ckb-sdk-core';
-import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils';
+import * as utils from '@nervosnetwork/ckb-sdk-utils';
+import {
+  LockScript,
+  ScriptHashType,
+  DepType,
+  Script,
+  CellDep,
+  SignatureAlgorithm,
+  RawTransaction,
+  Config,
+  SignProvider,
+  SignContext,
+} from '@keyper/specs';
+
+const numberToBN = require('number-to-bn');
 
 jest.unmock('@nervosnetwork/ckb-sdk-core');
 
@@ -13,6 +26,9 @@ describe('SimpleUDT Test', () => {
     const privateKey = '0x8e37c5553f29a63e38a54f2f28bb921e05f868ec813afbff8f1a5aa92404a777';
     const address =
       'ckt1qjr2r35c0f9vhcdgslx2fjwa9tylevr5qka7mfgmscd33wlhfykyhk3revrcye0356ns9k5edfzmm0mt53fmk6n77qe';
+    const targetCapacity = 575;
+    const charge = `0x${targetCapacity.toString(16)}`;
+    console.log(/charge/, charge);
 
     const transferTransaction = {
       version: '0x0',
@@ -37,14 +53,14 @@ describe('SimpleUDT Test', () => {
         {
           since: '0x0',
           previousOutput: {
-            txHash: '0x7329e30d081812b81ad8f46ecaa47799929aefd18e6fb01b1b8bc050d92b0cae',
+            txHash: '0x118305db8ce3b1879c6f058e045ab0d91e1eb9c4b5ed5ccc36aeb49aac8f27fa',
             index: '0x0',
           },
         },
         {
           since: '0x0',
           previousOutput: {
-            txHash: '0x118305db8ce3b1879c6f058e045ab0d91e1eb9c4b5ed5ccc36aeb49aac8f27fa',
+            txHash: '0x7329e30d081812b81ad8f46ecaa47799929aefd18e6fb01b1b8bc050d92b0cae',
             index: '0x0',
           },
         },
@@ -77,29 +93,35 @@ describe('SimpleUDT Test', () => {
           },
         },
         {
-          capacity: '0x3a0042feb60',
+          capacity: '0xd63445f00',
           lock: {
             hashType: 'type' as ScriptHashType,
             codeHash: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
-            args: '0xd479242a054e416e1d679d95354249d57d23a250',
+            args: '0xda23cb078265f1a6a702da996a45bdbf6ba453bb',
           },
           type: null,
         },
       ],
       outputsData: [
-        '0xa0bb0d00000000000000000000000000',
-        '0xa0860100000000000000000000000000',
+        '0x10270000000000000000000000000000',
+        '0x301b0f00000000000000000000000000',
         '0x',
       ],
       witnesses: [
+        '0x',
         {
           lock: '',
           inputType: '',
           outputType: '',
         },
-        '0x',
       ],
     };
+
+    const signedTx = await ckb.signTransaction(privateKey)(transferTransaction, []);
+    console.log(/signedTx/, signedTx);
+    const realTxHash = await ckb.rpc.sendTransaction(signedTx);
+    console.log(/realTxHash/, JSON.stringify(realTxHash));
+    console.log(`The real transaction hash is: ${realTxHash}`);
   });
 });
 
