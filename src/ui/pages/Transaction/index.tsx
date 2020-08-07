@@ -81,14 +81,6 @@ export const InnerForm = (props: AppProps) => {
   const [checkMsg, setCheckMsg] = React.useState('');
   const [unspentCapacity, setUnspentCapacity] = React.useState(-1);
 
-  React.useEffect(() => {
-    browser.storage.local.get('contacts').then((result) => {
-      if (Array.isArray(result.contacts)) {
-        setContacts(result.contacts);
-      }
-    });
-  }, []);
-
   const {
     values,
     touched,
@@ -101,6 +93,12 @@ export const InnerForm = (props: AppProps) => {
   } = props;
 
   React.useEffect(() => {
+    browser.storage.local.get('contacts').then((result) => {
+      if (Array.isArray(result.contacts)) {
+        setContacts(result.contacts);
+      }
+    });
+
     browser.storage.local.get('currentWallet').then(async (result) => {
       const lockHash = result.currentWallet.lock;
       const unspentCapacityResult = await getUnspentCapacity(lockHash);
@@ -200,7 +198,6 @@ export const InnerForm = (props: AppProps) => {
     }
   };
 
-<<<<<<< HEAD
   const { name, typeHash } = values;
   let sudtElem = null;
   let dataElem = null;
@@ -246,7 +243,9 @@ export const InnerForm = (props: AppProps) => {
           <ListItemText primary="UDT Hash" secondary={truncateHash(typeHash)} />
         </ListItem>
       </div>
-=======
+    );
+  }
+
   function ValueLabelComponent(props: TooltipProps) {
     const { children, open, value } = props;
 
@@ -254,13 +253,13 @@ export const InnerForm = (props: AppProps) => {
       <Tooltip open={open} enterTouchDelay={0} placement="top" title={value}>
         {children}
       </Tooltip>
->>>>>>> ele
     );
   }
 
   return (
-    <Form className="form-mnemonic" id="form-mnemonic" onSubmit={handleSubmit}>
+    <Form className="form-sendtx" id="form-sendtx" onSubmit={handleSubmit}>
       <div>{sudtElem}</div>
+
       <Autocomplete
         id="address"
         onChange={(event, newValue) => {
