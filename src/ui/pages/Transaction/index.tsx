@@ -28,7 +28,11 @@ import {
 import { getUnspentCapacity } from '@src/utils/apis';
 import { addressToScript } from '@keyper/specs';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils';
-import { Slider, Tooltip } from '@material-ui/core';
+import { Slider, Tooltip, Typography, Grid } from '@material-ui/core';
+
+import calculateTxFee from '@src/wallet/transaction/calculateFee';
+import { genDummyTransaction } from '@src/wallet/transaction/sendTransaction';
+import { showAddressHelper } from '@utils/wallet';
 
 const useStyles = makeStyles({
   container: {
@@ -80,6 +84,7 @@ export const InnerForm = (props: AppProps) => {
   const [checkAddressMsg, setCheckAddressMsg] = React.useState('');
   const [checkMsg, setCheckMsg] = React.useState('');
   const [unspentCapacity, setUnspentCapacity] = React.useState(-1);
+  const [feeRate, setFeeRate] = React.useState(0);
 
   const {
     values,
@@ -256,6 +261,55 @@ export const InnerForm = (props: AppProps) => {
     );
   }
 
+  const sliderMarks = [
+    {
+      value: 100,
+      label: '100',
+    },
+    {
+      value: 1000,
+      label: '1000',
+    },
+    {
+      value: 2000,
+      label: '2000',
+    },
+    {
+      value: 3000,
+      label: '3000',
+    },
+  ];
+
+  const handleSliderChange = async (event, newValue) => {
+    let timeout;
+
+    timeout && clearTimeout(timeout);
+    const cwStorage = await browser.storage.local.get('currentWallet');
+    const currNetworkStorage = await browser.storage.local.get('currentNetwork');
+
+    const { script, lock, type } = cwStorage.currentWallet;
+
+    const fromAddress = showAddressHelper(currNetworkStorage.currentNetwork.prefix, script);
+    const { address, capacity, fee, data } = values;
+
+    timeout = setTimeout(async () => {
+      setFeeRate(newValue);
+      const dummyTx = await genDummyTransaction(
+        fromAddress,
+        address,
+        capacity,
+        fee,
+        lock,
+        type,
+        data,
+      );
+
+      const feeHex = calculateTxFee(dummyTx, BigInt(feeRate));
+      const newFee = parseInt(feeHex.toString(), 16);
+      setFieldValue('fee', newFee / 10 ** 8);
+    }, 800);
+  };
+
   return (
     <Form className="form-sendtx" id="form-sendtx" onSubmit={handleSubmit}>
       <div>{sudtElem}</div>
@@ -324,7 +378,28 @@ export const InnerForm = (props: AppProps) => {
       />
 
       <div>
-        <Slider ValueLabelComponent={ValueLabelComponent} aria-label="费率" defaultValue={50} />
+        <Typography gutterBottom>费率</Typography>
+
+        <Grid container spacing={2}>
+          <Grid item>
+            <Typography gutterBottom>Slower</Typography>
+          </Grid>
+          <Grid item xs>
+            <Slider
+              ValueLabelComponent={ValueLabelComponent}
+              valueLabelDisplay="auto"
+              marks={sliderMarks}
+              aria-label="feeRate"
+              defaultValue={1000}
+              min={100}
+              max={3000}
+              onChange={handleSliderChange}
+            />
+          </Grid>
+          <Grid item>
+            <Typography gutterBottom>Faster</Typography>
+          </Grid>
+        </Grid>
       </div>
 
       <TextField
@@ -333,6 +408,9 @@ export const InnerForm = (props: AppProps) => {
         name="fee"
         type="text"
         fullWidth
+        InputProps={{
+          readOnly: true,
+        }}
         className={classes.textField}
         value={values.fee}
         onChange={handleChange}
