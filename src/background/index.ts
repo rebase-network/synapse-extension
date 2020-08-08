@@ -23,6 +23,7 @@ import addExternalMessageListener from '@background/messageHandlers';
 import { WEB_PAGE } from '@src/utils/message/constants';
 import { sendToWebPage } from '@background/messageHandlers/proxy';
 import NetworkManager from '@common/networkManager';
+import { sendSudtTransaction } from '@src/wallet/transaction/sendSudtTransaction';
 
 NetworkManager.initNetworks();
 
@@ -307,20 +308,11 @@ chrome.runtime.onMessage.addListener(async (request) => {
         },
       },
     };
-
-    // const typeArgs = request.args.trim();
-    // const typeCodeHash = request.codeHash.trim();
-    // const typeHashType = request.hashType.trim();
     const { typeHash, outputdata, index, txHash } = request;
     console.log(/typeHash/, typeHash);
     try {
       let sendTxObj = null;
-      if (typeHash !== '') {
-        console.log(/11111/);
-        console.log(/outputdata/, outputdata);
-        console.log(/index/, index);
-        console.log(/txHash/, txHash);
-      } else {
+      if (typeHash === undefined) {
         sendTxObj = await sendTransaction(
           privateKey,
           fromAddress,
@@ -332,6 +324,23 @@ chrome.runtime.onMessage.addListener(async (request) => {
           password,
           publicKey.replace('0x', ''),
           toData,
+        );
+      } else if (typeHash !== '') {
+        const sUdtAmount = outputdata;
+        const sendSudtAmount = capacity;
+        console.log(/sUdtAmount/, sUdtAmount);
+        console.log(/sendSudtAmount/, sendSudtAmount);
+        sendTxObj = await sendSudtTransaction(
+          fromAddress,
+          lockType,
+          lockHash,
+          sUdtAmount,
+          txHash,
+          index,
+          toAddress,
+          sendSudtAmount,
+          fee,
+          password,
         );
       }
 

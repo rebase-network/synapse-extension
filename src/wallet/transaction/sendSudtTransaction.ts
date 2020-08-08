@@ -1,39 +1,22 @@
 import { BN } from 'bn.js';
-import { addressToScript } from '@keyper/specs';
-import { ADDRESS_TYPE_CODEHASH } from '@utils/constants';
-import { textToHex } from '@utils/index';
 import _ from 'lodash';
-import { getDepFromLockType } from '@utils/deps';
+import { addressToScript } from '@keyper/specs';
 import { getUnspentCells } from '@utils/apis';
 import getCKB from '@utils/ckb';
 import { signTx } from '@src/keyper/keyperwallet';
 import NetworkManager from '@common/networkManager';
-import { createRawTx, createAnyPayRawTx } from './txSudtGenerator';
+import { createSudtRawTx } from './txSudtGenerator';
+import { getDepFromLockType } from '@src/utils/deps';
+import { ADDRESS_TYPE_CODEHASH } from '@src/utils/constants';
+import { getDepFromType } from '@src/utils/constants/TypesInfo';
 
 export interface GenerateTxResult {
   tx: CKBComponents.RawTransaction;
   fee: string;
 }
 
-export const generateTx = async (
-  fromAddress,
-  toAddress,
-  toAmount,
-  fee,
-  lockHash,
-  lockType,
-  toDataHex = '0x',
-  typeArgs,
-  typeCodeHash,
-  typeHashType,
-): Promise<GenerateTxResult> => {
-  const params = {
-    capacity: BigInt(toAmount).toString(),
-    hasData: 'false',
-  };
-
+export const getInputCells = async (lockHash, params) => {
   const unspentCells = await getUnspentCells(lockHash, params);
-
   // Error handling
   if (unspentCells.errCode !== undefined && unspentCells.errCode !== 0) {
     return unspentCells;
@@ -46,234 +29,92 @@ export const generateTx = async (
   function getTotalCapity(total, cell) {
     return BigInt(total) + BigInt(cell.capacity);
   }
-
   const totalCapity = unspentCells.reduce(getTotalCapity, 0);
   const inputCells = {
     cells: unspentCells,
     total: new BN(totalCapity),
   };
-
-  const fromLockScript = addressToScript(fromAddress);
-  const toLockScript = addressToScript(toAddress);
-
-  const depObj = await getDepFromLockType(lockType, NetworkManager);
-
-  const rawObj = createRawTx(
-    new BN(toAmount),
-    toLockScript,
-    inputCells,
-    fromLockScript,
-    [depObj],
-    new BN(fee),
-    toDataHex,
-    typeArgs,
-    typeCodeHash,
-    typeHashType,
-  );
-  const resultObj = {
-    tx: rawObj.tx,
-    fee: rawObj.fee,
-  };
-  return resultObj;
-};
-
-export const generateAnyPayTx = async (
-  fromAddress,
-  toAddress,
-  toAmount,
-  fee,
-  lockHash,
-  fromLockType,
-  toLockType,
-  typeArgs,
-  typeCodeHash,
-  typeHashType,
-): Promise<GenerateTxResult> => {
-  const ckb = await getCKB();
-  const fromLockScript = addressToScript(fromAddress);
-  const toLockScript = addressToScript(toAddress);
-  const toLockHash = ckb.utils.scriptToHash(toLockScript);
-  // unspentCells
-  const params = {
-    capacity: toAmount,
-    hasData: 'false',
-  };
-  const unspentCells = await getUnspentCells(lockHash, params);
-  // Error handling
-  if (unspentCells.errCode !== undefined && unspentCells.errCode !== 0) {
-    return unspentCells;
-  }
-  if (_.isEmpty(unspentCells)) {
-    throw new Error('There is not available live cells');
-  }
-
-  function getTotalCapity(total, cell) {
-    return BigInt(total) + BigInt(cell.capacity);
-  }
-  const totalCapity = unspentCells.reduce(getTotalCapity, 0);
-  const inputCells = {
-    cells: unspentCells,
-    total: new BN(totalCapity),
-  };
-
-  // Wallet Cell
-  const params2 = {
-    limit: '10',
-    hasData: 'false',
-  };
-  const unspentWalletCells = await getUnspentCells(toLockHash, params2);
-  // Error handling
-  if (unspentWalletCells.errCode !== undefined && unspentWalletCells.errCode !== 0) {
-    return unspentCells;
-  }
-
-  function getWalletTotalCapity(total, cell) {
-    return BigInt(total) + BigInt(cell.capacity);
-  }
-  const walletTotalCapity = unspentWalletCells.reduce(getWalletTotalCapity, 0);
-
-  const fromDepObj = await getDepFromLockType(fromLockType, NetworkManager);
-  const toDepObj = await getDepFromLockType(toLockType, NetworkManager);
-
-  const fromCodeHash = fromLockScript.codeHash;
-  const toCodeHash = toLockScript.codeHash;
-  // anypay to anypay deps = 1
-  let rawObj = {
-    target: '',
-    fee: '',
-    tx: null,
-  };
-
-  if (fromCodeHash === toCodeHash) {
-    rawObj = createAnyPayRawTx(
-      new BN(toAmount),
-      toLockScript,
-      inputCells,
-      fromLockScript,
-      [toDepObj],
-      new BN(fee),
-      unspentWalletCells,
-      walletTotalCapity,
-      typeArgs,
-      typeCodeHash,
-      typeHashType,
-    );
-  } else {
-    rawObj = createAnyPayRawTx(
-      new BN(toAmount),
-      toLockScript,
-      inputCells,
-      fromLockScript,
-      [fromDepObj, toDepObj],
-      new BN(fee),
-      unspentWalletCells,
-      walletTotalCapity,
-      typeArgs,
-      typeCodeHash,
-      typeHashType,
-    );
-  }
-
-  const resultObj = {
-    tx: rawObj.tx,
-    fee: rawObj.fee,
-  };
-  return resultObj;
+  return inputCells;
 };
 
 export const sendSudtTransaction = async (
   fromAddress,
-  toAddress,
-  toAmount,
-  fee,
+  fromLockType,
   lockHash,
-  lockType,
+  sUdtAmount,
+  txHash,
+  index,
+  toAddress,
+  sendSudtAmount,
+  fee,
   password,
-  publicKey,
-  toData = '0x',
-  typeArgs,
-  typeCodeHash,
-  typeHashType,
 ) => {
   const ckb = await getCKB();
-  const toDataHex = textToHex(toData || '0x');
-  const toAddressScript = addressToScript(toAddress);
-  let toLockType = '';
-
-  if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
-    toLockType = 'Secp256k1';
-  } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Keccak256) {
-    toLockType = 'Keccak256';
-  } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.AnyPay) {
-    toLockType = 'AnyPay';
-  }
-
   let rawTxObj: any;
-
-  // wallet cells check
-  const toLockScript = addressToScript(toAddress);
-  const toLockHash = ckb.utils.scriptToHash(toLockScript);
-
-  // get anypay wallet
-  let unspentWalletCells: any;
-  if (toLockType === 'AnyPay') {
-    const params = {
-      limit: '10',
-      hasData: 'false',
-    };
-    unspentWalletCells = await getUnspentCells(toLockHash, params);
-    // Error handling
-    if (unspentWalletCells.errCode !== undefined && unspentWalletCells.errCode !== 0) {
-      return unspentWalletCells;
-    }
-  }
 
   let realTxHash;
   let config = { index: 0, length: -1 };
 
-  if (toLockType === 'AnyPay' && unspentWalletCells.length === 0) {
-    rawTxObj = await generateTx(
-      fromAddress,
-      toAddress,
-      toAmount,
-      fee,
-      lockHash,
-      lockType,
-      toDataHex,
-      typeArgs,
-      typeCodeHash,
-      typeHashType,
-    );
-    config = { index: 0, length: -1 };
-  } else if (toLockType === 'AnyPay' && unspentWalletCells.length > 0) {
-    rawTxObj = await generateAnyPayTx(
-      fromAddress,
-      toAddress,
-      toAmount,
-      fee,
-      lockHash,
-      lockType,
-      toLockType,
-      typeArgs,
-      typeCodeHash,
-      typeHashType,
-    );
-    config = { index: 1, length: 1 };
-  } else if (toLockType === 'Secp256k1') {
-    rawTxObj = await generateTx(
-      fromAddress,
-      toAddress,
-      toAmount,
-      fee,
-      lockHash,
-      lockType,
-      toDataHex,
-      typeArgs,
-      typeCodeHash,
-      typeHashType,
-    );
-    config = { index: 0, length: -1 };
+  const sUdtInput = {
+    previousOutput: {
+      txHash: txHash,
+      index: index,
+    },
+    since: '0x0',
+  };
+  // 1.Get transaction by txHash (input SUDT)
+  const tx = await ckb.rpc.getTransaction(txHash);
+  const outputs = tx.transaction.outputs;
+  const sUdtOutput = outputs[index];
+  const { lock: lockScript, type: sUdtTypeScript } = sUdtOutput;
+
+  const fromLockScript = addressToScript(fromAddress);
+  const fromLockHash = ckb.utils.scriptToHash(fromLockScript);
+  const params = {
+    capacity: BigInt(142).toString(),
+    hasData: 'false',
+  };
+  const inputCkbCells = await getInputCells(fromLockHash, params);
+
+  const toLockScript = addressToScript(toAddress);
+  const toLockHash = ckb.utils.scriptToHash(toLockScript);
+
+  let toLockType = null;
+  if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
+    toLockType = 'Secp256k1';
+  } else if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.Keccak256) {
+    toLockType = 'Keccak256';
+  } else if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.AnyPay) {
+    toLockType = 'AnyPay';
   }
+
+  const deps = [];
+  if(fromLockType === toLockType){
+    const fromDepObj = await getDepFromLockType(fromLockType, NetworkManager);
+    deps.push(fromDepObj);
+  } else {
+    const fromDepObj = await getDepFromLockType(fromLockType, NetworkManager);
+    const toDepObj = await getDepFromLockType(toLockType, NetworkManager);
+    deps.push(fromDepObj);
+    deps.push(toDepObj);
+  }
+  const sUdtDep = await getDepFromType('simpleudt',NetworkManager);
+  deps.push(sUdtDep);
+
+  rawTxObj = createSudtRawTx(
+    sUdtInput,
+    sUdtTypeScript,
+    inputCkbCells,
+    sUdtOutput,
+    sUdtAmount,
+    fromLockScript,
+    sendSudtAmount,
+    toLockScript,
+    deps,
+    fee,
+  );
+
+  config = { index: 1, length: 1 };
 
   // Error handling
   if (rawTxObj.errCode !== undefined && rawTxObj.errCode !== 0) {
