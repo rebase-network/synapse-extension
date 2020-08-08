@@ -167,7 +167,6 @@ export const generateAnyPayTx = async (
 };
 
 export const sendTransaction = async (
-  privateKey,
   fromAddress,
   toAddress,
   toAmount,
@@ -175,7 +174,6 @@ export const sendTransaction = async (
   lockHash,
   lockType,
   password,
-  publicKey,
   toData = '0x',
 ) => {
   const ckb = await getCKB();

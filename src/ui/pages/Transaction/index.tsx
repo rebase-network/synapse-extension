@@ -294,20 +294,23 @@ export const InnerForm = (props: AppProps) => {
 
     timeout = setTimeout(async () => {
       setFeeRate(newValue);
-      const dummyTx = await genDummyTransaction(
-        fromAddress,
-        address,
-        capacity,
-        fee,
-        lock,
-        type,
-        data,
-      );
 
-      const feeHex = calculateTxFee(dummyTx, BigInt(feeRate));
-      const newFee = parseInt(feeHex.toString(), 16);
-      setFieldValue('fee', newFee / 10 ** 8);
-    }, 800);
+      if (address !== '' || capacity !== '') {
+        const dummyTx = await genDummyTransaction(
+          fromAddress,
+          address,
+          capacity,
+          fee,
+          lock,
+          type,
+          data,
+        );
+
+        const feeHex = calculateTxFee(dummyTx, BigInt(feeRate));
+        const newFee = parseInt(feeHex.toString(), 16);
+        setFieldValue('fee', newFee / 10 ** 8);
+      }
+    }, 200);
   };
 
   return (

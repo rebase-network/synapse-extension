@@ -322,10 +322,10 @@ chrome.runtime.onMessage.addListener(async (request) => {
     };
     const { typeHash } = request;
     try {
+
       let sendTxObj = null;
       if (typeHash === '') {
-        sendTxObj = await sendTransaction(
-          privateKey,
+        const sendTxObj = await sendTransaction(
           fromAddress,
           toAddress,
           capacity,
@@ -333,7 +333,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
           lockHash,
           lockType,
           password,
-          publicKey.replace('0x', ''),
           toData,
         );
       } else if (typeHash !== '') {
