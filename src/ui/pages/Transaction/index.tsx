@@ -114,7 +114,7 @@ export const InnerForm = (props: AppProps) => {
     setCheckAddressMsg('');
     handleBlur(event);
 
-    const { address } = values;
+    const { address, typeHash } = values;
     // check address
     try {
       addressToScript(address);
@@ -128,49 +128,49 @@ export const InnerForm = (props: AppProps) => {
     // secp256k1
     const capacity = event.target.value;
     const toLockScript = addressToScript(address);
-    if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
-      // every cell's capacity gt 61
-      if (Number(capacity) < Number(61)) {
-        const checkMsgId = "The transaction's ckb capacity cannot be less than 61 CKB";
-        const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
-        setCheckMsg(checkMsgI18n);
-        return;
+    if (typeHash === undefined) {
+      if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
+        // every cell's capacity gt 61
+        if (Number(capacity) < Number(61)) {
+          const checkMsgId = "The transaction's ckb capacity cannot be less than 61 CKB";
+          const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
+          setCheckMsg(checkMsgI18n);
+          return;
+        }
       }
-    }
-    // check anypay cell's capacity
-    if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.AnyPay) {
-      const toLockHash = scriptToHash(toLockScript);
-      const liveCapacity = await getUnspentCapacity(toLockHash);
-      if (liveCapacity === null && Number(capacity) < Number(61)) {
-        const checkMsgId = "The transaction's ckb capacity cannot be less than 61 CKB";
-        const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
-        setCheckMsg(checkMsgI18n);
-        return;
+      // check anypay cell's capacity
+      if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.AnyPay) {
+        const toLockHash = scriptToHash(toLockScript);
+        const liveCapacity = await getUnspentCapacity(toLockHash);
+        if (liveCapacity === null && Number(capacity) < Number(61)) {
+          const checkMsgId = "The transaction's ckb capacity cannot be less than 61 CKB";
+          const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
+          setCheckMsg(checkMsgI18n);
+          return;
+        }
       }
-    }
 
-    if (unspentCapacity > 0) {
-      if (unspentCapacity < Number(capacity) * CKB_TOKEN_DECIMALS) {
-        const checkMsgId = 'lack of capacity, available capacity is';
-        const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
-        setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter(unspentCapacity.toString())} ckb`);
-        return;
+      if (unspentCapacity > 0) {
+        if (unspentCapacity < Number(capacity) * CKB_TOKEN_DECIMALS) {
+          const checkMsgId = 'lack of capacity, available capacity is';
+          const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
+          setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter(unspentCapacity.toString())} ckb`);
+          return;
+        }
+        const chargeCapacity = unspentCapacity - Number(capacity) * CKB_TOKEN_DECIMALS;
+        if (chargeCapacity < 61 * CKB_TOKEN_DECIMALS) {
+          const checkMsgId =
+            'the remaining capacity is less than 61, if continue it will be destroyed, remaining capacity is';
+          const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
+          setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter(chargeCapacity.toString())} ckb`);
+        }
       }
-      const chargeCapacity = unspentCapacity - Number(capacity) * CKB_TOKEN_DECIMALS;
-      if (chargeCapacity < 61 * CKB_TOKEN_DECIMALS) {
-        const checkMsgId =
-          'the remaining capacity is less than 61, if continue it will be destroyed, remaining capacity is';
-        const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
-        setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter(chargeCapacity.toString())} ckb`);
-      }
+    } else {
+      console.log(/typeHash/, typeHash);
     }
   };
 
   const { name, typeHash, txHash, index, outputdata } = values;
-  //   console.log(/txHash/, txHash);
-  //   console.log(/index/, index);
-  //   console.log(/outputdata/, outputdata);
-
   let sudtElem = null;
   if (name === undefined && typeHash !== undefined) {
     sudtElem = null;

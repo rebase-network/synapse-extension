@@ -43,7 +43,7 @@ export const sendSudtTransaction = async (
   lockHash,
   sUdtAmount,
   txHash,
-  index,
+  txIndex,
   toAddress,
   sendSudtAmount,
   fee,
@@ -58,14 +58,15 @@ export const sendSudtTransaction = async (
   const sUdtInput = {
     previousOutput: {
       txHash: txHash,
-      index: index,
+      index: txIndex,
     },
     since: '0x0',
   };
+  
   // 1.Get transaction by txHash (input SUDT)
   const tx = await ckb.rpc.getTransaction(txHash);
   const outputs = tx.transaction.outputs;
-  const sUdtOutput = outputs[index];
+  const sUdtOutput = outputs[Number(txIndex)];
   const { lock: lockScript, type: sUdtTypeScript } = sUdtOutput;
 
   const fromLockScript = addressToScript(fromAddress);
@@ -74,6 +75,7 @@ export const sendSudtTransaction = async (
     capacity: BigInt(142).toString(),
     hasData: 'false',
   };
+
   const inputCkbCells = await getInputCells(fromLockHash, params);
 
   const toLockScript = addressToScript(toAddress);
@@ -114,14 +116,15 @@ export const sendSudtTransaction = async (
     fee,
   );
 
-  config = { index: 1, length: 1 };
-
+  config = { index: 0, length: -1 };
   // Error handling
   if (rawTxObj.errCode !== undefined && rawTxObj.errCode !== 0) {
     return rawTxObj;
   }
 
   const signedTx = await signTx(lockHash, password, rawTxObj.tx, config);
+  console.log(/signedTx/,JSON.stringify(signedTx));
+
   const txResultObj = {
     txHash: null,
     fee: rawTxObj.fee,

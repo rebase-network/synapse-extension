@@ -16,12 +16,12 @@ describe('Transaction test', async () => {
   //   });
 
   it('test capacity value', async () => {
-    const toSudtAmount = 1000000;
+    const toSudtAmount = 142 * 10 ** 8;
     const capacity = `0x${new BN(toSudtAmount).toString(16)}`;
     console.log(capacity);
-    const liend = toHexInLittleEndian(BigInt(toSudtAmount), 16);
-    console.log(liend);
-    const intValue = parseSUDT(liend);
-    console.log(intValue);
+    // const liend = toHexInLittleEndian(BigInt(toSudtAmount), 16);
+    // console.log(liend);
+    // const intValue = parseSUDT(liend);
+    // console.log(intValue);
   });
 });

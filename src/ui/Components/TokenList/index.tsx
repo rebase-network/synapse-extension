@@ -71,7 +71,6 @@ export default (props: AppProps) => {
   }
 
   const udtsCapacity = aggregateUDT(tokenList);
-  console.log(/udtsCapacity/, udtsCapacity);
   const resultElem = (
     <TokenListComponent udtsCapacity={udtsCapacity} udtsMeta={udtsMeta} explorerUrl={explorerUrl} />
   );

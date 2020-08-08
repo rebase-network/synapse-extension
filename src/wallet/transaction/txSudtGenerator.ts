@@ -3,6 +3,7 @@ import { scriptToHash, toHexInLittleEndian } from '@nervosnetwork/ckb-sdk-utils/
 import _ from 'lodash';
 import { Cell } from '@nervosnetwork/ckb-sdk-core/lib/generateRawTransaction';
 import { SUDT_MIN_AMOUNT } from '../const';
+import { ScriptHashType } from '@keyper/specs/types';
 
 export interface CreateRawTxResult {
   tx: CKBComponents.RawTransaction;
@@ -37,11 +38,7 @@ export function createSudtRawTx(
     outputsData: [],
   };
 
-  // 1. input Sudt
-  rawTx.inputs.push(sUdtInput);
-  rawTx.witnesses.push('0x');
-
-  // 2. input CKB
+  // 1. input CKB
   for (let i = 0; i < inputCkbCells.cells.length; i++) {
     const element = inputCkbCells.cells[i];
     rawTx.inputs.push({
@@ -50,29 +47,64 @@ export function createSudtRawTx(
     });
     rawTx.witnesses.push('0x');
   }
+  rawTx.witnesses[0] = {
+    lock: '',
+    inputType: '',
+    outputType: '',
+  };
+
+  // 2. input Sudt
+  rawTx.inputs.push(sUdtInput);
+  rawTx.witnesses.push('0x');
 
   // 1. output transfer to
-  const toSudtCapacity = (SUDT_MIN_AMOUNT * 10) ^ 8;
+  const toSudtCapacity = SUDT_MIN_AMOUNT * 10 ** 8;
   rawTx.outputs.push({
     capacity: `0x${new BN(toSudtCapacity).toString(16)}`,
-    lock: toLockScript,
-    type: sUdtTypeScript,
+    lock: {
+      hashType: toLockScript.hashType as ScriptHashType,
+      codeHash: toLockScript.codeHash,
+      args: toLockScript.args,
+    },
+    type: {
+      hashType: sUdtTypeScript.hashType as ScriptHashType,
+      codeHash: sUdtTypeScript.codeHash,
+      args: sUdtTypeScript.args,
+    },
   });
   const sUdtLeSend = toHexInLittleEndian(BigInt(sendSudtAmount), 16);
   rawTx.outputsData.push(sUdtLeSend);
 
   // 2. output | input sudt charge
-  rawTx.outputs.push(sUdtOutput);
+  const { capacity, lock, type } = sUdtOutput;
+  const sUdtOutputCell = {
+    capacity: capacity,
+    lock: {
+      hashType: lock.hashType as ScriptHashType,
+      codeHash: lock.codeHash,
+      args: lock.args,
+    },
+    type: {
+      hashType: type.hashType as ScriptHashType,
+      codeHash: type.codeHash,
+      args: type.args,
+    },
+  };
+  rawTx.outputs.push(sUdtOutputCell);
   const sUdtAmountCharge = sUdtAmount - sendSudtAmount;
   const sUdtLeCharge = toHexInLittleEndian(BigInt(sUdtAmountCharge), 16);
   rawTx.outputsData.push(sUdtLeCharge);
 
   // 3. output | input ckb charge
   const ckbCharge = inputCkbCells.total - toSudtCapacity - fee;
+
   rawTx.outputs.push({
     capacity: `0x${new BN(ckbCharge).toString(16)}`,
-    lock: fromLockScript,
-    type: null,
+    lock: {
+      hashType: fromLockScript.hashType as ScriptHashType,
+      codeHash: fromLockScript.codeHash,
+      args: fromLockScript.args,
+    },
   });
   rawTx.outputsData.push('0x');
 

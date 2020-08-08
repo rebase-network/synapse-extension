@@ -24,6 +24,7 @@ import { WEB_PAGE } from '@src/utils/message/constants';
 import { sendToWebPage } from '@background/messageHandlers/proxy';
 import NetworkManager from '@common/networkManager';
 import { sendSudtTransaction } from '@src/wallet/transaction/sendSudtTransaction';
+import { parseSUDT } from '@src/utils';
 
 NetworkManager.initNetworks();
 
@@ -269,6 +270,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const toAddress = request.address.trim();
     const capacity = request.capacity * CKB_TOKEN_DECIMALS;
     const fee = request.fee * CKB_TOKEN_DECIMALS;
+    let transferFee = request.fee;
     const password = request.password.trim();
     const toData = request.data.trim();
 
@@ -309,7 +311,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
       },
     };
     const { typeHash, outputdata, index, txHash } = request;
-    console.log(/typeHash/, typeHash);
     try {
       let sendTxObj = null;
       if (typeHash === undefined) {
@@ -326,10 +327,9 @@ chrome.runtime.onMessage.addListener(async (request) => {
           toData,
         );
       } else if (typeHash !== '') {
-        const sUdtAmount = outputdata;
-        const sendSudtAmount = capacity;
-        console.log(/sUdtAmount/, sUdtAmount);
-        console.log(/sendSudtAmount/, sendSudtAmount);
+        const sUdtAmount = parseSUDT(outputdata);
+        const sendSudtAmount = capacity / 10 ** 8;
+        transferFee = 0.0001 * CKB_TOKEN_DECIMALS;
         sendTxObj = await sendSudtTransaction(
           fromAddress,
           lockType,
@@ -339,7 +339,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
           index,
           toAddress,
           sendSudtAmount,
-          fee,
+          transferFee,
           password,
         );
       }
