@@ -8,7 +8,7 @@ import NetworkManager from '@common/networkManager';
 import { createSudtRawTx } from './txSudtGenerator';
 import { getDepFromLockType } from '@src/utils/deps';
 import { ADDRESS_TYPE_CODEHASH, SUDT_MIN_CELL_CAPACITY, CKB_TOKEN_DECIMALS } from '@src/utils/constants';
-import { getDepFromType } from '@src/utils/constants/TypesInfo';
+import { getDepFromType } from '@src/utils/constants/typesInfo';
 import { parseSUDT } from '@src/utils';
 
 export interface GenerateTxResult {
@@ -59,7 +59,7 @@ export const getInputSudtCells = async (lockHash, params) => {
     return BigInt(total) + BigInt(parseSUDT(cell.outputData));
   }
   const sudtAmount = unspentCells.reduce(getTotalSudtCapity, 0);
-  
+
   const inputCells = {
     cells: unspentCells,
     sudtCKBCapacity: sudtCKBCapity,
