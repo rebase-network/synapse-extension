@@ -53,7 +53,6 @@ export const sendSudtTransaction = async (
   let rawTxObj: any;
 
   let realTxHash;
-  let config = { index: 0, length: -1 };
 
   const sUdtInput = {
     previousOutput: {
@@ -103,6 +102,14 @@ export const sendSudtTransaction = async (
   const sUdtDep = await getDepFromType('simpleudt',NetworkManager);
   deps.push(sUdtDep);
 
+  // 多对一的聚合处理
+  // TODO 根据lockHash和typeHash从数据表中获取，发送的SUDT是否已经存在
+   const sudtParams = {
+    limit: '1',
+    hasData: 'true',
+  };
+  const toSudtOutput = await getUnspentCells(toLockHash, sudtParams);
+
   rawTxObj = createSudtRawTx(
     sUdtInput,
     sUdtTypeScript,
@@ -112,17 +119,18 @@ export const sendSudtTransaction = async (
     fromLockScript,
     sendSudtAmount,
     toLockScript,
+    toSudtOutput,
     deps,
     fee,
   );
+  console.log(/rawTxObj/,JSON.stringify(rawTxObj));
 
-  config = { index: 0, length: -1 };
   // Error handling
   if (rawTxObj.errCode !== undefined && rawTxObj.errCode !== 0) {
     return rawTxObj;
   }
 
-  const signedTx = await signTx(lockHash, password, rawTxObj.tx, config);
+  const signedTx = await signTx(lockHash, password, rawTxObj.tx, rawTxObj.config);
   console.log(/signedTx/,JSON.stringify(signedTx));
 
   const txResultObj = {
