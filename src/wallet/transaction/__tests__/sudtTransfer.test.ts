@@ -116,12 +116,11 @@ describe('SimpleUDT Test', () => {
         },
       ],
     };
-
-    const signedTx = await ckb.signTransaction(privateKey)(transferTransaction, []);
-    console.log(/signedTx/, signedTx);
-    const realTxHash = await ckb.rpc.sendTransaction(signedTx);
-    console.log(/realTxHash/, JSON.stringify(realTxHash));
-    console.log(`The real transaction hash is: ${realTxHash}`);
+    // const signedTx = await ckb.signTransaction(privateKey)(transferTransaction, []);
+    // console.log(/signedTx/, signedTx);
+    // const realTxHash = await ckb.rpc.sendTransaction(signedTx);
+    // console.log(/realTxHash/, JSON.stringify(realTxHash));
+    // console.log(`The real transaction hash is: ${realTxHash}`);
   });
 });
 

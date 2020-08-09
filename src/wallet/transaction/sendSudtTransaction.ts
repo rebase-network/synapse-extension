@@ -7,7 +7,7 @@ import { signTx } from '@src/keyper/keyperwallet';
 import NetworkManager from '@common/networkManager';
 import { createSudtRawTx } from './txSudtGenerator';
 import { getDepFromLockType } from '@src/utils/deps';
-import { ADDRESS_TYPE_CODEHASH } from '@src/utils/constants';
+import { ADDRESS_TYPE_CODEHASH, SUDT_MIN_CELL_CAPACITY, CKB_TOKEN_DECIMALS } from '@src/utils/constants';
 import { getDepFromType } from '@src/utils/constants/TypesInfo';
 import { parseSUDT } from '@src/utils';
 
@@ -85,7 +85,7 @@ export const sendSudtTransaction = async (
   const fromLockScript = addressToScript(fromAddress);
   const fromLockHash = ckb.utils.scriptToHash(fromLockScript);
   const params = {
-    capacity: BigInt(142).toString(),
+    capacity: SUDT_MIN_CELL_CAPACITY * CKB_TOKEN_DECIMALS,
     hasData: 'false',
   };
   // 1. input CKB cells
@@ -141,7 +141,6 @@ export const sendSudtTransaction = async (
   }
 
   const signedTx = await signTx(lockHash, password, rawTxObj.tx, rawTxObj.config);
-
   const txResultObj = {
     txHash: null,
     fee: rawTxObj.fee,

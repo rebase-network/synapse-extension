@@ -270,7 +270,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const toAddress = request.address.trim();
     const capacity = request.capacity * CKB_TOKEN_DECIMALS;
     const fee = request.fee * CKB_TOKEN_DECIMALS;
-    let transferFee = request.fee;
     const password = request.password.trim();
     const toData = request.data.trim();
 
@@ -328,7 +327,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
         );
       } else if (typeHash !== '') {
         const sendSudtAmount = capacity;
-        transferFee = 0.0001 * CKB_TOKEN_DECIMALS;
+        const transferFee = 0.0001 * CKB_TOKEN_DECIMALS;
         sendTxObj = await sendSudtTransaction(
           fromAddress,
           lockType,
