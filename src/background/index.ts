@@ -327,17 +327,13 @@ chrome.runtime.onMessage.addListener(async (request) => {
           toData,
         );
       } else if (typeHash !== '') {
-        const sUdtAmount = parseSUDT(outputdata);
         const sendSudtAmount = capacity / 10 ** 8;
         transferFee = 0.0001 * CKB_TOKEN_DECIMALS;
         sendTxObj = await sendSudtTransaction(
           fromAddress,
           lockType,
           lockHash,
-          sUdtAmount,
           typeHash,
-          txHash,
-          index,
           toAddress,
           sendSudtAmount,
           transferFee,

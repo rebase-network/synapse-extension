@@ -55,19 +55,17 @@ export function createSudtRawTx(
 
   // 2. input SUDT
   for (let i = 0; i < inputSudtCells.cells.length; i++) {
-    const element = inputSudtCells.cells[0];
+    const element = inputSudtCells.cells[i];
     rawTx.inputs.push({
       previousOutput: element.outPoint,
       since: '0x0',
     });
     rawTx.witnesses.push('0x');
   }
-
   const { sudtCKBCapacity, sudtAmount } = inputSudtCells;
-  console.log(/sudtCKBCapacity/, sudtCKBCapacity);
-  console.log(/sudtAmount/, sudtAmount);
 
-  const {lock,type}= inputSudtCells.cells[0]
+  console.log(/inputSudtCells.cells[0]/, inputSudtCells.cells[0]);
+  const { lock, type } = inputSudtCells.cells[0];
   const sUdtLockScript = {
     hashType: lock.hashType as ScriptHashType,
     codeHash: lock.codeHash,
@@ -79,8 +77,6 @@ export function createSudtRawTx(
     codeHash: type.codeHash,
     args: type.args,
   };
-  console.log(/sUdtLockScript/,sUdtLockScript);
-  console.log(/sUdtTypeScript/,sUdtTypeScript);
 
   // 1. output transfer to
   // toAddress have the same sudt
@@ -118,9 +114,7 @@ export function createSudtRawTx(
     },
   };
   rawTx.outputs.push(sUdtOutputCell);
-  // sUdtAmount 或者 sudtAmount
-  const sUdtAmountCharge = sUdtAmount - sendSudtAmount;
-  console.log(/sUdtAmountCharge/, sUdtAmountCharge);
+  const sUdtAmountCharge = BigInt(sUdtAmount) - BigInt(sendSudtAmount);
   const sUdtLeCharge = toHexInLittleEndian(BigInt(sUdtAmountCharge), 16);
   rawTx.outputsData.push(sUdtLeCharge);
 
@@ -131,12 +125,7 @@ export function createSudtRawTx(
     BigInt(toSudtCapacity) -
     BigInt(chargeSudtCapacity) -
     BigInt(fee);
-  console.log(/total/, BigInt(inputCkbCells.total));
-  console.log(/sudtCKBCapacity/, BigInt(sudtCKBCapacity));
-  console.log(/toSudtCapacity/, BigInt(toSudtCapacity));
-  console.log(/chargeSudtCapacity/, BigInt(chargeSudtCapacity));
-  console.log(/fee/, BigInt(fee));
-  console.log(/ckbCharge/, ckbCharge);
+
   rawTx.outputs.push({
     capacity: `0x${new BN(ckbCharge).toString(16)}`,
     lock: {

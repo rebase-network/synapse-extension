@@ -72,10 +72,7 @@ export const sendSudtTransaction = async (
   fromAddress,
   fromLockType,
   lockHash,
-  sUdtAmount,
   typeHash,
-  txHash,
-  txIndex,
   toAddress,
   sendSudtAmount,
   fee,
@@ -117,7 +114,6 @@ export const sendSudtTransaction = async (
   };
   // 2. Input sudt cells
   const inputSudtCells = await getInputSudtCells(fromLockHash, sudtParams);
-  console.log(/inputSudtCells/, inputSudtCells);
 
   const toLockScript = addressToScript(toAddress);
   const toLockHash = ckb.utils.scriptToHash(toLockScript);
@@ -144,6 +140,7 @@ export const sendSudtTransaction = async (
   const sUdtDep = await getDepFromType('simpleudt', NetworkManager);
   deps.push(sUdtDep);
 
+  const sUdtAmount = inputSudtCells.sudtAmount;
   rawTxObj = createSudtRawTx(
     inputCkbCells,
     inputSudtCells,
