@@ -2,9 +2,9 @@ import { BN } from 'bn.js';
 import { scriptToHash, toHexInLittleEndian } from '@nervosnetwork/ckb-sdk-utils/lib';
 import _ from 'lodash';
 import { Cell } from '@nervosnetwork/ckb-sdk-core/lib/generateRawTransaction';
-import { SUDT_MIN_AMOUNT } from '../const';
 import { ScriptHashType } from '@keyper/specs/types';
 import { parseSUDT } from '@src/utils';
+import { SUDT_MIN_CELL_CAPACITY, CKB_TOKEN_DECIMALS } from '@src/utils/constants';
 
 export interface CreateRawTxResult {
   tx: CKBComponents.RawTransaction;
@@ -76,10 +76,9 @@ export function createSudtRawTx(
     args: type.args,
   };
 
-  console.log(/111/)
   // 1. output transfer to
   // toAddress have the same sudt
-  const toSudtCapacity = SUDT_MIN_AMOUNT * 10 ** 8;
+  const toSudtCapacity = SUDT_MIN_CELL_CAPACITY * CKB_TOKEN_DECIMALS;
   const toSudtOutputCell = {
     capacity: `0x${new BN(toSudtCapacity).toString(16)}`,
     lock: {
@@ -94,13 +93,11 @@ export function createSudtRawTx(
     },
   };
   rawTx.outputs.push(toSudtOutputCell);
-  console.log(/sendSudtAmount/,sendSudtAmount);
   const sUdtLeSend = toHexInLittleEndian(BigInt(sendSudtAmount), 16);
   rawTx.outputsData.push(sUdtLeSend);
 
-  console.log(/222/)
   // 2. output | input sudt charge
-  const chargeSudtCapacity = SUDT_MIN_AMOUNT * 10 ** 8;
+  const chargeSudtCapacity = SUDT_MIN_CELL_CAPACITY * 10 ** 8;
   const sUdtOutputCell = {
     capacity: `0x${new BN(chargeSudtCapacity).toString(16)}`,
     lock: {
@@ -119,7 +116,6 @@ export function createSudtRawTx(
   const sUdtLeCharge = toHexInLittleEndian(BigInt(sUdtAmountCharge), 16);
   rawTx.outputsData.push(sUdtLeCharge);
 
-  console.log(/333/)
   // 3. output | input ckb charge
   const ckbCharge =
     BigInt(inputCkbCells.total) +

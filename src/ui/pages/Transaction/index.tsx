@@ -13,6 +13,7 @@ import {
   CKB_TOKEN_DECIMALS,
   MIN_TRANSFER_CELL_CAPACITY,
   ADDRESS_TYPE_CODEHASH,
+  SUDT_MIN_CELL_CAPACITY,
 } from '@utils/constants';
 import PageNav from '@ui/Components/PageNav';
 import Modal from '@ui/Components/Modal';
@@ -114,7 +115,7 @@ export const InnerForm = (props: AppProps) => {
     setCheckAddressMsg('');
     handleBlur(event);
 
-    const { address, typeHash } = values;
+    const { address, typeHash, udt } = values;
     // check address
     try {
       addressToScript(address);
@@ -166,11 +167,20 @@ export const InnerForm = (props: AppProps) => {
         }
       }
     } else {
-      console.log(/typeHash/, typeHash);
+      if (BigInt(capacity * CKB_TOKEN_DECIMALS) > BigInt(udt)) {
+        const checkMsgId = "The transaction's sudt amount cannot be more than have";
+        const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
+        setCheckMsg(checkMsgI18n);
+      }
+      if (BigInt(unspentCapacity) < BigInt((SUDT_MIN_CELL_CAPACITY + 1) * CKB_TOKEN_DECIMALS)) {
+        const checkMsgId = 'lack of capacity, available capacity is';
+        const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
+        setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter(unspentCapacity.toString())} ckb`);
+      }
     }
   };
 
-  const { name, typeHash, txHash, index, outputdata } = values;
+  const { name, typeHash } = values;
   let sudtElem = null;
   let dataElem = null;
   if (name === undefined && typeHash === undefined) {
@@ -335,7 +345,6 @@ export default () => {
 
   const { network } = React.useContext(AppContext);
   const [sending, setSending] = React.useState(false);
-  const [valAddress, setValAddress] = React.useState(true);
   const [open, setOpen] = React.useState(false);
   const [errMsg, setErrMsg] = React.useState('');
   const [selectedTx, setSelectedTx] = React.useState('');
@@ -397,9 +406,6 @@ export default () => {
     errNode = <div className={classes.error}>{intl.formatMessage({ id: errMsg })}</div>;
   }
 
-  let validateNode = null;
-  if (!valAddress) validateNode = <div>Invalid Address</div>;
-
   const txModal = !selectedTx ? (
     ''
   ) : (
@@ -426,7 +432,6 @@ export default () => {
       <div className={classes.container}>
         {sendingNode}
         {errNode}
-        {validateNode}
         <Formik
           initialValues={initialValues}
           onSubmit={onSubmit}

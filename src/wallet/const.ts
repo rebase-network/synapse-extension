@@ -23,8 +23,6 @@ export const WITHDRAW_EPOCHS = 180;
 export const IMMATURE_EPOCHS = 4;
 export const MILLISECONDS_IN_YEAR = 365 * 24 * 3600 * 1000;
 
-export const SUDT_MIN_AMOUNT = 142;
-
 export enum CapacityUnit {
   CKB = 'ckb',
   CKKB = 'ckkb',

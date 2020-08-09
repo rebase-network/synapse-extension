@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import { FormattedMessage } from 'react-intl';
 import PageNav from '@ui/Components/PageNav';
 import { BN } from 'bn.js';
-import { MAINNET_EXPLORER_URL, TESTNET_EXPLORER_URL } from '@utils/constants';
+import { MAINNET_EXPLORER_URL, TESTNET_EXPLORER_URL, CKB_TOKEN_DECIMALS } from '@utils/constants';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -86,7 +86,7 @@ export default (props: AppProps) => {
             </Typography>
           </Grid>
           <Grid item xs data-testid="amount">
-            <Typography> {transferAmount / 10 ** 8} CKB</Typography>
+            <Typography> {transferAmount / CKB_TOKEN_DECIMALS} CKB</Typography>
           </Grid>
         </Grid>
         <Grid container wrap="nowrap" spacing={2}>
@@ -96,7 +96,7 @@ export default (props: AppProps) => {
             </Typography>
           </Grid>
           <Grid item xs>
-            <Typography> {fee / 10 ** 8} CKB </Typography>
+            <Typography> {fee / CKB_TOKEN_DECIMALS} CKB </Typography>
           </Grid>
         </Grid>
 
@@ -110,7 +110,7 @@ export default (props: AppProps) => {
             </Typography>
           </div>
           <Grid item xs>
-            <Link rel="noreferrer" target="_blank" href={`${explorerUrl}/${txHash}`}>
+            <Link rel="noreferrer" target="_blank" href={`${explorerUrl}/transaction/${txHash}`}>
               <Typography className={classes.typography}>{txHash}</Typography>
             </Link>
           </Grid>

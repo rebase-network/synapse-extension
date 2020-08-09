@@ -90,7 +90,6 @@ export const sendSudtTransaction = async (
   };
   // 1. input CKB cells
   const inputCkbCells = await getInputCKBCells(fromLockHash, params);
-  console.log(/inputCkbCells/, inputCkbCells);
 
   const sudtParams = {
     limit: '20',
@@ -142,7 +141,6 @@ export const sendSudtTransaction = async (
   }
 
   const signedTx = await signTx(lockHash, password, rawTxObj.tx, rawTxObj.config);
-  console.log(/signedTx/, JSON.stringify(signedTx));
 
   const txResultObj = {
     txHash: null,
@@ -150,7 +148,6 @@ export const sendSudtTransaction = async (
   };
   try {
     realTxHash = await ckb.rpc.sendTransaction(signedTx);
-    console.log(/realTxHash/, JSON.stringify(realTxHash));
     txResultObj.txHash = realTxHash;
   } catch (error) {
     console.error(`Failed to send tx: ${error}`);

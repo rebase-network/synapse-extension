@@ -1,17 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import {
-  ListItem,
-  ListItemText,
-  Tooltip,
-  //   ListItem,
-  //   ListItemText,
-  //   List,
-  Link,
-  //   Tooltip,
-  Button,
-} from '@material-ui/core';
+import { ListItem, ListItemText, Tooltip, Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { HelpOutline } from '@material-ui/icons';
 import { shannonToCKBFormatter } from '@utils/formatters';
@@ -41,10 +31,6 @@ export interface ITokenInfo {
   decimal: string;
   symbol: string;
   typeHash: string;
-  type: any;
-  txHash: string;
-  index: string;
-  outputdata: string;
 }
 
 interface AppProps {
@@ -56,18 +42,7 @@ export default (props: AppProps) => {
   const classes = useStyles();
   const history = useHistory();
   const {
-    tokenInfo: {
-      name,
-      udt,
-      ckb,
-      decimal = '8',
-      symbol = '',
-      typeHash,
-      txHash,
-      index,
-      outputdata,
-      type,
-    },
+    tokenInfo: { name, udt, ckb, decimal = '8', symbol = '', typeHash },
     explorerUrl,
   } = props;
   let displayName: any = name;
@@ -114,20 +89,6 @@ export default (props: AppProps) => {
     history.push(`/manage-udts/${typeHashParmas}`);
   };
 
-  const handleClick = async (
-    event,
-    nameParams,
-    typeHashParams,
-    txHashParams,
-    indexParams,
-    outputdataParams,
-  ) => {
-    // const { args, codeHash, hashType } = type;
-    history.push(
-      `/send-tx?name=${nameParams}&typeHash=${typeHashParams}&txHash=${txHashParams}&index=${indexParams}&outputdata=${outputdataParams}`,
-    );
-  };
-
   return (
     <div>
       <ListItem
@@ -143,18 +104,6 @@ export default (props: AppProps) => {
           className={classes.token}
         />
       </ListItem>
-      <div>
-        <Button
-          type="submit"
-          id="submit-button"
-          color="primary"
-          variant="contained"
-          data-testid="submit-button"
-          onClick={(event) => handleClick(event, name, typeHash, txHash, index, outputdata)}
-        >
-          <FormattedMessage id="Send" />
-        </Button>
-      </div>
     </div>
   );
 };
