@@ -1,16 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import {
-  ListItem,
-  ListItemText,
-  Tooltip,
-  //   ListItem,
-  //   ListItemText,
-  //   List,
-  Link,
-  //   Tooltip,
-} from '@material-ui/core';
+import { ListItem, ListItemText, Tooltip, Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { HelpOutline } from '@material-ui/icons';
 import { shannonToCKBFormatter } from '@utils/formatters';
@@ -99,18 +90,20 @@ export default (props: AppProps) => {
   };
 
   return (
-    <ListItem
-      button
-      key={`item-${typeHash}`}
-      onClick={(event) => handleListItemClick(event, typeHash)}
-    >
-      <ListItemText primary={displayName} />
-      {expoloreShow}
-      <ListItemText
-        primary={`${udt / 10 ** decimalInt} ${symbol}`}
-        secondary={`${shannonToCKBFormatter(ckbStr)} CKB`}
-        className={classes.token}
-      />
-    </ListItem>
+    <div>
+      <ListItem
+        button
+        key={`item-${typeHash}`}
+        onClick={(event) => handleListItemClick(event, typeHash)}
+      >
+        <ListItemText primary={displayName} />
+        {expoloreShow}
+        <ListItemText
+          primary={`${udt / 10 ** decimalInt} ${symbol}`}
+          secondary={`${shannonToCKBFormatter(ckbStr)} CKB`}
+          className={classes.token}
+        />
+      </ListItem>
+    </div>
   );
 };

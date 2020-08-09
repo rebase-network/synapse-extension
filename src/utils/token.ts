@@ -6,6 +6,7 @@ export interface UDTInfo {
   capacity: string;
   outputdata: string;
   type: CKBComponents.Script;
+  name: string;
 }
 
 export const aggregateUDT = (udtArr: UDTInfo[]) => {
@@ -16,6 +17,7 @@ export const aggregateUDT = (udtArr: UDTInfo[]) => {
       result[cur.typeHash] = {
         ckb: 0,
         udt: 0,
+        type: cur.type,
       };
     }
     if (cur.typeHash) {

@@ -23,6 +23,8 @@ import addExternalMessageListener from '@background/messageHandlers';
 import { WEB_PAGE } from '@src/utils/message/constants';
 import { sendToWebPage } from '@background/messageHandlers/proxy';
 import NetworkManager from '@common/networkManager';
+import { sendSudtTransaction } from '@src/wallet/transaction/sendSudtTransaction';
+import { parseSUDT } from '@src/utils';
 
 NetworkManager.initNetworks();
 
@@ -268,6 +270,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const toAddress = request.address.trim();
     const capacity = request.capacity * CKB_TOKEN_DECIMALS;
     const fee = request.fee * CKB_TOKEN_DECIMALS;
+    let transferFee = request.fee;
     const password = request.password.trim();
     const toData = request.data.trim();
 
@@ -307,20 +310,36 @@ chrome.runtime.onMessage.addListener(async (request) => {
         },
       },
     };
-
+    const { typeHash } = request;
     try {
-      const sendTxObj = await sendTransaction(
-        privateKey,
-        fromAddress,
-        toAddress,
-        capacity,
-        fee,
-        lockHash,
-        lockType,
-        password,
-        publicKey.replace('0x', ''),
-        toData,
-      );
+      let sendTxObj = null;
+      if (typeHash === undefined) {
+        sendTxObj = await sendTransaction(
+          privateKey,
+          fromAddress,
+          toAddress,
+          capacity,
+          fee,
+          lockHash,
+          lockType,
+          password,
+          publicKey.replace('0x', ''),
+          toData,
+        );
+      } else if (typeHash !== '') {
+        const sendSudtAmount = capacity;
+        transferFee = 0.0001 * CKB_TOKEN_DECIMALS;
+        sendTxObj = await sendSudtTransaction(
+          fromAddress,
+          lockType,
+          lockHash,
+          typeHash,
+          toAddress,
+          sendSudtAmount,
+          transferFee,
+          password,
+        );
+      }
 
       if (sendTxObj.errCode !== undefined && sendTxObj.errCode !== 0) {
         const responseEorrorMsg = {
