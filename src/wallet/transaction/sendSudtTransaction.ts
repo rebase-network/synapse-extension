@@ -5,11 +5,15 @@ import { getUnspentCells } from '@utils/apis';
 import getCKB from '@utils/ckb';
 import { signTx } from '@src/keyper/keyperwallet';
 import NetworkManager from '@common/networkManager';
-import { createSudtRawTx } from './txSudtGenerator';
 import { getDepFromLockType } from '@src/utils/deps';
-import { ADDRESS_TYPE_CODEHASH, SUDT_MIN_CELL_CAPACITY, CKB_TOKEN_DECIMALS } from '@src/utils/constants';
+import {
+  ADDRESS_TYPE_CODEHASH,
+  SUDT_MIN_CELL_CAPACITY,
+  CKB_TOKEN_DECIMALS,
+} from '@src/utils/constants';
 import { getDepFromType } from '@src/utils/constants/typesInfo';
 import { parseSUDT } from '@src/utils';
+import { createSudtRawTx } from './txSudtGenerator';
 
 export interface GenerateTxResult {
   tx: CKBComponents.RawTransaction;
@@ -63,7 +67,7 @@ export const getInputSudtCells = async (lockHash, params) => {
   const inputCells = {
     cells: unspentCells,
     sudtCKBCapacity: sudtCKBCapity,
-    sudtAmount: sudtAmount,
+    sudtAmount,
   };
   return inputCells;
 };
@@ -94,7 +98,7 @@ export const sendSudtTransaction = async (
   const sudtParams = {
     limit: '20',
     hasData: 'true',
-    typeHash: typeHash,
+    typeHash,
   };
   // 2. Input sudt cells
   const inputSudtCells = await getInputSudtCells(fromLockHash, sudtParams);

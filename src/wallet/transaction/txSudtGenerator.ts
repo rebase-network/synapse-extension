@@ -3,7 +3,6 @@ import { scriptToHash, toHexInLittleEndian } from '@nervosnetwork/ckb-sdk-utils/
 import _ from 'lodash';
 import { Cell } from '@nervosnetwork/ckb-sdk-core/lib/generateRawTransaction';
 import { ScriptHashType } from '@keyper/specs/types';
-import { parseSUDT } from '@src/utils';
 import { SUDT_MIN_CELL_CAPACITY, CKB_TOKEN_DECIMALS } from '@src/utils/constants';
 
 export interface CreateRawTxResult {
@@ -36,7 +35,7 @@ export function createSudtRawTx(
     witnesses: [],
     outputsData: [],
   };
-  let config = { index: 0, length: -1 };
+  const config = { index: 0, length: -1 };
 
   // 1. input CKB
   for (let i = 0; i < inputCkbCells.cells.length; i++) {
@@ -136,7 +135,7 @@ export function createSudtRawTx(
 
   const signObj = {
     target: scriptToHash(fromLockScript),
-    config: config,
+    config,
     tx: rawTx,
     fee,
   };
