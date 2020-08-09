@@ -63,8 +63,6 @@ export function createSudtRawTx(
     rawTx.witnesses.push('0x');
   }
   const { sudtCKBCapacity, sudtAmount } = inputSudtCells;
-
-  console.log(/inputSudtCells.cells[0]/, inputSudtCells.cells[0]);
   const { lock, type } = inputSudtCells.cells[0];
   const sUdtLockScript = {
     hashType: lock.hashType as ScriptHashType,
@@ -78,6 +76,7 @@ export function createSudtRawTx(
     args: type.args,
   };
 
+  console.log(/111/)
   // 1. output transfer to
   // toAddress have the same sudt
   const toSudtCapacity = SUDT_MIN_AMOUNT * 10 ** 8;
@@ -95,9 +94,11 @@ export function createSudtRawTx(
     },
   };
   rawTx.outputs.push(toSudtOutputCell);
+  console.log(/sendSudtAmount/,sendSudtAmount);
   const sUdtLeSend = toHexInLittleEndian(BigInt(sendSudtAmount), 16);
   rawTx.outputsData.push(sUdtLeSend);
 
+  console.log(/222/)
   // 2. output | input sudt charge
   const chargeSudtCapacity = SUDT_MIN_AMOUNT * 10 ** 8;
   const sUdtOutputCell = {
@@ -118,6 +119,7 @@ export function createSudtRawTx(
   const sUdtLeCharge = toHexInLittleEndian(BigInt(sUdtAmountCharge), 16);
   rawTx.outputsData.push(sUdtLeCharge);
 
+  console.log(/333/)
   // 3. output | input ckb charge
   const ckbCharge =
     BigInt(inputCkbCells.total) +

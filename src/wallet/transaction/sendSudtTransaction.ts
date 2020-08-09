@@ -82,21 +82,6 @@ export const sendSudtTransaction = async (
   let rawTxObj: any;
 
   let realTxHash;
-
-  //   const sUdtInput = {
-  //     previousOutput: {
-  //       txHash: txHash,
-  //       index: txIndex,
-  //     },
-  //     since: '0x0',
-  //   };
-
-  // 1.Get transaction by txHash (input SUDT)
-  //   const tx = await ckb.rpc.getTransaction(txHash);
-  //   const outputs = tx.transaction.outputs;
-  //   const sUdtOutput = outputs[Number(txIndex)];
-  //   const { lock: lockScript, type: sUdtTypeScript } = sUdtOutput;
-
   const fromLockScript = addressToScript(fromAddress);
   const fromLockHash = ckb.utils.scriptToHash(fromLockScript);
   const params = {
@@ -151,8 +136,6 @@ export const sendSudtTransaction = async (
     deps,
     fee,
   );
-  console.log(/rawTxObj/, JSON.stringify(rawTxObj));
-
   // Error handling
   if (rawTxObj.errCode !== undefined && rawTxObj.errCode !== 0) {
     return rawTxObj;
@@ -167,6 +150,7 @@ export const sendSudtTransaction = async (
   };
   try {
     realTxHash = await ckb.rpc.sendTransaction(signedTx);
+    console.log(/realTxHash/, JSON.stringify(realTxHash));
     txResultObj.txHash = realTxHash;
   } catch (error) {
     console.error(`Failed to send tx: ${error}`);

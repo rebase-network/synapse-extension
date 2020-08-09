@@ -172,6 +172,26 @@ export const InnerForm = (props: AppProps) => {
 
   const { name, typeHash, txHash, index, outputdata } = values;
   let sudtElem = null;
+  let dataElem = null;
+  if (name === undefined && typeHash === undefined) {
+    dataElem = (
+      <TextField
+        label={intl.formatMessage({ id: 'Data' })}
+        id="data"
+        name="data"
+        type="text"
+        fullWidth
+        className={classes.textField}
+        value={values.data}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={!!errors.data}
+        helperText={errors.data && touched.data && errors.data}
+        margin="normal"
+        variant="outlined"
+      />
+    );
+  }
   if (name === undefined && typeHash !== undefined) {
     sudtElem = null;
   } else if (name !== 'undefined' && typeHash !== undefined) {
@@ -246,21 +266,7 @@ export const InnerForm = (props: AppProps) => {
         variant="outlined"
         data-testid="field-capacity"
       />
-      <TextField
-        label={intl.formatMessage({ id: 'Data' })}
-        id="data"
-        name="data"
-        type="text"
-        fullWidth
-        className={classes.textField}
-        value={values.data}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        error={!!errors.data}
-        helperText={errors.data && touched.data && errors.data}
-        margin="normal"
-        variant="outlined"
-      />
+      {dataElem}
       <TextField
         label={intl.formatMessage({ id: 'Fee' })}
         id="fee"
