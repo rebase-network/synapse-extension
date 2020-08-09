@@ -9,13 +9,14 @@ import { createSudtRawTx } from './txSudtGenerator';
 import { getDepFromLockType } from '@src/utils/deps';
 import { ADDRESS_TYPE_CODEHASH } from '@src/utils/constants';
 import { getDepFromType } from '@src/utils/constants/TypesInfo';
+import { parseSUDT } from '@src/utils';
 
 export interface GenerateTxResult {
   tx: CKBComponents.RawTransaction;
   fee: string;
 }
 
-export const getInputCells = async (lockHash, params) => {
+export const getInputCKBCells = async (lockHash, params) => {
   const unspentCells = await getUnspentCells(lockHash, params);
   // Error handling
   if (unspentCells.errCode !== undefined && unspentCells.errCode !== 0) {
@@ -37,11 +38,42 @@ export const getInputCells = async (lockHash, params) => {
   return inputCells;
 };
 
+export const getInputSudtCells = async (lockHash, params) => {
+  const unspentCells = await getUnspentCells(lockHash, params);
+  // Error handling
+  if (unspentCells.errCode !== undefined && unspentCells.errCode !== 0) {
+    return unspentCells;
+  }
+
+  if (_.isEmpty(unspentCells)) {
+    throw new Error('There is not available live cells');
+  }
+
+  function getTotalCKBCapity(total, cell) {
+    return BigInt(total) + BigInt(cell.capacity);
+  }
+  const sudtCKBCapity = unspentCells.reduce(getTotalCKBCapity, 0);
+
+  function getTotalSudtCapity(total, cell) {
+    console.log(parseSUDT(cell.outputData));
+    return BigInt(total) + BigInt(parseSUDT(cell.outputData));
+  }
+  const sudtAmount = unspentCells.reduce(getTotalSudtCapity, 0);
+  
+  const inputCells = {
+    cells: unspentCells,
+    sudtCKBCapacity: sudtCKBCapity,
+    sudtAmount: sudtAmount,
+  };
+  return inputCells;
+};
+
 export const sendSudtTransaction = async (
   fromAddress,
   fromLockType,
   lockHash,
   sUdtAmount,
+  typeHash,
   txHash,
   txIndex,
   toAddress,
@@ -54,19 +86,19 @@ export const sendSudtTransaction = async (
 
   let realTxHash;
 
-  const sUdtInput = {
-    previousOutput: {
-      txHash: txHash,
-      index: txIndex,
-    },
-    since: '0x0',
-  };
-  
+  //   const sUdtInput = {
+  //     previousOutput: {
+  //       txHash: txHash,
+  //       index: txIndex,
+  //     },
+  //     since: '0x0',
+  //   };
+
   // 1.Get transaction by txHash (input SUDT)
-  const tx = await ckb.rpc.getTransaction(txHash);
-  const outputs = tx.transaction.outputs;
-  const sUdtOutput = outputs[Number(txIndex)];
-  const { lock: lockScript, type: sUdtTypeScript } = sUdtOutput;
+  //   const tx = await ckb.rpc.getTransaction(txHash);
+  //   const outputs = tx.transaction.outputs;
+  //   const sUdtOutput = outputs[Number(txIndex)];
+  //   const { lock: lockScript, type: sUdtTypeScript } = sUdtOutput;
 
   const fromLockScript = addressToScript(fromAddress);
   const fromLockHash = ckb.utils.scriptToHash(fromLockScript);
@@ -74,8 +106,18 @@ export const sendSudtTransaction = async (
     capacity: BigInt(142).toString(),
     hasData: 'false',
   };
+  // 1. input CKB cells
+  const inputCkbCells = await getInputCKBCells(fromLockHash, params);
+  console.log(/inputCkbCells/, inputCkbCells);
 
-  const inputCkbCells = await getInputCells(fromLockHash, params);
+  const sudtParams = {
+    limit: '20',
+    hasData: 'true',
+    typeHash: typeHash,
+  };
+  // 2. Input sudt cells
+  const inputSudtCells = await getInputSudtCells(fromLockHash, sudtParams);
+  console.log(/inputSudtCells/, inputSudtCells);
 
   const toLockScript = addressToScript(toAddress);
   const toLockHash = ckb.utils.scriptToHash(toLockScript);
@@ -90,7 +132,7 @@ export const sendSudtTransaction = async (
   }
 
   const deps = [];
-  if(fromLockType === toLockType){
+  if (fromLockType === toLockType) {
     const fromDepObj = await getDepFromLockType(fromLockType, NetworkManager);
     deps.push(fromDepObj);
   } else {
@@ -99,31 +141,20 @@ export const sendSudtTransaction = async (
     deps.push(fromDepObj);
     deps.push(toDepObj);
   }
-  const sUdtDep = await getDepFromType('simpleudt',NetworkManager);
+  const sUdtDep = await getDepFromType('simpleudt', NetworkManager);
   deps.push(sUdtDep);
 
-  // 多对一的聚合处理
-  // TODO 根据lockHash和typeHash从数据表中获取，发送的SUDT是否已经存在
-   const sudtParams = {
-    limit: '1',
-    hasData: 'true',
-  };
-  const toSudtOutput = await getUnspentCells(toLockHash, sudtParams);
-
   rawTxObj = createSudtRawTx(
-    sUdtInput,
-    sUdtTypeScript,
     inputCkbCells,
-    sUdtOutput,
+    inputSudtCells,
     sUdtAmount,
     fromLockScript,
     sendSudtAmount,
     toLockScript,
-    toSudtOutput,
     deps,
     fee,
   );
-  console.log(/rawTxObj/,JSON.stringify(rawTxObj));
+  console.log(/rawTxObj/, JSON.stringify(rawTxObj));
 
   // Error handling
   if (rawTxObj.errCode !== undefined && rawTxObj.errCode !== 0) {
@@ -131,7 +162,7 @@ export const sendSudtTransaction = async (
   }
 
   const signedTx = await signTx(lockHash, password, rawTxObj.tx, rawTxObj.config);
-  console.log(/signedTx/,JSON.stringify(signedTx));
+  console.log(/signedTx/, JSON.stringify(signedTx));
 
   const txResultObj = {
     txHash: null,

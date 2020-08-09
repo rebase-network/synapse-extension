@@ -335,6 +335,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
           lockType,
           lockHash,
           sUdtAmount,
+          typeHash,
           txHash,
           index,
           toAddress,
