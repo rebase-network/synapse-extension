@@ -2,11 +2,12 @@ import CKB from '@nervosnetwork/ckb-sdk-core';
 import { BN } from 'bn.js';
 import { toHexInLittleEndian } from '@nervosnetwork/ckb-sdk-utils';
 import { parseSUDT } from '@src/utils';
+import { numberToBigInt } from '@src/utils/formatters';
 
 jest.unmock('@nervosnetwork/ckb-sdk-core');
 
-describe('Transaction test', async () => {
-  const ckb = new CKB('https://testnet.getsynapse.io/rpc');
+describe('Transaction test', () => {
+  //   const ckb = new CKB('https://testnet.getsynapse.io/rpc');
 
   //   it('test getTransaction', async () => {
   //     const txHash = '0x118305db8ce3b1879c6f058e045ab0d91e1eb9c4b5ed5ccc36aeb49aac8f27fa';
@@ -15,13 +16,16 @@ describe('Transaction test', async () => {
   //     const { outputs } = tx.transaction;
   //   });
 
-  it('test capacity value', async () => {
-    const toSudtAmount = 142 * 10 ** 8;
-    const capacity = `0x${new BN(toSudtAmount).toString(16)}`;
-    console.log(capacity);
-    // const liend = toHexInLittleEndian(BigInt(toSudtAmount), 16);
-    // console.log(liend);
-    // const intValue = parseSUDT(liend);
-    // console.log(intValue);
+  it('test capacity value', () => {
+    // const toSudtAmount = 142 * 10 ** 8;
+    // const capacity = `0x${new BN(toSudtAmount).toString(16)}`;
+    // console.log(capacity);
+    // // const liend = toHexInLittleEndian(BigInt(toSudtAmount), 16);
+    // // console.log(liend);
+    // // const intValue = parseSUDT(liend);
+    // // console.log(intValue);
+    const capacity = '0.0003';
+    const result = numberToBigInt(Number(capacity));
+    console.log(result);
   });
 });

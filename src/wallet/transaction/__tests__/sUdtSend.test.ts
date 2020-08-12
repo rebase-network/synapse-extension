@@ -124,4 +124,30 @@ describe('SUDT Transaction test', () => {
     );
     expect(signedTx.tx).toEqual(expectSignedTx);
   });
+
+  it('send single SUDT Part to ...', async () => {
+    const {
+      fromAddress,
+      fromLockType,
+      lockHash,
+      typeHash,
+      toAddress,
+      sendSudtAmount,
+      fee,
+      password,
+      expectSignedTx,
+    } = fixtures.createSinglePartToError;
+
+    const signedTx = await createSudtTransaction(
+      fromAddress,
+      fromLockType,
+      lockHash,
+      typeHash,
+      toAddress,
+      sendSudtAmount,
+      fee,
+      password,
+    );
+    expect(signedTx.tx).toEqual(expectSignedTx);
+  });
 });

@@ -46,6 +46,14 @@ export const truncateAddress = (address: string) =>
 export const truncateHash = (hashParma: string) =>
   `${hashParma.substr(0, 10)}...${hashParma.substr(hashParma.length - 10, hashParma.length)}`;
 
+export const numberToBigInt = (number: any) => {
+  let result = Number(number) * 100;
+  result *= 100;
+  result *= 100;
+  result *= 100;
+  return BigInt(result);
+};
+
 export default {
   shannonToCKBFormatter,
   truncateAddress,

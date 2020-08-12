@@ -25,6 +25,7 @@ import { sendToWebPage } from '@background/messageHandlers/proxy';
 import NetworkManager from '@common/networkManager';
 import { sendSudtTransaction } from '@src/wallet/transaction/sendSudtTransaction';
 import { parseSUDT } from '@src/utils';
+import { numberToBigInt } from '@src/utils/formatters';
 
 NetworkManager.initNetworks();
 
@@ -268,7 +269,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const currNetworkStorage = await browser.storage.local.get('currentNetwork');
 
     const toAddress = request.address.trim();
-    const capacity = request.capacity * CKB_TOKEN_DECIMALS;
+    const capacity = numberToBigInt(request.capacity);
     const fee = request.fee * CKB_TOKEN_DECIMALS;
     const password = request.password.trim();
     const toData = request.data.trim();
@@ -326,7 +327,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
           toData,
         );
       } else if (typeHash !== '') {
-        const sendSudtAmount = capacity;
+        const sendSudtAmount: BigInt = capacity;
         const transferFee = 0.0001 * CKB_TOKEN_DECIMALS;
         sendTxObj = await sendSudtTransaction(
           fromAddress,

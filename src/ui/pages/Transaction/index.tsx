@@ -19,7 +19,12 @@ import PageNav from '@ui/Components/PageNav';
 import Modal from '@ui/Components/Modal';
 import TxDetail from '@ui/Components/TxDetail';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { truncateAddress, shannonToCKBFormatter, truncateHash } from '@utils/formatters';
+import {
+  truncateAddress,
+  shannonToCKBFormatter,
+  truncateHash,
+  numberToBigInt,
+} from '@utils/formatters';
 import { getUnspentCapacity } from '@src/utils/apis';
 import { addressToScript } from '@keyper/specs';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils';
@@ -173,7 +178,8 @@ export const InnerForm = (props: AppProps) => {
         const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
         setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter('0')} CKB`);
       }
-      if (BigInt(capacity * CKB_TOKEN_DECIMALS) > BigInt(udt)) {
+
+      if (numberToBigInt(capacity) > BigInt(udt)) {
         const checkMsgId = "The transaction's sudt amount cannot be more than have";
         const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
         setCheckMsg(checkMsgI18n);
@@ -423,7 +429,7 @@ export default () => {
 
   const initialValues = {
     address: '',
-    capacity: '',
+    capacity: null,
     data: '',
     fee: 0.00001,
     password: '',
