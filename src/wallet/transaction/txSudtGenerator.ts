@@ -7,7 +7,6 @@ import { SUDT_MIN_CELL_CAPACITY, CKB_TOKEN_DECIMALS } from '@src/utils/constants
 
 export interface CreateRawTxResult {
   tx: CKBComponents.RawTransaction;
-  fee: string;
   target: string;
 }
 
@@ -137,7 +136,6 @@ export function createSudtRawTx(
     target: scriptToHash(fromLockScript),
     config,
     tx: rawTx,
-    fee,
   };
   return signObj;
 }

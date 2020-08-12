@@ -130,6 +130,7 @@ export const InnerForm = (props: AppProps) => {
     const capacity = event.target.value;
     const toLockScript = addressToScript(address);
     if (typeHash === undefined) {
+      console.log(/111/);
       if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
         // every cell's capacity gt 61
         if (Number(capacity) < Number(61)) {
@@ -167,6 +168,8 @@ export const InnerForm = (props: AppProps) => {
         }
       }
     } else {
+      console.log(/222/);
+      console.log(/unspentCapacity/, unspentCapacity);
       if (BigInt(capacity * CKB_TOKEN_DECIMALS) > BigInt(udt)) {
         const checkMsgId = "The transaction's sudt amount cannot be more than have";
         const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
