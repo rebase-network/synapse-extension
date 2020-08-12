@@ -74,22 +74,11 @@ export const getInputSudtCells = async (lockHash, params) => {
 export const createSudtTransaction = async (
   fromAddress,
   fromLockType,
-  lockHash,
   typeHash,
   toAddress,
   sendSudtAmount,
   fee,
-  password,
 ) => {
-  console.log(/fromAddress/, fromAddress);
-  console.log(/fromLockType/, fromLockType);
-  console.log(/lockHash/, lockHash);
-  console.log(/typeHash/, typeHash);
-  console.log(/toAddress/, toAddress);
-  console.log(/sendSudtAmount/, sendSudtAmount);
-  console.log(/fee/, fee);
-  console.log(/password/, password);
-
   const ckb = await getCKB();
 
   const fromLockScript = addressToScript(fromAddress);
@@ -170,22 +159,20 @@ export const sendSudtTransaction = async (
   const rawTxObj = await createSudtTransaction(
     fromAddress,
     fromLockType,
-    lockHash,
     typeHash,
     toAddress,
     sendSudtAmount,
     fee,
-    password,
   );
-  console.log(/rawTxObj/, JSON.stringify(rawTxObj));
 
   const signedTx = await signSudtTransaction(lockHash, password, rawTxObj);
   const txResultObj = {
     txHash: null,
   };
   try {
-    // const realTxHash = await ckb.rpc.sendTransaction(signedTx);
-    // txResultObj.txHash = realTxHash;
+    const ckb = await getCKB();
+    const realTxHash = await ckb.rpc.sendTransaction(signedTx);
+    txResultObj.txHash = realTxHash;
   } catch (error) {
     console.error(`Failed to send tx: ${error}`);
   }
