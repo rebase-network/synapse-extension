@@ -156,7 +156,7 @@ export const InnerForm = (props: AppProps) => {
         if (unspentCapacity < Number(capacity) * CKB_TOKEN_DECIMALS) {
           const checkMsgId = 'lack of capacity, available capacity is';
           const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
-          setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter(unspentCapacity.toString())} ckb`);
+          setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter(unspentCapacity.toString())} CKB`);
           return;
         }
         const chargeCapacity = unspentCapacity - Number(capacity) * CKB_TOKEN_DECIMALS;
@@ -164,21 +164,28 @@ export const InnerForm = (props: AppProps) => {
           const checkMsgId =
             'the remaining capacity is less than 61, if continue it will be destroyed, remaining capacity is';
           const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
-          setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter(chargeCapacity.toString())} ckb`);
+          setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter(chargeCapacity.toString())} CKB`);
         }
       }
     } else {
       console.log(/222/);
       console.log(/unspentCapacity/, unspentCapacity);
+      if (unspentCapacity === null) {
+        const checkMsgId =
+          'lack of capacity, ckb capacity cannot be less than 142 CKB, available capacity is';
+        const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
+        setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter('0')} CKB`);
+      }
       if (BigInt(capacity * CKB_TOKEN_DECIMALS) > BigInt(udt)) {
         const checkMsgId = "The transaction's sudt amount cannot be more than have";
         const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
         setCheckMsg(checkMsgI18n);
       }
       if (BigInt(unspentCapacity) < BigInt((SUDT_MIN_CELL_CAPACITY + 1) * CKB_TOKEN_DECIMALS)) {
-        const checkMsgId = 'lack of capacity, available capacity is';
+        const checkMsgId =
+          'lack of capacity, ckb capacity cannot be less than 142 CKB, available capacity is';
         const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
-        setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter(unspentCapacity.toString())} ckb`);
+        setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter(unspentCapacity.toString())} CKB`);
       }
     }
   };

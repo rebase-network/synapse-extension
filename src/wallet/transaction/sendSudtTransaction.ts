@@ -59,7 +59,6 @@ export const getInputSudtCells = async (lockHash, params) => {
   const sudtCKBCapity = unspentCells.reduce(getTotalCKBCapity, 0);
 
   function getTotalSudtCapity(total, cell) {
-    console.log(parseSUDT(cell.outputData));
     return BigInt(total) + BigInt(parseSUDT(cell.outputData));
   }
   const sudtAmount = unspentCells.reduce(getTotalSudtCapity, 0);
@@ -178,6 +177,7 @@ export const sendSudtTransaction = async (
     fee,
     password,
   );
+  console.log(/rawTxObj/, JSON.stringify(rawTxObj));
 
   const signedTx = await signSudtTransaction(lockHash, password, rawTxObj);
   const txResultObj = {

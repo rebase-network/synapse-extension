@@ -4,7 +4,7 @@ export const lockHash = '0xc86d0baf6b7813807680dc93252d408aba37764cbdd01741d4a4d
 export const typeHash = '0xa8b69151db2de6031203da9189c955ddb9c311fa7557f3f6e583d149b6681301';
 export const toAddress =
   'ckt1qjr2r35c0f9vhcdgslx2fjwa9tylevr5qka7mfgmscd33wlhfykyk38nuum7tp60nx933n39ut8nrz53nss8vkw52vu';
-export const sendSudtAmount = 10000;
+export const sendSudtAmount = 5000;
 export const fee = 10000;
 export const password = '123456';
 
@@ -65,7 +65,20 @@ export const expectSignedTx = {
       },
     },
     {
-      capacity: '0x746a5260f0',
+      capacity: '0x34e62ce00',
+      lock: {
+        hashType: 'type',
+        codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+        args: '0x44f3e737e5874f998b18ce25e2cf318a919c2076',
+      },
+      type: {
+        hashType: 'data',
+        codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+        args: '0x8d24922aa4a5df0a9aa6cf855ea917c1cbb9efe5a66f2f744f0ec4543964974a',
+      },
+    },
+    {
+      capacity: '0x711bef92f0',
       lock: {
         hashType: 'type',
         codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
@@ -81,5 +94,5 @@ export const expectSignedTx = {
     },
     '0x',
   ],
-  outputsData: ['0x10270000000000000000000000000000', '0x'],
+  outputsData: ['0x88130000000000000000000000000000', '0x88130000000000000000000000000000', '0x'],
 };

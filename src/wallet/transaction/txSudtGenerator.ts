@@ -3,7 +3,11 @@ import { scriptToHash, toHexInLittleEndian } from '@nervosnetwork/ckb-sdk-utils/
 import _ from 'lodash';
 import { Cell } from '@nervosnetwork/ckb-sdk-core/lib/generateRawTransaction';
 import { ScriptHashType } from '@keyper/specs/types';
-import { SUDT_MIN_CELL_CAPACITY, CKB_TOKEN_DECIMALS } from '@src/utils/constants';
+import {
+  SUDT_MIN_CELL_CAPACITY,
+  CKB_TOKEN_DECIMALS,
+  EMPTY_OUTPUT_DATA,
+} from '@src/utils/constants';
 
 export interface CreateRawTxResult {
   tx: CKBComponents.RawTransaction;
@@ -95,32 +99,34 @@ export function createSudtRawTx(
   rawTx.outputsData.push(sUdtLeSend);
 
   // 2. output | input sudt charge
-  const chargeSudtCapacity = SUDT_MIN_CELL_CAPACITY * 10 ** 8;
-  const sUdtOutputCell = {
-    capacity: `0x${new BN(chargeSudtCapacity).toString(16)}`,
-    lock: {
-      hashType: sUdtLockScript.hashType as ScriptHashType,
-      codeHash: sUdtLockScript.codeHash,
-      args: sUdtLockScript.args,
-    },
-    type: {
-      hashType: sUdtTypeScript.hashType as ScriptHashType,
-      codeHash: sUdtTypeScript.codeHash,
-      args: sUdtTypeScript.args,
-    },
-  };
-  rawTx.outputs.push(sUdtOutputCell);
   const sUdtAmountCharge = BigInt(sUdtAmount) - BigInt(sendSudtAmount);
   const sUdtLeCharge = toHexInLittleEndian(BigInt(sUdtAmountCharge), 16);
-  rawTx.outputsData.push(sUdtLeCharge);
+  // input sudt charge
+  let chargeSudtCapacity = 0;
+  if (sUdtLeCharge !== EMPTY_OUTPUT_DATA) {
+    chargeSudtCapacity = SUDT_MIN_CELL_CAPACITY * 10 ** 8;
+    const sUdtOutputCell = {
+      capacity: `0x${new BN(chargeSudtCapacity).toString(16)}`,
+      lock: {
+        hashType: sUdtLockScript.hashType as ScriptHashType,
+        codeHash: sUdtLockScript.codeHash,
+        args: sUdtLockScript.args,
+      },
+      type: {
+        hashType: sUdtTypeScript.hashType as ScriptHashType,
+        codeHash: sUdtTypeScript.codeHash,
+        args: sUdtTypeScript.args,
+      },
+    };
+    rawTx.outputs.push(sUdtOutputCell);
+    rawTx.outputsData.push(sUdtLeCharge);
+  }
 
   // 3. output | input ckb charge
+  // - ckb charge of SUDT
+  const sudtCKBCharge = BigInt(sudtCKBCapacity) - BigInt(chargeSudtCapacity);
   const ckbCharge =
-    BigInt(inputCkbCells.total) +
-    BigInt(sudtCKBCapacity) -
-    BigInt(toSudtCapacity) -
-    BigInt(chargeSudtCapacity) -
-    BigInt(fee);
+    BigInt(inputCkbCells.total) + BigInt(sudtCKBCharge) - BigInt(toSudtCapacity) - BigInt(fee);
 
   rawTx.outputs.push({
     capacity: `0x${new BN(ckbCharge).toString(16)}`,

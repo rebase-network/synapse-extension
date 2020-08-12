@@ -1,10 +1,10 @@
-export const fromAddress = 'ckt1qyqyful8xljcwnue3vvvuf0zeucc4yvuypmqlxdkmh';
+export const fromAddress = 'ckt1qyqxq62839823nh2x82zhnrt5ktj88n5pmxs63njjf';
 export const fromLockType = 'Secp256k1';
-export const lockHash = '0xc86d0baf6b7813807680dc93252d408aba37764cbdd01741d4a4dbef9683e580';
+export const lockHash = '0x02b11786f5f5ee9fd12bd7b67d7967b1d83c5602df0d22a7bb535eec90856f24';
 export const typeHash = '0xa8b69151db2de6031203da9189c955ddb9c311fa7557f3f6e583d149b6681301';
 export const toAddress =
-  'ckt1qjr2r35c0f9vhcdgslx2fjwa9tylevr5qka7mfgmscd33wlhfykyk38nuum7tp60nx933n39ut8nrz53nss8vkw52vu';
-export const sendSudtAmount = 10000;
+  'ckt1qjr2r35c0f9vhcdgslx2fjwa9tylevr5qka7mfgmscd33wlhfykykcrfg7y5a2xwagcag27vdwjewgu7ws8v6k44ckt';
+export const sendSudtAmount = 150000;
 export const fee = 10000;
 export const password = '123456';
 
@@ -37,14 +37,21 @@ export const expectSignedTx = {
   inputs: [
     {
       previousOutput: {
-        txHash: '0xe2c9448d843b4578e66419384d86b0902bcb2fd65abc330d7fa6d20be6defa3f',
+        txHash: '0x4c119d8295a6cf81f40e0a7850a61103f6382186cd249662eb7a36afa7215c8e',
         index: '0x0',
       },
       since: '0x0',
     },
     {
       previousOutput: {
-        txHash: '0x06c965bee34adf00d8248c4076376369d0a5cc196055f9d0f21a63a942f63ec7',
+        txHash: '0xd165f93fb21f70818b13c1f9225e358881c190adb69ff7788a9774e05546d3d8',
+        index: '0x0',
+      },
+      since: '0x0',
+    },
+    {
+      previousOutput: {
+        txHash: '0xc0d01b55484b833ece95b309682b07329d0259617b3eeec42ea119d8f827e4c3',
         index: '0x0',
       },
       since: '0x0',
@@ -56,7 +63,7 @@ export const expectSignedTx = {
       lock: {
         hashType: 'type',
         codeHash: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
-        args: '0x44f3e737e5874f998b18ce25e2cf318a919c2076',
+        args: '0x606947894ea8ceea31d42bcc6ba597239e740ecd',
       },
       type: {
         hashType: 'data',
@@ -65,21 +72,22 @@ export const expectSignedTx = {
       },
     },
     {
-      capacity: '0x746a5260f0',
+      capacity: '0x77b8b52ef0',
       lock: {
         hashType: 'type',
         codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-        args: '0x44f3e737e5874f998b18ce25e2cf318a919c2076',
+        args: '0x606947894ea8ceea31d42bcc6ba597239e740ecd',
       },
     },
   ],
   witnesses: [
     {
-      inputType: '',
       lock: '',
+      inputType: '',
       outputType: '',
     },
     '0x',
+    '0x',
   ],
-  outputsData: ['0x10270000000000000000000000000000', '0x'],
+  outputsData: ['0xf0490200000000000000000000000000', '0x'],
 };

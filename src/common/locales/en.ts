@@ -80,6 +80,7 @@ export default {
   'INVALID_KEYSTORE':'Invalid  Keystore',
   'Message to be signed': 'Message to be signed',
   'Invalid address':'Invalid address,Please input a valid address',
-  "The transaction's ckb capacity cannot be less than 61 CKB":'交易的CKB数量不能小于61 CKB',
-  "The transaction's sudt amount cannot be more than have": '交易的sudt的数量不能大于有的数量'
+  "The transaction's ckb capacity cannot be less than 61 CKB":"The transaction's ckb capacity cannot be less than 61 CKB",
+  "The transaction's sudt amount cannot be more than have": "The transaction's sudt amount cannot be more than have",
+  'lack of capacity, ckb capacity cannot be less than 142 CKB, available capacity is':'lack of capacity, ckb capacity cannot be less than 142 CKB, available capacity is'
 };
