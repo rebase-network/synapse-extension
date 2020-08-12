@@ -130,7 +130,6 @@ export const InnerForm = (props: AppProps) => {
     const capacity = event.target.value;
     const toLockScript = addressToScript(address);
     if (typeHash === undefined) {
-      console.log(/111/);
       if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
         // every cell's capacity gt 61
         if (Number(capacity) < Number(61)) {
@@ -168,8 +167,6 @@ export const InnerForm = (props: AppProps) => {
         }
       }
     } else {
-      console.log(/222/);
-      console.log(/unspentCapacity/, unspentCapacity);
       if (unspentCapacity === null) {
         const checkMsgId =
           'lack of capacity, ckb capacity cannot be less than 142 CKB, available capacity is';
@@ -438,7 +435,7 @@ export default () => {
 
   return (
     <div>
-      <PageNav to="/address" title={intl.formatMessage({ id: 'Send CKB' })} />
+      <PageNav to="/address" title={intl.formatMessage({ id: 'Send Transaction' })} />
       <div className={classes.container}>
         {sendingNode}
         {errNode}

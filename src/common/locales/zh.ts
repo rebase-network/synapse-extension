@@ -33,7 +33,7 @@ export default {
   Create: '创建',
   'Wallet Password': '钱包密码',
   'Keystore Password': 'Keystore密码',
-  'Send CKB': '发送CKB',
+  'Send Transaction': '发送交易',
   'The transaction is sending, please wait for seconds...': '交易正在确认中, 请等待...',
   'The transaction failed to send, please try again later': '交易发送失败，请稍后再试',
   'Should be greater than ': '应该大于',

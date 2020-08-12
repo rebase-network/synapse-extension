@@ -33,7 +33,7 @@ export default {
   Create: 'Create',
   'Wallet Password': 'Wallet Password',
   'Keystore Password': 'Keystore Password',
-  'Send CKB': 'Send CKB',
+  'Send Transaction': 'Send Transaction',
   'The transaction is sending, please wait for seconds...': 'The transaction is sending, please wait for seconds...',
   'Should be greater than ': 'Should be greater than ',
   'The transaction failed to send, please try again later': 'The transaction failed to send, please try again later',
