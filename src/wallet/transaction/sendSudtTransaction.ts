@@ -74,10 +74,12 @@ export const getInputSudtCells = async (lockHash, params) => {
 export const createSudtTransaction = async (
   fromAddress,
   fromLockType,
+  lockHash,
   typeHash,
   toAddress,
   sendSudtAmount,
   fee,
+  password,
 ) => {
   const ckb = await getCKB();
 
@@ -159,10 +161,12 @@ export const sendSudtTransaction = async (
   const rawTxObj = await createSudtTransaction(
     fromAddress,
     fromLockType,
+    lockHash,
     typeHash,
     toAddress,
     sendSudtAmount,
     fee,
+    password,
   );
 
   const signedTx = await signSudtTransaction(lockHash, password, rawTxObj);
