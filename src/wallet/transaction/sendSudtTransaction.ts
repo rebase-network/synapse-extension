@@ -59,7 +59,6 @@ export const getInputSudtCells = async (lockHash, params) => {
   const sudtCKBCapity = unspentCells.reduce(getTotalCKBCapity, 0);
 
   function getTotalSudtCapity(total, cell) {
-    console.log(parseSUDT(cell.outputData));
     return BigInt(total) + BigInt(parseSUDT(cell.outputData));
   }
   const sudtAmount = unspentCells.reduce(getTotalSudtCapity, 0);
@@ -72,7 +71,7 @@ export const getInputSudtCells = async (lockHash, params) => {
   return inputCells;
 };
 
-export const sendSudtTransaction = async (
+export const createSudtTransaction = async (
   fromAddress,
   fromLockType,
   lockHash,
@@ -82,10 +81,17 @@ export const sendSudtTransaction = async (
   fee,
   password,
 ) => {
-  const ckb = await getCKB();
-  let rawTxObj: any;
+  console.log(/fromAddress/, fromAddress);
+  console.log(/fromLockType/, fromLockType);
+  console.log(/lockHash/, lockHash);
+  console.log(/typeHash/, typeHash);
+  console.log(/toAddress/, toAddress);
+  console.log(/sendSudtAmount/, sendSudtAmount);
+  console.log(/fee/, fee);
+  console.log(/password/, password);
 
-  let realTxHash;
+  const ckb = await getCKB();
+
   const fromLockScript = addressToScript(fromAddress);
   const fromLockHash = ckb.utils.scriptToHash(fromLockScript);
   const params = {
@@ -129,6 +135,7 @@ export const sendSudtTransaction = async (
   deps.push(sUdtDep);
 
   const sUdtAmount = inputSudtCells.sudtAmount;
+  let rawTxObj: any = null;
   rawTxObj = createSudtRawTx(
     inputCkbCells,
     inputSudtCells,
@@ -139,19 +146,46 @@ export const sendSudtTransaction = async (
     deps,
     fee,
   );
-  // Error handling
+  return rawTxObj;
+};
+
+export const signSudtTransaction = async (lockHash, password, rawTxObj) => {
   if (rawTxObj.errCode !== undefined && rawTxObj.errCode !== 0) {
     return rawTxObj;
   }
-
   const signedTx = await signTx(lockHash, password, rawTxObj.tx, rawTxObj.config);
+  return signedTx;
+};
+
+export const sendSudtTransaction = async (
+  fromAddress,
+  fromLockType,
+  lockHash,
+  typeHash,
+  toAddress,
+  sendSudtAmount,
+  fee,
+  password,
+) => {
+  const rawTxObj = await createSudtTransaction(
+    fromAddress,
+    fromLockType,
+    lockHash,
+    typeHash,
+    toAddress,
+    sendSudtAmount,
+    fee,
+    password,
+  );
+  console.log(/rawTxObj/, JSON.stringify(rawTxObj));
+
+  const signedTx = await signSudtTransaction(lockHash, password, rawTxObj);
   const txResultObj = {
     txHash: null,
-    fee: rawTxObj.fee,
   };
   try {
-    realTxHash = await ckb.rpc.sendTransaction(signedTx);
-    txResultObj.txHash = realTxHash;
+    // const realTxHash = await ckb.rpc.sendTransaction(signedTx);
+    // txResultObj.txHash = realTxHash;
   } catch (error) {
     console.error(`Failed to send tx: ${error}`);
   }

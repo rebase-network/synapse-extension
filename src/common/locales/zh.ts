@@ -33,7 +33,7 @@ export default {
   Create: '创建',
   'Wallet Password': '钱包密码',
   'Keystore Password': 'Keystore密码',
-  'Send CKB': '发送CKB',
+  'Send Transaction': '发送交易',
   'The transaction is sending, please wait for seconds...': '交易正在确认中, 请等待...',
   'The transaction failed to send, please try again later': '交易发送失败，请稍后再试',
   'Should be greater than ': '应该大于',
@@ -67,7 +67,7 @@ export default {
   'Loading UDT...': '加载UDT...',
   'lack of capacity':'可交易的capacity不足',
   'the rest capacity is less than 61, it will be destroyed':'剩余capacity不足61，将会销毁。',
-  'lack of capacity, available capacity is':'capacity不足, 可交易的capacity是',
+  'lack of capacity, available capacity is':'capacity不足, 可用的capacity是',
   'the remaining capacity is less than 61, if continue it will be destroyed, remaining capacity is':'剩余capacity小于61,如果继续，剩余的将被销毁, 剩余的capacity是 ',
   'Manage Networks': '管理网络',
   'CKB Node URL': 'CKB Node URL',
@@ -81,5 +81,6 @@ export default {
   'Message to be signed': '签名消息',
   'Invalid address':'无效的地址，请输入有效的地址',
   "The transaction's ckb capacity cannot be less than 61 CKB":'交易的CKB数量不能小于61 CKB',
-  "The transaction's sudt amount cannot be more than have": "The transaction's sudt amount cannot be more than have"
+  "The transaction's sudt amount cannot be more than have": "The transaction's sudt amount cannot be more than have",
+  'lack of capacity, ckb capacity cannot be less than 142 CKB, available capacity is':'capacity不足, 可用capacity不能少于142 CKB，可用的capacity是',
 };
