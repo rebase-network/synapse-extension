@@ -29,7 +29,6 @@ export default (props: AppProps) => {
 
   const { udtsCapacity, udtsMeta, explorerUrl } = props;
   const addressesElem = Object.keys(udtsCapacity).map((typeHash) => {
-    console.log(/typeHash/, typeHash);
     const meta = _.find(udtsMeta, { typeHash });
     const itemProps: ITokenInfo = {
       ...udtsCapacity[typeHash],
