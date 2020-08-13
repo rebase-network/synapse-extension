@@ -29,6 +29,7 @@ export default (props: AppProps) => {
 
   const { udtsCapacity, udtsMeta, explorerUrl } = props;
   const addressesElem = Object.keys(udtsCapacity).map((typeHash) => {
+    console.log(/typeHash/, typeHash);
     const meta = _.find(udtsMeta, { typeHash });
     const itemProps: ITokenInfo = {
       ...udtsCapacity[typeHash],
@@ -44,18 +45,22 @@ export default (props: AppProps) => {
     return (
       <List component="nav" aria-label="Token List" key={`tokenInfo-${typeHash}`}>
         <TokenListItem tokenInfo={itemProps} explorerUrl={explorerUrl} />
-        <div>
-          <Button
-            type="submit"
-            id="submit-button"
-            color="primary"
-            variant="contained"
-            data-testid="submit-button"
-            onClick={(event) => handleClick(event, itemProps)}
-          >
-            <FormattedMessage id="Send" />
-          </Button>
-        </div>
+        {typeHash !== 'null' ? (
+          <div>
+            <Button
+              type="submit"
+              id="submit-button"
+              color="primary"
+              variant="contained"
+              data-testid="submit-button"
+              onClick={(event) => handleClick(event, itemProps)}
+            >
+              <FormattedMessage id="Send" />
+            </Button>
+          </div>
+        ) : (
+          <div />
+        )}
       </List>
     );
   });
