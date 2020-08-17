@@ -120,7 +120,7 @@ export const InnerForm = (props: AppProps) => {
     setCheckAddressMsg('');
     handleBlur(event);
 
-    const { address, typeHash, udt } = values;
+    const { address, typeHash, udt, decimal } = values;
     // check address
     try {
       addressToScript(address);
@@ -179,7 +179,7 @@ export const InnerForm = (props: AppProps) => {
         setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter('0')} CKB`);
       }
 
-      if (numberToBigInt(capacity) > BigInt(udt)) {
+      if (numberToBigInt(capacity, decimal) > BigInt(udt)) {
         const checkMsgId = "The transaction's sudt amount cannot be more than have";
         const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
         setCheckMsg(checkMsgI18n);

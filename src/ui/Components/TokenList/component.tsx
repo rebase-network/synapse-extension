@@ -28,6 +28,7 @@ export default (props: AppProps) => {
   const classes = useStyles();
 
   const { udtsCapacity, udtsMeta, explorerUrl } = props;
+
   const addressesElem = Object.keys(udtsCapacity).map((typeHash) => {
     const meta = _.find(udtsMeta, { typeHash });
     const itemProps: ITokenInfo = {
@@ -38,7 +39,11 @@ export default (props: AppProps) => {
 
     const handleClick = async (event, itemPropsParams) => {
       const { name, typeHash: typeHashItem, udt } = itemPropsParams;
-      history.push(`/send-tx?name=${name}&typeHash=${typeHashItem}&udt=${udt}`);
+      let decimal = itemPropsParams?.decimal;
+      if (decimal === undefined || decimal === null) {
+        decimal = '8';
+      }
+      history.push(`/send-tx?name=${name}&typeHash=${typeHashItem}&udt=${udt}&decimal=${decimal}`);
     };
 
     return (

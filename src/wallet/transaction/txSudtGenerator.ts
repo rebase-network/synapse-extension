@@ -64,7 +64,7 @@ export function createSudtRawTx(
     });
     rawTx.witnesses.push('0x');
   }
-  const { sudtCKBCapacity, sudtAmount } = inputSudtCells;
+  const { sudtCKBCapacity } = inputSudtCells;
   const { lock, type } = inputSudtCells.cells[0];
   const sUdtLockScript = {
     hashType: lock.hashType as ScriptHashType,
@@ -127,7 +127,6 @@ export function createSudtRawTx(
   const sudtCKBCharge = BigInt(sudtCKBCapacity) - BigInt(chargeSudtCapacity);
   const ckbCharge =
     BigInt(inputCkbCells.total) + BigInt(sudtCKBCharge) - BigInt(toSudtCapacity) - BigInt(fee);
-
   rawTx.outputs.push({
     capacity: `0x${new BN(ckbCharge).toString(16)}`,
     lock: {
