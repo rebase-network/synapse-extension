@@ -15,6 +15,10 @@ const useStyles = makeStyles({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  sendLink: {
+    cursor: 'pointer',
+    'text-decoration': 'underline',
+  }
 });
 
 interface AppProps {
@@ -46,25 +50,15 @@ export default (props: AppProps) => {
       history.push(`/send-tx?name=${name}&typeHash=${typeHashItem}&udt=${udt}&decimal=${decimal}`);
     };
 
+    const sendLink = typeHash !== 'null' && (
+      <span onClick={(event) => handleClick(event, itemProps)} className={classes.sendLink}>
+        <FormattedMessage id="Send" />
+      </span>
+    )
+
     return (
       <List component="nav" aria-label="Token List" key={`tokenInfo-${typeHash}`}>
-        <TokenListItem tokenInfo={itemProps} explorerUrl={explorerUrl} />
-        {typeHash !== 'null' ? (
-          <div>
-            <Button
-              type="submit"
-              id="submit-button"
-              color="primary"
-              variant="contained"
-              data-testid="submit-button"
-              onClick={(event) => handleClick(event, itemProps)}
-            >
-              <FormattedMessage id="Send" />
-            </Button>
-          </div>
-        ) : (
-          <div />
-        )}
+        <TokenListItem tokenInfo={itemProps} sendLink={sendLink} explorerUrl={explorerUrl} />
       </List>
     );
   });

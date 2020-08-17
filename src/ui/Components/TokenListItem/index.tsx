@@ -36,6 +36,7 @@ export interface ITokenInfo {
 interface AppProps {
   tokenInfo: ITokenInfo;
   explorerUrl: any;
+  sendLink: any;
 }
 
 export default (props: AppProps) => {
@@ -44,6 +45,7 @@ export default (props: AppProps) => {
   const {
     tokenInfo: { name, udt, ckb, decimal = '8', symbol = '', typeHash },
     explorerUrl,
+    sendLink,
   } = props;
   let displayName: any = name;
   let expoloreShow: any = null;
@@ -92,11 +94,14 @@ export default (props: AppProps) => {
   return (
     <div>
       <ListItem
-        button
+        disableGutters
         key={`item-${typeHash}`}
         onClick={(event) => handleListItemClick(event, typeHash)}
       >
-        <ListItemText primary={displayName} />
+        <ListItemText
+          primary={displayName}
+          secondary={sendLink}
+        />
         {expoloreShow}
         <ListItemText
           primary={`${udt / 10 ** decimalInt} ${symbol}`}
