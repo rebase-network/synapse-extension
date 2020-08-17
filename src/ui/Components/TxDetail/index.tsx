@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import { FormattedMessage } from 'react-intl';
 import PageNav from '@ui/Components/PageNav';
 import { BN } from 'bn.js';
-import { MAINNET_EXPLORER_URL, TESTNET_EXPLORER_URL, CKB_TOKEN_DECIMALS } from '@utils/constants';
+import { MAINNET_EXPLORER_URL, TESTNET_EXPLORER_URL } from '@utils/constants';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,7 +67,7 @@ export default (props: AppProps) => {
     <div>
       <PageNav to="/address" title="Address" />
       <div className={classes.root}>
-        <Grid container spacing={3}>
+        <Grid container>
           <Grid item xs={12}>
             <Box textAlign="center" fontSize={22}>
               {status}
@@ -80,13 +80,13 @@ export default (props: AppProps) => {
         <br />
         <Divider variant="middle" className={classes.divider} />
         <br />
-        <Grid container wrap="nowrap" spacing={2}>
-          <Grid item>
+        <Grid container>
+          <Grid item xs={3}>
             <Typography noWrap>
               <FormattedMessage id="Capacity" />
             </Typography>
           </Grid>
-          <Grid item xs data-testid="amount">
+          <Grid item xs={9} data-testid="amount">
             {typeHash === '' ? (
               <Typography> {transferAmount} CKB</Typography>
             ) : (
@@ -94,13 +94,13 @@ export default (props: AppProps) => {
             )}
           </Grid>
         </Grid>
-        <Grid container wrap="nowrap" spacing={2}>
-          <Grid item>
+        <Grid container>
+          <Grid item xs={3}>
             <Typography noWrap>
               <FormattedMessage id="Fee" />
             </Typography>
           </Grid>
-          <Grid item xs>
+          <Grid item xs={9}>
             <Typography> {fee} CKB </Typography>
           </Grid>
         </Grid>
@@ -108,25 +108,27 @@ export default (props: AppProps) => {
         <br />
         <Divider variant="middle" className={classes.divider} />
         <br />
-        <Grid container wrap="nowrap" spacing={2}>
-          <div data-testid="txHash">
+        <Grid container>
+          <Grid item xs={3} data-testid="txHash">
             <Typography noWrap>
               <FormattedMessage id="Tx Hash" />
             </Typography>
-          </div>
-          <Grid item xs>
-            <Link rel="noreferrer" target="_blank" href={`${explorerUrl}/transaction/${txHash}`}>
-              <Typography className={classes.typography}>{txHash}</Typography>
-            </Link>
+          </Grid>
+          <Grid item xs={9}>
+            <Typography className={classes.typography}>
+              <Link rel="noreferrer" target="_blank" href={`${explorerUrl}/transaction/${txHash}`}>
+                {txHash}
+              </Link>
+            </Typography>
           </Grid>
         </Grid>
-        <Grid container wrap="nowrap" spacing={2}>
-          <Grid item>
+        <Grid container>
+          <Grid item xs={3}>
             <Typography noWrap>
               <FormattedMessage id="Block" />
             </Typography>
           </Grid>
-          <Grid item xs>
+          <Grid item xs={9}>
             <Typography>{blockNum}</Typography>
           </Grid>
         </Grid>
