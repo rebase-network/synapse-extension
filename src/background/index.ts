@@ -311,11 +311,12 @@ chrome.runtime.onMessage.addListener(async (request) => {
         tx: {
           from: fromAddress,
           to: toAddress,
-          amount: capacity.toString(),
-          fee,
+          amount: request.capacity.toString(),
+          fee: request.fee,
           hash: '',
           status: 'Pending',
           blockNum: 'Pending',
+          typeHash: '',
         },
       },
     };
@@ -361,7 +362,8 @@ chrome.runtime.onMessage.addListener(async (request) => {
       }
       responseMsg.data.hash = sendTxObj.txHash;
       responseMsg.data.tx.hash = sendTxObj.txHash;
-      responseMsg.data.tx.fee = fee;
+      responseMsg.data.tx.typeHash = typeHash;
+      responseMsg.data.tx.fee = request.fee;
       responseMsg.success = true;
       responseMsg.message = 'TX is sent';
     } catch (error) {
@@ -369,7 +371,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
     }
 
     // sedb back to extension UI
-    console.log(/responseMsg/, responseMsg);
     chrome.runtime.sendMessage(responseMsg);
   }
 

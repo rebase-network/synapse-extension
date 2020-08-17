@@ -215,24 +215,25 @@ export const InnerForm = (props: AppProps) => {
       />
     );
   }
-  if (name === '' && typeHash !== '') {
+
+  if (name === 'undefined' && typeHash === '') {
     sudtElem = null;
-  } else if (name !== '' && typeHash !== '') {
+  } else if (name === 'undefined' && typeHash !== '') {
+    // sudt show
+    sudtElem = (
+      <div>
+        <ListItem>
+          <ListItemText primary="UDT Hash" secondary={truncateHash(typeHash)} />
+        </ListItem>
+      </div>
+    );
+  } else if (name !== 'undefined' && typeHash !== '') {
     // sudt show
     sudtElem = (
       <div>
         <ListItem>
           <ListItemText primary="UDT Name" secondary={name} />
         </ListItem>
-        <ListItem>
-          <ListItemText primary="UDT Hash" secondary={truncateHash(typeHash)} />
-        </ListItem>
-      </div>
-    );
-  } else if (name === '' && typeHash !== '') {
-    // sudt show
-    sudtElem = (
-      <div>
         <ListItem>
           <ListItemText primary="UDT Hash" secondary={truncateHash(typeHash)} />
         </ListItem>
