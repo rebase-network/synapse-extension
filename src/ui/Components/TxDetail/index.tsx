@@ -45,6 +45,7 @@ export default (props: AppProps) => {
     blockNum,
     timestamp,
     income,
+    typeHash,
   } = data;
 
   let transferAmount = capacity;
@@ -86,7 +87,11 @@ export default (props: AppProps) => {
             </Typography>
           </Grid>
           <Grid item xs data-testid="amount">
-            <Typography> {transferAmount / CKB_TOKEN_DECIMALS} CKB</Typography>
+            {typeHash === '' ? (
+              <Typography> {transferAmount} CKB</Typography>
+            ) : (
+              <Typography> {transferAmount} SUDT</Typography>
+            )}
           </Grid>
         </Grid>
         <Grid container wrap="nowrap" spacing={2}>
@@ -96,7 +101,7 @@ export default (props: AppProps) => {
             </Typography>
           </Grid>
           <Grid item xs>
-            <Typography> {fee / CKB_TOKEN_DECIMALS} CKB </Typography>
+            <Typography> {fee} CKB </Typography>
           </Grid>
         </Grid>
 

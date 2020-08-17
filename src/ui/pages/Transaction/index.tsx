@@ -120,7 +120,7 @@ export const InnerForm = (props: AppProps) => {
     setCheckAddressMsg('');
     handleBlur(event);
 
-    const { address, typeHash, udt } = values;
+    const { address, typeHash, udt, decimal } = values;
     // check address
     try {
       addressToScript(address);
@@ -134,7 +134,7 @@ export const InnerForm = (props: AppProps) => {
     // secp256k1
     const capacity = event.target.value;
     const toLockScript = addressToScript(address);
-    if (typeHash === undefined) {
+    if (typeHash === '') {
       if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
         // every cell's capacity gt 61
         if (Number(capacity) < Number(61)) {
@@ -179,7 +179,7 @@ export const InnerForm = (props: AppProps) => {
         setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter('0')} CKB`);
       }
 
-      if (numberToBigInt(capacity) > BigInt(udt)) {
+      if (numberToBigInt(capacity, decimal) > BigInt(udt)) {
         const checkMsgId = "The transaction's sudt amount cannot be more than have";
         const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
         setCheckMsg(checkMsgI18n);
@@ -196,7 +196,7 @@ export const InnerForm = (props: AppProps) => {
   const { name, typeHash } = values;
   let sudtElem = null;
   let dataElem = null;
-  if (name === undefined && typeHash === undefined) {
+  if (name === '' && typeHash === '') {
     dataElem = (
       <TextField
         label={intl.formatMessage({ id: 'Data' })}
@@ -215,24 +215,25 @@ export const InnerForm = (props: AppProps) => {
       />
     );
   }
-  if (name === undefined && typeHash !== undefined) {
+
+  if (name === 'undefined' && typeHash === '') {
     sudtElem = null;
-  } else if (name !== 'undefined' && typeHash !== undefined) {
+  } else if (name === 'undefined' && typeHash !== '') {
+    // sudt show
+    sudtElem = (
+      <div>
+        <ListItem>
+          <ListItemText primary="UDT Hash" secondary={truncateHash(typeHash)} />
+        </ListItem>
+      </div>
+    );
+  } else if (name !== 'undefined' && typeHash !== '') {
     // sudt show
     sudtElem = (
       <div>
         <ListItem>
           <ListItemText primary="UDT Name" secondary={name} />
         </ListItem>
-        <ListItem>
-          <ListItemText primary="UDT Hash" secondary={truncateHash(typeHash)} />
-        </ListItem>
-      </div>
-    );
-  } else if (name === 'undefined' && typeHash !== undefined) {
-    // sudt show
-    sudtElem = (
-      <div>
         <ListItem>
           <ListItemText primary="UDT Hash" secondary={truncateHash(typeHash)} />
         </ListItem>
@@ -429,7 +430,7 @@ export default () => {
 
   const initialValues = {
     address: '',
-    capacity: null,
+    capacity: '',
     data: '',
     fee: 0.00001,
     password: '',

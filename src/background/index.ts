@@ -262,15 +262,24 @@ chrome.runtime.onMessage.addListener(async (request) => {
     browser.notifications.create(notificationMsg);
   }
 
-  // send transactioin
+  /**
+   * send transactioin
+   */
   if (request.type === MESSAGE_TYPE.REQUEST_SEND_TX) {
     const cwStorage = await browser.storage.local.get('currentWallet');
     const walletsStorage = await browser.storage.local.get('wallets');
     const currNetworkStorage = await browser.storage.local.get('currentNetwork');
 
     const toAddress = request.address.trim();
-    const capacity = numberToBigInt(request.capacity);
-    const fee = request.fee * CKB_TOKEN_DECIMALS;
+    const decimal = request?.decimal;
+    let capacity = null;
+    if (decimal === undefined || decimal === null) {
+      capacity = numberToBigInt(request.capacity, 8);
+    } else {
+      capacity = numberToBigInt(request.capacity, decimal);
+    }
+
+    const fee = numberToBigInt(request.fee);
     const password = request.password.trim();
     const toData = request.data.trim();
 
@@ -302,18 +311,19 @@ chrome.runtime.onMessage.addListener(async (request) => {
         tx: {
           from: fromAddress,
           to: toAddress,
-          amount: capacity.toString(),
-          fee,
+          amount: request.capacity.toString(),
+          fee: request.fee,
           hash: '',
           status: 'Pending',
           blockNum: 'Pending',
+          typeHash: '',
         },
       },
     };
     const { typeHash } = request;
     try {
       let sendTxObj = null;
-      if (typeHash === undefined) {
+      if (typeHash === '') {
         sendTxObj = await sendTransaction(
           privateKey,
           fromAddress,
@@ -328,7 +338,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
         );
       } else if (typeHash !== '') {
         const sendSudtAmount: BigInt = capacity;
-        const transferFee = 0.0001 * CKB_TOKEN_DECIMALS;
         sendTxObj = await sendSudtTransaction(
           fromAddress,
           lockType,
@@ -336,7 +345,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
           typeHash,
           toAddress,
           sendSudtAmount,
-          transferFee,
+          fee,
           password,
         );
       }
@@ -353,7 +362,8 @@ chrome.runtime.onMessage.addListener(async (request) => {
       }
       responseMsg.data.hash = sendTxObj.txHash;
       responseMsg.data.tx.hash = sendTxObj.txHash;
-      responseMsg.data.tx.fee = fee;
+      responseMsg.data.tx.typeHash = typeHash;
+      responseMsg.data.tx.fee = request.fee;
       responseMsg.success = true;
       responseMsg.message = 'TX is sent';
     } catch (error) {
