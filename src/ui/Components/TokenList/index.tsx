@@ -77,7 +77,7 @@ export default (props: AppProps) => {
 
   return (
     <div className={classes.root}>
-      <ListItem className={classes.ckb}>
+      <ListItem disableGutters className={classes.ckb}>
         <ListItemText primary="CKB" />
         <ListItemText primary={`${emptyCapacity} CKB`} className={classes.token} />
       </ListItem>

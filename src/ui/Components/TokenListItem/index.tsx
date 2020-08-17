@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { HelpOutline } from '@material-ui/icons';
 import { shannonToCKBFormatter } from '@utils/formatters';
 import CallMadeIcon from '@material-ui/icons/CallMade';
+import { Link as RouterLink } from 'react-router-dom';
 
 const useStyles = makeStyles({
   token: {
@@ -65,8 +66,9 @@ export default (props: AppProps) => {
         </Tooltip>
       );
     } else {
-      //   displayName = <Link to="/manage-udts">{typeHash.substr(0, 10)}</Link>;
-      displayName = <div>{typeHash.substr(0, 10)}</div>;
+      displayName = <RouterLink to={`/manage-udts/${typeHash}`}>
+        {typeHash.substr(0, 10)}
+      </RouterLink>
       expoloreShow = (
         <Link rel="noreferrer" target="_blank" href={`${explorerUrl}/sudt/${typeHash}`}>
           <Tooltip title={<FormattedMessage id="View on Explorer" />} placement="top">
@@ -83,6 +85,9 @@ export default (props: AppProps) => {
         </Tooltip>
       </Link>
     );
+    displayName = <RouterLink to={`/manage-udts/${typeHash}`}>
+      {displayName}
+    </RouterLink>
   }
   const decimalInt = parseInt(decimal, 10);
   const ckbStr = ckb.toString();
@@ -96,7 +101,6 @@ export default (props: AppProps) => {
       <ListItem
         disableGutters
         key={`item-${typeHash}`}
-        onClick={(event) => handleListItemClick(event, typeHash)}
       >
         <ListItemText
           primary={displayName}

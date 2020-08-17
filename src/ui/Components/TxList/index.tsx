@@ -43,7 +43,7 @@ export default (props: AppProps) => {
   const txListElem = txList.map((item) => (
     <List onClick={() => onSelectTx(item.hash)} key={item.hash} className={classes.list}>
       <Divider />
-      <ListItem>
+      <ListItem disableGutters>
         <ListItemText primary={`${shannonToCKBFormatter(item.amount.toString())} CKB`} />
         <Link rel="noreferrer" target="_blank" href={`${explorerUrl}/transaction/${item.hash}`}>
           <Tooltip title={<FormattedMessage id="View on Explorer" />} placement="top">
@@ -51,7 +51,7 @@ export default (props: AppProps) => {
           </Tooltip>
         </Link>
       </ListItem>
-      <ListItem>
+      <ListItem disableGutters>
         <ListItemText secondary={item.income ? 'Received' : 'Sent'} />
         <ListItemText secondary={moment(item.timestamp).format('YYYY-MM-DD HH:mm:ss')} />
       </ListItem>
