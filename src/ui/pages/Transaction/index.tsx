@@ -134,7 +134,7 @@ export const InnerForm = (props: AppProps) => {
     // secp256k1
     const capacity = event.target.value;
     const toLockScript = addressToScript(address);
-    if (typeHash === undefined) {
+    if (typeHash === '') {
       if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
         // every cell's capacity gt 61
         if (Number(capacity) < Number(61)) {
@@ -196,7 +196,7 @@ export const InnerForm = (props: AppProps) => {
   const { name, typeHash } = values;
   let sudtElem = null;
   let dataElem = null;
-  if (name === undefined && typeHash === undefined) {
+  if (name === '' && typeHash === '') {
     dataElem = (
       <TextField
         label={intl.formatMessage({ id: 'Data' })}
@@ -215,9 +215,9 @@ export const InnerForm = (props: AppProps) => {
       />
     );
   }
-  if (name === undefined && typeHash !== undefined) {
+  if (name === '' && typeHash !== '') {
     sudtElem = null;
-  } else if (name !== 'undefined' && typeHash !== undefined) {
+  } else if (name !== '' && typeHash !== '') {
     // sudt show
     sudtElem = (
       <div>
@@ -229,7 +229,7 @@ export const InnerForm = (props: AppProps) => {
         </ListItem>
       </div>
     );
-  } else if (name === 'undefined' && typeHash !== undefined) {
+  } else if (name === '' && typeHash !== '') {
     // sudt show
     sudtElem = (
       <div>
@@ -429,7 +429,7 @@ export default () => {
 
   const initialValues = {
     address: '',
-    capacity: null,
+    capacity: '',
     data: '',
     fee: 0.00001,
     password: '',

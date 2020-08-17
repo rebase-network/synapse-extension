@@ -322,7 +322,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const { typeHash } = request;
     try {
       let sendTxObj = null;
-      if (typeHash === undefined) {
+      if (typeHash === '') {
         sendTxObj = await sendTransaction(
           privateKey,
           fromAddress,
@@ -369,6 +369,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     }
 
     // sedb back to extension UI
+    console.log(/responseMsg/, responseMsg);
     chrome.runtime.sendMessage(responseMsg);
   }
 

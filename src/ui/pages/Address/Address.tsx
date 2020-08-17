@@ -206,7 +206,8 @@ export default (props: AppProps) => {
   }, [address, capacity, type]);
 
   const onSendtx = () => {
-    history.push('/send-tx');
+    const pushUrl = `/send-tx?name=${''}&typeHash=${''}&udt=${''}`;
+    history.push(pushUrl);
   };
 
   const copyAddress = async () => {
