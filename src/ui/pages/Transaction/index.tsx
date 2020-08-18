@@ -23,7 +23,7 @@ import {
   truncateAddress,
   shannonToCKBFormatter,
   truncateHash,
-  numberToBigInt,
+  ckbToshannonFormatter,
 } from '@utils/formatters';
 import { getUnspentCapacity } from '@src/utils/apis';
 import { addressToScript } from '@keyper/specs';
@@ -179,7 +179,7 @@ export const InnerForm = (props: AppProps) => {
         setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter('0')} CKB`);
       }
 
-      if (numberToBigInt(capacity, decimal) > BigInt(udt)) {
+      if (ckbToshannonFormatter(capacity, decimal) > BigInt(udt)) {
         const checkMsgId = "The transaction's sudt amount cannot be more than have";
         const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
         setCheckMsg(checkMsgI18n);
@@ -382,6 +382,7 @@ export default () => {
       if (messageHandled && message.type === MESSAGE_TYPE.SEND_TX_OVER) {
         setSending(false);
         if (message.success) {
+          console.log(/message?.data?.tx/, message?.data?.tx);
           onSelectTx(message?.data?.tx);
         } else {
           setErrMsg('The transaction failed to send, please try again later');

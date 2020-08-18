@@ -18,14 +18,14 @@ import * as PasswordKeystore from '@src/wallet/passwordEncryptor';
 import _ from 'lodash';
 import { findInWalletsByPublicKey, showAddressHelper } from '@utils/wallet';
 import { getStatusByTxHash, getBlockNumberByTxHash, sendSignedTx } from '@utils/transaction';
-import { MESSAGE_TYPE, CKB_TOKEN_DECIMALS } from '@utils/constants';
+import { MESSAGE_TYPE } from '@utils/constants';
 import addExternalMessageListener from '@background/messageHandlers';
 import { WEB_PAGE } from '@src/utils/message/constants';
 import { sendToWebPage } from '@background/messageHandlers/proxy';
 import NetworkManager from '@common/networkManager';
 import { sendSudtTransaction } from '@src/wallet/transaction/sendSudtTransaction';
 import { parseSUDT } from '@src/utils';
-import { numberToBigInt } from '@src/utils/formatters';
+import { ckbToshannonFormatter, shannonToSUDTFormatter } from '@src/utils/formatters';
 
 NetworkManager.initNetworks();
 
@@ -136,11 +136,35 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const { currentWallet } = await browser.storage.local.get('currentWallet');
     const lockHash = currentWallet?.lock;
     let txs = [];
+    const txsReturn = [];
+
+    const udtsObj = await browser.storage.local.get('udts');
+    const udts = udtsObj.udts;
     if (currentWallet?.lockHash) {
       txs = await getTxHistories(lockHash);
+
+      let txReturn = {};
+      txs.forEach((element) => {
+        txReturn = element;
+        const txTypeHash = element.typeHash;
+        if (txTypeHash === undefined) {
+            txReturn['sudt'] = '0 SUDT';
+        } else if (txTypeHash !== undefined) {
+          const sudtObj = _.find(udts, { 'typeHash': txTypeHash});
+          if (sudtObj !== undefined) {
+            txReturn['decimal'] = sudtObj.decimal;
+            txReturn['symbol'] = sudtObj.symbol;
+            txReturn['sudt'] =
+              shannonToSUDTFormatter(element.sudt, Number(sudtObj.decimal)) + sudtObj.symbol;
+          } else {
+            txReturn['sudt'] = shannonToSUDTFormatter(element.sudt, 8) + ' SUDT';
+          }
+        }
+        txsReturn.push(txReturn);
+      });
     }
     chrome.runtime.sendMessage({
-      txs,
+      txs: txsReturn,
       type: MESSAGE_TYPE.SEND_TX_HISTORY,
     });
   }
@@ -269,22 +293,36 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const cwStorage = await browser.storage.local.get('currentWallet');
     const walletsStorage = await browser.storage.local.get('wallets');
     const currNetworkStorage = await browser.storage.local.get('currentNetwork');
+    const udtsObj = await browser.storage.local.get('udts');
 
     const toAddress = request.address.trim();
     const decimal = request?.decimal;
     let capacity = null;
     if (decimal === undefined || decimal === null) {
-      capacity = numberToBigInt(request.capacity, 8);
+      capacity = ckbToshannonFormatter(request.capacity, 8);
     } else {
-      capacity = numberToBigInt(request.capacity, decimal);
+      capacity = ckbToshannonFormatter(request.capacity, decimal);
     }
 
-    const fee = numberToBigInt(request.fee);
+    const fee = ckbToshannonFormatter(request.fee);
     const password = request.password.trim();
     const toData = request.data.trim();
+    const { typeHash } = request;
+    let ckbAmount = 0;
+    let sudtAmount = 0;
+    let showSudtAmount = '0';
+    if(typeHash === ''){
+        ckbAmount = capacity;
+    } else if(typeHash !== ''){
+        ckbAmount = 142 * 10 ** 8;
+        sudtAmount = capacity;
+
+        const udts = udtsObj.udts;
+        const sudtObj = _.find(udts, { 'typeHash': typeHash});
+        showSudtAmount = shannonToSUDTFormatter(capacity,decimal) + sudtObj.symbol;
+    }
 
     const { script, publicKey, lock: lockHash, type: lockType } = cwStorage.currentWallet;
-
     const fromAddress = showAddressHelper(currNetworkStorage.currentNetwork.prefix, script);
 
     const wallet = findInWalletsByPublicKey(publicKey, walletsStorage.wallets);
@@ -311,16 +349,17 @@ chrome.runtime.onMessage.addListener(async (request) => {
         tx: {
           from: fromAddress,
           to: toAddress,
-          amount: request.capacity.toString(),
-          fee: request.fee,
+          amount: ckbAmount.toString(),
+          fee: fee.toString(),
           hash: '',
           status: 'Pending',
           blockNum: 'Pending',
-          typeHash: '',
+          typeHash: typeHash,
+          sudt: showSudtAmount.toString(),
         },
       },
     };
-    const { typeHash } = request;
+
     try {
       let sendTxObj = null;
       if (typeHash === '') {
@@ -362,14 +401,11 @@ chrome.runtime.onMessage.addListener(async (request) => {
       }
       responseMsg.data.hash = sendTxObj.txHash;
       responseMsg.data.tx.hash = sendTxObj.txHash;
-      responseMsg.data.tx.typeHash = typeHash;
-      responseMsg.data.tx.fee = request.fee;
       responseMsg.success = true;
       responseMsg.message = 'TX is sent';
     } catch (error) {
       responseMsg.message = `${responseMsg.message}: ${error}`;
     }
-
     // sedb back to extension UI
     chrome.runtime.sendMessage(responseMsg);
   }

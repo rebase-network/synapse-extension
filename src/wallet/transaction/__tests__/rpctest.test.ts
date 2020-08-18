@@ -2,7 +2,7 @@ import CKB from '@nervosnetwork/ckb-sdk-core';
 import { BN } from 'bn.js';
 import { toHexInLittleEndian } from '@nervosnetwork/ckb-sdk-utils';
 import { parseSUDT } from '@src/utils';
-import { numberToBigInt } from '@src/utils/formatters';
+import { ckbToshannonFormatter } from '@src/utils/formatters';
 
 jest.unmock('@nervosnetwork/ckb-sdk-core');
 
@@ -25,7 +25,7 @@ describe('Transaction test', () => {
     // // const intValue = parseSUDT(liend);
     // // console.log(intValue);
     const capacity = '0.0003';
-    const result = numberToBigInt(Number(capacity));
+    const result = ckbToshannonFormatter(Number(capacity));
     console.log(result);
   });
 });

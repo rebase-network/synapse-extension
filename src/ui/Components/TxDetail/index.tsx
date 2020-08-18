@@ -9,7 +9,12 @@ import Typography from '@material-ui/core/Typography';
 import { FormattedMessage } from 'react-intl';
 import PageNav from '@ui/Components/PageNav';
 import { BN } from 'bn.js';
-import { MAINNET_EXPLORER_URL, TESTNET_EXPLORER_URL } from '@utils/constants';
+import {
+  MAINNET_EXPLORER_URL,
+  TESTNET_EXPLORER_URL,
+  MIN_TRANSFER_CELL_CAPACITY,
+  CKB_TOKEN_DECIMALS,
+} from '@utils/constants';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,6 +51,7 @@ export default (props: AppProps) => {
     timestamp,
     income,
     typeHash,
+    sudt,
   } = data;
 
   let transferAmount = capacity;
@@ -82,16 +88,12 @@ export default (props: AppProps) => {
         <br />
         <Grid container>
           <Grid item xs={3}>
-            <Typography noWrap>
-              <FormattedMessage id="Capacity" />
-            </Typography>
+            <Typography noWrap>CKB</Typography>
+            <Typography noWrap>sUDT</Typography>
           </Grid>
           <Grid item xs={9} data-testid="amount">
-            {typeHash === '' ? (
-              <Typography> {transferAmount} CKB</Typography>
-            ) : (
-              <Typography> {transferAmount} SUDT</Typography>
-            )}
+            <Typography> {transferAmount / CKB_TOKEN_DECIMALS} CKB</Typography>
+            {typeHash === '' ? null : <Typography> {sudt} </Typography>}
           </Grid>
         </Grid>
         <Grid container>
@@ -101,7 +103,7 @@ export default (props: AppProps) => {
             </Typography>
           </Grid>
           <Grid item xs={9}>
-            <Typography> {fee} CKB </Typography>
+            <Typography> {fee / CKB_TOKEN_DECIMALS} CKB </Typography>
           </Grid>
         </Grid>
 

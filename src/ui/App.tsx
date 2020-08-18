@@ -7,7 +7,6 @@ import ImportMnemonic from '@ui/pages/ImportMnemonic/index';
 import GenerateMnemonic from '@ui/pages/ImportMnemonic/generate';
 import Transaction from '@ui/pages/Transaction';
 import Sign from '@ui/pages/Sign';
-import TxHistoryDetail from '@ui/pages/Transaction/txHistoryDetail';
 import MnemonicSetting from '@ui/pages/MnemonicSetting';
 import ImportPrivateKey from '@ui/pages/ImportPrivateKey';
 import ExportPrivateKey from '@ui/pages/ExportPrivateKey';
@@ -57,9 +56,6 @@ export default function App() {
             </Route>
             <Route path="/sign-tx">
               <Sign />
-            </Route>
-            <Route path="/tx-history-detail">
-              <TxHistoryDetail />
             </Route>
             <Route path="/import-private-key">
               <ImportPrivateKey />

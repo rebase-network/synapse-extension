@@ -46,13 +46,22 @@ export const truncateAddress = (address: string) =>
 export const truncateHash = (hashParma: string) =>
   `${hashParma.substr(0, 10)}...${hashParma.substr(hashParma.length - 10, hashParma.length)}`;
 
-export const numberToBigInt = (number: any, decimal = 8) => {
+export const ckbToshannonFormatter = (number: any, decimal = 8) => {
   let result = Number(number);
   const count = decimal / 2;
   for (let i = 0; i < count; i++) {
     result *= 100;
   }
   return BigInt(result);
+};
+
+export const shannonToSUDTFormatter = (number: any, decimal = 8) => {
+  let result = Number(number);
+  const count = decimal / 2;
+  for (let i = 0; i < count; i++) {
+    result = result / 100;
+  }
+  return result;
 };
 
 export default {
