@@ -224,7 +224,9 @@ export const InnerForm = (props: AppProps) => {
         className={classes.textField}
         value={values.data}
         onChange={handleChange}
-        onBlur={handleBlur}
+        onBlur={(event) => {
+          setTxData(event.target.value);
+        }}
         error={!!errors.data}
         helperText={errors.data && touched.data && errors.data}
         margin="normal"
@@ -283,7 +285,7 @@ export const InnerForm = (props: AppProps) => {
     },
     {
       value: 3000,
-      label: '3000',
+      label: '3000 shn/kb',
     },
   ];
 
@@ -322,7 +324,7 @@ export const InnerForm = (props: AppProps) => {
   }, [toAddress, txCapacity, txData]);
 
   React.useEffect(() => {
-    if (feeRate === 0) {
+    if (feeRate === 0 || _.isEmpty(dummyTx)) {
       return;
     }
 
@@ -385,23 +387,6 @@ export const InnerForm = (props: AppProps) => {
         data-testid="field-capacity"
       />
       {dataElem}
-      <TextField
-        label={intl.formatMessage({ id: 'Data' })}
-        id="data"
-        name="data"
-        type="text"
-        fullWidth
-        className={classes.textField}
-        value={values.data}
-        onChange={handleChange}
-        onBlur={(event) => {
-          setTxData(event.target.value);
-        }}
-        error={!!errors.data}
-        helperText={errors.data && touched.data && errors.data}
-        margin="normal"
-        variant="outlined"
-      />
 
       <div>
         <Typography gutterBottom>费率</Typography>
