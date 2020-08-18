@@ -84,6 +84,11 @@ export const InnerForm = (props: AppProps) => {
   const [checkAddressMsg, setCheckAddressMsg] = React.useState('');
   const [checkMsg, setCheckMsg] = React.useState('');
   const [unspentCapacity, setUnspentCapacity] = React.useState(-1);
+
+  const [toAddress, setToAddress] = React.useState('');
+  const [txCapacity, setTxCapacity] = React.useState('');
+  const [txData, setTxData] = React.useState('');
+  const [dummyTx, setDummyTx] = React.useState({});
   const [feeRate, setFeeRate] = React.useState(0);
 
   const {
@@ -143,6 +148,8 @@ export const InnerForm = (props: AppProps) => {
 
     // secp256k1
     const capacity = event.target.value;
+    setTxCapacity(capacity);
+
     const toLockScript = addressToScript(address);
     if (typeHash === '') {
       if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
@@ -263,8 +270,8 @@ export const InnerForm = (props: AppProps) => {
 
   const sliderMarks = [
     {
-      value: 100,
-      label: '100',
+      value: 500,
+      label: '500',
     },
     {
       value: 1000,
@@ -280,38 +287,49 @@ export const InnerForm = (props: AppProps) => {
     },
   ];
 
-  const handleSliderChange = async (event, newValue) => {
-    let timeout;
-
-    timeout && clearTimeout(timeout);
-    const cwStorage = await browser.storage.local.get('currentWallet');
-    const currNetworkStorage = await browser.storage.local.get('currentNetwork');
-
-    const { script, lock, type } = cwStorage.currentWallet;
-
-    const fromAddress = showAddressHelper(currNetworkStorage.currentNetwork.prefix, script);
-    const { address, capacity, fee, data } = values;
-
-    timeout = setTimeout(async () => {
-      setFeeRate(newValue);
-
-      if (address !== '' || capacity !== '') {
-        const dummyTx = await genDummyTransaction(
-          fromAddress,
-          address,
-          capacity,
-          fee,
-          lock,
-          type,
-          data,
-        );
-
-        const feeHex = calculateTxFee(dummyTx, BigInt(feeRate));
-        const newFee = parseInt(feeHex.toString(), 16);
-        setFieldValue('fee', newFee / 10 ** 8);
-      }
-    }, 200);
+  const handleSliderChangeCommitted = async (event, newValue) => {
+    setFeeRate(newValue);
   };
+
+  React.useEffect(() => {
+    const c1 = toAddress === '' || toAddress === null;
+    const c2 = txCapacity === '' || txCapacity === null;
+
+    if (c1 || c2) {
+      return;
+    }
+
+    (async () => {
+      const cwStorage = await browser.storage.local.get('currentWallet');
+      const currNetworkStorage = await browser.storage.local.get('currentNetwork');
+
+      const { script, lock, type } = cwStorage.currentWallet;
+
+      const fromAddress = showAddressHelper(currNetworkStorage.currentNetwork.prefix, script);
+
+      const dummyTxObj = await genDummyTransaction(
+        fromAddress,
+        toAddress,
+        txCapacity,
+        10,
+        lock,
+        type,
+        txData,
+      );
+
+      setDummyTx(dummyTxObj);
+    })();
+  }, [toAddress, txCapacity, txData]);
+
+  React.useEffect(() => {
+    if (feeRate === 0) {
+      return;
+    }
+
+    const feeHex = calculateTxFee(dummyTx, BigInt(feeRate));
+    const newFee = parseInt(feeHex.toString(), 16);
+    setFieldValue('fee', newFee / 10 ** 8);
+  }, [dummyTx, feeRate]);
 
   return (
     <Form className="form-sendtx" id="form-sendtx" onSubmit={handleSubmit}>
@@ -339,6 +357,9 @@ export const InnerForm = (props: AppProps) => {
             value={values.address}
             onChange={handleChange}
             margin="normal"
+            onBlur={(event) => {
+              setToAddress(event.target.value);
+            }}
             InputProps={{ ...params.InputProps, type: 'search' }}
             variant="outlined"
             error={!!errors.address}
@@ -373,7 +394,9 @@ export const InnerForm = (props: AppProps) => {
         className={classes.textField}
         value={values.data}
         onChange={handleChange}
-        onBlur={handleBlur}
+        onBlur={(event) => {
+          setTxData(event.target.value);
+        }}
         error={!!errors.data}
         helperText={errors.data && touched.data && errors.data}
         margin="normal"
@@ -391,12 +414,13 @@ export const InnerForm = (props: AppProps) => {
             <Slider
               ValueLabelComponent={ValueLabelComponent}
               valueLabelDisplay="auto"
+              step={500}
               marks={sliderMarks}
               aria-label="feeRate"
               defaultValue={1000}
-              min={100}
+              min={500}
               max={3000}
-              onChange={handleSliderChange}
+              onChangeCommitted={handleSliderChangeCommitted}
             />
           </Grid>
           <Grid item>
