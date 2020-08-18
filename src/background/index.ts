@@ -302,7 +302,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
     const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
 
-    const responseMsg = {
+    const respMsg = {
       type: MESSAGE_TYPE.SEND_TX_OVER,
       success: false,
       message: 'Failed to send tx',
@@ -322,10 +322,10 @@ chrome.runtime.onMessage.addListener(async (request) => {
     };
     const { typeHash } = request;
     try {
+
       let sendTxObj = null;
       if (typeHash === '') {
-        sendTxObj = await sendTransaction(
-          privateKey,
+         sendTxObj = await sendTransaction(
           fromAddress,
           toAddress,
           capacity,
@@ -333,7 +333,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
           lockHash,
           lockType,
           password,
-          publicKey.replace('0x', ''),
           toData,
         );
       } else if (typeHash !== '') {
@@ -351,27 +350,28 @@ chrome.runtime.onMessage.addListener(async (request) => {
       }
 
       if (sendTxObj.errCode !== undefined && sendTxObj.errCode !== 0) {
-        const responseEorrorMsg = {
+        const respErrMsg = {
           type: MESSAGE_TYPE.SEND_TX_ERROR,
           success: true,
           message: sendTxObj.errMsg,
           data: '',
         };
-        chrome.runtime.sendMessage(responseEorrorMsg);
+        chrome.runtime.sendMessage(respErrMsg);
         return;
       }
-      responseMsg.data.hash = sendTxObj.txHash;
-      responseMsg.data.tx.hash = sendTxObj.txHash;
-      responseMsg.data.tx.typeHash = typeHash;
-      responseMsg.data.tx.fee = request.fee;
-      responseMsg.success = true;
-      responseMsg.message = 'TX is sent';
+
+      respMsg.data.hash = sendTxObj.txHash;
+      respMsg.data.tx.hash = sendTxObj.txHash;
+      respMsg.data.tx.typeHash = typeHash;
+      respMsg.data.tx.fee = request.fee;
+      respMsg.success = true;
+      respMsg.message = 'TX is sent';
     } catch (error) {
-      responseMsg.message = `${responseMsg.message}: ${error}`;
+      respMsg.message = `${respMsg.message}: ${error}`;
     }
 
     // sedb back to extension UI
-    chrome.runtime.sendMessage(responseMsg);
+    chrome.runtime.sendMessage(respMsg);
   }
 
   // transactioin detail

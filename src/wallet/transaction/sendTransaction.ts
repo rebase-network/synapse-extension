@@ -167,7 +167,6 @@ export const generateAnyPayTx = async (
 };
 
 export const sendTransaction = async (
-  privateKey,
   fromAddress,
   toAddress,
   toAmount,
@@ -175,7 +174,6 @@ export const sendTransaction = async (
   lockHash,
   lockType,
   password,
-  publicKey,
   toData = '0x',
 ) => {
   const ckb = await getCKB();
@@ -259,6 +257,7 @@ export const sendTransaction = async (
     txHash: null,
     fee: rawTxObj.fee,
   };
+
   try {
     realTxHash = await ckb.rpc.sendTransaction(signedTx);
     txResultObj.txHash = realTxHash;
@@ -267,4 +266,89 @@ export const sendTransaction = async (
   }
 
   return txResultObj;
+};
+
+export const genDummyTransaction = async (
+  fromAddress,
+  toAddress,
+  toAmount,
+  fee,
+  lockHash,
+  lockType,
+  toData = '0x',
+) => {
+  const ckb = await getCKB();
+  const toDataHex = textToHex(toData || '0x');
+  const toAddressScript = addressToScript(toAddress);
+  let toLockType = '';
+
+  if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
+    toLockType = 'Secp256k1';
+  } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Keccak256) {
+    toLockType = 'Keccak256';
+  } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.AnyPay) {
+    toLockType = 'AnyPay';
+  }
+
+  let rawTxObj: any;
+
+  // wallet cells check
+  const toLockScript = addressToScript(toAddress);
+  const toLockHash = ckb.utils.scriptToHash(toLockScript);
+
+  // get anypay wallet
+  let unspentWalletCells: any;
+  if (toLockType === 'AnyPay') {
+    const params = {
+      limit: '10',
+      hasData: 'false',
+    };
+    unspentWalletCells = await getUnspentCells(toLockHash, params);
+    // Error handling
+    if (unspentWalletCells.errCode !== undefined && unspentWalletCells.errCode !== 0) {
+      return unspentWalletCells;
+    }
+  }
+
+  let config = { index: 0, length: -1 };
+
+  if (toLockType === 'AnyPay' && unspentWalletCells.length === 0) {
+    rawTxObj = await generateTx(
+      fromAddress,
+      toAddress,
+      toAmount,
+      fee,
+      lockHash,
+      lockType,
+      toDataHex,
+    );
+    config = { index: 0, length: -1 };
+  } else if (toLockType === 'AnyPay' && unspentWalletCells.length > 0) {
+    rawTxObj = await generateAnyPayTx(
+      fromAddress,
+      toAddress,
+      toAmount,
+      fee,
+      lockHash,
+      lockType,
+      toLockType,
+    );
+    config = { index: 1, length: 1 };
+  } else if (toLockType === 'Secp256k1') {
+
+    rawTxObj = await generateTx(
+      fromAddress,
+      toAddress,
+      toAmount,
+      fee,
+      lockHash,
+      lockType,
+      toDataHex,
+    );
+
+    config = { index: 0, length: -1 };
+  }
+
+  return rawTxObj.tx;
+
 };
