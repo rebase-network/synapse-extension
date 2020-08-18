@@ -40,7 +40,8 @@ describe('txDetail page', () => {
   it('should render amount', async () => {
     const amount = getByTestId('amount');
     expect(container).toContainElement(amount);
-    expect(amount).toHaveTextContent((tx.amount / 10 ** 8).toString());
+    // expect(amount).toHaveTextContent((tx.amount / 10 ** 8).toString());
+    expect(amount).toHaveTextContent('0.000001 CKB');
   });
 
   it('should render TxHash', async () => {
