@@ -28,6 +28,11 @@ import {
 import { getUnspentCapacity } from '@src/utils/apis';
 import { addressToScript } from '@keyper/specs';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils';
+import { Slider, Tooltip, Typography, Grid } from '@material-ui/core';
+
+import calculateTxFee from '@src/wallet/transaction/calculateFee';
+import { genDummyTransaction } from '@src/wallet/transaction/sendTransaction';
+import { showAddressHelper } from '@utils/wallet';
 
 const useStyles = makeStyles({
   container: {
@@ -66,6 +71,12 @@ interface AppProps {
 
 interface AppState {}
 
+interface TooltipProps {
+  children: React.ReactElement;
+  open: boolean;
+  value: number;
+}
+
 export const InnerForm = (props: AppProps) => {
   const classes = useStyles();
   const intl = useIntl();
@@ -74,13 +85,11 @@ export const InnerForm = (props: AppProps) => {
   const [checkMsg, setCheckMsg] = React.useState('');
   const [unspentCapacity, setUnspentCapacity] = React.useState(-1);
 
-  React.useEffect(() => {
-    browser.storage.local.get('contacts').then((result) => {
-      if (Array.isArray(result.contacts)) {
-        setContacts(result.contacts);
-      }
-    });
-  }, []);
+  const [toAddress, setToAddress] = React.useState('');
+  const [txCapacity, setTxCapacity] = React.useState('');
+  const [txData, setTxData] = React.useState('');
+  const [dummyTx, setDummyTx] = React.useState({});
+  const [feeRate, setFeeRate] = React.useState(0);
 
   const {
     values,
@@ -94,6 +103,12 @@ export const InnerForm = (props: AppProps) => {
   } = props;
 
   React.useEffect(() => {
+    browser.storage.local.get('contacts').then((result) => {
+      if (Array.isArray(result.contacts)) {
+        setContacts(result.contacts);
+      }
+    });
+
     browser.storage.local.get('currentWallet').then(async (result) => {
       const lockHash = result.currentWallet.lock;
       const unspentCapacityResult = await getUnspentCapacity(lockHash);
@@ -133,6 +148,8 @@ export const InnerForm = (props: AppProps) => {
 
     // secp256k1
     const capacity = event.target.value;
+    setTxCapacity(capacity);
+
     const toLockScript = addressToScript(address);
     if (typeHash === '') {
       if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
@@ -207,7 +224,9 @@ export const InnerForm = (props: AppProps) => {
         className={classes.textField}
         value={values.data}
         onChange={handleChange}
-        onBlur={handleBlur}
+        onBlur={(event) => {
+          setTxData(event.target.value);
+        }}
         error={!!errors.data}
         helperText={errors.data && touched.data && errors.data}
         margin="normal"
@@ -241,9 +260,83 @@ export const InnerForm = (props: AppProps) => {
     );
   }
 
+  function ValueLabelComponent(props: TooltipProps) {
+    const { children, open, value } = props;
+
+    return (
+      <Tooltip open={open} enterTouchDelay={0} placement="top" title={value}>
+        {children}
+      </Tooltip>
+    );
+  }
+
+  const sliderMarks = [
+    {
+      value: 500,
+      label: '500',
+    },
+    {
+      value: 1000,
+      label: '1000',
+    },
+    {
+      value: 2000,
+      label: '2000',
+    },
+    {
+      value: 3000,
+      label: '3000 shn/kb',
+    },
+  ];
+
+  const handleSliderChangeCommitted = async (event, newValue) => {
+    setFeeRate(newValue);
+  };
+
+  React.useEffect(() => {
+    const c1 = toAddress === '' || toAddress === null;
+    const c2 = txCapacity === '' || txCapacity === null;
+
+    if (c1 || c2) {
+      return;
+    }
+
+    (async () => {
+      const cwStorage = await browser.storage.local.get('currentWallet');
+      const currNetworkStorage = await browser.storage.local.get('currentNetwork');
+
+      const { script, lock, type } = cwStorage.currentWallet;
+
+      const fromAddress = showAddressHelper(currNetworkStorage.currentNetwork.prefix, script);
+
+      const dummyTxObj = await genDummyTransaction(
+        fromAddress,
+        toAddress,
+        txCapacity,
+        10,
+        lock,
+        type,
+        txData,
+      );
+
+      setDummyTx(dummyTxObj);
+    })();
+  }, [toAddress, txCapacity, txData]);
+
+  React.useEffect(() => {
+    if (feeRate === 0 || _.isEmpty(dummyTx)) {
+      return;
+    }
+
+    const feeHex = calculateTxFee(dummyTx, BigInt(feeRate));
+    const newFee = parseInt(feeHex.toString(), 16);
+    setFieldValue('fee', newFee / 10 ** 8);
+  }, [dummyTx, feeRate]);
+
   return (
-    <Form className="form-mnemonic" id="form-mnemonic" onSubmit={handleSubmit}>
+    <Form className="form-sendtx" id="form-sendtx" onSubmit={handleSubmit}>
       <div>{sudtElem}</div>
+
       <Autocomplete
         id="address"
         onChange={(event, newValue) => {
@@ -266,6 +359,9 @@ export const InnerForm = (props: AppProps) => {
             value={values.address}
             onChange={handleChange}
             margin="normal"
+            onBlur={(event) => {
+              setToAddress(event.target.value);
+            }}
             InputProps={{ ...params.InputProps, type: 'search' }}
             variant="outlined"
             error={!!errors.address}
@@ -291,12 +387,42 @@ export const InnerForm = (props: AppProps) => {
         data-testid="field-capacity"
       />
       {dataElem}
+
+      <div>
+        <Typography gutterBottom>费率</Typography>
+
+        <Grid container spacing={2}>
+          <Grid item>
+            <Typography gutterBottom>Slower</Typography>
+          </Grid>
+          <Grid item xs>
+            <Slider
+              ValueLabelComponent={ValueLabelComponent}
+              valueLabelDisplay="auto"
+              step={500}
+              marks={sliderMarks}
+              aria-label="feeRate"
+              defaultValue={1000}
+              min={500}
+              max={3000}
+              onChangeCommitted={handleSliderChangeCommitted}
+            />
+          </Grid>
+          <Grid item>
+            <Typography gutterBottom>Faster</Typography>
+          </Grid>
+        </Grid>
+      </div>
+
       <TextField
         label={intl.formatMessage({ id: 'Fee' })}
         id="fee"
         name="fee"
         type="text"
         fullWidth
+        InputProps={{
+          readOnly: true,
+        }}
         className={classes.textField}
         value={values.fee}
         onChange={handleChange}
@@ -336,7 +462,6 @@ export const InnerForm = (props: AppProps) => {
       </Button>
 
       <Button
-        // type="reset"
         id="submit-button"
         disabled={isSubmitting}
         color="primary"
