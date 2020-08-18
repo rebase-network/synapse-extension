@@ -397,11 +397,15 @@ export const InnerForm = (props: AppProps) => {
       {dataElem}
 
       <div>
-        <Typography gutterBottom>费率</Typography>
+        <Typography gutterBottom>
+          <FormattedMessage id="Fee Rate" />
+        </Typography>
 
         <Grid container spacing={2}>
           <Grid item>
-            <Typography gutterBottom>Slower</Typography>
+            <Typography gutterBottom>
+              <FormattedMessage id="Slower" />
+            </Typography>
           </Grid>
           <Grid item xs>
             <Slider
@@ -417,7 +421,9 @@ export const InnerForm = (props: AppProps) => {
             />
           </Grid>
           <Grid item>
-            <Typography gutterBottom>Faster</Typography>
+            <Typography gutterBottom>
+              <FormattedMessage id="Faster" />
+            </Typography>
           </Grid>
         </Grid>
       </div>
