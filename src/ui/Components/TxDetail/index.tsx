@@ -9,12 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import { FormattedMessage } from 'react-intl';
 import PageNav from '@ui/Components/PageNav';
 import { BN } from 'bn.js';
-import {
-  MAINNET_EXPLORER_URL,
-  TESTNET_EXPLORER_URL,
-  MIN_TRANSFER_CELL_CAPACITY,
-  CKB_TOKEN_DECIMALS,
-} from '@utils/constants';
+import { MAINNET_EXPLORER_URL, TESTNET_EXPLORER_URL, CKB_TOKEN_DECIMALS } from '@utils/constants';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -89,11 +84,11 @@ export default (props: AppProps) => {
         <Grid container>
           <Grid item xs={3}>
             <Typography noWrap>CKB</Typography>
-            <Typography noWrap>sUDT</Typography>
+            {typeHash !== '' ? <Typography noWrap>sUDT</Typography> : null}
           </Grid>
           <Grid item xs={9} data-testid="amount">
             <Typography> {transferAmount / CKB_TOKEN_DECIMALS} CKB</Typography>
-            {typeHash === '' ? null : <Typography> {sudt} </Typography>}
+            {typeHash !== '' ? <Typography> {sudt} </Typography> : null}
           </Grid>
         </Grid>
         <Grid container>

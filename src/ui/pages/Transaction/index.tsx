@@ -2,7 +2,16 @@ import React from 'react';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import queryString from 'query-string';
-import { Button, TextField, ListItem, ListItemText } from '@material-ui/core';
+import {
+  Button,
+  TextField,
+  ListItem,
+  ListItemText,
+  Slider,
+  Tooltip,
+  Typography,
+  Grid,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -28,7 +37,6 @@ import {
 import { getUnspentCapacity } from '@src/utils/apis';
 import { addressToScript } from '@keyper/specs';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils';
-import { Slider, Tooltip, Typography, Grid } from '@material-ui/core';
 
 import calculateTxFee from '@src/wallet/transaction/calculateFee';
 import { genDummyTransaction } from '@src/wallet/transaction/sendTransaction';
@@ -507,7 +515,6 @@ export default () => {
       if (messageHandled && message.type === MESSAGE_TYPE.SEND_TX_OVER) {
         setSending(false);
         if (message.success) {
-          console.log(/message?.data?.tx/, message?.data?.tx);
           onSelectTx(message?.data?.tx);
         } else {
           setErrMsg('The transaction failed to send, please try again later');

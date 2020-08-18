@@ -25,7 +25,6 @@ export default (props: AppProps) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [selectedTxHash, setSelectedTxHash] = React.useState('');
-  const [sudtAmount, setSudtAmount] = React.useState(0);
 
   const { txList, explorerUrl } = props;
 
@@ -40,7 +39,6 @@ export default (props: AppProps) => {
   const onSelectTx = (hash) => {
     toggleModal();
     setSelectedTxHash(hash);
-    console.log(/hash/, hash);
   };
 
   const txListElem = txList.map((item) => (
@@ -48,7 +46,7 @@ export default (props: AppProps) => {
       <Divider />
       <ListItem disableGutters>
         <ListItemText primary={`${shannonToCKBFormatter(item.amount.toString())} CKB`} />
-        {item?.typeHash !== null ? <ListItemText primary={item.sudt} /> : null}
+        {item.typeHash !== null ? <ListItemText primary={item.sudt} /> : null}
         <Link rel="noreferrer" target="_blank" href={`${explorerUrl}/transaction/${item.hash}`}>
           <Tooltip title={<FormattedMessage id="View on Explorer" />} placement="top">
             <CallMadeIcon />
