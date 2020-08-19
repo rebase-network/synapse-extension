@@ -25,7 +25,8 @@ import { sendToWebPage } from '@background/messageHandlers/proxy';
 import NetworkManager from '@common/networkManager';
 import { sendSudtTransaction } from '@src/wallet/transaction/sendSudtTransaction';
 import { parseSUDT } from '@src/utils';
-import { ckbToshannonFormatter, shannonToSUDTFormatter } from '@src/utils/formatters';
+import { ckbToshannon, shannonToSUDT } from '@src/utils/formatters';
+import {CKBToShannonFormatter} from "@src/wallet/formatters"
 
 NetworkManager.initNetworks();
 
@@ -162,9 +163,9 @@ chrome.runtime.onMessage.addListener(async (request) => {
             txReturn.symbol = sudtObj.symbol;
             txReturn.typeHash = sudtObj.typeHash;
             txReturn.sudt =
-              shannonToSUDTFormatter(element.sudt, Number(sudtObj.decimal)) + sudtObj.symbol;
+              shannonToSUDT(element.sudt, Number(sudtObj.decimal)) + sudtObj.symbol;
           } else {
-            txReturn.sudt = `${shannonToSUDTFormatter(element.sudt, 8)} SUDT`;
+            txReturn.sudt = `${shannonToSUDT(element.sudt, 8)} SUDT`;
           }
         }
         txsReturn.push(txReturn);
@@ -306,12 +307,12 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const decimal = request?.decimal;
     let capacity = null;
     if (decimal === undefined || decimal === null) {
-      capacity = ckbToshannonFormatter(request.capacity, 8);
+      capacity = ckbToshannon(request.capacity, 8);
     } else {
-      capacity = ckbToshannonFormatter(request.capacity, decimal);
+      capacity = ckbToshannon(request.capacity, decimal);
     }
 
-    const fee = ckbToshannonFormatter(request.fee);
+    const fee = CKBToShannonFormatter(request.fee);
     const password = request.password.trim();
     const toData = request.data.trim();
     const { typeHash } = request;
@@ -324,7 +325,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
       const { udts } = udtsObj;
       const sudtObj = _.find(udts, { typeHash });
-      showSudtAmount = shannonToSUDTFormatter(capacity, decimal) + sudtObj.symbol;
+      showSudtAmount = shannonToSUDT(capacity, decimal) + sudtObj.symbol;
     }
 
     const { script, publicKey, lock: lockHash, type: lockType } = cwStorage.currentWallet;

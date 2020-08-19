@@ -30,7 +30,6 @@ const calculateTxFee = (transaction, feeRate = BigInt(1000)): String => {
 
   if (BigInt(txFee) < BigInt(MIN_FEE_RATE)) {
     console.log(/calculate fee/, txFee);
-    console.log(/min_fee_rate/, MIN_FEE_RATE);
     txFee = MIN_FEE_RATE;
   }
 

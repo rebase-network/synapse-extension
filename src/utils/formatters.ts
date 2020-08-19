@@ -46,7 +46,7 @@ export const truncateAddress = (address: string) =>
 export const truncateHash = (hashParma: string) =>
   `${hashParma.substr(0, 10)}...${hashParma.substr(hashParma.length - 10, hashParma.length)}`;
 
-export const ckbToshannonFormatter = (number: any, decimal = 8) => {
+export const ckbToshannon = (number: any, decimal = 8) => {
   let result = Number(number);
   const count = decimal / 2;
   for (let i = 0; i < count; i++) {
@@ -55,7 +55,7 @@ export const ckbToshannonFormatter = (number: any, decimal = 8) => {
   return BigInt(result);
 };
 
-export const shannonToSUDTFormatter = (number: any, decimal = 8) => {
+export const shannonToSUDT = (number: any, decimal = 8) => {
   let result = Number(number);
   const count = decimal / 2;
   for (let i = 0; i < count; i++) {
