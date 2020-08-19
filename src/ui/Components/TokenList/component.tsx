@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import { makeStyles } from '@material-ui/core/styles';
-import { List, Button } from '@material-ui/core';
+import { List } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 
 import { FormattedMessage } from 'react-intl';
@@ -18,7 +18,7 @@ const useStyles = makeStyles({
   sendLink: {
     cursor: 'pointer',
     'text-decoration': 'underline',
-  }
+  },
 });
 
 interface AppProps {
@@ -54,7 +54,7 @@ export default (props: AppProps) => {
       <span onClick={(event) => handleClick(event, itemProps)} className={classes.sendLink}>
         <FormattedMessage id="Send" />
       </span>
-    )
+    );
 
     return (
       <List component="nav" aria-label="Token List" key={`tokenInfo-${typeHash}`}>

@@ -1,12 +1,11 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { ListItem, ListItemText, Tooltip, Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { HelpOutline } from '@material-ui/icons';
 import { shannonToCKBFormatter } from '@utils/formatters';
 import CallMadeIcon from '@material-ui/icons/CallMade';
-import { Link as RouterLink } from 'react-router-dom';
 
 const useStyles = makeStyles({
   token: {
@@ -22,6 +21,9 @@ const useStyles = makeStyles({
   helpIcon: {
     'font-size': '1.2rem',
     color: 'gray',
+  },
+  displayName: {
+    color: 'inherit',
   },
 });
 
@@ -42,7 +44,6 @@ interface AppProps {
 
 export default (props: AppProps) => {
   const classes = useStyles();
-  const history = useHistory();
   const {
     tokenInfo: { name, udt, ckb, decimal = '8', symbol = '', typeHash },
     explorerUrl,
@@ -66,9 +67,11 @@ export default (props: AppProps) => {
         </Tooltip>
       );
     } else {
-      displayName = <RouterLink to={`/manage-udts/${typeHash}`}>
-        {typeHash.substr(0, 10)}
-      </RouterLink>
+      displayName = (
+        <RouterLink className={classes.displayName} to={`/manage-udts/${typeHash}`}>
+          {typeHash.substr(0, 10)}
+        </RouterLink>
+      );
       expoloreShow = (
         <Link rel="noreferrer" target="_blank" href={`${explorerUrl}/sudt/${typeHash}`}>
           <Tooltip title={<FormattedMessage id="View on Explorer" />} placement="top">
@@ -85,27 +88,19 @@ export default (props: AppProps) => {
         </Tooltip>
       </Link>
     );
-    displayName = <RouterLink to={`/manage-udts/${typeHash}`}>
-      {displayName}
-    </RouterLink>
+    displayName = (
+      <RouterLink className={classes.displayName} to={`/manage-udts/${typeHash}`}>
+        {displayName}
+      </RouterLink>
+    );
   }
   const decimalInt = parseInt(decimal, 10);
   const ckbStr = ckb.toString();
 
-  const handleListItemClick = (event, typeHashParmas: string) => {
-    history.push(`/manage-udts/${typeHashParmas}`);
-  };
-
   return (
     <div>
-      <ListItem
-        disableGutters
-        key={`item-${typeHash}`}
-      >
-        <ListItemText
-          primary={displayName}
-          secondary={sendLink}
-        />
+      <ListItem disableGutters key={`item-${typeHash}`}>
+        <ListItemText primary={displayName} secondary={sendLink} />
         {expoloreShow}
         <ListItemText
           primary={`${udt / 10 ** decimalInt} ${symbol}`}
