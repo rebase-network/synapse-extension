@@ -20,6 +20,7 @@ describe('SUDT Transaction test', () => {
   });
 
   it('send Muti SUDT All to ...', async () => {
+    jest.setTimeout(50000);
     const {
       fromAddress,
       fromLockType,
@@ -74,6 +75,7 @@ describe('SUDT Transaction test', () => {
   });
 
   it('send single SUDT All to ...', async () => {
+    jest.setTimeout(50000);
     const {
       fromAddress,
       fromLockType,
@@ -100,6 +102,7 @@ describe('SUDT Transaction test', () => {
   });
 
   it('send single SUDT Part to ...', async () => {
+    jest.setTimeout(50000);
     const {
       fromAddress,
       fromLockType,
@@ -126,6 +129,7 @@ describe('SUDT Transaction test', () => {
   });
 
   it('send single SUDT Part to ...', async () => {
+    jest.setTimeout(50000);
     const {
       fromAddress,
       fromLockType,
