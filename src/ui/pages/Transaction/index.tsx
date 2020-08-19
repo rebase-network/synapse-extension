@@ -32,7 +32,7 @@ import {
   truncateAddress,
   shannonToCKBFormatter,
   truncateHash,
-  ckbToshannonFormatter,
+  ckbToshannon,
 } from '@utils/formatters';
 import { getUnspentCapacity } from '@src/utils/apis';
 import { addressToScript } from '@keyper/specs';
@@ -41,6 +41,7 @@ import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils';
 import calculateTxFee from '@src/wallet/transaction/calculateFee';
 import { genDummyTransaction } from '@src/wallet/transaction/sendTransaction';
 import { showAddressHelper } from '@utils/wallet';
+// import { shannonToCKBFormatter } from '@src/wallet/formatters';
 
 const useStyles = makeStyles({
   container: {
@@ -204,7 +205,7 @@ export const InnerForm = (props: AppProps) => {
         setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter('0')} CKB`);
       }
 
-      if (ckbToshannonFormatter(capacity, decimal) > BigInt(udt)) {
+      if (ckbToshannon(capacity, decimal) > BigInt(udt)) {
         const checkMsgId = "The transaction's sudt amount cannot be more than have";
         const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
         setCheckMsg(checkMsgI18n);
@@ -338,7 +339,9 @@ export const InnerForm = (props: AppProps) => {
 
     const feeHex = calculateTxFee(dummyTx, BigInt(feeRate));
     const newFee = parseInt(feeHex.toString(), 16);
-    setFieldValue('fee', newFee / 10 ** 8);
+    const fee = shannonToCKBFormatter(newFee.toString());
+
+    setFieldValue('fee', fee);
   }, [dummyTx, feeRate]);
 
   return (
