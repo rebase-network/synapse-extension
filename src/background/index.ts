@@ -26,7 +26,7 @@ import NetworkManager from '@common/networkManager';
 import { sendSudtTransaction } from '@src/wallet/transaction/sendSudtTransaction';
 import { parseSUDT } from '@src/utils';
 import { ckbToshannon, shannonToSUDT } from '@src/utils/formatters';
-import {CKBToShannonFormatter} from "@src/wallet/formatters"
+import { CKBToShannonFormatter } from '@src/wallet/formatters';
 
 NetworkManager.initNetworks();
 
@@ -162,8 +162,9 @@ chrome.runtime.onMessage.addListener(async (request) => {
             txReturn.decimal = sudtObj.decimal;
             txReturn.symbol = sudtObj.symbol;
             txReturn.typeHash = sudtObj.typeHash;
-            txReturn.sudt =
-              shannonToSUDT(element.sudt, Number(sudtObj.decimal)) + sudtObj.symbol;
+            txReturn.sudt = `${shannonToSUDT(element.sudt, Number(sudtObj.decimal))} ${
+              sudtObj.symbol
+            }`;
           } else {
             txReturn.sudt = `${shannonToSUDT(element.sudt, 8)} SUDT`;
           }
