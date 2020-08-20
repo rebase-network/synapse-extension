@@ -5,6 +5,7 @@ import { makeStyles, Theme, createStyles, withStyles } from '@material-ui/core/s
 import Grid from '@material-ui/core/Grid';
 import { FormattedMessage } from 'react-intl';
 import { MESSAGE_TYPE } from '@utils/constants';
+import { getChallenge, createCredential } from '@src/authn/authn';
 
 const useStylesTheme = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,6 +52,7 @@ interface AppState {}
 
 export default function (props: AppProps, state: AppState) {
   const history = useHistory();
+  const classes = useStylesTheme();
 
   const onImport = () => {
     history.push('/import-mnemonic');
@@ -61,7 +63,11 @@ export default function (props: AppProps, state: AppState) {
     history.push('/generate-mnemonic');
   };
 
-  const classes = useStylesTheme();
+  const onRegister = () => {
+    getChallenge().then((challenge) => {
+      return createCredential(challenge);
+    });
+  };
 
   return (
     <div className={classes.root}>
@@ -90,6 +96,19 @@ export default function (props: AppProps, state: AppState) {
             data-testid="generate-button"
           >
             <FormattedMessage id="Generate Mnemonic" />
+          </BootstrapButton>
+        </Grid>
+        <Grid item xs={12}>
+          <BootstrapButton
+            type="button"
+            variant="contained"
+            id="generate-button"
+            color="primary"
+            onClick={onRegister}
+            className={classes.button}
+            data-testid="generate-button"
+          >
+            Register
           </BootstrapButton>
         </Grid>
       </Grid>
