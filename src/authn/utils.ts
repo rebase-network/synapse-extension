@@ -33,3 +33,13 @@ export function stringToArrayBuffer(str) {
 export function logVariable(name, text) {
   console.log(`${name}: ${text}`);
 }
+
+export function randomRangeId(num) {
+  let returnStr = '';
+  const charStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  for (let i = 0; i < num; i++) {
+    const index = Math.round(Math.random() * (charStr.length - 1));
+    returnStr += charStr.substring(index, index + 1);
+  }
+  return returnStr;
+}

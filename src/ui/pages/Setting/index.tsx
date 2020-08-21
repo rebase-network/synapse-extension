@@ -165,7 +165,9 @@ export default function (props: AppProps, state: AppState) {
   };
 
   const onSubmit = async (values) => {
-    chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.DELETE_WALLET });
+    // chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.DELETE_WALLET });
+    localStorage.setItem('IS_LOGIN', 'FALSE');
+    history.push('/mnemonic-setting');
   };
 
   const isLogin = localStorage.getItem('IS_LOGIN') === 'YES';

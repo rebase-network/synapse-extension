@@ -1,4 +1,10 @@
-import { stringToArrayBuffer, logVariable, arrayBufferToString, base64encode } from './utils';
+import {
+  stringToArrayBuffer,
+  logVariable,
+  arrayBufferToString,
+  base64encode,
+  randomRangeId,
+} from './utils';
 import { getChallengeFido, makeCredential, verifyAssertion } from './fido';
 
 /**
@@ -19,7 +25,7 @@ export function getChallenge() {
  * 1- 用户输入用户名点击注册按钮，客户端立即 Post 一个请求到服务器
  * 2- 服务器生成一个随机的字符串 challenge 与一个 userId，组装成下面的数据格式发送到客户端
  */
-export function createCredential(challenge) {
+export function createCredential(challenge, userName) {
   if (
     !PublicKeyCredential ||
     typeof PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable !== 'function'
@@ -31,13 +37,13 @@ export function createCredential(challenge) {
 
   const createCredentialOptions = {
     rp: {
-      name: 'WebAuthn Sample App',
+      name: 'Synapse WebAuthn Demo',
       //   icon: 'https://example.com/rpIcon.png',
     },
     user: {
-      id: stringToArrayBuffer('some.user.id'), // userId, 需要转换为TypedArray,也就是Unit8Array
-      name: 'bob.smith@contoso.com',
-      displayName: 'Bob Smith',
+      id: stringToArrayBuffer(randomRangeId(20)), // userId, 需要转换为TypedArray,也就是Unit8Array
+      name: userName,
+      displayName: userName,
       // icon: "https://example.com/userIcon.png"
     },
     pubKeyCredParams: [
@@ -96,8 +102,7 @@ export function createCredential(challenge) {
       // clientDataJSON: {"type":"webauthn.create","challenge":"ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SnBZWFFpT2pFMU9UYzROVEF5TlRjc0ltVjRjQ0k2TVRVNU56azNNREkxTjMwLnUyQzl0TG1xMTI3eW8wakM5WnJSRWJpa2FaQTl3WkZxZ29DNzJ6X2FCMDQ","origin":"http://localhost:3000","crossOrigin":false,"extra_keys_may_be_added_here":"do not compare clientDataJSON against a template. See https://goo.gl/yabPex"}
       // attestationObject (base64): o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YVjQSZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NFXz1Ck63OAAI1vMYKZIsLJfHwVQMATAGYISW9UcUrIdNZRw2VuGR/yp8nWyMO790niu7Csuc3pQXqy3cb14dZMmmP1p+cUBy1c1vroVFoLlPcX7k12DCROizsc9gfhlfp3NKlAQIDJiABIVggKyfE43I/WXOVgfFEW0rBEvJAH8CtVsBVKug4VG5/9YciWCBmpwCbSrxMjjp/LOjo5k9mYo/1hha+XObWIKCq8tz58Q==
       // return rest_put('/credentials', attestation);
-
-      const authData = await makeCredential(attestation);
+      const authData = await makeCredential(attestation, userName);
       return authData;
     });
 }
@@ -107,7 +112,7 @@ export /**
  * @param {ArrayBuffer} challenge
  * @return {any} server response object
  */
-function getAssertion(challenge) {
+function getAssertion(challenge, userName) {
   if (!PublicKeyCredential)
     // eslint-disable-next-line prefer-promise-reject-errors
     return Promise.reject('WebAuthn APIs are not available on this user agent.');
@@ -162,8 +167,9 @@ function getAssertion(challenge) {
       logVariable('signature (base64)', assertion.signature);
 
       //   return rest_put('/assertion', assertion)
-      await verifyAssertion(assertion);
-      return null;
+      const credential = await verifyAssertion(assertion);
+
+      return credential;
     })
     .then((response) => {
       if (response.error) {

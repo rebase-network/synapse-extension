@@ -4,6 +4,7 @@ import base64url from 'base64url';
 import cbor from 'cbor';
 import uuid from 'uuid-parse';
 import jwkToPem from 'jwk-to-pem';
+import _ from 'lodash';
 import { logVariable, base64encode } from './utils';
 
 const url = require('url');
@@ -205,7 +206,7 @@ const parseAuthenticatorData = (authData) => {
  * Creates a FIDO credential and stores it
  * @param {any} attestation AuthenticatorAttestationResponse received from client
  */
-export const makeCredential = async (attestation) => {
+export const makeCredential = async (attestation, userName) => {
   // https://w3c.github.io/webauthn/#registering-a-new-credential
 
   if (!attestation.id) throw new Error('id is missing');
@@ -279,9 +280,22 @@ export const makeCredential = async (attestation) => {
   };
   credentialObj = credential;
 
+  /// 0-
+  localStorage.setItem('credentialId', attestation.id);
+
   const credentials = [];
   credentials.push(credential);
+  /// 1-
   await browser.storage.local.set({ credential });
+
+  const userCredentialIds = [];
+  const userCredentialId = {
+    userName,
+    credentialId,
+  };
+  userCredentialIds.push(userCredentialId);
+  /// 2-
+  await browser.storage.local.set({ userCredentialIds });
 
   logVariable('credentialObj', JSON.stringify(credentialObj));
   return base64encode(attestationObject.authData);
@@ -393,4 +407,16 @@ export const verifyAssertion = async (assertion) => {
   await browser.storage.local.set({ credential });
   // Return credential object that was verified
   return credential;
+};
+
+export const isUserRegisted = async (userName) => {
+  const userCredentialIdsObj = await browser.storage.local.get('userCredentialIds');
+  const { userCredentialIds } = userCredentialIdsObj;
+  const userCId = _.find(userCredentialIds, function find(item) {
+    return item.userName === userName;
+  });
+  if (userCId !== undefined) {
+    return true;
+  }
+  return false;
 };

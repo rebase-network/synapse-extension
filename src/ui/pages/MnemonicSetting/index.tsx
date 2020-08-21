@@ -8,6 +8,7 @@ import { MESSAGE_TYPE } from '@utils/constants';
 import { getChallenge, createCredential, getAssertion } from '@src/authn/authn';
 import generateAddressByAuthn from '@src/authn/authnaddress';
 import { logVariable } from '@src/authn/utils';
+import { isUserRegisted } from '@src/authn/fido';
 
 const useStylesTheme = makeStyles((theme: Theme) =>
   createStyles({
@@ -66,20 +67,26 @@ export default function (props: AppProps, state: AppState) {
   };
 
   const onRegister = async () => {
+    const userName = 'River';
+    const isUser = await isUserRegisted(userName);
+    if (isUser === true) {
+      alert('用户已经注册');
+      return;
+    }
+
     const authData = await getChallenge().then((challenge) => {
-      return createCredential(challenge);
+      return createCredential(challenge, userName);
     });
     logVariable('authData', authData);
     await generateAddressByAuthn(authData);
 
     alert('注册成功');
-    // localStorage.setItem('IS_LOGIN', 'YES');
-    // history.push('/address');
   };
 
   const onAuthenticate = async () => {
+    const userName = 'River';
     await getChallenge().then((challenge) => {
-      return getAssertion(challenge);
+      return getAssertion(challenge, userName);
     });
     localStorage.setItem('IS_LOGIN', 'YES');
     history.push('/address');
