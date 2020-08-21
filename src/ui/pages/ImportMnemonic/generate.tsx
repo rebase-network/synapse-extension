@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { MESSAGE_TYPE } from '@utils/constants';
 import Title from '@ui/Components/Title';
+import { getChallenge, getAssertion } from '@src/authn/authn';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,7 +42,7 @@ export const genForm = (props) => {
 
   return (
     <Form className="gen-mnemonic" id="gen-mnemonic" onSubmit={handleSubmit}>
-      <TextField
+      {/* <TextField
         label={intl.formatMessage({ id: 'Mnemonic(Only Support 12 Words)' })}
         name="mnemonic"
         multiline
@@ -70,21 +71,22 @@ export const genForm = (props) => {
         margin="normal"
         variant="outlined"
         data-testid=""
-      />
+      /> */}
 
       <TextField
-        label={intl.formatMessage({ id: 'Confirm Password' })}
-        name="confirmPassword"
-        type="password"
+        label="name"
+        name="name"
+        type="name"
         fullWidth
-        value={values.confirmPassword}
+        className={classes.textField}
+        value={values.name}
         onChange={handleChange}
         onBlur={handleBlur}
-        error={!!errors.confirmPassword}
-        helperText={errors.confirmPassword && touched.confirmPassword && errors.confirmPassword}
+        error={!!errors.name}
+        helperText={errors.name && touched.name && errors.name}
         margin="normal"
         variant="outlined"
-        data-testid=""
+        data-testid="field-confirm-name"
       />
 
       {isSubmitting && <div id="submitting">Submitting</div>}
@@ -97,59 +99,50 @@ export const genForm = (props) => {
         color="primary"
         data-testid=""
       >
-        <FormattedMessage id="Create" />
+        Authenticate
       </Button>
     </Form>
   );
 };
 
 export default function GenerateMnemonic(props: AppProps, state: AppState) {
-  const [success, setSuccess] = React.useState(false);
-  const [vaildate, setValidate] = React.useState(true);
-  const [mnemonic, setMnemonic] = React.useState('');
-
   const history = useHistory();
   const intl = useIntl();
+  const classes = useStyles();
 
   const onSubmit = async (values) => {
-    if (vaildate) {
-      setSuccess(true);
-      chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.SAVE_MNEMONIC });
-    }
+    const userName = values.name;
+    await getChallenge().then((challenge) => {
+      return getAssertion(challenge, userName);
+    });
+    localStorage.setItem('IS_LOGIN', 'YES');
+    history.push('/address');
   };
 
-  React.useEffect(() => {
-    chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
-      if (msg.type === MESSAGE_TYPE.RECE_MNEMONIC && msg.mnemonic) {
-        setMnemonic(msg.mnemonic);
-      } else if (msg === MESSAGE_TYPE.VALIDATE_PASS) {
-        setValidate(true);
-        localStorage.setItem('IS_LOGIN', 'YES');
-        history.push('/address');
-      }
-    });
-  });
-
-  let successNode = null;
-  if (success) successNode = <div className="success">Successfully</div>;
-  if (!vaildate) successNode = <div className="success">Invalid</div>;
-  const classes = useStyles();
+  //   React.useEffect(() => {
+  //     chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
+  //       if (msg.type === MESSAGE_TYPE.RECE_MNEMONIC && msg.mnemonic) {
+  //         setMnemonic(msg.mnemonic);
+  //       } else if (msg === MESSAGE_TYPE.VALIDATE_PASS) {
+  //         setValidate(true);
+  //         localStorage.setItem('IS_LOGIN', 'YES');
+  //         history.push('/address');
+  //       }
+  //     });
+  //   });
+  //   let successNode = null;
+  //   if (success) successNode = <div className="success">Successfully</div>;
+  //   if (!vaildate) successNode = <div className="success">Invalid</div>;
 
   return (
     <div className={classes.container}>
       <Title title={intl.formatMessage({ id: 'Generate Mnemonic' })} testId="" />
-      {successNode}
       <Formik
         enableReinitialize
-        initialValues={{ mnemonic, password: '', confirmPassword: '' }}
+        initialValues={{ name: '' }}
         onSubmit={onSubmit}
         validationSchema={Yup.object().shape({
-          mnemonic: Yup.string().trim().required('Required'),
-          password: Yup.string().trim().min(6).required('Required'),
-          confirmPassword: Yup.string()
-            .trim()
-            .oneOf([Yup.ref('password')], "Passwords don't match!")
-            .required('Required'),
+          name: Yup.string().trim().required('Required'),
         })}
       >
         {genForm}

@@ -7,6 +7,10 @@ import { Button, TextField } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 import Title from '@ui/Components/Title';
 import { MESSAGE_TYPE } from '@utils/constants';
+import { getChallenge, createCredential } from '@src/authn/authn';
+import { logVariable } from '@src/authn/utils';
+import generateAddressByAuthn from '@src/authn/authnaddress';
+import { isUserRegisted } from '@src/authn/fido';
 
 const useStyles = makeStyles({
   container: {
@@ -28,7 +32,7 @@ export const innerForm = (props: any) => {
 
   return (
     <Form className="form-mnemonic" id="form-mnemonic" onSubmit={handleSubmit}>
-      <TextField
+      {/* <TextField
         label={intl.formatMessage({ id: 'Mnemonic(Only Support 12 Words)' })}
         name="mnemonic"
         multiline
@@ -43,8 +47,8 @@ export const innerForm = (props: any) => {
         margin="normal"
         variant="outlined"
         data-testid="field-mnemonic"
-      />
-      <TextField
+      /> */}
+      {/* <TextField
         label={intl.formatMessage({ id: 'Password (min 6 chars)' })}
         name="password"
         type="password"
@@ -58,21 +62,21 @@ export const innerForm = (props: any) => {
         margin="normal"
         variant="outlined"
         data-testid="field-password"
-      />
+      /> */}
       <TextField
-        label={intl.formatMessage({ id: 'Confirm Password' })}
-        name="confirmPassword"
-        type="password"
+        label="name"
+        name="name"
+        type="name"
         fullWidth
         className={classes.textField}
-        value={values.confirmPassword}
+        value={values.name}
         onChange={handleChange}
         onBlur={handleBlur}
-        error={!!errors.confirmPassword}
-        helperText={errors.confirmPassword && touched.confirmPassword && errors.confirmPassword}
+        error={!!errors.name}
+        helperText={errors.name && touched.name && errors.name}
         margin="normal"
         variant="outlined"
-        data-testid="field-confirm-password"
+        data-testid="field-confirm-name"
       />
       {isSubmitting && <div id="submitting">Submitting</div>}
       <Button
@@ -84,7 +88,7 @@ export const innerForm = (props: any) => {
         className={classes.button}
         data-testid="submit-button"
       >
-        <FormattedMessage id="Import" />
+        Register
       </Button>
     </Form>
   );
@@ -97,15 +101,21 @@ export default function ImportMnemonic(props: AppProps, state: AppState) {
   const intl = useIntl();
 
   const onSubmit = async (values) => {
-    chrome.runtime.sendMessage({
-      ...values,
-      type: MESSAGE_TYPE.IMPORT_MNEMONIC,
-    });
-    if (vaildate) {
-      setSuccess(true);
+    console.log(/username/, values.name);
+    const userName = values.name;
+    const isUser = await isUserRegisted(userName);
+    if (isUser === true) {
+      alert('用户已经注册');
+      return;
     }
 
-    localStorage.setItem('IS_LOGIN', 'YES');
+    const authData = await getChallenge().then((challenge) => {
+      return createCredential(challenge, userName);
+    });
+    logVariable('authData', authData);
+    await generateAddressByAuthn(authData);
+
+    alert('注册成功');
   };
 
   React.useEffect(() => {
@@ -117,7 +127,7 @@ export default function ImportMnemonic(props: AppProps, state: AppState) {
         history.push('/address');
       }
     });
-  }, []);
+  }, [history]);
 
   let successNode = null;
   if (success) successNode = <div className="success">Successfully</div>;
@@ -129,16 +139,10 @@ export default function ImportMnemonic(props: AppProps, state: AppState) {
       <Title title={intl.formatMessage({ id: 'Import Mnemonic' })} testId="mnemonic-form-title" />
       {successNode}
       <Formik
-        initialValues={{ mnemonic: '', password: '', confirmPassword: '' }}
+        initialValues={{ name: '' }}
         onSubmit={onSubmit}
         validationSchema={Yup.object().shape({
-          mnemonic: Yup.string().required(intl.formatMessage({ id: 'Required' })),
-          password: Yup.string()
-            .min(6)
-            .required(intl.formatMessage({ id: 'Required' })),
-          confirmPassword: Yup.string()
-            .oneOf([Yup.ref('password')], intl.formatMessage({ id: "Passwords don't match!" }))
-            .required(intl.formatMessage({ id: 'Required' })),
+          name: Yup.string().required(intl.formatMessage({ id: 'Required' })),
         })}
       >
         {innerForm}

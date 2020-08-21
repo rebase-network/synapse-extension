@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { makeStyles, Theme, createStyles, withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -66,31 +66,31 @@ export default function (props: AppProps, state: AppState) {
     history.push('/generate-mnemonic');
   };
 
-  const onRegister = async () => {
-    const userName = 'River';
-    const isUser = await isUserRegisted(userName);
-    if (isUser === true) {
-      alert('用户已经注册');
-      return;
-    }
+  //   const onRegister = async () => {
+  //     const userName = 'River';
+  //     const isUser = await isUserRegisted(userName);
+  //     if (isUser === true) {
+  //       alert('用户已经注册');
+  //       return;
+  //     }
 
-    const authData = await getChallenge().then((challenge) => {
-      return createCredential(challenge, userName);
-    });
-    logVariable('authData', authData);
-    await generateAddressByAuthn(authData);
+  //     const authData = await getChallenge().then((challenge) => {
+  //       return createCredential(challenge, userName);
+  //     });
+  //     logVariable('authData', authData);
+  //     await generateAddressByAuthn(authData);
 
-    alert('注册成功');
-  };
+  //     alert('注册成功');
+  //   };
 
-  const onAuthenticate = async () => {
-    const userName = 'River';
-    await getChallenge().then((challenge) => {
-      return getAssertion(challenge, userName);
-    });
-    localStorage.setItem('IS_LOGIN', 'YES');
-    history.push('/address');
-  };
+  //   const onAuthenticate = async () => {
+  //     const userName = 'River';
+  //     await getChallenge().then((challenge) => {
+  //       return getAssertion(challenge, userName);
+  //     });
+  //     localStorage.setItem('IS_LOGIN', 'YES');
+  //     history.push('/address');
+  //   };
 
   return (
     <div className={classes.root}>
@@ -121,7 +121,7 @@ export default function (props: AppProps, state: AppState) {
             <FormattedMessage id="Generate Mnemonic" />
           </BootstrapButton>
         </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <BootstrapButton
             type="button"
             variant="contained"
@@ -146,7 +146,7 @@ export default function (props: AppProps, state: AppState) {
           >
             Authenticate
           </BootstrapButton>
-        </Grid>
+        </Grid> */}
       </Grid>
     </div>
   );
