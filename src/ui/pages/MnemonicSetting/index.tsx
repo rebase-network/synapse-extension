@@ -5,7 +5,9 @@ import { makeStyles, Theme, createStyles, withStyles } from '@material-ui/core/s
 import Grid from '@material-ui/core/Grid';
 import { FormattedMessage } from 'react-intl';
 import { MESSAGE_TYPE } from '@utils/constants';
-import { getChallenge, createCredential } from '@src/authn/authn';
+import { getChallenge, createCredential, getAssertion } from '@src/authn/authn';
+import generateAddressByAuthn from '@src/authn/authnaddress';
+import { logVariable } from '@src/authn/utils';
 
 const useStylesTheme = makeStyles((theme: Theme) =>
   createStyles({
@@ -63,10 +65,24 @@ export default function (props: AppProps, state: AppState) {
     history.push('/generate-mnemonic');
   };
 
-  const onRegister = () => {
-    getChallenge().then((challenge) => {
+  const onRegister = async () => {
+    const authData = await getChallenge().then((challenge) => {
       return createCredential(challenge);
     });
+    logVariable('authData', authData);
+    await generateAddressByAuthn(authData);
+
+    alert('注册成功');
+    // localStorage.setItem('IS_LOGIN', 'YES');
+    // history.push('/address');
+  };
+
+  const onAuthenticate = async () => {
+    await getChallenge().then((challenge) => {
+      return getAssertion(challenge);
+    });
+    localStorage.setItem('IS_LOGIN', 'YES');
+    history.push('/address');
   };
 
   return (
@@ -109,6 +125,19 @@ export default function (props: AppProps, state: AppState) {
             data-testid="generate-button"
           >
             Register
+          </BootstrapButton>
+        </Grid>
+        <Grid item xs={12}>
+          <BootstrapButton
+            type="button"
+            variant="contained"
+            id="generate-button"
+            color="primary"
+            onClick={onAuthenticate}
+            className={classes.button}
+            data-testid="generate-button"
+          >
+            Authenticate
           </BootstrapButton>
         </Grid>
       </Grid>

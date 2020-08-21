@@ -1,9 +1,10 @@
 import { LockHashWithMeta, PublicKey } from '@keyper/container';
-import { SignatureAlgorithm, Script } from '@keyper/specs';
+import { SignatureAlgorithm, Script, addressToScript } from '@keyper/specs';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 import PublicKeyClass from '@src/keyper/publicKey';
 import * as Keystore from '@src/wallet/passwordEncryptor';
 import { KEYSTORE_TYPE } from '@utils/constants';
+import { publicKeyToAddress } from '@src/wallet/address';
 import ContainerManager from './containerManager';
 
 interface IAddressesList {
@@ -104,16 +105,17 @@ const updateAddressesList = async () => {
 };
 
 export const setCurrentWallet = async (publicKey: string) => {
-  const { addresses } = await getWalletInfoByPublicKey(publicKey);
-  const { type, script, lock, lockHash } = addresses[0];
+  //   const { addresses } = await getWalletInfoByPublicKey(publicKey);
+  const address = publicKeyToAddress(publicKey);
+  const lockscript = addressToScript(address);
+  const lockHash = ckbUtils.scriptToHash(lockscript);
   const currentWallet = {
     publicKey,
-    type,
-    script,
-    lock,
+    type: 'type',
+    script: lockscript,
+    lock: lockHash,
     lockHash,
   };
-
   await browser.storage.local.set({
     currentWallet,
   });
@@ -157,7 +159,7 @@ export async function addKeyperWallet(
 
   await addPublicKey(publicKey);
 
-  await updateAddressesList();
+  // await updateAddressesList();
 
   await setCurrentWallet(publicKey);
 }

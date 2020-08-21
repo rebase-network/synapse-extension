@@ -1,5 +1,5 @@
 import { stringToArrayBuffer, logVariable, arrayBufferToString, base64encode } from './utils';
-import { getChallengeFido, makeCredential } from './fido';
+import { getChallengeFido, makeCredential, verifyAssertion } from './fido';
 
 /**
  * Retrieves a challenge from the server
@@ -68,7 +68,7 @@ export function createCredential(challenge) {
     // prevent re-registration by specifying existing credentials here
     excludeCredentials: [],
     // specifies whether you need an attestation statement
-    attestation: 'direct' as AttestationConveyancePreference,
+    attestation: 'none' as AttestationConveyancePreference,
   };
 
   // 然后浏览器会提示用户需要进行验证，并提供多种方式给用户选择，待用户选择相应的验证方式后
@@ -97,8 +97,72 @@ export function createCredential(challenge) {
       // attestationObject (base64): o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YVjQSZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NFXz1Ck63OAAI1vMYKZIsLJfHwVQMATAGYISW9UcUrIdNZRw2VuGR/yp8nWyMO790niu7Csuc3pQXqy3cb14dZMmmP1p+cUBy1c1vroVFoLlPcX7k12DCROizsc9gfhlfp3NKlAQIDJiABIVggKyfE43I/WXOVgfFEW0rBEvJAH8CtVsBVKug4VG5/9YciWCBmpwCbSrxMjjp/LOjo5k9mYo/1hha+XObWIKCq8tz58Q==
       // return rest_put('/credentials', attestation);
 
-      await makeCredential(attestation);
+      const authData = await makeCredential(attestation);
+      return authData;
+    });
+}
 
+export /**
+ * Calls the .get() API and sends result to server to verify
+ * @param {ArrayBuffer} challenge
+ * @return {any} server response object
+ */
+function getAssertion(challenge) {
+  if (!PublicKeyCredential)
+    // eslint-disable-next-line prefer-promise-reject-errors
+    return Promise.reject('WebAuthn APIs are not available on this user agent.');
+
+  let allowCredentials = [];
+  //   const allowCredentialsSelection = $("input[name='allowCredentials']:checked").val();
+  const allowCredentialsSelection = 'filled';
+  if (allowCredentialsSelection === 'filled') {
+    const credentialId = localStorage.getItem('credentialId');
+    console.log(/credentialId/, credentialId);
+
+    // eslint-disable-next-line prefer-promise-reject-errors
+    if (!credentialId) return Promise.reject('Please create a credential first');
+
+    allowCredentials = [
+      {
+        type: 'public-key',
+        id: Uint8Array.from(atob(credentialId), (c) => c.charCodeAt(0)).buffer,
+      },
+    ];
+  }
+
+  const getAssertionOptions = {
+    // specifies which credential IDs are allowed to authenticate the user
+    // if empty, any credential can authenticate the users
+    allowCredentials,
+    // an opaque challenge that the authenticator signs over
+    challenge,
+    // Since Edge shows UI, it is better to select larger timeout values
+    timeout: 50000,
+  };
+
+  return navigator.credentials
+    .get({
+      publicKey: getAssertionOptions,
+    })
+    .then(async (rawAssertion: PublicKeyCredential) => {
+      const response = rawAssertion.response as AuthenticatorAssertionResponse;
+      const assertion = {
+        id: base64encode(rawAssertion.rawId),
+        clientDataJSON: arrayBufferToString(response.clientDataJSON),
+        userHandle: base64encode(response.userHandle),
+        signature: base64encode(response.signature),
+        authenticatorData: base64encode(response.authenticatorData),
+      };
+
+      console.log('=== Assertion response ===');
+      logVariable('id (base64)', assertion.id);
+      logVariable('userHandle (base64)', assertion.userHandle);
+      logVariable('authenticatorData (base64)', assertion.authenticatorData);
+      logVariable('clientDataJSON', assertion.clientDataJSON);
+      logVariable('signature (base64)', assertion.signature);
+
+      //   return rest_put('/assertion', assertion)
+      await verifyAssertion(assertion);
       return null;
     })
     .then((response) => {
