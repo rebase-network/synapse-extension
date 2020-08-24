@@ -13,6 +13,7 @@ import {
 import { getDepFromType } from '@src/utils/constants/typesInfo';
 import { Cell } from '@nervosnetwork/ckb-sdk-core/lib/generateRawTransaction';
 import { scriptToHash, toHexInLittleEndian } from '@nervosnetwork/ckb-sdk-utils';
+import { parseSUDT } from '@src/utils';
 
 import BN = require('bn.js');
 
@@ -53,6 +54,35 @@ export const getInputCKBCells = async (lockHash, params) => {
   return inputCells;
 };
 
+export const getInputSudtCells = async (lockHash, params) => {
+  const unspentCells = await getUnspentCells(lockHash, params);
+  // Error handling
+  if (unspentCells.errCode !== undefined && unspentCells.errCode !== 0) {
+    return unspentCells;
+  }
+
+  if (_.isEmpty(unspentCells)) {
+    throw new Error('There is not available live cells');
+  }
+
+  function getTotalCKBCapity(total, cell) {
+    return BigInt(total) + BigInt(cell.capacity);
+  }
+  const sudtCKBCapity = unspentCells.reduce(getTotalCKBCapity, 0);
+
+  function getTotalSudtCapity(total, cell) {
+    return BigInt(total) + BigInt(parseSUDT(cell.outputData));
+  }
+  const sudtAmount = unspentCells.reduce(getTotalSudtCapity, 0);
+
+  const inputCells = {
+    cells: unspentCells,
+    sudtCKBCapacity: sudtCKBCapity,
+    sudtAmount,
+  };
+  return inputCells;
+};
+
 export const getLockScriptName = (lockScript: CKBComponents.Script) => {
   let lockScriptName = null;
   if (lockScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
@@ -71,17 +101,18 @@ export const getLockScriptName = (lockScript: CKBComponents.Script) => {
  * @export
  * @param {CkbCells} inputCkbCells
  * @param {CKBComponents.Script} fromLockScript
- * @param {*} mintSudtAmount
+ * @param {*} redeemSudtAmount
  * @param {CKBComponents.Script} toLockScript
  * @param {CKBComponents.Script} sudtLockScript
  * @param {*} deps
  * @param {*} fee
  * @returns {CreateRawTxResult}
  */
-export function mintSudtRawTx(
+export function createSudtRawTx(
   inputCkbCells: CkbCells,
+  inputSudtCells,
   fromLockScript: CKBComponents.Script,
-  mintSudtAmount,
+  redeemSudtAmount,
   toLockScript: CKBComponents.Script,
   deps,
   fee,
@@ -112,7 +143,18 @@ export function mintSudtRawTx(
     outputType: '',
   };
 
-  // 1. output | mint sudt
+  // 2. input SUDT
+  for (let i = 0; i < inputSudtCells.cells.length; i++) {
+    const element = inputSudtCells.cells[i];
+    rawTx.inputs.push({
+      previousOutput: element.outPoint,
+      since: '0x0',
+    });
+    rawTx.witnesses.push('0x');
+  }
+  const { sudtCKBCapacity } = inputSudtCells;
+
+  // 1. output | charge sudt //剩余SUDT
   const toLockHash = scriptToHash(toLockScript);
   const toSudtCapacity = SUDT_MIN_CELL_CAPACITY * CKB_TOKEN_DECIMALS;
   const toSudtOutputCell = {
@@ -129,11 +171,15 @@ export function mintSudtRawTx(
     },
   };
   rawTx.outputs.push(toSudtOutputCell);
-  const sUdtLeSend = toHexInLittleEndian(BigInt(mintSudtAmount), 16);
+  const sUdtAmount = inputSudtCells.sudtAmount;
+  const sUdtAmountCharge = BigInt(sUdtAmount) - BigInt(redeemSudtAmount);
+  const sUdtLeSend = toHexInLittleEndian(BigInt(sUdtAmountCharge), 16);
   rawTx.outputsData.push(sUdtLeSend);
 
-  // 2. output | ckb charge
-  const ckbCharge = BigInt(inputCkbCells.total) - BigInt(toSudtCapacity) - BigInt(fee);
+  // 3. output | input ckb charge //剩余CKB
+  const sudtCKBCharge = BigInt(sudtCKBCapacity);
+  const ckbCharge =
+    BigInt(inputCkbCells.total) + BigInt(sudtCKBCharge) - BigInt(toSudtCapacity) - BigInt(fee);
   rawTx.outputs.push({
     capacity: `0x${new BN(ckbCharge.toString()).toString(16)}`,
     lock: {
@@ -152,7 +198,7 @@ export function mintSudtRawTx(
   return signObj;
 }
 
-export const createSudtTransaction = async (fromAddress, toAddress, sendSudtAmount, fee) => {
+export const redeemSudtTx = async (fromAddress, toAddress, redeemSudtAmount, fee, typeHash) => {
   const fromLockScript = addressToScript(fromAddress);
   const fromLockHash = scriptToHash(fromLockScript);
   const params = {
@@ -161,6 +207,17 @@ export const createSudtTransaction = async (fromAddress, toAddress, sendSudtAmou
   };
   // 1. input CKB cells
   const inputCkbCells = await getInputCKBCells(fromLockHash, params);
+  console.log(/inputCkbCells/, inputCkbCells);
+
+  // 2. Input sudt cells
+  const sudtParams = {
+    limit: '20',
+    hasData: 'true',
+    typeHash,
+  };
+  console.log(/sudtParams/, sudtParams);
+  const inputSudtCells = await getInputSudtCells(fromLockHash, sudtParams);
+  console.log(/inputSudtCells/, inputSudtCells);
 
   const toLockScript = addressToScript(toAddress);
   const fromLockScripeName = getLockScriptName(fromLockScript);
@@ -180,7 +237,15 @@ export const createSudtTransaction = async (fromAddress, toAddress, sendSudtAmou
   deps.push(sUdtDep);
 
   let rawTxObj: any = null;
-  rawTxObj = mintSudtRawTx(inputCkbCells, fromLockScript, sendSudtAmount, toLockScript, deps, fee);
+  rawTxObj = createSudtRawTx(
+    inputCkbCells,
+    inputSudtCells,
+    fromLockScript,
+    redeemSudtAmount,
+    toLockScript,
+    deps,
+    fee,
+  );
   return rawTxObj;
 };
 
@@ -192,16 +257,21 @@ export const signSudtTransaction = async (lockHash, password, rawTxObj) => {
   return signedTx;
 };
 
-export const mintSudtTransaction = async (
+export const redeemSudtTransaction = async (
   fromAddress,
   toAddress,
-  mintSudtAmount,
+  redeemSudtAmount, // 赎回SUDT数量
   fee,
   password,
 ) => {
-  const lockScript = addressToScript(fromAddress);
+  const lockScript = addressToScript(toAddress);
   const lockHash = scriptToHash(lockScript);
-  const rawTxObj = await createSudtTransaction(fromAddress, toAddress, mintSudtAmount, fee);
+  const typeHash = {
+    hashType: 'data' as ScriptHashType,
+    codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+    args: lockHash,
+  };
+  const rawTxObj = await redeemSudtTx(fromAddress, toAddress, redeemSudtAmount, fee, typeHash);
 
   const signedTx = await signSudtTransaction(lockHash, password, rawTxObj);
   const txResultObj = {

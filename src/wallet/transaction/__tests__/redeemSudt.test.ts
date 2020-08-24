@@ -1,7 +1,8 @@
 import CKB from '@nervosnetwork/ckb-sdk-core';
 import NetworkManager from '@src/common/networkManager';
-import { CKB_TOKEN_DECIMALS } from '@src/utils/constants';
-import { createSudtTransaction } from '../mintSudtTransaction';
+import { ScriptHashType } from '@keyper/specs/types/type';
+import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils';
+import { redeemSudtTx } from '../redeemSudtTransaction';
 
 jest.unmock('@nervosnetwork/ckb-sdk-core');
 
@@ -30,13 +31,21 @@ describe('Mint SimpleUDT Test', () => {
     await browser.storage.local.set({ currentNetwork: testNet });
   });
 
-  it.skip('mint SimpleUDT from  address1 to address1', async () => {
-    jest.setTimeout(5000);
+  it('redeem SimpleUDT from  address1 to address1', async () => {
+    jest.setTimeout(50000);
+
     const fromAddress = address1;
     const toAddress = address1; // address1定义了SUDT的类型:
-    const mintSudtAmount = 100 * CKB_TOKEN_DECIMALS;
+    const redeemSudtAmount = 100;
     const fee = 10000;
-    const rawTxObj = await createSudtTransaction(fromAddress, toAddress, mintSudtAmount, fee);
+    const toLockHash = '0x0466a2e7b55dad9353271614ca3a1b6016d3c6b69e3239c6ba7e37ef1bbe0a0e';
+    const typeScript = {
+      hashType: 'data' as ScriptHashType,
+      codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+      args: toLockHash,
+    };
+    const typeHash = scriptToHash(typeScript);
+    const rawTxObj = await redeemSudtTx(fromAddress, toAddress, redeemSudtAmount, fee, typeHash);
     const rawTx = rawTxObj.tx;
     console.log(/rawTxObj/, JSON.stringify(rawTx));
 
@@ -44,24 +53,6 @@ describe('Mint SimpleUDT Test', () => {
 
     const realTxHash = await ckb.rpc.sendTransaction(signedTx);
     console.log(`The real transaction hash is: ${realTxHash}`);
-    // First : 0x67c24010986a26df7094308d06d5c0ed135f230a309ef78b1446c75d2b6500e5
-    // Second: 0xda41e25d6946605a2d793b08e98bd0b62399b5969f2a2876a35e51cf29a8190b
-  });
-
-  it.skip('mint SimpleUDT from  address2 to address1', async () => {
-    jest.setTimeout(5000);
-    const fromAddress = address2;
-    const toAddress = address1; // address1定义了SUDT的类型:
-    const mintSudtAmount = 800;
-    const fee = 10000;
-    const rawTxObj = await createSudtTransaction(fromAddress, toAddress, mintSudtAmount, fee);
-    const rawTx = rawTxObj.tx;
-    console.log(/rawTxObj/, JSON.stringify(rawTx));
-
-    // TODO 使用address2的privateKey进行签名的操作;
-    const signedTx = await ckb.signTransaction(privateKey2)(rawTx, []);
-
-    const realTxHash = await ckb.rpc.sendTransaction(signedTx);
-    console.log(`The real transaction hash is: ${realTxHash}`);
+    // 0x5158c78215a0dbedeeb3e729680ab8c0d8f9991c56f6c1c9a669d730aa2ced1f
   });
 });
