@@ -5,6 +5,9 @@ import { ListItem, ListItemText } from '@material-ui/core';
 import { getUDTsByLockHash } from '@utils/apis';
 import { aggregateUDT } from '@utils/token';
 import { shannonToCKBFormatter } from '@utils/formatters';
+import { TypesInfo } from '@src/utils/constants/typesInfo';
+import NetworkManager from '@src/common/networkManager';
+import _ from 'lodash';
 import TokenListComponent from './component';
 
 const useStyles = makeStyles({
@@ -46,11 +49,21 @@ export default (props: AppProps) => {
       const { currentWallet } = await browser.storage.local.get('currentWallet');
       if (!currentWallet) return;
       const { lock: lockHash } = currentWallet;
-      const udtsWithCapacity = await getUDTsByLockHash({
+      const AllWithCapacity = await getUDTsByLockHash({
         lockHash,
       });
-      setTokenList(udtsWithCapacity.udts);
-      setEmptyCapacity(shannonToCKBFormatter(udtsWithCapacity.capacity));
+
+      const { networkType } = await NetworkManager.getCurrentNetwork();
+      const typeInfo = TypesInfo[networkType.toLowerCase()];
+      const sudtCodeHash = typeInfo.simpleudt.codeHash;
+      // Just Show Simple UDT
+      const udtsAllWithCapacity = AllWithCapacity.udts;
+      const udts = _.filter(udtsAllWithCapacity, function find(item) {
+        return item.type === null || item.type.codeHash === sudtCodeHash;
+      });
+
+      setTokenList(udts);
+      setEmptyCapacity(shannonToCKBFormatter(AllWithCapacity.capacity));
     }
     getUDTs();
   }, []);
