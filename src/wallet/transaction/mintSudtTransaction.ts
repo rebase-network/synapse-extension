@@ -14,7 +14,7 @@ import { getDepFromType } from '@src/utils/constants/typesInfo';
 import { Cell } from '@nervosnetwork/ckb-sdk-core/lib/generateRawTransaction';
 import { scriptToHash, toHexInLittleEndian } from '@nervosnetwork/ckb-sdk-utils';
 
-import BN = require('bn.js');
+import BN from 'bn.js';
 
 export interface GenerateTxResult {
   tx: CKBComponents.RawTransaction;

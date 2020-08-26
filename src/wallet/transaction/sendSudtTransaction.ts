@@ -1,4 +1,4 @@
-import { BN } from 'bn.js';
+import BN from 'bn.js';
 import _ from 'lodash';
 import { addressToScript } from '@keyper/specs';
 import { getUnspentCells } from '@utils/apis';
