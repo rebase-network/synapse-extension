@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import blake2b from 'blake2b';
+import { Keccak } from 'sha3'
 import randomBytes from 'randombytes';
 import scrypt from 'scrypt.js';
 import { v4 as uuidv4 } from 'uuid';
@@ -187,12 +187,10 @@ function runCipherBuffer(cipher: crypto.Cipher | crypto.Decipher, data: Buffer):
   return Buffer.concat([cipher.update(data), cipher.final()]);
 }
 
-function mac(derivedKey: Buffer, ciphertext: Buffer): Buffer {
-  const mac = blake2b(32)
+function mac(derivedKey: Buffer, ciphertext: Buffer): string {
+  return new Keccak(256)
     .update(Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext)]))
-    .digest('hex');
-
-  return mac;
+    .digest('hex')
 }
 
 function getDerivedKey(password: string, opts?: Partial<V3Params>): Buffer {
@@ -270,7 +268,7 @@ export function encrypt(privKey: Buffer, password: string, opts?: Partial<V3Para
   }
 
   const ciphertext = runCipherBuffer(cipher, privKey);
-  const macStr = mac(derivedKey, ciphertext).toString('hex');
+  const macStr = mac(derivedKey, ciphertext)
 
   return {
     version: 3,
@@ -334,10 +332,11 @@ export function decrypt(
   }
 
   const ciphertext = Buffer.from(json.crypto.ciphertext, 'hex');
-  const mac = blake2b(32)
+  const mac = new Keccak(256)
     .update(Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext)]))
     .digest('hex');
-  if (mac.toString('hex') !== json.crypto.mac) {
+
+  if (mac !== json.crypto.mac) {
     throw new Error('Key derivation failed - possibly wrong passphrase');
   }
 
@@ -390,6 +389,6 @@ export function checkPasswd(input: string | V3Keystore, password: string): boole
   }
 
   const ciphertext = Buffer.from(json.crypto.ciphertext, 'hex');
-  const res = mac(derivedKey, ciphertext).toString('hex');
+  const res = mac(derivedKey, ciphertext);
   return res === json.crypto.mac;
 }
