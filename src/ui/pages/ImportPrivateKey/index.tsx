@@ -141,6 +141,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           rows="4"
           fullWidth
           className={classes.textField}
+          inputProps={{ spellCheck: 'false' }}
           value={values.keystore}
           onChange={handleChange}
           onBlur={handleBlur}
