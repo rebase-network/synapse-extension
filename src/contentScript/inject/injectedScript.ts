@@ -34,6 +34,10 @@ interface QueryCellsParams {
   limit?: string;
   hasData?: string;
 }
+interface BurnUDTParams {
+  from: string;
+  amount: string;
+}
 
 const promisedMessageHandler = (requestMessage: RequestMessage) => {
   window.postMessage(requestMessage, '*');
@@ -65,6 +69,18 @@ window.ckb = {
       requestId: 'getAddressInfoRequestId',
     },
   ) => promisedMessageHandler(requestMessage),
+
+  burnUDT: async (request: BurnUDTParams) => {
+    const requestMessage = {
+      type: MESSAGE_TYPE.EXTERNAL_BUTN_UDT,
+      target: BACKGROUND_PORT,
+      token: 'EXTERNAL_BUTN_UDTToken',
+      requestId: 'EXTERNAL_BUTN_UDTRequestId',
+      data: request,
+    };
+
+    return promisedMessageHandler(requestMessage);
+  },
 
   getLiveCells: async (request: QueryCellsParams) => {
     const requestMessage = {

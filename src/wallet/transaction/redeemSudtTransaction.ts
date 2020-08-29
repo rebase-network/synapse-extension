@@ -17,6 +17,15 @@ import { parseSUDT } from '@src/utils';
 
 import BN = require('bn.js');
 
+export const TestDaiTypeScript = {
+  hashType: 'data' as ScriptHashType,
+  codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+  args: '0x0466a2e7b55dad9353271614ca3a1b6016d3c6b69e3239c6ba7e37ef1bbe0a0e',
+};
+
+export const TestDaiTypeHash = scriptToHash(TestDaiTypeScript); // '0x7abd58773ffee5866ffd30cd287e88f8139dd0cad5deb9e189c68b4b26bf9899';
+console.log('TestDaiTypeHash: ', TestDaiTypeHash);
+
 export interface GenerateTxResult {
   tx: CKBComponents.RawTransaction;
   fee: string;
@@ -155,7 +164,6 @@ export function createSudtRawTx(
   const { sudtCKBCapacity } = inputSudtCells;
 
   // 1. output | charge sudt //剩余SUDT
-  const toLockHash = scriptToHash(toLockScript);
   const toSudtCapacity = SUDT_MIN_CELL_CAPACITY * CKB_TOKEN_DECIMALS;
   const toSudtOutputCell = {
     capacity: `0x${new BN(toSudtCapacity).toString(16)}`,
@@ -164,11 +172,7 @@ export function createSudtRawTx(
       codeHash: toLockScript.codeHash,
       args: toLockScript.args,
     },
-    type: {
-      hashType: 'data' as ScriptHashType,
-      codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
-      args: toLockHash,
-    },
+    type: TestDaiTypeScript,
   };
   rawTx.outputs.push(toSudtOutputCell);
   const sUdtAmount = inputSudtCells.sudtAmount;
@@ -198,7 +202,8 @@ export function createSudtRawTx(
   return signObj;
 }
 
-export const redeemSudtTx = async (fromAddress, toAddress, redeemSudtAmount, fee, typeHash) => {
+export const redeemSudtTx = async (fromAddress, redeemSudtAmount, fee) => {
+  const toAddress = fromAddress;
   const fromLockScript = addressToScript(fromAddress);
   const fromLockHash = scriptToHash(fromLockScript);
   const params = {
@@ -213,7 +218,7 @@ export const redeemSudtTx = async (fromAddress, toAddress, redeemSudtAmount, fee
   const sudtParams = {
     limit: '20',
     hasData: 'true',
-    typeHash,
+    typeHash: TestDaiTypeHash,
   };
   console.log(/sudtParams/, sudtParams);
   const inputSudtCells = await getInputSudtCells(fromLockHash, sudtParams);
@@ -259,19 +264,14 @@ export const signSudtTransaction = async (lockHash, password, rawTxObj) => {
 
 export const redeemSudtTransaction = async (
   fromAddress,
-  toAddress,
   redeemSudtAmount, // 赎回SUDT数量
   fee,
   password,
 ) => {
+  const toAddress = fromAddress;
   const lockScript = addressToScript(toAddress);
   const lockHash = scriptToHash(lockScript);
-  const typeHash = {
-    hashType: 'data' as ScriptHashType,
-    codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
-    args: lockHash,
-  };
-  const rawTxObj = await redeemSudtTx(fromAddress, toAddress, redeemSudtAmount, fee, typeHash);
+  const rawTxObj = await redeemSudtTx(fromAddress, redeemSudtAmount, fee);
 
   const signedTx = await signSudtTransaction(lockHash, password, rawTxObj);
   const txResultObj = {
