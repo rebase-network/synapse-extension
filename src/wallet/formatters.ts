@@ -50,11 +50,11 @@ export const currencyFormatter = (
   exchange: string = '0.000000001',
 ): string => {
   if (Number.isNaN(+shannons)) {
-    throw new TypeError(`Shannons is not a valid number`);
+    throw new TypeError('Shannons is not a valid number');
   }
 
   if (Number.isNaN(+exchange)) {
-    throw new TypeError(`Exchange is not a valid number`);
+    throw new TypeError('Exchange is not a valid number');
   }
 
   const [integer, decimal] = numberParser(shannons, exchange);
@@ -77,10 +77,10 @@ export const CKBToShannonFormatter = (
   unit: CapacityUnit = CapacityUnit.CKB,
 ) => {
   if (Number.isNaN(+amount)) {
-    console.warn(`Amount is not a valid number`);
+    console.warn('Amount is not a valid number');
     return `${amount} ${unit}`;
   }
-  const [integer = '0', decimal = ''] = amount.split('.');
+  const [integer = '0', decimal = ''] = amount.toString().split('.');
   const decimalLength = 10 ** decimal.length;
   const num = integer + decimal;
 
@@ -106,7 +106,7 @@ export const shannonToCKBFormatter = (
   delimiter: string = ',',
 ) => {
   if (Number.isNaN(+shannon)) {
-    console.warn(`Shannon is not a valid number`);
+    console.warn('Shannon is not a valid number');
     return shannon;
   }
   if (shannon === null) {
@@ -148,7 +148,7 @@ export const localNumberFormatter = (num: string | number | bigint = 0) => {
     return numberFormatter.format(num as any);
   }
   if (Number.isNaN(+num)) {
-    console.warn(`Number is not a valid number`);
+    console.warn('Number is not a valid number');
     return num.toString();
   }
   const parts = num.toString().split('.');
