@@ -5,22 +5,23 @@ describe('encrypt checkpassword decrypt test', () => {
   const password = '123456';
   const keystoreString = {
     version: 3,
-    id: 'a3f4bc4a-d1d7-4ed0-92a5-85263b2337c1',
+    id: '47a83b49-13fe-4bc8-9bf9-f3039fba2bec',
     crypto: {
-      ciphertext: '49c079d4c276f80d68bc265e726307f464d61b53ed55908e8d10e1e570801e34',
-      cipherparams: { iv: 'ff16916f29bdcedc5348c539fec9f7b1' },
+      ciphertext: 'f7ddbe74497221d28a3a8d6ba0d9f76ef8f2be1d76b7146906034cbee787a28b',
+      cipherparams: { iv: 'a2b79c36237e00ce7b6fa6109fce5bfc' },
       cipher: 'aes-128-ctr',
       kdf: 'scrypt',
       kdfparams: {
         dklen: 32,
-        salt: 'd28aef7e0b59c2e7c10650c274bf67f3b5c548f3b9507b4892a072138434a407',
+        salt: '237225cf33080c219303d4f07c20b02dbdc48e923f7ec6c800e8669761b692d6',
         n: 262144,
         r: 8,
         p: 1,
       },
-      mac: 'ac1d1c0b7039e6efa3cc0066ecaf43d10a4c0a2c7755c63b048a5576b53cc0ce',
+      mac: '35107480c8c167e8deb145a308890fdd45de0ea34ebc11fa5a5ee24e4445cba2',
     },
   };
+
   let keystore;
   let privateKeyDecrypt;
   beforeAll(() => {
