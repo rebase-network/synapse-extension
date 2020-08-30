@@ -35,8 +35,11 @@ interface QueryCellsParams {
   hasData?: string;
 }
 interface BurnUDTParams {
-  from: string;
   amount: string;
+}
+
+interface GetUDTsParams {
+  typeScripts: CKBComponents.Script[];
 }
 
 const promisedMessageHandler = (requestMessage: RequestMessage) => {
@@ -69,6 +72,18 @@ window.ckb = {
       requestId: 'getAddressInfoRequestId',
     },
   ) => promisedMessageHandler(requestMessage),
+
+  getUDTs: async (request: GetUDTsParams) => {
+    const requestMessage = {
+      type: MESSAGE_TYPE.EXTERNAL_GET_UDTS,
+      target: BACKGROUND_PORT,
+      token: 'getUDTsToken',
+      requestId: 'getUDTsRequestId',
+      data: request,
+    };
+
+    return promisedMessageHandler(requestMessage);
+  },
 
   burnUDT: async (request: BurnUDTParams) => {
     const requestMessage = {

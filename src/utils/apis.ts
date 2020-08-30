@@ -98,6 +98,7 @@ export const getUDTsByLockHash = async (params: TLockAndTypeScripts): Promise<an
     for (let i = 0; i < pTypeScripts.length; i++) {
       const typeScript = pTypeScripts[i];
       const typeHash = scriptToHash(typeScript);
+      // FIXME: bug
       typeHashes.join(typeHash);
     }
   }

@@ -4,6 +4,7 @@ import sendToPopup from './sendToPopup';
 import getAddressInfo from './getAddressInfo';
 import getLiveCells from './getLiveCells';
 import burnUDT from './burnUDT';
+import getUDTs from './getUDTs';
 
 const handler = async (message, port) => {
   const isSendToPopup =
@@ -27,6 +28,10 @@ const handler = async (message, port) => {
 
   if (message.type === MESSAGE_TYPE.EXTERNAL_BUTN_UDT) {
     burnUDT(port, message.data);
+  }
+
+  if (message.type === MESSAGE_TYPE.EXTERNAL_GET_UDTS) {
+    getUDTs(port, message.data);
   }
 };
 

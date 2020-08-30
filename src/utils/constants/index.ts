@@ -65,6 +65,7 @@ export const MESSAGE_TYPE = {
   EXTERNAL_SIGN_SEND: 'sign_send',
   EXTERNAL_GET_LIVE_CELLS: 'live_cells',
   EXTERNAL_BUTN_UDT: 'burn_udt',
+  EXTERNAL_GET_UDTS: 'EXTERNAL_GET_UDTS',
 
   // delete wallet
   DELETE_WALLET: 'DELETE_WALLET',

@@ -287,3 +287,60 @@ export const redeemSudtTransaction = async (
 
   return txResultObj;
 };
+
+const a = {
+  version: '0x0',
+  cellDeps: [
+    {
+      outPoint: {
+        txHash: '0xf8de3bb47d055cdf460d93a2a6e1b05f7432f9777c8c474abf4eec1d4aee5d37',
+        index: '0x0',
+      },
+      depType: 'depGroup',
+    },
+    {
+      outPoint: {
+        txHash: '0xc1b2ae129fad7465aaa9acc9785f842ba3e6e8b8051d899defa89f5508a77958',
+        index: '0x0',
+      },
+      depType: 'code',
+    },
+  ],
+  headerDeps: [],
+  inputs: [
+    {
+      previousOutput: {
+        txHash: '0x5ce0f12c872e15acaed5839391c24539e932af52bbf26d469f1cfd341bec607e',
+        index: '0x1',
+      },
+      since: '0x0',
+    },
+  ],
+  outputs: [
+    {
+      capacity: '0x34e62ce00',
+      lock: {
+        hashType: 'type',
+        codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+        args: '0x8eb4d75815e2207bd29a0b3651523e5a48e8fd34',
+      },
+      type: {
+        hashType: 'data',
+        codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+        args: '0x0466a2e7b55dad9353271614ca3a1b6016d3c6b69e3239c6ba7e37ef1bbe0a0e',
+      },
+    },
+    {
+      capacity: '0x6a7f28be70',
+      lock: {
+        hashType: 'type',
+        codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+        args: '0xe583c0ba3522dd2034e6dd9882dffbb99e8dbc3d',
+      },
+    },
+  ],
+  witnesses: [
+    '0x5500000010000000550000005500000041000000bdf0d6be24433849556eb04c8088b63013416676f65d7f0b45f404d9482f95b47fc6f2abfe80416255a66ebba1ebb6d1a6206be80b308f2af13b60d359b621c501',
+  ],
+  outputsData: ['0x01000000000000000000000000000000', '0x'],
+};
