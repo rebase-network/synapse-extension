@@ -11,7 +11,7 @@ import { MESSAGE_TYPE } from '@utils/constants';
 
 const useStyles = makeStyles({
   container: {
-    margin: 30,
+    margin: '0 30px 30px',
   },
   link: {
     textDecoration: 'none',
