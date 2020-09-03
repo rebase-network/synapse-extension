@@ -20,11 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface AppProps {}
-
-interface AppState {}
-
-export default function (props: AppProps, state: AppState) {
+export default () => {
   const classes = useStyles();
   const defaultLanguage = getDefaultLanguage();
   const [language, setLanguage] = React.useState(defaultLanguage);
@@ -45,10 +41,10 @@ export default function (props: AppProps, state: AppState) {
           onChange={handleChange}
           className={classes.select}
         >
-          <MenuItem value={'en'}>English</MenuItem>
-          <MenuItem value={'zh'}>中文</MenuItem>
+          <MenuItem value="en">English</MenuItem>
+          <MenuItem value="zh">中文</MenuItem>
         </Select>
       </FormControl>
     </div>
   );
-}
+};
