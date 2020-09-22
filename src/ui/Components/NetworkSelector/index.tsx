@@ -1,8 +1,12 @@
 import React from 'react';
 import _ from 'lodash';
+import { Link } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { MenuItem, FormControl, Select } from '@material-ui/core';
 import NetworkManager from '@common/networkManager';
+
+const customRPCKey = 'custom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -15,6 +19,12 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     select: {
       color: 'white',
+    },
+    link: {
+      color: '#333',
+      textDecoration: 'none',
+      paddingTop: '1rem',
+      borderTop: '1px solid #aaa',
     },
   }),
 );
@@ -45,9 +55,13 @@ export default (props: AppProps) => {
   }, []);
 
   const handleChange = (event: React.ChangeEvent<{ value: string }>) => {
-    setNetwork(event.target.value);
-    props.handleNetworkChange(event.target.value);
-    NetworkManager.setCurrentNetwork(event.target.value);
+    const { value } = event.target;
+    if (value === customRPCKey) {
+      return;
+    }
+    setNetwork(value);
+    props.handleNetworkChange(value);
+    NetworkManager.setCurrentNetwork(value);
   };
 
   const handleOpen = () => {
@@ -66,10 +80,19 @@ export default (props: AppProps) => {
     );
   });
 
+  const customRPCItem = (
+    <MenuItem value={customRPCKey} key={customRPCKey}>
+      <Link to="/manage-networks" className={classes.link}>
+        <FormattedMessage id="Custom RPC" />
+      </Link>
+    </MenuItem>
+  );
+
+  menuItems.push(customRPCItem);
+
   return (
     <div>
       <FormControl className={classes.formControl}>
-        {/* <InputLabel id="network-select-label">Age</InputLabel> */}
         <Select
           labelId="network-select-label"
           id="network-select"
