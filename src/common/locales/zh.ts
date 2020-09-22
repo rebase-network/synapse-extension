@@ -86,4 +86,5 @@ export default {
   'Fee Rate':'费率',
   'Slower': '更慢',
   'Faster':'更快',
+  'Custom RPC':'自定义 RPC',
 };
