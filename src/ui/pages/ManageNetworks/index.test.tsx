@@ -37,7 +37,7 @@ describe('Manage networks page', () => {
   });
 
   it('should change form fields: name', async () => {
-    const name = screen.getByLabelText('NetWork Name');
+    const name = screen.getByLabelText('Network Name');
     const expectedValue = 'Mainnet';
 
     expect(name).toBeInTheDocument();

@@ -21,7 +21,7 @@ export const networks = [
     cacheURL: configService.CACHE_LAYER_ENDPOINT,
   },
   {
-    title: 'local',
+    title: 'Local',
     networkType: NETWORK_TYPES.testnet,
     prefix: 'ckt',
     nodeURL: 'http://127.0.0.1:8114',
