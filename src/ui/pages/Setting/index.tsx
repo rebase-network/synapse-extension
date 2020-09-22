@@ -11,7 +11,7 @@ import { MESSAGE_TYPE } from '@utils/constants';
 
 const useStyles = makeStyles({
   container: {
-    margin: '0 30px 30px',
+    margin: '0 20px 20px',
   },
   link: {
     textDecoration: 'none',
@@ -19,14 +19,15 @@ const useStyles = makeStyles({
   },
   linkText: {
     color: '#333',
-    padding: '25px 0',
+    padding: '1rem 0',
     borderBottom: '1px solid #ccc',
     display: 'flex',
     justifyContent: 'space-between',
   },
   deleteGroup: {
-    marginTop: '25px',
-    marginBottom: '25px',
+    borderTop: '1px solid #ccc',
+    padding: '1rem 0',
+    marginTop: '1rem',
   },
   modal: {
     display: 'flex',
@@ -195,6 +196,8 @@ export default function (props: AppProps, state: AppState) {
       <div className={classes.container}>
         {isLogin ? settingElem : ''}
 
+        <LanguageSelector />
+
         {isLogin ? (
           <div className={classes.deleteGroup}>
             <Button size="large" color="secondary" variant="contained" onClick={handleOpen}>
@@ -220,8 +223,6 @@ export default function (props: AppProps, state: AppState) {
         ) : (
           ''
         )}
-
-        <LanguageSelector />
       </div>
     </div>
   );
