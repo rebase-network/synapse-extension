@@ -1,5 +1,5 @@
-@import "palette";
-@import "var";
+@import 'palette';
+@import 'var';
 
 * {
   box-sizing: border-box;
@@ -10,7 +10,6 @@ html {
   height: $popup-size-height;
   margin: 0;
   background-color: white;
-
   overflow: auto;
 }
 
@@ -23,5 +22,5 @@ body {
 #popup {
   width: $popup-size-width;
   height: $popup-size-height;
-  overflow: scroll;
+  overflow-x: hidden;
 }
