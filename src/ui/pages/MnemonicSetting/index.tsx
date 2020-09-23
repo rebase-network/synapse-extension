@@ -17,11 +17,6 @@ const useStylesTheme = makeStyles((theme: Theme) =>
       textAlign: 'center',
       color: theme.palette.text.secondary,
     },
-    button: {
-      'margin-left': '60px',
-      'margin-bottom': '20px',
-      padding: theme.spacing(3),
-    },
     title: {
       padding: theme.spacing(2),
       textAlign: 'center',
@@ -32,15 +27,12 @@ const useStylesTheme = makeStyles((theme: Theme) =>
 
 const BootstrapButton = withStyles({
   root: {
-    width: '208px',
-    size: 'medium',
-    marginBottom: '25px',
+    width: 208,
     boxShadow: 'none',
     textTransform: 'none',
     fontSize: 16,
     padding: '8px 12px',
     border: '1px solid',
-    lineHeight: 1.5,
     backgroundColor: '#0063cc',
     borderColor: '#0063cc',
   },
@@ -65,28 +57,26 @@ export default function (props: AppProps, state: AppState) {
 
   return (
     <div className={classes.root}>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
+      <Grid container direction="column" spacing={4}>
+        <Grid item xs={12} container justify="center">
           <BootstrapButton
             type="button"
             variant="contained"
             id="import-button"
             color="primary"
             onClick={onImport}
-            className={classes.button}
             data-testid="import-button"
           >
             <FormattedMessage id="Import Mnemonic" />
           </BootstrapButton>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} container justify="center">
           <BootstrapButton
             type="button"
             variant="contained"
             id="generate-button"
             color="primary"
             onClick={onGenerate}
-            className={classes.button}
             data-testid="generate-button"
           >
             <FormattedMessage id="Generate Mnemonic" />
