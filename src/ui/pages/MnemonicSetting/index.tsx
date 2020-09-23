@@ -12,11 +12,6 @@ const useStylesTheme = makeStyles((theme: Theme) =>
       flexGrow: 1,
       marginTop: '120px',
     },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      color: theme.palette.text.secondary,
-    },
     title: {
       padding: theme.spacing(2),
       textAlign: 'center',
