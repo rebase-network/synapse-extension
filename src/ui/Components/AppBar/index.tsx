@@ -13,14 +13,11 @@ import NetworkSelector from '../NetworkSelector';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      flexGrow: 1,
-    },
     drawerInner: {
       width: 320,
     },
     menuButton: {
-      marginRight: 0,
+      marginLeft: 0,
     },
     title: {
       flexGrow: 1,
@@ -80,37 +77,35 @@ export default (props: AppProps) => {
   const logoElem = <img src="logo-32.svg" alt="logo" className={classes.logo} />;
 
   return (
-    <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
-          <div className={classes.title}>{logoElem}</div>
-          <NetworkSelector handleNetworkChange={handleNetworkChange} />
-          <IconButton
-            onClick={toggleDrawer('right', true)}
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-            data-testid="setting-icon"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Drawer anchor="right" open={state.right} onClose={toggleDrawer('right', false)}>
-            <div className={classes.drawerInner}>
-              <PageNav to="#" position="right" onClickRight={setState} title="My Addresses" />
+    <AppBar position="static">
+      <Toolbar>
+        <div className={classes.title}>{logoElem}</div>
+        <NetworkSelector handleNetworkChange={handleNetworkChange} />
+        <IconButton
+          onClick={toggleDrawer('right', true)}
+          edge="start"
+          className={classes.menuButton}
+          color="inherit"
+          aria-label="menu"
+          data-testid="setting-icon"
+        >
+          <MenuIcon />
+        </IconButton>
+        <Drawer anchor="right" open={state.right} onClose={toggleDrawer('right', false)}>
+          <div className={classes.drawerInner}>
+            <PageNav to="#" position="right" onClickRight={setState} title="My Addresses" />
 
-              <AddressList onSelectAddress={setState} />
+            <AddressList onSelectAddress={setState} />
 
-              <Link to="/setting" onClick={toggleDrawer('right', false)} className={classes.link}>
-                <SettingsIcon className={classes.icon} />
-                <span className={classes.linkText}>
-                  <FormattedMessage id="Setting" />
-                </span>
-              </Link>
-            </div>
-          </Drawer>
-        </Toolbar>
-      </AppBar>
-    </div>
+            <Link to="/setting" onClick={toggleDrawer('right', false)} className={classes.link}>
+              <SettingsIcon className={classes.icon} />
+              <span className={classes.linkText}>
+                <FormattedMessage id="Setting" />
+              </span>
+            </Link>
+          </div>
+        </Drawer>
+      </Toolbar>
+    </AppBar>
   );
 };
