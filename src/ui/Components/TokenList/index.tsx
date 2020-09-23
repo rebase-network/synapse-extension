@@ -56,14 +56,16 @@ export default (props: AppProps) => {
   const classes = useStyles();
   React.useEffect(() => {
     browser.storage.local.get('udts').then((result) => {
-      setLoading(false);
       if (!result.udts) return;
       setUdtsMeta(result.udts);
     });
 
     async function getUDTs(): Promise<void> {
       const { currentWallet } = await browser.storage.local.get('currentWallet');
-      if (!currentWallet) return;
+      if (!currentWallet) {
+        setLoading(false);
+        return;
+      }
       const { lock: lockHash } = currentWallet;
       const AllWithCapacity = await getUDTsByLockHash({
         lockHash,
@@ -80,6 +82,7 @@ export default (props: AppProps) => {
       });
 
       setTokenList(udts);
+      setLoading(false);
       setEmptyCapacity(shannonToCKBFormatter(AllWithCapacity.capacity));
 
       // expect SUDT
@@ -102,7 +105,7 @@ export default (props: AppProps) => {
       </div>
     );
   }
-  if (tokenList === undefined || tokenList.length === 0) {
+  if (!loading && (tokenList === undefined || tokenList.length === 0)) {
     return (
       <div className={classes.loading}>
         <FormattedMessage id="No UDT found" />
