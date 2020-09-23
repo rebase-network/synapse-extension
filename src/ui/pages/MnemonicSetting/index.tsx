@@ -9,8 +9,7 @@ import { MESSAGE_TYPE } from '@utils/constants';
 const useStylesTheme = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      flexGrow: 1,
-      marginTop: '120px',
+      marginTop: 120,
     },
   }),
 );
