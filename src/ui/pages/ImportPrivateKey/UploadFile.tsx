@@ -16,7 +16,7 @@ const useStyles = makeStyles({
   },
   name: {
     color: 'rgba(0, 0, 0, 0.26)',
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: 400,
   },
 });
