@@ -37,11 +37,11 @@ export default function PageNav(props: AppProps) {
   let navButtonNext;
   if (props.position !== 'right') {
     navButtonBefore = (
-      <IconButton edge="start" className={classes.menuButton} aria-label="nav">
-        <Link to={props.to}>
+      <Link to={props.to}>
+        <IconButton edge="start" className={classes.menuButton} aria-label="nav">
           <NavigateBeforeIcon />
-        </Link>
-      </IconButton>
+        </IconButton>
+      </Link>
     );
   } else {
     navButtonNext = (
