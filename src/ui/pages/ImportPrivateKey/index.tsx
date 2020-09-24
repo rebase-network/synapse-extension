@@ -12,6 +12,7 @@ import FormControl from '@material-ui/core/FormControl';
 import { FormattedMessage, useIntl } from 'react-intl';
 import PageNav from '@ui/Components/PageNav';
 import { MESSAGE_TYPE } from '@utils/constants';
+import UploadFile from './UploadFile';
 
 const useStyles = makeStyles({
   container: {
@@ -134,23 +135,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
 
     const keystoreForm = (
       <Form className="form-keystore" id="form-keystore" onSubmit={handleSubmit}>
-        <TextField
-          label={intl.formatMessage({ id: 'Keystore' })}
-          name="keystore"
-          multiline
-          rows="4"
-          fullWidth
-          className={classes.textField}
-          inputProps={{ spellCheck: 'false' }}
-          value={values.keystore}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          error={!!errors.keystore}
-          helperText={errors.keystore && touched.keystore && errors.keystore}
-          margin="normal"
-          variant="outlined"
-          data-testid="field-keystore"
-        />
+        <UploadFile />
         <TextField
           label={intl.formatMessage({ id: 'Keystore Password' })}
           name="keystorePassword"
