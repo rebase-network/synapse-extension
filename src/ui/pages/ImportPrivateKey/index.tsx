@@ -205,7 +205,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
   type validateObjType = {
     password?: Yup.StringSchema<string>;
     privateKey?: Yup.StringSchema<string>;
-    keystore?: Yup.StringSchema<string>;
+    // keystore?: Yup.StringSchema<string>;
     keystorePassword?: Yup.StringSchema<string>;
     userPassword?: Yup.StringSchema<string>;
   };
@@ -218,7 +218,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
         privateKey: Yup.string().required(intl.formatMessage({ id: 'Required' })), // TODO
       }
     : {
-        keystore: Yup.string().required(intl.formatMessage({ id: 'Required' })),
+        // keystore: Yup.string().required(intl.formatMessage({ id: 'Required' })),
         keystorePassword: Yup.string()
           .required(intl.formatMessage({ id: 'Required' }))
           .min(6),
@@ -250,7 +250,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           initialValues={{
             password: '',
             privateKey: '',
-            keystore: '',
+            // keystore: '',
             keystorePassword: '',
             userPassword: '',
           }}
