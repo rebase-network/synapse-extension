@@ -591,6 +591,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
     // 01- get the params from request
     const keystore = request.keystore.trim();
+    console.log('bg keystore....', keystore)
     const kPassword = request.keystorePassword.trim();
     const uPassword = request.userPassword.trim();
 

@@ -21,7 +21,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function UploadFile() {
+export default function UploadFile(props) {
   const classes = useStyles();
   const [name, setName] = React.useState('');
 
@@ -29,6 +29,12 @@ export default function UploadFile() {
     const file: any = e.target.files[0];
     if (!file) return;
     setName(file.name);
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const content = evt.target.result;
+      props.onChange(content);
+    };
+    reader.readAsText(file);
     e.target.value = null;
   };
 

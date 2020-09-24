@@ -35,6 +35,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
   const [isHidePrivate, setIsHidePrivate] = React.useState(false);
   const [value, setValue] = React.useState('1');
   const [showMsg, setShowMsg] = React.useState(null);
+  const [keystore, setKeystore] = React.useState('');
 
   React.useEffect(() => {
     chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
@@ -56,7 +57,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
     if (!isHidePrivate) {
       chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY });
     } else {
-      chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.IMPORT_KEYSTORE });
+      chrome.runtime.sendMessage({ ...values, keystore, type: MESSAGE_TYPE.IMPORT_KEYSTORE });
     }
   };
 
@@ -85,6 +86,10 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
       handleSubmit,
       handleReset,
     } = props;
+
+    const handleKeystore = (content) => {
+      setKeystore(content);
+    };
 
     const privateKeyForm = (
       <Form className="form-privateKey" id="form-privateKey" onSubmit={handleSubmit}>
@@ -135,7 +140,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
 
     const keystoreForm = (
       <Form className="form-keystore" id="form-keystore" onSubmit={handleSubmit}>
-        <UploadFile />
+        <UploadFile onChange={handleKeystore} />
         <TextField
           label={intl.formatMessage({ id: 'Keystore Password' })}
           name="keystorePassword"
