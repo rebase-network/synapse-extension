@@ -1,28 +1,22 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { Button } from '@material-ui/core';
+import ArrowUpwardRounded from '@material-ui/icons/ArrowUpwardRounded';
 import { FormattedMessage } from 'react-intl';
 
 const useStyles = makeStyles({
   input: {
-    width: 0.1,
-    height: 0.1,
-    opacity: 0,
-    overflow: 'hidden',
-    zIndex: -1,
+    display: 'none',
   },
-  label: {
-    border: '1px solid rgba(0, 0, 0, 0.23)',
-    cursor: 'pointer',
-    display: 'inline-block',
-    overflow: 'hidden',
-    zIndex: 99,
+  button: {
     width: '100%',
-    padding: '8px 15px',
-    color: 'rgba(0, 0, 0, 0.54)',
-    borderRadius: 4,
-    textAlign: 'center',
-    fontSize: 16,
-    lineHeight: 2,
+    textTransform: 'none',
+    marginTop: 24,
+    marginBottom: 8,
+  },
+  name: {
+    color: 'rgba(0, 0, 0, 0.26)',
+    fontSize: 14,
     fontWeight: 400,
   },
 });
@@ -30,16 +24,34 @@ const useStyles = makeStyles({
 export default function UploadFile() {
   const classes = useStyles();
   const [name, setName] = React.useState('');
+
   const handleChange = (e) => {
-    const file = e.target.files[0];
-    console.log('file', file);
+    const file: any = e.target.files[0];
+    if (!file) return;
+    setName(file.name);
+    e.target.value = null;
   };
+
   return (
     <div>
-      <input type="file" id="keystore" onChange={handleChange} className={classes.input} />
-      <label htmlFor="keystore" className={classes.label}>
-        Upload Keystore
+      <input
+        accept=".json"
+        className={classes.input}
+        id="keystore-file"
+        type="file"
+        onChange={handleChange}
+      />
+      <label htmlFor="keystore-file">
+        <Button
+          className={classes.button}
+          variant="outlined"
+          component="span"
+          endIcon={<ArrowUpwardRounded />}
+        >
+          Upload Keystore JSON File
+        </Button>
       </label>
+      {name && <div className={classes.name}>{name}</div>}
     </div>
   );
 }

@@ -12,7 +12,6 @@ import FormControl from '@material-ui/core/FormControl';
 import { FormattedMessage, useIntl } from 'react-intl';
 import PageNav from '@ui/Components/PageNav';
 import { MESSAGE_TYPE } from '@utils/constants';
-import UploadFile from './UploadFile';
 
 const useStyles = makeStyles({
   container: {
@@ -257,7 +256,6 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
             label="Keystore"
           />
         </RadioGroup>
-        <UploadFile />
         <Formik
           initialValues={{
             password: '',
