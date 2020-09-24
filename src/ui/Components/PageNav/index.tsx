@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -32,6 +32,7 @@ interface AppProps {
 
 export default function PageNav(props: AppProps) {
   const classes = useStyles();
+  const history = useHistory();
   let navButtonBefore;
   let navButtonNext;
   if (props.position !== 'right') {
@@ -48,11 +49,12 @@ export default function PageNav(props: AppProps) {
         edge="start"
         className={classes.menuButtonRight}
         aria-label="nav"
-        onClick={() => props.onClickRight('right', false)}
+        onClick={() => {
+          props.onClickRight('right', false);
+          history.push(props.to);
+        }}
       >
-        <Link to={props.to}>
-          <NavigateNextIcon />
-        </Link>
+        <NavigateNextIcon />
       </IconButton>
     );
   }
