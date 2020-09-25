@@ -88,4 +88,5 @@ export default {
   'Faster':'Faster',
   'Custom RPC':'Custom RPC',
   'Upload Keystore JSON File':'Upload Keystore JSON File',
+  'Invalid number':'Invalid number'
 };

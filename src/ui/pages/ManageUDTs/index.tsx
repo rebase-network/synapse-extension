@@ -111,8 +111,7 @@ export default function InitFunction(props: AppProps) {
   const classes = useStyles();
   const intl = useIntl();
   const [udtsItems, setUdtsItems] = React.useState([]);
-  const typeHashPropsFromUrl = _.get(props, 'match.params.typeHash', '');
-  const initialValues = { name: '', typeHash: typeHashPropsFromUrl, decimal: '8', symbol: '' };
+  const initialValues = { name: '', typeHash: '', decimal: '', symbol: '' };
 
   const onSubmit = async (values, { resetForm }) => {
     let udtsList = [];
@@ -190,7 +189,9 @@ export default function InitFunction(props: AppProps) {
           validationSchema={Yup.object().shape({
             name: Yup.string().required(intl.formatMessage({ id: 'Required' })),
             typeHash: Yup.string().required(intl.formatMessage({ id: 'Required' })),
-            decimal: Yup.string().required(intl.formatMessage({ id: 'Required' })),
+            decimal: Yup.string()
+              .required(intl.formatMessage({ id: 'Required' }))
+              .matches(/^[1-9][0-9]*$|^0$/, intl.formatMessage({ id: 'Invalid number' })),
             symbol: Yup.string().required(intl.formatMessage({ id: 'Required' })),
           })}
         >
