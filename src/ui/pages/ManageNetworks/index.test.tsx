@@ -36,17 +36,17 @@ describe('Manage networks page', () => {
     expect(submitButton).toBeInTheDocument();
   });
 
-  it('should change form fields: name', async () => {
-    const name = screen.getByLabelText('Network Name');
+  it('should change form fields: title', async () => {
+    const title = screen.getByLabelText('Network Name');
     const expectedValue = 'Mainnet';
 
-    expect(name).toBeInTheDocument();
-    expect(name).toBeEmpty();
+    expect(title).toBeInTheDocument();
+    expect(title).toBeEmpty();
 
-    await userEvent.type(name, expectedValue);
+    await userEvent.type(title, expectedValue);
 
     expect(screen.getByRole('form')).toHaveFormValues({
-      name: expectedValue,
+      title: expectedValue,
     });
   });
 

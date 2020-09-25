@@ -26,7 +26,7 @@ const useStyles = makeStyles({
 });
 
 interface FormValues {
-  name: string;
+  title: string;
   prefix: string;
   nodeURL: string;
   cacheURL: string;
@@ -46,18 +46,18 @@ const innerForm = (props: FormikProps<FormValues>): React.ReactElement => {
     >
       <TextField
         label={intl.formatMessage({ id: 'NetWorkName' })}
-        id="name"
-        name="name"
+        id="title"
+        name="title"
         type="text"
         fullWidth
-        value={values.name}
+        value={values.title}
         onChange={handleChange}
         onBlur={handleBlur}
-        error={!!errors.name}
-        helperText={errors.name && touched.name && errors.name}
+        error={!!errors.title}
+        helperText={errors.title && touched.title && errors.title}
         margin="normal"
         variant="outlined"
-        data-testid="field-name"
+        data-testid="field-title"
       />
       <FormControl>
         <NativeSelect
@@ -147,12 +147,12 @@ export default () => {
     return (
       <List component="nav" aria-label="Network List" key={`${item.name}-${item.nodeURL}`}>
         <ListItem>
-          <ListItemText primary={item.name} secondary={secondaryItem} />
+          <ListItemText primary={item.title} secondary={secondaryItem} />
           <ListItemSecondaryAction>
             <IconButton
               edge="end"
               aria-label="delete"
-              onClick={(event) => removeItem(event, item.name)}
+              onClick={(event) => removeItem(event, item.title)}
             >
               <DeleteIcon />
             </IconButton>
@@ -168,10 +168,10 @@ export default () => {
       <div className={classes.container}>
         {networkListElem}
         <Formik
-          initialValues={{ name: '', nodeURL: '', cacheURL: '', prefix: 'ckt' }}
+          initialValues={{ title: '', nodeURL: '', cacheURL: '', prefix: 'ckt' }}
           onSubmit={onSubmit}
           validationSchema={Yup.object().shape({
-            name: Yup.string().required(intl.formatMessage({ id: 'Required' })),
+            title: Yup.string().required(intl.formatMessage({ id: 'Required' })),
             nodeURL: Yup.string().required(intl.formatMessage({ id: 'Required' })),
             cacheURL: Yup.string().required(intl.formatMessage({ id: 'Required' })),
           })}
