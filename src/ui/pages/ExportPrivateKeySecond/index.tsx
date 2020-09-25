@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import Radio from '@material-ui/core/Radio';
+import Button from '@material-ui/core/Button';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { makeStyles } from '@material-ui/core/styles';
@@ -11,7 +12,10 @@ const useStyles = makeStyles({
   container: {
     margin: 30,
   },
-  button: {},
+  button: {
+    marginTop: 16,
+    textTransform: 'none',
+  },
   textField: {},
   radioGroup: {
     'justify-content': 'center',
@@ -63,6 +67,15 @@ export default function (props: AppProps, state: AppState) {
     }
   };
 
+  const handleClick = () => {
+    const url = 'data:application/json;base64,' + btoa(keystore);
+    chrome.downloads.download({
+      url: url,
+      filename: 'keystore.json',
+      saveAs: true,
+    });
+  };
+
   return (
     <div>
       <PageNav
@@ -89,8 +102,16 @@ export default function (props: AppProps, state: AppState) {
         <div className={classes.divShow} data-testid="privateKey" hidden={isPrivate}>
           {privateKey}
         </div>
-        <div className={classes.divShow} data-testid="json-keystore" hidden={isJSON}>
-          {keystore}
+        <div data-testid="json-keystore" hidden={isJSON}>
+          <div className={classes.divShow}>{keystore}</div>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleClick}
+            className={classes.button}
+          >
+            <FormattedMessage id="Save Keystore" />
+          </Button>
         </div>
         <br />
       </div>

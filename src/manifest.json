@@ -25,7 +25,7 @@
     }
   ],
   "web_accessible_resources": ["js/injectedScript.js"],
-  "permissions": ["storage", "notifications"],
+  "permissions": ["storage", "notifications", "downloads"],
   "manifest_version": 2,
   "content_security_policy": "script-src 'self'; object-src 'self'"
 }

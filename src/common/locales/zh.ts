@@ -88,5 +88,6 @@ export default {
   'Faster':'更快',
   'Custom RPC':'自定义 RPC',
   'Upload Keystore JSON File':'上传 Keystore JSON 文件',
-  'Invalid number':'无效数字'
+  'Invalid number':'无效数字',
+  'Save Keystore':'保存 Keystore',
 };
