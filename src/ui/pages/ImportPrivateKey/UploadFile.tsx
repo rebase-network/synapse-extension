@@ -54,7 +54,7 @@ export default function UploadFile(props) {
           component="span"
           endIcon={<ArrowUpwardRounded />}
         >
-          Upload Keystore JSON File
+          <FormattedMessage id="Upload Keystore JSON File" />
         </Button>
       </label>
       {name && <div className={classes.name}>{name}</div>}

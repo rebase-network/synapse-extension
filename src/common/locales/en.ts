@@ -87,4 +87,5 @@ export default {
   'Slower': 'Slower',
   'Faster':'Faster',
   'Custom RPC':'Custom RPC',
+  'Upload Keystore JSON File':'Upload Keystore JSON File',
 };
