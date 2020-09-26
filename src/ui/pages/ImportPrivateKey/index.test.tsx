@@ -69,22 +69,18 @@ describe('import privateKey page', () => {
   it('should change keystore form fields', async () => {
     const { getByTestId, container } = tree;
 
-    const keystore = container.querySelector('[name="keystore"]');
     const keystorePassword = container.querySelector('[name="keystorePassword"]');
     const userPassword = container.querySelector('[name="userPassword"]');
 
-    expect(keystore).toBeEmpty();
     expect(keystorePassword).toBeEmpty();
     expect(userPassword).toBeEmpty();
 
     await waitFor(() => {
-      fireEvent.change(keystore, { target: { value: 'test keystore' } });
       fireEvent.change(keystorePassword, { target: { value: 'test keystorePassword 123456' } });
       fireEvent.change(userPassword, { target: { value: 'test userPassword 123456' } });
     });
 
     expect(container.querySelector('#form-keystore')).toHaveFormValues({
-      keystore: 'test keystore',
       keystorePassword: 'test keystorePassword 123456',
       userPassword: 'test userPassword 123456',
     });

@@ -89,7 +89,7 @@ describe('Manage UDTs page', () => {
     expect(decimal).toBeInTheDocument();
 
     expect(screen.getByRole('form')).toHaveFormValues({
-      decimal: '8',
+      decimal: '',
     });
   });
 });
