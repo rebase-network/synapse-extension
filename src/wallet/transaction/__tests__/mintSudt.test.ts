@@ -12,9 +12,6 @@ describe('Mint SimpleUDT Test', () => {
   const privateKey2 = '0xd3f8f72ae675314cb2e5ed1f343318ae069544015c6ee9f0f1fe1dd1af8180af'; // forest radar cheap sure method undo potato squeeze jaguar right dismiss call
   const address2 = 'ckt1qyqqeemf67thft9m59qkp7qzp9m0agt2l76s9mpfz0';
 
-  const privateKey3 = '0xa02c4ec3735491a5939de90ef1b7bdd13c7ef14c4ec4b03041495490bead75a0'; // object decline rigid earth marriage rather drip purse february coyote never what
-  const address3 = 'ckt1qyqyxq9f2c5975v3kj4w64p0sfsv4l4maelsnm64w7';
-
   const nodeUrl = 'https://testnet.getsynapse.io/rpc'; // example node url
   const ckb = new CKB(nodeUrl); // instantiate the JS SDK with provided node url
 
@@ -30,10 +27,10 @@ describe('Mint SimpleUDT Test', () => {
     await browser.storage.local.set({ currentNetwork: testNet });
   });
 
-  it.skip('mint SimpleUDT from  address1 to address1', async () => {
+  it('mint SimpleUDT from  address1 to address1', async () => {
     jest.setTimeout(5000);
     const fromAddress = address1;
-    const toAddress = address1; // address1定义了SUDT的类型:
+    const toAddress = address1;
     const mintSudtAmount = 100 * CKB_TOKEN_DECIMALS;
     const fee = 10000;
     const rawTxObj = await createSudtTransaction(fromAddress, toAddress, mintSudtAmount, fee);
@@ -52,14 +49,13 @@ describe('Mint SimpleUDT Test', () => {
     jest.setTimeout(5000);
     const fromAddress = address2;
     const toAddress = address1; // address1定义了SUDT的类型:
-    const mintSudtAmount = 800;
+    const mintSudtAmount = 999999999900;
     const fee = 10000;
     const rawTxObj = await createSudtTransaction(fromAddress, toAddress, mintSudtAmount, fee);
     const rawTx = rawTxObj.tx;
     console.log(/rawTxObj/, JSON.stringify(rawTx));
 
-    // TODO 使用address2的privateKey进行签名的操作;
-    const signedTx = await ckb.signTransaction(privateKey2)(rawTx, []);
+    const signedTx = await ckb.signTransaction(privateKey1)(rawTx, []);
 
     const realTxHash = await ckb.rpc.sendTransaction(signedTx);
     console.log(`The real transaction hash is: ${realTxHash}`);

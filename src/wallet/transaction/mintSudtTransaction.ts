@@ -31,40 +31,6 @@ export interface CkbCells {
   total: any;
 }
 
-export const getInputCKBCells = async (lockHash, params) => {
-  const unspentCells = await getUnspentCells(lockHash, params);
-  // Error handling
-  if (unspentCells.errCode !== undefined && unspentCells.errCode !== 0) {
-    return unspentCells;
-  }
-
-  if (_.isEmpty(unspentCells)) {
-    throw new Error('There is not available live cells');
-  }
-
-  function getTotalCapity(total, cell) {
-    return BigInt(total) + BigInt(cell.capacity);
-  }
-  const totalCapity = unspentCells.reduce(getTotalCapity, 0);
-  const inputCells = {
-    cells: unspentCells,
-    total: new BN(totalCapity),
-  };
-  return inputCells;
-};
-
-export const getLockScriptName = (lockScript: CKBComponents.Script) => {
-  let lockScriptName = null;
-  if (lockScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
-    lockScriptName = 'Secp256k1';
-  } else if (lockScript.codeHash === ADDRESS_TYPE_CODEHASH.Keccak256) {
-    lockScriptName = 'Keccak256';
-  } else if (lockScript.codeHash === ADDRESS_TYPE_CODEHASH.AnyPay) {
-    lockScriptName = 'AnyPay';
-  }
-  return lockScriptName;
-};
-
 /**
  *
  * create Mint Sudt Raw transaction.
@@ -78,7 +44,7 @@ export const getLockScriptName = (lockScript: CKBComponents.Script) => {
  * @param {*} fee
  * @returns {CreateRawTxResult}
  */
-export function mintSudtRawTx(
+export function createSudtRawTx(
   inputCkbCells: CkbCells,
   fromLockScript: CKBComponents.Script,
   mintSudtAmount,
@@ -152,6 +118,40 @@ export function mintSudtRawTx(
   return signObj;
 }
 
+export const getInputCKBCells = async (lockHash, params) => {
+  const unspentCells = await getUnspentCells(lockHash, params);
+  // Error handling
+  if (unspentCells.errCode !== undefined && unspentCells.errCode !== 0) {
+    return unspentCells;
+  }
+
+  if (_.isEmpty(unspentCells)) {
+    throw new Error('There is not available live cells');
+  }
+
+  function getTotalCapity(total, cell) {
+    return BigInt(total) + BigInt(cell.capacity);
+  }
+  const totalCapity = unspentCells.reduce(getTotalCapity, 0);
+  const inputCells = {
+    cells: unspentCells,
+    total: new BN(totalCapity),
+  };
+  return inputCells;
+};
+
+export const getLockScriptName = (lockScript: CKBComponents.Script) => {
+  let lockScriptName = null;
+  if (lockScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
+    lockScriptName = 'Secp256k1';
+  } else if (lockScript.codeHash === ADDRESS_TYPE_CODEHASH.Keccak256) {
+    lockScriptName = 'Keccak256';
+  } else if (lockScript.codeHash === ADDRESS_TYPE_CODEHASH.AnyPay) {
+    lockScriptName = 'AnyPay';
+  }
+  return lockScriptName;
+};
+
 export const createSudtTransaction = async (fromAddress, toAddress, sendSudtAmount, fee) => {
   const fromLockScript = addressToScript(fromAddress);
   const fromLockHash = scriptToHash(fromLockScript);
@@ -180,7 +180,14 @@ export const createSudtTransaction = async (fromAddress, toAddress, sendSudtAmou
   deps.push(sUdtDep);
 
   let rawTxObj: any = null;
-  rawTxObj = mintSudtRawTx(inputCkbCells, fromLockScript, sendSudtAmount, toLockScript, deps, fee);
+  rawTxObj = createSudtRawTx(
+    inputCkbCells,
+    fromLockScript,
+    sendSudtAmount,
+    toLockScript,
+    deps,
+    fee,
+  );
   return rawTxObj;
 };
 
