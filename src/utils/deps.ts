@@ -1,7 +1,6 @@
 import LOCKS_INFO, { NETWORKS } from '@utils/constants/locksInfo';
 
 type TLockType = 'Secp256k1' | 'Keccak256' | 'AnyPay';
-type TNetworkType = 'mainnet' | 'testnet';
 
 export const secp256k1Dep = {
   outPoint: {
