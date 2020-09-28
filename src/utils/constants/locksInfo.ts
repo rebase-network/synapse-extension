@@ -1,11 +1,36 @@
 import { ScriptHashType } from '@keyper/specs';
 import { NETWORK_TYPES } from '@utils/constants/networks';
 
-const { testnet, mainnet } = NETWORK_TYPES;
-export const NETWORKS = [testnet, mainnet];
+const { testnet, mainnet, local } = NETWORK_TYPES;
+export const NETWORKS = [mainnet, testnet, local];
 
 // https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0024-ckb-system-script-list/0024-ckb-system-script-list.md
 export default {
+  [local]: {
+    secp256k1: {
+      codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+      hashType: 'type' as ScriptHashType,
+      txHash: '0xace5ea83c478bb866edf122ff862085789158f5cbff155b7bb5f13058555b708',
+      depType: 'depGroup',
+      index: '0x0',
+    },
+    keccak256: {
+      codeHash: '0xa5b896894539829f5e7c5902f0027511f94c70fa2406d509e7c6d1df76b06f08',
+      hashType: 'code' as ScriptHashType,
+      // TODO: not deployed yet, how to handle local net?
+      txHash: '0x',
+      depType: 'depGroup',
+      index: '0x0',
+    },
+    anypay: {
+      codeHash: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
+      hashType: 'type' as ScriptHashType,
+      // TODO: not deployed yet, how to handle local net?
+      txHash: '0x',
+      depType: 'depGroup',
+      index: '0x0',
+    },
+  },
   [testnet]: {
     secp256k1: {
       codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
@@ -18,7 +43,7 @@ export default {
       codeHash: '0xa5b896894539829f5e7c5902f0027511f94c70fa2406d509e7c6d1df76b06f08',
       hashType: 'code' as ScriptHashType,
       // TODO: not deployed yet
-      txHash: '0x0',
+      txHash: '0x',
       depType: 'depGroup',
       index: '0x0',
     },

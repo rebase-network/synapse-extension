@@ -69,8 +69,9 @@ const innerForm = (props: FormikProps<FormValues>): React.ReactElement => {
             id: 'prefix',
           }}
         >
-          <option value="ckt">TestNet</option>
-          {/* <option value="ckb">MainNet</option> */}
+          <option value="ckb">Mainnet</option>
+          <option value="ckt">Testnet</option>
+          <option value="local">Local</option>
         </NativeSelect>
       </FormControl>
       <TextField
@@ -116,7 +117,12 @@ export default () => {
   const [networkItems, setNetworkItems] = React.useState([]);
 
   const onSubmit = async (values, { resetForm }) => {
-    const { title, networkType, nodeURL, cacheURL, prefix } = values;
+    const { title, nodeURL, cacheURL, prefix } = values;
+    const networkTypeMapping = {
+      ckb: 'mainnet',
+      ckt: 'testnet',
+    };
+    const networkType = networkTypeMapping[prefix];
     const networkObj = { title, networkType, nodeURL, cacheURL, prefix };
     const newNetworkList = await NetworkManager.createNetwork(networkObj);
     setNetworkItems(newNetworkList);
@@ -140,8 +146,8 @@ export default () => {
   const networkListElem = networkItems.map((item) => {
     const secondaryItem = (
       <span>
-        <span className={classes.item}>{item.cacheURL}</span>
         <span className={classes.item}>{item.nodeURL}</span>
+        <span className={classes.item}>{item.cacheURL}</span>
       </span>
     );
     return (

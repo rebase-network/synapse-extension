@@ -3,6 +3,7 @@ import configService from '@src/config';
 export const NETWORK_TYPES = {
   testnet: 'testnet',
   mainnet: 'mainnet',
+  local: 'local',
 };
 
 export const networks = [
@@ -22,7 +23,7 @@ export const networks = [
   },
   {
     title: 'Local',
-    networkType: NETWORK_TYPES.testnet,
+    networkType: NETWORK_TYPES.local,
     prefix: 'ckt',
     nodeURL: 'http://127.0.0.1:8114',
     cacheURL: 'http://127.0.0.1:3000',
