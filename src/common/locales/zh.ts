@@ -90,4 +90,9 @@ export default {
   'Upload Keystore JSON File':'上传 Keystore JSON 文件',
   'Invalid number':'无效数字',
   'Save Keystore':'保存 Keystore',
+  'Rejected':'请求被拒绝',
+  'InvalidToken':'认证失败',
+  'RemoteError':'来自索引服务器的错误',
+  'UnknownError':'其它错误',
+  'Error code': '错误码'
 };

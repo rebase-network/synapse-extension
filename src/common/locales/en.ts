@@ -89,5 +89,10 @@ export default {
   'Custom RPC':'Custom RPC',
   'Upload Keystore JSON File':'Upload Keystore JSON File',
   'Invalid number':'Invalid number',
-  'Save Keystore':'Save Keystore'
+  'Save Keystore':'Save Keystore',
+  'Rejected':'request is rejected',
+  'InvalidToken':'authorization failed',
+  'RemoteError':'error from indexer server',
+  'UnknownError':'other error',
+  'Error code': 'Error code'
 };

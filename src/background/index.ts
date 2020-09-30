@@ -399,6 +399,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
           type: MESSAGE_TYPE.SEND_TX_ERROR,
           success: true,
           message: sendTxObj.errMsg,
+          errCode: sendTxObj.errCode,
           data: '',
         };
         chrome.runtime.sendMessage(respErrMsg);

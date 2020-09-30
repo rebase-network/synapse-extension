@@ -175,7 +175,13 @@ export const sendSudtTransaction = async (
   };
   try {
     const ckb = await getCKB();
-    const realTxHash = await ckb.rpc.sendTransaction(signedTx);
+    const realTxHash: any = await ckb.rpc.sendTransaction(signedTx);
+    if (realTxHash.code !== undefined && realTxHash.code !== 0) {
+      return {
+        errCode: realTxHash.code,
+        message: realTxHash.message
+      };
+    }  
     txResultObj.txHash = realTxHash;
   } catch (error) {
     console.error(`Failed to send tx: ${error}`);

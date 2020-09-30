@@ -503,6 +503,7 @@ export default () => {
   const [sending, setSending] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [errMsg, setErrMsg] = React.useState('');
+  const [errCode, setErrCode] = React.useState('');
   const [selectedTx, setSelectedTx] = React.useState('');
 
   const openModal = () => {
@@ -532,6 +533,7 @@ export default () => {
 
       if (messageHandled && message.type === MESSAGE_TYPE.SEND_TX_ERROR) {
         setErrMsg(message.message);
+        setErrCode(message.errCode);
       }
     });
     // setLoading(true);
@@ -559,7 +561,14 @@ export default () => {
 
   if (errMsg) {
     sendingNode = null;
-    errNode = <div className={classes.error}>{intl.formatMessage({ id: errMsg })}</div>;
+    errNode = (
+      <div className={classes.error}>
+        <div>
+          {intl.formatMessage({ id: 'Error code' })} {errCode}
+        </div>
+        <div>{intl.formatMessage({ id: errMsg })}</div>
+      </div>
+    );
   }
 
   const txModal = !selectedTx ? (
