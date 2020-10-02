@@ -15,14 +15,9 @@ An extension wallet for Nervos CKB.
 ### Installation for non-developer
 
 1. Download the latest released zip file: https://github.com/rebase-network/synapse-extension/releases
-
 2. Uncompress synapse-extension.zip, you will get a folder named `synapse-extension`
-
 3. Open Chrome `chrome://extensions/`, enable `Developer mode`
-
 4. Click `Load unpacked` button, select `synapse-extension` folder
-
-5. You will see synapse extension icon on you tool bar
 
 ## Development
 ### Start extension
@@ -38,12 +33,11 @@ Optional: If you want to work with local CKB RPC node, you need to setup a local
 ### Install extension
 
 1. Open Google Chrome and go to [_chrome://extensions_](chrome://extensions)
-2. Open Chrome `chrome://extensions/`, enable `Developer mode`
-3. Click `Load unpacked` button, select `synapse-extension` folder
-4. You will see synapse extension icon on you tool bar
+2. Enable `Developer mode`
+3. Click `Load unpacked` button, select `synapse-extension/dist` folder
 
 ### Testing
-`yarn test` to run test
+`yarn test`
 
 ### Lint
 
