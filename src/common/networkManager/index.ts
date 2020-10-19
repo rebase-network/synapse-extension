@@ -9,9 +9,33 @@ interface INetwork {
   cacheURL: string;
 }
 
+const deprecatedUrls = ['https://testnet.getsynapse.io/rpc', 'https://mainnet.getsynapse.io/rpc'];
+const urlMap = {
+  'https://testnet.getsynapse.io/rpc': 'https://ckb-testnet.rebase.network/rpc',
+  'https://mainnet.getsynapse.io/rpc': 'https://ckb-mainnet.rebase.network/rpc',
+};
+
 const NetworkManager = {
   async initNetworks() {
     const isNetworkSet = await NetworkManager.isNetworkSet();
+    const networks = await NetworkManager.getNetworkList();
+    const needToUpdateUrls = networks.some(
+      (network) => deprecatedUrls.indexOf(network.nodeURL) !== -1,
+    );
+    if (needToUpdateUrls) {
+      const correctNetworks = networks.map((network) => {
+        if (deprecatedUrls.indexOf(network.nodeURL) !== -1) {
+          return {
+            ...network,
+            nodeURL: urlMap[network.nodeURL],
+          };
+        }
+        return network;
+      });
+      await browser.storage.local.set({
+        networks: correctNetworks,
+      });
+    }
     if (isNetworkSet) return;
 
     await browser.storage.local.set({
