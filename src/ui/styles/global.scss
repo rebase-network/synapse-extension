@@ -8,8 +8,8 @@
 html {
   width: $popup-size-width;
   height: $popup-size-height;
-  margin: 0;
-  background-color: white;
+  margin: 0 auto;
+  background-color: #eee;
   overflow: auto;
 }
 
@@ -17,6 +17,7 @@ body {
   width: $popup-size-width;
   height: $popup-size-height;
   margin: 0;
+  background: white;
 }
 
 #popup {

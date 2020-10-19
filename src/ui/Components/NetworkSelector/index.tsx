@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     select: {
       color: 'white',
+      paddingLeft: '0.5rem',
     },
     link: {
       color: '#333',
