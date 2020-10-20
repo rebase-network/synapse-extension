@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface AppProps {
-  to: string;
   title: React.ReactNode;
+  to?: string;
   position?: string;
   onClickRight?: Function;
 }
@@ -33,11 +33,12 @@ interface AppProps {
 export default function PageNav(props: AppProps) {
   const classes = useStyles();
   const history = useHistory();
+  const { position, to, title, onClickRight } = props;
   let navButtonBefore;
   let navButtonNext;
-  if (props.position !== 'right') {
-    navButtonBefore = (
-      <Link to={props.to}>
+  if (position !== 'right') {
+    navButtonBefore = !!to && (
+      <Link to={to}>
         <IconButton edge="start" className={classes.menuButton} aria-label="nav">
           <NavigateBeforeIcon />
         </IconButton>
@@ -50,8 +51,8 @@ export default function PageNav(props: AppProps) {
         className={classes.menuButtonRight}
         aria-label="nav"
         onClick={() => {
-          props.onClickRight('right', false);
-          history.push(props.to);
+          onClickRight('right', false);
+          history.push(to);
         }}
       >
         <NavigateNextIcon />
@@ -63,7 +64,7 @@ export default function PageNav(props: AppProps) {
     <div className={classes.root}>
       <Toolbar>
         {navButtonBefore}
-        <Typography variant="h6">{props.title}</Typography>
+        <Typography variant="h6">{title}</Typography>
         {navButtonNext}
       </Toolbar>
     </div>

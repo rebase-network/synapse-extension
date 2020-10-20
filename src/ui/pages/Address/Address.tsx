@@ -29,7 +29,7 @@ import {
   TESTNET_EXPLORER_URL,
   LockType,
 } from '@utils/constants';
-import { truncateAddress, shannonToCKBFormatter, truncateHash } from '@utils/formatters';
+import { truncateAddress, shannonToCKBFormatter } from '@utils/formatters';
 import { getAddressInfo } from '@utils/apis';
 import TxList from '@ui/Components/TxList';
 import TokenList from '@ui/Components/TokenList';
@@ -185,24 +185,6 @@ export default (props: AppProps) => {
     );
 
     setLoading(true);
-
-    chrome.runtime.onMessage.addListener((message) => {
-      if (message.type === MESSAGE_TYPE.SEND_TX_HISTORY && message.txs) {
-        setTxs(message.txs);
-      }
-
-      if (
-        message.type === MESSAGE_TYPE.EXTERNAL_SEND ||
-        message.type === MESSAGE_TYPE.EXTERNAL_SIGN ||
-        message.type === MESSAGE_TYPE.EXTERNAL_SIGN_SEND
-      ) {
-        const searchString = queryString.stringify({
-          ...message,
-          data: JSON.stringify(message.data),
-        });
-        history.push(`/sign-tx?${searchString}`);
-      }
-    });
   }, [address, capacity, type]);
 
   const onSendtx = () => {

@@ -29,6 +29,8 @@ export default function App() {
     location.replace('/popup.html');
   };
 
+  const homeComponent = location.pathname === '/notification.html' ? <Sign /> : <Address />;
+
   return (
     <Router>
       <AppContext.Provider
@@ -92,9 +94,7 @@ export default function App() {
               <Setting />
             </Route>
             {/* 通配放到最后 */}
-            <Route path="/">
-              <Address />
-            </Route>
+            <Route path="/">{homeComponent}</Route>
           </Switch>
         </div>
       </AppContext.Provider>

@@ -3,10 +3,10 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { Button, TextField } from '@material-ui/core';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import queryString from 'query-string';
 import { makeStyles } from '@material-ui/core/styles';
 import PageNav from '@ui/Components/PageNav';
 import RawTxDetail from '@ui/Components/PrettyPrintJson/Accordion';
+import { MESSAGE_TYPE } from '@utils/constants';
 
 const useStyles = makeStyles({
   container: {
@@ -63,21 +63,33 @@ export const innerForm = (props: any) => {
 export default () => {
   const classes = useStyles();
   const intl = useIntl();
-  const searchParams = queryString.parse(location.search);
-  const data = searchParams?.data ? JSON.parse(searchParams?.data as string) : '';
+  const [message, setMessage] = React.useState({} as any);
+
   const onSubmit = async (values) => {
     const requestMsg = { ...values };
-    if (searchParams?.data && searchParams?.type) {
-      requestMsg.data = data;
-      requestMsg.type = searchParams.type;
+    if (message?.data && message?.type) {
+      requestMsg.data = message.data;
+      requestMsg.type = message.type;
       browser.runtime.sendMessage(requestMsg);
     }
   };
 
+  React.useEffect(() => {
+    browser.runtime.onMessage.addListener((msg) => {
+      if (
+        msg.type === MESSAGE_TYPE.EXTERNAL_SEND ||
+        msg.type === MESSAGE_TYPE.EXTERNAL_SIGN ||
+        msg.type === MESSAGE_TYPE.EXTERNAL_SIGN_SEND
+      ) {
+        setMessage(msg);
+      }
+    });
+  }, []);
+
   return (
     <div>
-      <PageNav to="/setting" title={<FormattedMessage id="Auth" />} />
-      <RawTxDetail tx={data?.tx} />
+      <PageNav title={<FormattedMessage id="Auth" />} />
+      <RawTxDetail tx={message?.data?.tx} />
       <div className={classes.container}>
         <Formik
           initialValues={{ password: '' }}
