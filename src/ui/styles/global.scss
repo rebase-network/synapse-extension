@@ -6,22 +6,22 @@
 }
 
 html {
-  width: $popup-size-width;
+  min-width: $popup-size-width;
   height: $popup-size-height;
   margin: 0 auto;
-  background-color: #eee;
   overflow: auto;
 }
 
 body {
-  width: $popup-size-width;
-  height: $popup-size-height;
+  width: 100%;
+  height: 100%;
+  background-color: #efefef;
   margin: 0;
-  background: white;
 }
 
 #popup {
-  width: $popup-size-width;
-  height: $popup-size-height;
+  width: 100%;
+  height: 100%;
   overflow-x: hidden;
+  background: white;
 }
