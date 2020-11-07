@@ -1,5 +1,4 @@
 import Axios from 'axios';
-import configService from '@src/config';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils';
 import NetworkManager from '@src/common/networkManager';
 
