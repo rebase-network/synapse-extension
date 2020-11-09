@@ -1,4 +1,4 @@
-import { CapacityUnit } from './const';
+import { CapacityUnit } from '@utils/constants';
 
 const base = 10e9;
 const numberParser = (value: string, exchange: string) => {

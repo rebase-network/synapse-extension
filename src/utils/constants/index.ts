@@ -1,3 +1,9 @@
+export enum CapacityUnit {
+  CKB = 'ckb',
+  CKKB = 'ckkb',
+  CKGB = 'ckgb',
+}
+
 export const MESSAGE_TYPE = {
   IMPORT_MNEMONIC: 'IMPORT_MNEMONIC',
   GEN_MNEMONIC: 'GEN_MNEMONIC',
