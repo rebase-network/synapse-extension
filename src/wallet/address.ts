@@ -37,7 +37,7 @@ export default class Address {
 
   public static fromPublicKey = (
     publicKey: string,
-    path: string,
+    path: string = Address.pathForReceiving(0),
     prefix: AddressPrefix = AddressPrefix.Testnet,
   ) => {
     const address = publicKeyToAddress(publicKey, prefix);
@@ -53,7 +53,9 @@ export default class Address {
     path: string = Address.pathForReceiving(0),
     prefix: AddressPrefix = AddressPrefix.Testnet,
   ) => {
-    const publicKey = ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
+    const publicKey = privateKey.startsWith('0x')
+      ? ckbUtils.privateKeyToPublicKey(privateKey)
+      : ckbUtils.privateKeyToPublicKey(`0x${privateKey}`);
     const instance = Address.fromPublicKey(publicKey, path, prefix);
     return instance;
   };
