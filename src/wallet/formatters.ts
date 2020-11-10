@@ -14,25 +14,6 @@ const numberParser = (value: string, exchange: string) => {
   return [integer, decimal];
 };
 
-const numberFormatter = new Intl.NumberFormat('en-US');
-const timeFormatter = new Intl.DateTimeFormat('zh-CN', {
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
-  hour12: false,
-});
-
-export const queryFormatter = (params: { [index: string]: any }) => {
-  const newQuery = new URLSearchParams();
-  Object.entries(params).forEach(([key, value]) => {
-    newQuery.set(key, `${value}`);
-  });
-  return newQuery;
-};
-
 export type currencyCode = 'CKB' | 'CNY' | 'USD';
 /**
  *
@@ -77,7 +58,6 @@ export const CKBToShannonFormatter = (
   unit: CapacityUnit = CapacityUnit.CKB,
 ) => {
   if (Number.isNaN(+amount)) {
-    console.warn('Amount is not a valid number');
     return `${amount} ${unit}`;
   }
   const [integer = '0', decimal = ''] = amount.toString().split('.');
@@ -106,7 +86,6 @@ export const shannonToCKBFormatter = (
   delimiter: string = ',',
 ) => {
   if (Number.isNaN(+shannon)) {
-    console.warn('Shannon is not a valid number');
     return shannon;
   }
   if (shannon === null) {
@@ -140,32 +119,8 @@ export const shannonToCKBFormatter = (
   return +unsignedCKB === 0 ? '0' : `${sign}${unsignedCKB}`;
 };
 
-export const localNumberFormatter = (num: string | number | bigint = 0) => {
-  if (num === '' || num === undefined || num === null) {
-    return '';
-  }
-  if (typeof num === 'bigint') {
-    return numberFormatter.format(num as any);
-  }
-  if (Number.isNaN(+num)) {
-    console.warn('Number is not a valid number');
-    return num.toString();
-  }
-  const parts = num.toString().split('.');
-  const n: any = BigInt(parts[0]);
-  parts[0] = numberFormatter.format(n);
-  return parts.join('.');
-};
-
-export const uniformTimeFormatter = (time: string | number | Date) => {
-  return timeFormatter.format(+time).replace(/\//g, '-');
-};
-
 export default {
-  queryFormatter,
   currencyFormatter,
   CKBToShannonFormatter,
   shannonToCKBFormatter,
-  localNumberFormatter,
-  uniformTimeFormatter,
 };
