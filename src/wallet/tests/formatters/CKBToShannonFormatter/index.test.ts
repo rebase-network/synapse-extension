@@ -1,5 +1,5 @@
 import { CapacityUnit } from '@utils/constants';
-import { CKBToShannonFormatter } from '../../../formatters';
+import { CKBToShannonFormatter } from '@utils/formatters';
 import fixtures from './fixtures';
 
 const fixtureTable: [

@@ -41,7 +41,6 @@ import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils';
 import calculateTxFee from '@src/wallet/transaction/calculateFee';
 import { genDummyTransaction } from '@src/wallet/transaction/sendTransaction';
 import { showAddressHelper } from '@utils/wallet';
-// import { shannonToCKBFormatter } from '@src/wallet/formatters';
 
 const useStyles = makeStyles({
   container: {

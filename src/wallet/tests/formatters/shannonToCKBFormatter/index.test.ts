@@ -1,4 +1,4 @@
-import { shannonToCKBFormatter } from '../../../formatters';
+import { shannonToCKBFormatter } from '@utils/formatters';
 import fixtures from './fixtures';
 
 const fixtureTable = fixtures.map(({ shannons, expected }) => [shannons, expected]);

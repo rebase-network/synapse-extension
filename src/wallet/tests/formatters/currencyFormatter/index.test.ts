@@ -1,4 +1,4 @@
-import { currencyFormatter } from '../../../formatters';
+import { currencyFormatter } from '@utils/formatters';
 import fixtures from './fixtures';
 
 const fixtureTable = fixtures.map(({ value, expected }) => [value, expected]);

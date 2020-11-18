@@ -24,8 +24,7 @@ import { WEB_PAGE } from '@src/utils/message/constants';
 import { sendToWebPage } from '@background/messageHandlers/proxy';
 import NetworkManager from '@common/networkManager';
 import { sendSudtTransaction } from '@src/wallet/transaction/sendSudtTransaction';
-import { ckbToshannon, shannonToSUDT } from '@src/utils/formatters';
-import { CKBToShannonFormatter } from '@src/wallet/formatters';
+import { ckbToshannon, shannonToSUDT, CKBToShannonFormatter } from '@src/utils/formatters';
 
 NetworkManager.initNetworks();
 

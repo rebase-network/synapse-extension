@@ -1,4 +1,84 @@
-// const base = 10e9
+import { CapacityUnit } from '@utils/constants';
+
+const base = 10e9;
+const numberParser = (value: string, exchange: string) => {
+  if (Number.isNaN(+value)) {
+    throw new TypeError('Value is not a valid number');
+  }
+  if (Number.isNaN(+exchange)) {
+    throw new TypeError('Exchange is not a valid number');
+  }
+  const res = (BigInt(value) * BigInt(+exchange * base)).toString();
+  const integer = res.slice(0, res.length - 10);
+  const decimal = res.slice(res.length - 10).replace(/0+$/, '');
+  return [integer, decimal];
+};
+
+export type CurrencyCode = 'CKB' | 'CNY' | 'USD';
+/**
+ *
+ *
+ * @function currencyFormatter
+ * @param {string} value
+ * @param {('CKB' | 'CNY' | 'USD')} [type='CKB']
+ * @param {string} [exchange='0.000000001']
+ * @description display balance in the format of xxx,xxx.xxxxxxxx CKB (yyy,yyy.yy CNY)
+ * @returns
+ */
+export const currencyFormatter = (
+  shannons: string = '0',
+  unit: CurrencyCode = 'CKB',
+  exchange: string = '0.000000001',
+): string => {
+  if (Number.isNaN(+shannons)) {
+    throw new TypeError('Shannons is not a valid number');
+  }
+
+  if (Number.isNaN(+exchange)) {
+    throw new TypeError('Exchange is not a valid number');
+  }
+
+  const [integer, decimal] = numberParser(shannons, exchange);
+  const dot = '.';
+  const delimiter = ',';
+  switch (unit) {
+    case 'CKB':
+    case 'CNY': {
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+  return `${integer.replace(/\B(?=(\d{3})+(?!\d))/g, delimiter)}${dot}${decimal} ${unit}`;
+};
+
+export const CKBToShannonFormatter = (
+  amount: string = '0',
+  unit: string | CapacityUnit = CapacityUnit.CKB,
+) => {
+  if (Number.isNaN(+amount)) {
+    return `${amount} ${unit}`;
+  }
+  const [integer = '0', decimal = ''] = amount.toString().split('.');
+  const decimalLength = 10 ** decimal.length;
+  const num = integer + decimal;
+
+  switch (unit) {
+    case CapacityUnit.CKB: {
+      return (BigInt(num) * BigInt(1e8 / decimalLength)).toString();
+    }
+    case CapacityUnit.CKKB: {
+      return (BigInt(num) * BigInt(1e11 / decimalLength)).toString();
+    }
+    case CapacityUnit.CKGB: {
+      return (BigInt(num) * BigInt(1e17 / decimalLength)).toString();
+    }
+    default: {
+      return amount;
+    }
+  }
+};
 
 export const shannonToCKBFormatter = (
   shannon: string = '0',
@@ -6,7 +86,6 @@ export const shannonToCKBFormatter = (
   delimiter: string = ',',
 ) => {
   if (Number.isNaN(+shannon)) {
-    console.warn('Shannon is not a valid number');
     return shannon;
   }
   if (shannon === null) {
@@ -62,9 +141,4 @@ export const shannonToSUDT = (number: any, decimal = 8) => {
     result /= 100;
   }
   return result;
-};
-
-export default {
-  shannonToCKBFormatter,
-  truncateAddress,
 };
