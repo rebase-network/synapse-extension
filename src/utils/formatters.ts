@@ -59,7 +59,7 @@ export const shannonToSUDT = (number: any, decimal = 8) => {
   let result = Number(number);
   const count = decimal / 2;
   for (let i = 0; i < count; i++) {
-    result = result / 100;
+    result /= 100;
   }
   return result;
 };
