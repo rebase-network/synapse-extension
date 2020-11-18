@@ -185,6 +185,11 @@ export default (props: AppProps) => {
     );
 
     setLoading(true);
+    chrome.runtime.onMessage.addListener((message) => {
+      if (message.type === MESSAGE_TYPE.SEND_TX_HISTORY && message.txs) {
+        setTxs(message.txs);
+      }
+    });
   }, [address, capacity, type]);
 
   const onSendtx = () => {
