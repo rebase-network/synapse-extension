@@ -29,7 +29,6 @@ describe('SUDT Transaction test', () => {
       toAddress,
       sendSudtAmount,
       fee,
-      password,
       expectSignedTx,
     } = fixtures.createMutiAllTo;
 
@@ -41,7 +40,6 @@ describe('SUDT Transaction test', () => {
       toAddress,
       sendSudtAmount,
       fee,
-      password,
     );
     expect(signedTx.tx).toEqual(expectSignedTx);
   });
@@ -57,7 +55,6 @@ describe('SUDT Transaction test', () => {
       toAddress,
       sendSudtAmount,
       fee,
-      password,
       expectSignedTx,
     } = fixtures.createMutiPartTo;
 
@@ -69,7 +66,6 @@ describe('SUDT Transaction test', () => {
       toAddress,
       sendSudtAmount,
       fee,
-      password,
     );
     expect(signedTx.tx).toEqual(expectSignedTx);
   });
@@ -84,7 +80,6 @@ describe('SUDT Transaction test', () => {
       toAddress,
       sendSudtAmount,
       fee,
-      password,
       expectSignedTx,
     } = fixtures.createSingleAllTo;
 
@@ -96,7 +91,6 @@ describe('SUDT Transaction test', () => {
       toAddress,
       sendSudtAmount,
       fee,
-      password,
     );
     expect(signedTx.tx).toEqual(expectSignedTx);
   });
@@ -111,7 +105,6 @@ describe('SUDT Transaction test', () => {
       toAddress,
       sendSudtAmount,
       fee,
-      password,
       expectSignedTx,
     } = fixtures.createSinglePartTo;
 
@@ -123,7 +116,6 @@ describe('SUDT Transaction test', () => {
       toAddress,
       sendSudtAmount,
       fee,
-      password,
     );
     expect(signedTx.tx).toEqual(expectSignedTx);
   });
@@ -138,7 +130,6 @@ describe('SUDT Transaction test', () => {
       toAddress,
       sendSudtAmount,
       fee,
-      password,
       expectSignedTx,
     } = fixtures.createSinglePartToError;
 
@@ -150,7 +141,6 @@ describe('SUDT Transaction test', () => {
       toAddress,
       sendSudtAmount,
       fee,
-      password,
     );
     expect(signedTx.tx).toEqual(expectSignedTx);
   });

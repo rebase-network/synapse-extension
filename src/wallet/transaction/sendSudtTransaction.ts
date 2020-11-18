@@ -79,7 +79,6 @@ export const createSudtTransaction = async (
   toAddress,
   sendSudtAmount,
   fee,
-  password,
 ) => {
   const ckb = await getCKB();
 
@@ -166,7 +165,6 @@ export const sendSudtTransaction = async (
     toAddress,
     sendSudtAmount,
     fee,
-    password,
   );
 
   const signedTx = await signSudtTransaction(lockHash, password, rawTxObj);

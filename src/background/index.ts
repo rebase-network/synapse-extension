@@ -390,7 +390,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
           toAddress,
           sendSudtAmount,
           fee,
-          password,
         );
       }
 
