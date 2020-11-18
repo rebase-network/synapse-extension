@@ -4,7 +4,7 @@ import fixtures from './fixtures';
 
 const fixtureTable: [
   string,
-  CapacityUnit,
+  string | CapacityUnit,
   string,
 ][] = fixtures.map(({ ckb: { amount, unit }, expected }) => [amount, unit, expected]);
 

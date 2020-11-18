@@ -55,7 +55,7 @@ export const currencyFormatter = (
 
 export const CKBToShannonFormatter = (
   amount: string = '0',
-  unit: CapacityUnit = CapacityUnit.CKB,
+  unit: string | CapacityUnit = CapacityUnit.CKB,
 ) => {
   if (Number.isNaN(+amount)) {
     return `${amount} ${unit}`;
