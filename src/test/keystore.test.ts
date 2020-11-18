@@ -36,8 +36,4 @@ describe('encrypt checkpassword decrypt test', () => {
   it('checks correct password', async () => {
     expect(Keystore.checkPasswd(keystore, password)).toBe(true);
   });
-
-  it('encrypt decrypt', () => {
-    expect(privateKeyDecrypt).toEqual(privateKey);
-  });
 });
