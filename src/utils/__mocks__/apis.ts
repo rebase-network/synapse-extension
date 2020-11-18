@@ -1,5 +1,8 @@
+import { udtUnspentCells } from '../fixtures/apis';
+
 // const unspentCells = await getUnspentCells(lockHash);
-export const getUnspentCells = async () => {
+export const getUnspentCells = async (lockHash, params) => {
+  if (lockHash || params) return udtUnspentCells;
   const result = [
     {
       capacity: 100,
