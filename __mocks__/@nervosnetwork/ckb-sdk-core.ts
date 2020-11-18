@@ -12,7 +12,7 @@ class CKB {
   }
 
   rpc: any = {
-    sendTransaction: (signedTx) => Promise.resolve(signedTx),
+    sendTransaction: (signedTx) => Promise.resolve('0x123'),
     getLiveCell: () => {
       return {
         cell: {
