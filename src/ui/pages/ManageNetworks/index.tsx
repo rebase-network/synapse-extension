@@ -63,7 +63,6 @@ const innerForm = (props: FormikProps<FormValues>): React.ReactElement => {
         <NativeSelect
           value={values.prefix}
           onChange={handleChange}
-          defaultValue="ckt"
           inputProps={{
             name: 'prefix',
             id: 'prefix',
