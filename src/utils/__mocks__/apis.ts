@@ -15,8 +15,14 @@ export const getAddressInfo = () => Promise.resolve({ capacity: '0x01' });
 
 export const getTxHistories = () => Promise.resolve([]);
 
+export const getUDTsByLockHash = () => Promise.resolve([]);
+
+export const getUnspentCapacity = () => Promise.resolve([]);
+
 export default {
-  getUnspentCells,
   getAddressInfo,
+  getUnspentCells,
   getTxHistories,
+  getUDTsByLockHash,
+  getUnspentCapacity,
 };
