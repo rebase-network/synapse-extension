@@ -72,7 +72,7 @@ const useStyles = makeStyles({
     'text-transform': 'none',
   },
   capacityBtn: {
-    fontSize: '1.5rem',
+    fontSize: '1.3rem',
     'text-transform': 'none',
   },
   udtBtn: {
