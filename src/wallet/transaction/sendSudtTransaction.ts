@@ -177,9 +177,9 @@ export const sendSudtTransaction = async (
     if (realTxHash.code !== undefined && realTxHash.code !== 0) {
       return {
         errCode: realTxHash.code,
-        message: realTxHash.message
+        message: realTxHash.message,
       };
-    }  
+    }
     txResultObj.txHash = realTxHash;
   } catch (error) {
     console.error(`Failed to send tx: ${error}`);

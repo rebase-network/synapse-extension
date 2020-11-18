@@ -24,7 +24,6 @@ import { WEB_PAGE } from '@src/utils/message/constants';
 import { sendToWebPage } from '@background/messageHandlers/proxy';
 import NetworkManager from '@common/networkManager';
 import { sendSudtTransaction } from '@src/wallet/transaction/sendSudtTransaction';
-import { parseSUDT } from '@src/utils';
 import { ckbToshannon, shannonToSUDT } from '@src/utils/formatters';
 import { CKBToShannonFormatter } from '@src/wallet/formatters';
 
@@ -344,8 +343,6 @@ chrome.runtime.onMessage.addListener(async (request) => {
       browser.runtime.sendMessage(responseEorrorMsg);
       return;
     }
-    const Uint8ArrayPk = new Uint8Array(privateKeyBuffer.data);
-    const privateKey = ckbUtils.bytesToHex(Uint8ArrayPk);
 
     const respMsg = {
       type: MESSAGE_TYPE.SEND_TX_OVER,
