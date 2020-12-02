@@ -58,6 +58,19 @@ export const aliceWallet = {
   publicKey: '0x0390518e809be027269b464734ed7315959729b3f9dd6bc06572745c6d65182623',
   rootKeystore: '',
 };
+
+export const aliceWalletInStorage = {
+  publicKey: '0x0390518e809be027269b464734ed7315959729b3f9dd6bc06572745c6d65182623',
+  type: 'Secp256k1',
+  script: {
+    codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+    hashType: 'type',
+    args: '0x5c0eaae525d4fc2e04b162c84f286dfd51af4002',
+  },
+  lock: '0xaef10fd7479757aeb519eff422ea29092652f579150105d67ea662023730e1f6',
+  lockHash: '0xaef10fd7479757aeb519eff422ea29092652f579150105d67ea662023730e1f6',
+};
+
 export const aliceWalletPwd = 'aaaaaa';
 
 export const walletCellAddresses = {

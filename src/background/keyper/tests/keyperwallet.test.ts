@@ -1,10 +1,30 @@
 import _ from 'lodash';
-import { aliceAddresses, aliceWallet, aliceWalletPwd } from '@src/tests/fixture/address';
+import {
+  aliceAddresses,
+  aliceWallet,
+  aliceWalletPwd,
+  aliceWalletInStorage,
+  bobAddresses,
+} from '@src/tests/fixture/address';
 import setupKeyper from '@background/keyper/setupKeyper';
 import { privateKey, rawTx, signedMessage, config } from '@common/fixtures/tx';
-import { signTx } from '@background/keyper/keyperwallet';
+import {
+  signTx,
+  getWallets,
+  addKeyperWallet,
+  addWallet,
+  getPublicKeys,
+  addPublicKey,
+  setCurrentWallet,
+  getCurrentWallet,
+  setAddressesList,
+  updateAddressesList,
+} from '@background/keyper/keyperwallet';
 import NetworkManager from '@common/networkManager';
 import { networks } from '@src/common/utils/constants/networks';
+import addressesList from './fixtures/addressesList';
+
+jest.mock('@background/wallet/passwordEncryptor');
 
 describe('Transaction test: secp256k1', () => {
   const {
@@ -21,6 +41,55 @@ describe('Transaction test: secp256k1', () => {
     });
 
     await setupKeyper();
+  });
+
+  it('should able to get wallets', async () => {
+    const wallets = await getWallets();
+    expect(wallets).toEqual([aliceWallet]);
+  });
+
+  it('should able to addKeyperWallet', async () => {
+    await addKeyperWallet(aliceAddresses.privateKey.substr(2), aliceWalletPwd);
+    const wallets = await getWallets();
+    expect(wallets).toEqual([aliceWallet]);
+  });
+
+  it('should able to addWallet', async () => {
+    await addWallet(
+      aliceAddresses.privateKey.substr(2),
+      aliceWallet.keystore,
+      aliceWallet.entropyKeystore,
+      aliceWallet.rootKeystore,
+    );
+    const wallets = await getWallets();
+    expect(wallets).toEqual([aliceWallet, aliceWallet]);
+  });
+
+  it('should able to addPublicKey', async () => {
+    await addPublicKey(aliceAddresses.publicKey);
+    const publicKeys = await getPublicKeys();
+    expect(publicKeys).toEqual([aliceAddresses.publicKey]);
+    await addPublicKey(bobAddresses.publicKey);
+    const publicKeysAfter = await getPublicKeys();
+    expect(publicKeysAfter).toEqual([aliceAddresses.publicKey, bobAddresses.publicKey]);
+  });
+
+  it('should able to setCurrentWallet', async () => {
+    await setCurrentWallet(aliceWallet.publicKey);
+    const currentWallet = await getCurrentWallet();
+    expect(currentWallet).toEqual(aliceWalletInStorage);
+  });
+
+  it('should able to setAddressesList', async () => {
+    await setAddressesList(addressesList);
+    const { addressesList: list } = await browser.storage.local.get('addressesList');
+    expect(list).toEqual(addressesList);
+  });
+
+  it('should able to updateAddressesList', async () => {
+    await updateAddressesList();
+    const { addressesList: list } = await browser.storage.local.get('addressesList');
+    expect(list).not.toBeNull();
   });
 
   it('Mainnet: should be able to sign tx with secp256k1', async () => {

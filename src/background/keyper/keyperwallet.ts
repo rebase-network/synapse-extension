@@ -91,7 +91,7 @@ const getWalletInfoByPublicKey = async (publicKey: string) => {
   };
 };
 
-const updateAddressesList = async () => {
+export const updateAddressesList = async () => {
   const publicKeys = await getPublicKeys();
   const addressesListPromise = publicKeys.map((publicKey) => {
     return getWalletInfoByPublicKey(publicKey);
