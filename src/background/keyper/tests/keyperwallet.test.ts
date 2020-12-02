@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { aliceAddresses, aliceWallet, aliceWalletPwd } from '@src/test/fixture/address';
+import { aliceAddresses, aliceWallet, aliceWalletPwd } from '@src/tests/fixture/address';
 import setupKeyper from '@background/keyper/setupKeyper';
 import { privateKey, rawTx, signedMessage, config } from '@common/fixtures/tx';
 import { signTx } from '@background/keyper/keyperwallet';

@@ -1,4 +1,4 @@
-import { aliceAddresses } from '@src/test/fixture/address';
+import { aliceAddresses } from '@src/tests/fixture/address';
 // https://explorer.nervos.org/aggron/transaction/0x44f543d59974cb9dac09323008a162beebaa19e6d7d0dbf91507947f678e612c
 
 // use alice's address rather than the real one

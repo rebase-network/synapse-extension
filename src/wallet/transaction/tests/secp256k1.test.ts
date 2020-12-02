@@ -1,8 +1,8 @@
 import CKB from '@nervosnetwork/ckb-sdk-core';
 import configService from '@src/config';
 import { rawTx, signedWitnesses } from '@common/fixtures/tx';
-import { bobAddresses, aliceAddresses } from '@src/test/fixture/address';
-import { secp256k1Dep } from '@src/test/fixture/deps';
+import { bobAddresses, aliceAddresses } from '@src/tests/fixture/address';
+import { secp256k1Dep } from '@src/tests/fixture/deps';
 import { signTx } from '@background/keyper/keyperwallet';
 import { Secp256k1LockScript as Secp256k1LockScriptOriginal } from '@keyper/container/lib/locks/secp256k1';
 import signProvider from '@background/keyper/signProviders/secp256k1';

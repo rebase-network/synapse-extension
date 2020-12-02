@@ -1,7 +1,7 @@
 import { Container } from '@keyper/container';
 import { SignatureAlgorithm } from '@keyper/specs';
 import NetworkManager from '@common/networkManager';
-import { aliceAddresses, bobAddresses } from '@src/test/fixture/address';
+import { aliceAddresses, bobAddresses } from '@src/tests/fixture/address';
 import ContainerManager from '../containerManager';
 import TestLockScript from './fixtures/lockScript';
 

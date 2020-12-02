@@ -1,5 +1,5 @@
 import { wallets as walletsSample } from '@src/wallet/fixtures/wallets';
-import { aliceAddresses, aliceWallet } from '@src/test/fixture/address';
+import { aliceAddresses, aliceWallet } from '@src/tests/fixture/address';
 import signProvider, { getWalletsInStorage } from './secp256k1';
 
 describe('secp256k1 sign provider', () => {

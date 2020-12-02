@@ -8,7 +8,6 @@ import Divider from '@material-ui/core/Divider';
 import { shannonToCKBFormatter } from '@utils/formatters';
 import Modal from '@ui/Components/Modal';
 import TxDetail from '@ui/Components/TxDetail';
-import _ from 'lodash';
 
 const useStyles = makeStyles({
   list: {

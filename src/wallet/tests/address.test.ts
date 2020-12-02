@@ -1,4 +1,4 @@
-import { bobAddresses } from '@src/test/fixture/address';
+import { bobAddresses } from '@src/tests/fixture/address';
 import Address from '../address';
 
 describe('address', () => {
