@@ -1,4 +1,4 @@
-import { signTx } from '@src/keyper/keyperwallet';
+import { signTx } from '@background/keyper/keyperwallet';
 
 export const signTxFromMsg = async (request) => {
   const { currentWallet } = await browser.storage.local.get(['currentWallet']);

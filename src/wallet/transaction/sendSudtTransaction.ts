@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { addressToScript } from '@keyper/specs';
 import { getUnspentCells } from '@utils/apis';
 import getCKB from '@utils/ckb';
-import { signTx } from '@src/keyper/keyperwallet';
+import { signTx } from '@background/keyper/keyperwallet';
 import NetworkManager from '@common/networkManager';
 import { getDepFromLockType } from '@src/utils/deps';
 import {

@@ -6,7 +6,7 @@ import _ from 'lodash';
 import { getDepFromLockType } from '@utils/deps';
 import { getUnspentCells } from '@utils/apis';
 import getCKB from '@utils/ckb';
-import { signTx } from '@src/keyper/keyperwallet';
+import { signTx } from '@background/keyper/keyperwallet';
 import NetworkManager from '@common/networkManager';
 import { createRawTx, createAnyPayRawTx } from './txGenerator';
 

@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import { Secp256k1LockScript as Secp256k1LockScriptOriginal } from '@keyper/container/lib/locks/secp256k1';
-import Secp256k1LockScript from '@src/keyper/locks/secp256k1';
+import Secp256k1LockScript from '@background/keyper/locks/secp256k1';
 import LOCKS_INFO from '@utils/constants/locksInfo';
-import signProvider from '@src/keyper/signProviders/secp256k1';
+import signProvider from '@background/keyper/signProviders/secp256k1';
 import { privateKey, rawTx, signedMessage, config } from '@common/fixtures/tx';
 
 describe('secp256k1 lockscript', () => {

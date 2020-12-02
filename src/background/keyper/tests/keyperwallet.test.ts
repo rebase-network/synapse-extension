@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import { aliceAddresses, aliceWallet, aliceWalletPwd } from '@src/test/fixture/address';
-import setupKeyper from '@src/keyper/setupKeyper';
+import setupKeyper from '@background/keyper/setupKeyper';
 import { privateKey, rawTx, signedMessage, config } from '@common/fixtures/tx';
-import { signTx } from '@src/keyper/keyperwallet';
+import { signTx } from '@background/keyper/keyperwallet';
 import NetworkManager from '@common/networkManager';
 import { networks } from '@utils/constants/networks';
 

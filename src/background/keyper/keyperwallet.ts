@@ -1,7 +1,7 @@
 import { LockHashWithMeta, PublicKey } from '@keyper/container';
 import { SignatureAlgorithm, Script } from '@keyper/specs';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
-import PublicKeyClass from '@src/keyper/publicKey';
+import PublicKeyClass from '@background/keyper/publicKey';
 import * as Keystore from '@src/wallet/passwordEncryptor';
 import { KEYSTORE_TYPE } from '@utils/constants';
 import ContainerManager from './containerManager';
