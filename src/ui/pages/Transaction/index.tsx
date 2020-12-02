@@ -38,7 +38,7 @@ import { getUnspentCapacity } from '@src/common/utils/apis';
 import { addressToScript } from '@keyper/specs';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils';
 
-import calculateTxFee from '@src/wallet/transaction/calculateFee';
+import calculateTxFee from '@common/utils/fee/calculateFee';
 import { genDummyTransaction } from '@src/wallet/transaction/sendTransaction';
 import { showAddressHelper } from '@src/common/utils/wallet';
 

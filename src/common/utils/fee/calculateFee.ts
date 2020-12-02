@@ -11,7 +11,7 @@ export interface CalculateTxFeeResult {
 }
 
 const calculateTxFee = (transaction, feeRate = BigInt(1000)): String => {
-  const { version, cellDeps, headerDeps, inputs, outputs, outputsData, witnesses } = transaction;
+  const { version, cellDeps, headerDeps, inputs, outputs, outputsData } = transaction;
 
   const calculateTx = {
     version,
@@ -26,10 +26,7 @@ const calculateTxFee = (transaction, feeRate = BigInt(1000)): String => {
   const transactionSize = calculateSerializedTxSizeInBlock(calculateTx);
   let txFee = calculateTransactionFee(BigInt(transactionSize), feeRate);
 
-  console.log(/feeRate/, feeRate);
-
   if (BigInt(txFee) < BigInt(MIN_FEE_RATE)) {
-    console.log(/calculate fee/, txFee);
     txFee = MIN_FEE_RATE;
   }
 
