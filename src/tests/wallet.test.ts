@@ -1,6 +1,6 @@
-import { generateMnemonic } from '../wallet/key';
-import Keychain from '../wallet/keychain';
-import { mnemonicToSeedSync } from '../wallet/mnemonic';
+import { generateMnemonic } from '@background/wallet/key';
+import Keychain from '@background/wallet/keychain';
+import { mnemonicToSeedSync } from '@background/wallet/mnemonic';
 
 const fixture = {
   entropy: '7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f',

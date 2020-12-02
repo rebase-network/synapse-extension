@@ -1,4 +1,8 @@
-import Address, { AddressType, publicKeyToAddress, AddressPrefix } from '../wallet/address';
+import Address, {
+  AddressType,
+  publicKeyToAddress,
+  AddressPrefix,
+} from '@background/wallet/address';
 
 describe('address', () => {
   it('path from index', () => {

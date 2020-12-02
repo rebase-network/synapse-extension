@@ -3,18 +3,18 @@ import {
   validateMnemonic,
   mnemonicToEntropy,
   entropyToMnemonic,
-} from '@src/wallet/mnemonic';
+} from '@src/background/wallet/mnemonic';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
-import { generateMnemonic, ExtendedPrivateKey } from '@src/wallet/key';
-import Keychain from '@src/wallet/keychain';
-import { sendTransaction } from '@src/wallet/transaction/sendTransaction';
-import Address from '@src/wallet/address';
+import { generateMnemonic, ExtendedPrivateKey } from '@src/background/wallet/key';
+import Keychain from '@src/background/wallet/keychain';
+import { sendTransaction } from '@src/background/wallet/transaction/sendTransaction';
+import Address from '@src/background/wallet/address';
 import { signTxFromMsg } from '@background/transaction';
 import { getTxHistories } from '@src/common/utils/apis';
 import { addKeyperWallet } from '@background/keyper/keyperwallet';
 import setupKeyper from '@background/keyper/setupKeyper';
-import * as WalletKeystore from '@src/wallet/keystore';
-import * as PasswordKeystore from '@src/wallet/passwordEncryptor';
+import * as WalletKeystore from '@src/background/wallet/keystore';
+import * as PasswordKeystore from '@src/background/wallet/passwordEncryptor';
 import _ from 'lodash';
 import { findInWalletsByPublicKey, showAddressHelper } from '@src/common/utils/wallet';
 import {
@@ -27,7 +27,7 @@ import addExternalMessageListener from '@background/messageHandlers';
 import { WEB_PAGE } from '@src/common/utils/message/constants';
 import { sendToWebPage } from '@background/messageHandlers/proxy';
 import NetworkManager from '@common/networkManager';
-import { sendSudtTransaction } from '@src/wallet/transaction/sendSudtTransaction';
+import { sendSudtTransaction } from '@src/background/wallet/transaction/sendSudtTransaction';
 import { ckbToshannon, shannonToSUDT, CKBToShannonFormatter } from '@src/common/utils/formatters';
 
 NetworkManager.initNetworks();

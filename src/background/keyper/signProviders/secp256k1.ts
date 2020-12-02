@@ -1,5 +1,5 @@
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
-import * as Keystore from '@src/wallet/passwordEncryptor';
+import * as Keystore from '@src/background/wallet/passwordEncryptor';
 import { sign as secp256k1WithPrivateKey } from './secp256k1WithPrivateKey';
 
 export async function getWalletsInStorage() {

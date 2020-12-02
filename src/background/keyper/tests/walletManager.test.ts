@@ -1,4 +1,4 @@
-import wallets from '@src/wallet/fixtures/wallets';
+import wallets from '@src/background/wallet/fixtures/wallets';
 import WalletManager from '../walletManager';
 
 describe('wallet manager', () => {

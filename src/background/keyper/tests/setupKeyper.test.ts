@@ -1,4 +1,4 @@
-import wallets from '@src/wallet/fixtures/wallets';
+import wallets from '@src/background/wallet/fixtures/wallets';
 import { NETWORKS } from '@src/common/utils/constants/locksInfo';
 import setupKeyper from '../setupKeyper';
 import ContainerManager from '../containerManager';

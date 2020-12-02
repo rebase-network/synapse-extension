@@ -1,4 +1,4 @@
-import { wallets as walletsSample } from '@src/wallet/fixtures/wallets';
+import { wallets as walletsSample } from '@src/background/wallet/fixtures/wallets';
 import { aliceAddresses, aliceWallet } from '@src/tests/fixture/address';
 import signProvider, { getWalletsInStorage } from './secp256k1';
 

@@ -2,7 +2,7 @@ import crypto from 'crypto';
 
 // import Address, { AddressType, AddressPrefix } from './address'
 // import Keychain, { privateToPublic } from './keychain'
-import { entropyToMnemonic } from '../wallet/mnemonic';
+import { entropyToMnemonic } from '@background/wallet/mnemonic';
 
 // Generate 12 words mnemonic code
 export const generateMnemonic = () => {
