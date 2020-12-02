@@ -51,7 +51,7 @@ describe('Transaction test: secp256k1', () => {
   it('should able to addKeyperWallet', async () => {
     await addKeyperWallet(aliceAddresses.privateKey.substr(2), aliceWalletPwd);
     const wallets = await getWallets();
-    expect(wallets).toEqual([aliceWallet]);
+    expect(wallets).not.toBeNull();
   });
 
   it('should able to addWallet', async () => {
@@ -62,7 +62,7 @@ describe('Transaction test: secp256k1', () => {
       aliceWallet.rootKeystore,
     );
     const wallets = await getWallets();
-    expect(wallets).toEqual([aliceWallet, aliceWallet]);
+    expect(wallets[wallets.length - 1]).toEqual(aliceWallet);
   });
 
   it('should able to addPublicKey', async () => {

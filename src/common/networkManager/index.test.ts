@@ -1,5 +1,6 @@
 import { networks } from '@src/common/utils/constants/networks';
 import NetworkManager from './index';
+import { deprecatedNetworks, networks as networksFixture } from './fixtures/networks';
 
 describe('network manager', () => {
   beforeEach(async () => {
@@ -12,6 +13,17 @@ describe('network manager', () => {
   it('should return initial networks', async () => {
     const result = await NetworkManager.getNetworkList();
     expect(result).toHaveLength(networks.length);
+  });
+
+  it('should able to update deprecated networks', async () => {
+    await browser.storage.local.set({
+      networks: deprecatedNetworks,
+    });
+
+    await NetworkManager.initNetworks();
+
+    const result = await NetworkManager.getNetworkList();
+    expect(result).toHaveLength(deprecatedNetworks.length);
   });
 
   it('should able to set current network', async () => {
