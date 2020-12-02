@@ -3,7 +3,7 @@ import {
   calculateTransactionFee,
 } from '@nervosnetwork/ckb-sdk-utils';
 import { BN } from 'bn.js';
-import { MIN_FEE_RATE, EMPTY_WITNESS } from '@src/utils/constants';
+import { MIN_FEE_RATE, EMPTY_WITNESS } from '@utils/constants';
 
 export interface CalculateTxFeeResult {
   tx: CKBComponents.RawTransaction;

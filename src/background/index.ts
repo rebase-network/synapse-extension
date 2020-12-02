@@ -20,11 +20,11 @@ import { findInWalletsByPublicKey, showAddressHelper } from '@utils/wallet';
 import { getStatusByTxHash, getBlockNumberByTxHash, sendSignedTx } from '@utils/transaction';
 import { MESSAGE_TYPE } from '@utils/constants';
 import addExternalMessageListener from '@background/messageHandlers';
-import { WEB_PAGE } from '@src/utils/message/constants';
+import { WEB_PAGE } from '@utils/message/constants';
 import { sendToWebPage } from '@background/messageHandlers/proxy';
 import NetworkManager from '@common/networkManager';
 import { sendSudtTransaction } from '@src/wallet/transaction/sendSudtTransaction';
-import { ckbToshannon, shannonToSUDT, CKBToShannonFormatter } from '@src/utils/formatters';
+import { ckbToshannon, shannonToSUDT, CKBToShannonFormatter } from '@utils/formatters';
 
 NetworkManager.initNetworks();
 

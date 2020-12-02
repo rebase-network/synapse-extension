@@ -5,14 +5,14 @@ import { getUnspentCells } from '@utils/apis';
 import getCKB from '@utils/ckb';
 import { signTx } from '@background/keyper/keyperwallet';
 import NetworkManager from '@common/networkManager';
-import { getDepFromLockType } from '@src/utils/deps';
+import { getDepFromLockType } from '@utils/deps';
 import {
   ADDRESS_TYPE_CODEHASH,
   SUDT_MIN_CELL_CAPACITY,
   CKB_TOKEN_DECIMALS,
-} from '@src/utils/constants';
-import { getDepFromType } from '@src/utils/constants/typesInfo';
-import { parseSUDT } from '@src/utils';
+} from '@utils/constants';
+import { getDepFromType } from '@utils/constants/typesInfo';
+import { parseSUDT } from '@utils/index';
 import { createSudtRawTx } from './txSudtGenerator';
 
 export interface GenerateTxResult {

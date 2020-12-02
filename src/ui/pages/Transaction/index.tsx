@@ -34,7 +34,7 @@ import {
   truncateHash,
   ckbToshannon,
 } from '@utils/formatters';
-import { getUnspentCapacity } from '@src/utils/apis';
+import { getUnspentCapacity } from '@utils/apis';
 import { addressToScript } from '@keyper/specs';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils';
 

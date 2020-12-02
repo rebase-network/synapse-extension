@@ -5,7 +5,7 @@ import { ListItem, ListItemText, Tooltip } from '@material-ui/core';
 import { getUDTsByLockHash } from '@utils/apis';
 import { aggregateUDT } from '@utils/token';
 import { shannonToCKBFormatter } from '@utils/formatters';
-import { TypesInfo } from '@src/utils/constants/typesInfo';
+import { TypesInfo } from '@utils/constants/typesInfo';
 import NetworkManager from '@src/common/networkManager';
 import _ from 'lodash';
 import { HelpOutline } from '@material-ui/icons';

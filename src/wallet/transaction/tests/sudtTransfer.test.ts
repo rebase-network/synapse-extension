@@ -28,7 +28,6 @@ describe('SimpleUDT Test', () => {
       'ckt1qjr2r35c0f9vhcdgslx2fjwa9tylevr5qka7mfgmscd33wlhfykyhk3revrcye0356ns9k5edfzmm0mt53fmk6n77qe';
     const targetCapacity = 575;
     const charge = `0x${targetCapacity.toString(16)}`;
-    console.log(/charge/, charge);
 
     const transferTransaction = {
       version: '0x0',

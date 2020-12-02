@@ -7,7 +7,7 @@ import {
   SUDT_MIN_CELL_CAPACITY,
   CKB_TOKEN_DECIMALS,
   EMPTY_OUTPUT_DATA,
-} from '@src/utils/constants';
+} from '@utils/constants';
 
 export interface CreateRawTxResult {
   tx: CKBComponents.RawTransaction;

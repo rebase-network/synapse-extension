@@ -1,4 +1,4 @@
-import { ckbToshannon } from '@src/utils/formatters';
+import { ckbToshannon } from '@utils/formatters';
 
 jest.unmock('@nervosnetwork/ckb-sdk-core');
 
