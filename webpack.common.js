@@ -38,15 +38,15 @@ module.exports = {
         to: path.join(__dirname, 'dist'),
       },
       {
-        from: './src/images/logo-32.png',
+        from: './src/ui/public/assets/logo-32.png',
         to: path.join(__dirname, 'dist'),
       },
       {
-        from: './src/images/logo-32.svg',
+        from: './src/ui/public/assets/logo-32.svg',
         to: path.join(__dirname, 'dist'),
       },
       {
-        from: './src/images/logo-128.png',
+        from: './src/ui/public/assets/logo-128.png',
         to: path.join(__dirname, 'dist'),
       },
     ]),
