@@ -9,7 +9,11 @@ import Typography from '@material-ui/core/Typography';
 import { FormattedMessage } from 'react-intl';
 import PageNav from '@ui/Components/PageNav';
 import { BN } from 'bn.js';
-import { MAINNET_EXPLORER_URL, TESTNET_EXPLORER_URL, CKB_TOKEN_DECIMALS } from '@utils/constants';
+import {
+  MAINNET_EXPLORER_URL,
+  TESTNET_EXPLORER_URL,
+  CKB_TOKEN_DECIMALS,
+} from '@src/common/utils/constants';
 
 const useStyles = makeStyles((theme) => ({
   root: {

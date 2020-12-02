@@ -1,13 +1,12 @@
 import { BN } from 'bn.js';
 import { scriptToHash, toHexInLittleEndian } from '@nervosnetwork/ckb-sdk-utils/lib';
-import _ from 'lodash';
 import { Cell } from '@nervosnetwork/ckb-sdk-core/lib/generateRawTransaction';
 import { ScriptHashType } from '@keyper/specs/types';
 import {
   SUDT_MIN_CELL_CAPACITY,
   CKB_TOKEN_DECIMALS,
   EMPTY_OUTPUT_DATA,
-} from '@utils/constants';
+} from '@src/common/utils/constants';
 
 export interface CreateRawTxResult {
   tx: CKBComponents.RawTransaction;

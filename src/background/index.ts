@@ -10,21 +10,25 @@ import Keychain from '@src/wallet/keychain';
 import { sendTransaction } from '@src/wallet/transaction/sendTransaction';
 import Address from '@src/wallet/address';
 import { signTxFromMsg } from '@background/transaction';
-import { getTxHistories } from '@utils/apis';
+import { getTxHistories } from '@src/common/utils/apis';
 import { addKeyperWallet } from '@background/keyper/keyperwallet';
 import setupKeyper from '@background/keyper/setupKeyper';
 import * as WalletKeystore from '@src/wallet/keystore';
 import * as PasswordKeystore from '@src/wallet/passwordEncryptor';
 import _ from 'lodash';
-import { findInWalletsByPublicKey, showAddressHelper } from '@utils/wallet';
-import { getStatusByTxHash, getBlockNumberByTxHash, sendSignedTx } from '@utils/transaction';
-import { MESSAGE_TYPE } from '@utils/constants';
+import { findInWalletsByPublicKey, showAddressHelper } from '@src/common/utils/wallet';
+import {
+  getStatusByTxHash,
+  getBlockNumberByTxHash,
+  sendSignedTx,
+} from '@src/common/utils/transaction';
+import { MESSAGE_TYPE } from '@src/common/utils/constants';
 import addExternalMessageListener from '@background/messageHandlers';
-import { WEB_PAGE } from '@utils/message/constants';
+import { WEB_PAGE } from '@src/common/utils/message/constants';
 import { sendToWebPage } from '@background/messageHandlers/proxy';
 import NetworkManager from '@common/networkManager';
 import { sendSudtTransaction } from '@src/wallet/transaction/sendSudtTransaction';
-import { ckbToshannon, shannonToSUDT, CKBToShannonFormatter } from '@utils/formatters';
+import { ckbToshannon, shannonToSUDT, CKBToShannonFormatter } from '@src/common/utils/formatters';
 
 NetworkManager.initNetworks();
 

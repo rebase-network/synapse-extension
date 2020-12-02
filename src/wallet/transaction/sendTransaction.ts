@@ -1,11 +1,11 @@
+import _ from 'lodash';
 import { BN } from 'bn.js';
 import { addressToScript } from '@keyper/specs';
-import { ADDRESS_TYPE_CODEHASH } from '@utils/constants';
-import { textToHex } from '@utils/index';
-import _ from 'lodash';
-import { getDepFromLockType } from '@utils/deps';
-import { getUnspentCells } from '@utils/apis';
-import getCKB from '@utils/ckb';
+import { ADDRESS_TYPE_CODEHASH } from '@src/common/utils/constants';
+import { textToHex } from '@src/common/utils/index';
+import { getDepFromLockType } from '@src/common/utils/deps';
+import { getUnspentCells } from '@src/common/utils/apis';
+import getCKB from '@src/common/utils/ckb';
 import { signTx } from '@background/keyper/keyperwallet';
 import NetworkManager from '@common/networkManager';
 import { createRawTx, createAnyPayRawTx } from './txGenerator';
@@ -262,9 +262,9 @@ export const sendTransaction = async (
     if (realTxHash.code !== undefined && realTxHash.code !== 0) {
       return {
         errCode: realTxHash.code,
-        message: realTxHash.message
+        message: realTxHash.message,
       };
-    }  
+    }
     txResultObj.txHash = realTxHash;
   } catch (error) {
     console.error(`Failed to send tx: ${error}`);
@@ -340,7 +340,6 @@ export const genDummyTransaction = async (
     );
     config = { index: 1, length: 1 };
   } else if (toLockType === 'Secp256k1') {
-
     rawTxObj = await generateTx(
       fromAddress,
       toAddress,
@@ -355,5 +354,4 @@ export const genDummyTransaction = async (
   }
 
   return rawTxObj.tx;
-
 };

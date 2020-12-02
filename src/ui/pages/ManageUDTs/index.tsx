@@ -1,4 +1,6 @@
 import React from 'react';
+import _ from 'lodash';
+import * as Yup from 'yup';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Formik, Form } from 'formik';
 import { makeStyles } from '@material-ui/core/styles';
@@ -7,9 +9,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import { Button, TextField, ListItem, ListItemText, List } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { truncateHash } from '@utils/formatters';
-import _ from 'lodash';
-import * as Yup from 'yup';
+import { truncateHash } from '@src/common/utils/formatters';
 
 const useStyles = makeStyles({
   container: {

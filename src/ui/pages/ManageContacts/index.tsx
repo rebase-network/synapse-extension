@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Button, TextField } from '@material-ui/core';
 import { Formik, Form } from 'formik';
@@ -10,8 +11,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { truncateAddress } from '@utils/formatters';
-import _ from 'lodash';
+import { truncateAddress } from '@src/common/utils/formatters';
 import * as Yup from 'yup';
 import { addressToScript } from '@keyper/specs';
 

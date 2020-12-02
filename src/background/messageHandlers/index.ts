@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { MESSAGE_TYPE } from '@utils/constants';
+import { MESSAGE_TYPE } from '@src/common/utils/constants';
 import sendToPopup from './sendToPopup';
 import getAddressInfo from './getAddressInfo';
 import getLiveCells from './getLiveCells';

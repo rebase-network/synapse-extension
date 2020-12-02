@@ -1,18 +1,18 @@
 import BN from 'bn.js';
 import _ from 'lodash';
 import { addressToScript } from '@keyper/specs';
-import { getUnspentCells } from '@utils/apis';
-import getCKB from '@utils/ckb';
+import { getUnspentCells } from '@common/utils/apis';
+import getCKB from '@common/utils/ckb';
 import { signTx } from '@background/keyper/keyperwallet';
 import NetworkManager from '@common/networkManager';
-import { getDepFromLockType } from '@utils/deps';
+import { getDepFromLockType } from '@common/utils/deps';
 import {
   ADDRESS_TYPE_CODEHASH,
   SUDT_MIN_CELL_CAPACITY,
   CKB_TOKEN_DECIMALS,
-} from '@utils/constants';
-import { getDepFromType } from '@utils/constants/typesInfo';
-import { parseSUDT } from '@utils/index';
+} from '@common/utils/constants';
+import { getDepFromType } from '@common/utils/constants/typesInfo';
+import { parseSUDT } from '@common/utils';
 import { createSudtRawTx } from './txSudtGenerator';
 
 export interface GenerateTxResult {

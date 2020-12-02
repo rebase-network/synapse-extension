@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { makeStyles, Theme, createStyles, withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { FormattedMessage } from 'react-intl';
-import { MESSAGE_TYPE } from '@utils/constants';
+import { MESSAGE_TYPE } from '@src/common/utils/constants';
 
 const useStylesTheme = makeStyles((theme: Theme) =>
   createStyles({

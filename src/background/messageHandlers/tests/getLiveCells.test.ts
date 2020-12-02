@@ -1,7 +1,7 @@
 import currentWallet from './fixtures/currentWallet';
 import getLiveCells from '../getLiveCells';
 
-jest.mock('@utils/apis');
+jest.mock('@common/utils/apis');
 
 describe('getLiveCells', () => {
   it('should able to get live cells', async () => {

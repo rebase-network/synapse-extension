@@ -1,5 +1,5 @@
 import { ScriptHashType } from '@keyper/specs';
-import { NETWORK_TYPES } from '@utils/constants/networks';
+import { NETWORK_TYPES } from '@src/common/utils/constants/networks';
 
 const { testnet, mainnet, local } = NETWORK_TYPES;
 export const NETWORKS = [mainnet, testnet, local];

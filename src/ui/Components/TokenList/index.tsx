@@ -1,13 +1,13 @@
 import React from 'react';
+import _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@material-ui/core/styles';
 import { ListItem, ListItemText, Tooltip } from '@material-ui/core';
-import { getUDTsByLockHash } from '@utils/apis';
-import { aggregateUDT } from '@utils/token';
-import { shannonToCKBFormatter } from '@utils/formatters';
-import { TypesInfo } from '@utils/constants/typesInfo';
+import { getUDTsByLockHash } from '@src/common/utils/apis';
+import { aggregateUDT } from '@src/common/utils/token';
+import { shannonToCKBFormatter } from '@src/common/utils/formatters';
+import { TypesInfo } from '@src/common/utils/constants/typesInfo';
 import NetworkManager from '@src/common/networkManager';
-import _ from 'lodash';
 import { HelpOutline } from '@material-ui/icons';
 import TokenListComponent from './component';
 

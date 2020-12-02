@@ -5,7 +5,7 @@ import { IntlProvider } from 'react-intl';
 import zh from '@common/locales/zh';
 import en from '@common/locales/en';
 import App from '@ui/App';
-import { getDefaultLanguage } from '@utils/locale';
+import { getDefaultLanguage } from '@src/common/utils/locale';
 
 const messages = {
   en,

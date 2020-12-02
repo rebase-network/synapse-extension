@@ -8,7 +8,7 @@ import { Secp256k1LockScript as Secp256k1LockScriptOriginal } from '@keyper/cont
 import signProvider from '@background/keyper/signProviders/secp256k1';
 import { LockScript } from '@keyper/specs';
 
-jest.mock('@utils/apis');
+jest.mock('@common/utils/apis');
 
 const resultWitnesses = [
   '0x5500000010000000550000005500000041000000ffac752f9a4da6fc3069dd8bea3caf8e8b687040e28d2ed1d71f0f32713e87b0380902cabdad79caaf7931d48ae2ee7db370e456c0546633a6d887e2f16d402d00',

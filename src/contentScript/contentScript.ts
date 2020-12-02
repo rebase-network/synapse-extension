@@ -1,4 +1,4 @@
-import { BACKGROUND_PORT, WEB_PAGE, CONTENT_SCRIPT } from '@utils/message/constants';
+import { BACKGROUND_PORT, WEB_PAGE, CONTENT_SCRIPT } from '@src/common/utils/message/constants';
 import _ from 'lodash';
 
 function injectCustomJs(jsPath) {

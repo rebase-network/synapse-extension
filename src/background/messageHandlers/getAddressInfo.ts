@@ -1,6 +1,6 @@
-import { MESSAGE_TYPE } from '@utils/constants';
-import { WEB_PAGE } from '@utils/message/constants';
-import { getAddressInfo } from '@utils/apis';
+import { MESSAGE_TYPE } from '@src/common/utils/constants';
+import { WEB_PAGE } from '@src/common/utils/message/constants';
+import { getAddressInfo } from '@src/common/utils/apis';
 import { scriptToAddress } from '@keyper/specs/lib/address';
 import NetworkManager from '@common/networkManager';
 

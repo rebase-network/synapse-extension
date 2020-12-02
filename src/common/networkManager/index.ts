@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { networks as presetNetworks } from '@utils/constants/networks';
+import { networks as presetNetworks } from '@src/common/utils/constants/networks';
 
 interface INetwork {
   title: string;

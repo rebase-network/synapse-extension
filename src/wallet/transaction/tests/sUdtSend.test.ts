@@ -3,7 +3,7 @@ import { createSudtTransaction } from '../sendSudtTransaction';
 
 const fixtures = require('./sUdtSend.fixtures.json');
 
-jest.mock('@utils/apis');
+jest.mock('@common/utils/apis');
 jest.unmock('@nervosnetwork/ckb-sdk-core');
 
 describe('SUDT Transaction test', () => {

@@ -1,4 +1,4 @@
-import LOCKS_INFO, { NETWORKS } from '@utils/constants/locksInfo';
+import LOCKS_INFO, { NETWORKS } from '@src/common/utils/constants/locksInfo';
 
 type TLockType = 'Secp256k1' | 'Keccak256' | 'AnyPay';
 

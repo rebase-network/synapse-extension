@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { FormattedMessage, useIntl } from 'react-intl';
-import { MESSAGE_TYPE } from '@utils/constants';
+import { FormattedMessage } from 'react-intl';
+import { MESSAGE_TYPE } from '@src/common/utils/constants';
 import PageNav from '@ui/Components/PageNav';
 
 const useStyles = makeStyles({

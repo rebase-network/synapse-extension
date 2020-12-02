@@ -1,4 +1,4 @@
-import { CapacityUnit } from '@utils/constants';
+import { CapacityUnit } from '@src/common/utils/constants';
 
 const fixtures = [
   {

@@ -1,6 +1,6 @@
 import { AddressPrefix, AddressType as Type, pubkeyToAddress } from '@nervosnetwork/ckb-sdk-utils';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
-import { Ckb } from '@utils/constants';
+import { Ckb } from '@src/common/utils/constants';
 // FIXME
 import { AccountExtendedPublicKey } from './key';
 

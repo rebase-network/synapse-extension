@@ -23,7 +23,7 @@ import {
   MIN_TRANSFER_CELL_CAPACITY,
   ADDRESS_TYPE_CODEHASH,
   SUDT_MIN_CELL_CAPACITY,
-} from '@utils/constants';
+} from '@src/common/utils/constants';
 import PageNav from '@ui/Components/PageNav';
 import Modal from '@ui/Components/Modal';
 import TxDetail from '@ui/Components/TxDetail';
@@ -33,14 +33,14 @@ import {
   shannonToCKBFormatter,
   truncateHash,
   ckbToshannon,
-} from '@utils/formatters';
-import { getUnspentCapacity } from '@utils/apis';
+} from '@src/common/utils/formatters';
+import { getUnspentCapacity } from '@src/common/utils/apis';
 import { addressToScript } from '@keyper/specs';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils';
 
 import calculateTxFee from '@src/wallet/transaction/calculateFee';
 import { genDummyTransaction } from '@src/wallet/transaction/sendTransaction';
-import { showAddressHelper } from '@utils/wallet';
+import { showAddressHelper } from '@src/common/utils/wallet';
 
 const useStyles = makeStyles({
   container: {

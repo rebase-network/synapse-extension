@@ -4,7 +4,7 @@ import setupKeyper from '@background/keyper/setupKeyper';
 import { privateKey, rawTx, signedMessage, config } from '@common/fixtures/tx';
 import { signTx } from '@background/keyper/keyperwallet';
 import NetworkManager from '@common/networkManager';
-import { networks } from '@utils/constants/networks';
+import { networks } from '@src/common/utils/constants/networks';
 
 describe('Transaction test: secp256k1', () => {
   const {

@@ -1,11 +1,11 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
-import TxList from './index';
-import { txList } from './fixture';
+import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
-import { explorerUrl } from '@utils/tests/fixtures/token';
+import { explorerUrl } from '@src/common/utils/tests/fixtures/token';
+import TxList from './index';
+import { txList } from './fixture';
 
 describe('TxList', () => {
   let tree;

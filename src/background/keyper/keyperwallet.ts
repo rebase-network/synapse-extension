@@ -3,7 +3,7 @@ import { SignatureAlgorithm, Script } from '@keyper/specs';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 import PublicKeyClass from '@background/keyper/publicKey';
 import * as Keystore from '@src/wallet/passwordEncryptor';
-import { KEYSTORE_TYPE } from '@utils/constants';
+import { KEYSTORE_TYPE } from '@src/common/utils/constants';
 import ContainerManager from './containerManager';
 
 interface IAddressesList {

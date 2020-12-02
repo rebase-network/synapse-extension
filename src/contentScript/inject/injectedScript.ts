@@ -1,5 +1,5 @@
-import { MESSAGE_TYPE } from '@utils/constants';
-import { BACKGROUND_PORT, WEB_PAGE } from '@utils/message/constants';
+import { MESSAGE_TYPE } from '@src/common/utils/constants';
+import { BACKGROUND_PORT, WEB_PAGE } from '@src/common/utils/message/constants';
 
 interface RequestMessage {
   type: string;

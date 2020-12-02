@@ -3,8 +3,8 @@ import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
 import { makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { ListItem, ListItemText, Typography } from '@material-ui/core';
-import { truncateAddress, shannonToCKBFormatter } from '@utils/formatters';
-import { getAddressInfo } from '@utils/apis';
+import { truncateAddress, shannonToCKBFormatter } from '@src/common/utils/formatters';
+import { getAddressInfo } from '@src/common/utils/apis';
 
 const useStylesTheme = makeStyles({
   container: {

@@ -1,4 +1,4 @@
-import { parseSUDT } from '@utils/index';
+import { parseSUDT } from '@src/common/utils/index';
 import _ from 'lodash';
 
 export interface UDTInfo {

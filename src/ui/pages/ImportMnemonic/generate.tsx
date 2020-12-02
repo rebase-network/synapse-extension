@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { MESSAGE_TYPE } from '@utils/constants';
+import { MESSAGE_TYPE } from '@src/common/utils/constants';
 import Title from '@ui/Components/Title';
 
 const useStyles = makeStyles((theme) => ({

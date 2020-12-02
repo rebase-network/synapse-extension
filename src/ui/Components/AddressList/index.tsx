@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import AddressListItem from '@ui/Components/AddressListItem';
-import { showAddressHelper } from '@utils/wallet';
+import { showAddressHelper } from '@src/common/utils/wallet';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

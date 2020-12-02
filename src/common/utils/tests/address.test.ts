@@ -1,6 +1,6 @@
-import { getAddressInfo } from '@utils/apis';
+import { getAddressInfo } from '@src/common/utils/apis';
 
-jest.mock('@utils/apis');
+jest.mock('@common/utils/apis');
 
 describe('address util test', () => {
   it('should return value for address balance', async () => {

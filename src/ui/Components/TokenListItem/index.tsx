@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { ListItem, ListItemText, Tooltip, Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { HelpOutline } from '@material-ui/icons';
-import { shannonToCKBFormatter } from '@utils/formatters';
+import { shannonToCKBFormatter } from '@src/common/utils/formatters';
 import CallMadeIcon from '@material-ui/icons/CallMade';
 
 const useStyles = makeStyles({

@@ -5,7 +5,7 @@ import { ListItem, ListItemText, List, Link, Tooltip } from '@material-ui/core';
 import CallMadeIcon from '@material-ui/icons/CallMade';
 import { makeStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
-import { shannonToCKBFormatter } from '@utils/formatters';
+import { shannonToCKBFormatter } from '@src/common/utils/formatters';
 import Modal from '@ui/Components/Modal';
 import TxDetail from '@ui/Components/TxDetail';
 

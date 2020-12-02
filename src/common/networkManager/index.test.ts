@@ -1,4 +1,4 @@
-import { networks } from '@utils/constants/networks';
+import { networks } from '@src/common/utils/constants/networks';
 import NetworkManager from './index';
 
 describe('network manager', () => {

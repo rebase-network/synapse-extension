@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Button, TextField } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 import Title from '@ui/Components/Title';
-import { MESSAGE_TYPE } from '@utils/constants';
+import { MESSAGE_TYPE } from '@src/common/utils/constants';
 
 const useStyles = makeStyles({
   container: {

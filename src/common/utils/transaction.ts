@@ -1,4 +1,4 @@
-import getCKB from '@utils/ckb';
+import getCKB from '@src/common/utils/ckb';
 
 export const getStatusByTxHash = async (txHash) => {
   const ckb = await getCKB();

@@ -2,19 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import QrCode from 'qrcode.react';
 import { FormattedMessage } from 'react-intl';
-import queryString from 'query-string';
-import {
-  Grid,
-  Button,
-  Dialog,
-  IconButton,
-  Link,
-  Tooltip,
-  Divider,
-  Box,
-  ListItem,
-  ListItemText,
-} from '@material-ui/core';
+import { Grid, Button, Dialog, IconButton, Link, Tooltip, Divider, Box } from '@material-ui/core';
 import {
   Close as CloseIcon,
   CallMade as CallMadeIcon,
@@ -28,12 +16,12 @@ import {
   MAINNET_EXPLORER_URL,
   TESTNET_EXPLORER_URL,
   LockType,
-} from '@utils/constants';
-import { truncateAddress, shannonToCKBFormatter } from '@utils/formatters';
-import { getAddressInfo } from '@utils/apis';
+} from '@src/common/utils/constants';
+import { truncateAddress, shannonToCKBFormatter } from '@src/common/utils/formatters';
+import { getAddressInfo } from '@src/common/utils/apis';
 import TxList from '@ui/Components/TxList';
 import TokenList from '@ui/Components/TokenList';
-import { showAddressHelper } from '@utils/wallet';
+import { showAddressHelper } from '@src/common/utils/wallet';
 
 const useStyles = makeStyles({
   container: {

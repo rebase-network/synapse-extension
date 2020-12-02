@@ -7,7 +7,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import PageNav from '@ui/Components/PageNav';
 import LanguageSelector from '@ui/Components/LanguageSelector';
 import { TextField, Button, Modal } from '@material-ui/core';
-import { MESSAGE_TYPE } from '@utils/constants';
+import { MESSAGE_TYPE } from '@src/common/utils/constants';
 
 const useStyles = makeStyles({
   container: {
