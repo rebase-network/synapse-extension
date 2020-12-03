@@ -1,5 +1,5 @@
 import { wallets as walletsSample } from '@src/background/wallet/fixtures/wallets';
-import { aliceAddresses, aliceWallet } from '@src/tests/fixture/address';
+import { aliceAddresses, aliceWallet, aliceWalletPwd } from '@src/tests/fixture/address';
 import signProvider, { getWalletsInStorage } from './secp256k1';
 
 describe('secp256k1 sign provider', () => {
@@ -25,7 +25,7 @@ describe('secp256k1 sign provider', () => {
       privateKey: aliceAddresses.privateKey,
       publicKey: aliceAddresses.publicKey,
       address: aliceAddresses.secp256k1.address,
-      password: 'aaa',
+      password: aliceWalletPwd,
     };
     const result = await signProvider.sign(context, '0x123');
     const expected =
@@ -41,7 +41,7 @@ describe('secp256k1 sign provider', () => {
     const context = {
       publicKey: aliceAddresses.publicKey,
       address: aliceAddresses.secp256k1.address,
-      password: 'aaaaaa',
+      password: aliceWalletPwd,
     };
     try {
       await signProvider.sign(context, '0x123');
