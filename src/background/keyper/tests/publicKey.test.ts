@@ -1,4 +1,4 @@
-import { aliceAddresses, aliceWallet, aliceWalletPwd } from '@src/tests/fixture/address';
+import { aliceAddresses } from '@src/tests/fixture/address';
 import LOCKS_INFO from '@common/utils/constants/locksInfo';
 import PublicKey from '../publicKey';
 

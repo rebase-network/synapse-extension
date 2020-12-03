@@ -100,7 +100,6 @@ export const createSudtTransaction = async (
   const inputSudtCells = await getInputSudtCells(fromLockHash, sudtParams);
 
   const toLockScript = addressToScript(toAddress);
-  const toLockHash = ckb.utils.scriptToHash(toLockScript);
 
   let toLockType = null;
   if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
