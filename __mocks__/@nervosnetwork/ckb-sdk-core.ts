@@ -32,6 +32,8 @@ class CKB {
   };
 
   signTransaction = CKBOriginalInstance.signTransaction;
+
+  utils = CKBOriginalInstance.utils;
 }
 
 export default CKB;
