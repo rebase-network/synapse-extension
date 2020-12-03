@@ -15,6 +15,12 @@ describe('network manager', () => {
     expect(result).toHaveLength(networks.length);
   });
 
+  it('should be able to reset networks', async () => {
+    await NetworkManager.reset();
+    const result = await NetworkManager.getNetworkList();
+    expect(result).toHaveLength(networks.length);
+  });
+
   it('should able to update deprecated networks', async () => {
     await browser.storage.local.set({
       networks: deprecatedNetworks,
