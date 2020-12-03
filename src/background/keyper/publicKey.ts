@@ -5,7 +5,7 @@ export default class PublicKey {
   publicKey: string;
 
   constructor(publicKey: string) {
-    this.publicKey = publicKey;
+    this.publicKey = publicKey.startsWith('0x') ? publicKey.substr(2) : publicKey;
   }
 
   public getBlake160 = (): string => {
