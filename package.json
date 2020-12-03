@@ -8,7 +8,7 @@
     "watch": "webpack -w --config webpack.dev.js",
     "lint": "eslint 'src/**/*.{ts, tsx}'",
     "code:format": "prettier './src/**/**.{js,jsx,ts,tsx}' --write",
-    "test:watch": "jest --watch --runInBand",
+    "test:watch": "jest --watchAll --runInBand --coverage",
     "test": "jest --runInBand",
     "test:e2e": "jest --runInBand --config jest.e2e.config.js",
     "test:cov": "codecov",
