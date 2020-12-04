@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { Keccak } from 'sha3'
+import { Keccak } from 'sha3';
 import randomBytes from 'randombytes';
 import scrypt from 'scrypt.js';
 import { v4 as uuidv4 } from 'uuid';
@@ -190,41 +190,7 @@ function runCipherBuffer(cipher: crypto.Cipher | crypto.Decipher, data: Buffer):
 function mac(derivedKey: Buffer, ciphertext: Buffer): string {
   return new Keccak(256)
     .update(Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext)]))
-    .digest('hex')
-}
-
-function getDerivedKey(password: string, opts?: Partial<V3Params>): Buffer {
-  const v3Params: V3ParamsStrict = mergeToV3ParamsWithDefaults(opts);
-
-  let kdfParams: KDFParams;
-  let derivedKey: Buffer;
-  switch (v3Params.kdf) {
-    case KDFFunctions.PBKDF:
-      kdfParams = kdfParamsForPBKDF(v3Params);
-      derivedKey = crypto.pbkdf2Sync(
-        Buffer.from(password),
-        kdfParams.salt,
-        kdfParams.c,
-        kdfParams.dklen,
-        'sha256',
-      );
-      break;
-    case KDFFunctions.Scrypt:
-      kdfParams = kdfParamsForScrypt(v3Params);
-      derivedKey = scrypt(
-        Buffer.from(password),
-        kdfParams.salt,
-        kdfParams.n,
-        kdfParams.r,
-        kdfParams.p,
-        kdfParams.dklen,
-      );
-      break;
-    default:
-      throw new Error('Unsupported kdf');
-  }
-
-  return derivedKey;
+    .digest('hex');
 }
 
 export function encrypt(privKey: Buffer, password: string, opts?: Partial<V3Params>): V3Keystore {
@@ -268,7 +234,7 @@ export function encrypt(privKey: Buffer, password: string, opts?: Partial<V3Para
   }
 
   const ciphertext = runCipherBuffer(cipher, privKey);
-  const macStr = mac(derivedKey, ciphertext)
+  const macStr = mac(derivedKey, ciphertext);
 
   return {
     version: 3,
