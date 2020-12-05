@@ -31,7 +31,6 @@ export const getAddressInfo = async (lockHash: string): Promise<{ capacity: stri
     }
     return result.data;
   } catch (error) {
-    console.log('result error', error);
     return error;
   }
 };
@@ -67,7 +66,6 @@ export const getUnspentCells = async (
     }
     return result.data;
   } catch (error) {
-    console.error('result error', error);
     return error;
   }
 };
