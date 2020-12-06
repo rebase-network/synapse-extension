@@ -38,7 +38,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
   const [keystore, setKeystore] = React.useState('');
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
+    browser.runtime.onMessage.addListener((msg, sender, sendResp) => {
       if (
         msg.type === MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK ||
         msg.type === MESSAGE_TYPE.IMPORT_KEYSTORE_OK
@@ -55,9 +55,9 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
 
   const onSubmit = async (values) => {
     if (!isHidePrivate) {
-      chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY });
+      browser.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY });
     } else {
-      chrome.runtime.sendMessage({ ...values, keystore, type: MESSAGE_TYPE.IMPORT_KEYSTORE });
+      browser.runtime.sendMessage({ ...values, keystore, type: MESSAGE_TYPE.IMPORT_KEYSTORE });
     }
   };
 

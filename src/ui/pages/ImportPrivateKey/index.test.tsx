@@ -5,6 +5,7 @@ import '@testing-library/jest-dom/extend-expect';
 import chrome from 'sinon-chrome';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
+import { MESSAGE_TYPE } from '@src/common/utils/constants';
 import App from './index';
 
 jest.mock('react-router-dom', () => {
@@ -16,15 +17,15 @@ jest.mock('react-router-dom', () => {
     ...originalModule,
     // add your noops here
     useParams: jest.fn(),
-    useHistory: jest.fn(),
+    useHistory: () => {
+      return { push: jest.fn() };
+    },
     Link: 'a',
   };
 });
 
 describe('import privateKey page', () => {
   let tree;
-  let container;
-  let getByTestId;
 
   beforeAll(() => {
     window.chrome = chrome;
@@ -38,8 +39,26 @@ describe('import privateKey page', () => {
         </Router>
       </IntlProvider>,
     );
-    container = tree.container;
-    getByTestId = tree.getByTestId;
+  });
+
+  it('send message err', async () => {
+    await waitFor(() => {
+      browser.runtime.sendMessage({
+        message: 'Private Key',
+        type: MESSAGE_TYPE.IMPORT_KEYSTORE_ERR,
+      });
+      expect(browser.runtime.sendMessage).toBeCalled();
+    });
+  });
+
+  it('send message ok', async () => {
+    browser.runtime.sendMessage({
+      message: 'Private Key',
+      type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK,
+    });
+    await waitFor(() => {
+      expect(browser.runtime.sendMessage).toBeCalled();
+    });
   });
 
   it('should change privateKey form fields', async () => {
