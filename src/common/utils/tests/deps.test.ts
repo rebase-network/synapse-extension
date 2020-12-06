@@ -2,11 +2,8 @@ import NetworkManager from '@common/networkManager';
 import { getDepFromLockType } from '../deps';
 
 describe('deps', () => {
-  beforeAll(async () => {
-    await NetworkManager.initNetworks();
-  });
-
   it('getDepFromLockType', async () => {
+    await NetworkManager.initNetworks();
     const result = await getDepFromLockType('Secp256k1', NetworkManager);
     const expected = {
       depType: 'depGroup',
@@ -16,5 +13,18 @@ describe('deps', () => {
       },
     };
     expect(result).toEqual(expected);
+  });
+
+  it('getDepFromLockType with error', async () => {
+    const network = {
+      networkType: 'notSupport',
+    };
+    await browser.storage.local.set({
+      networks: [network],
+      currentNetwork: network,
+    });
+    expect(getDepFromLockType('Secp256k1', NetworkManager)).rejects.toEqual(
+      new Error('Network is not supported'),
+    );
   });
 });
