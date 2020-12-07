@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import '@testing-library/jest-dom/extend-expect';
 import chrome from 'sinon-chrome';
@@ -61,6 +61,22 @@ describe('import privateKey page', () => {
     });
   });
 
+  it('should change radio form fields: private key', async () => {
+    const radio = screen.getByLabelText('Private Key');
+    expect(radio).toBeInTheDocument();
+
+    fireEvent.change(radio, { target: { value: '1', checked: true } });
+    expect(radio).toBeChecked();
+  });
+
+  it('should change radio form fields: keystore', async () => {
+    const radio = screen.getByLabelText('Keystore');
+    expect(radio).toBeInTheDocument();
+
+    fireEvent.change(radio, { target: { value: '1', checked: true } });
+    expect(radio).toBeChecked();
+  });
+
   it('should change privateKey form fields', async () => {
     const { getByTestId, container } = tree;
 
@@ -103,5 +119,10 @@ describe('import privateKey page', () => {
       keystorePassword: 'test keystorePassword 123456',
       userPassword: 'test userPassword 123456',
     });
+  });
+
+  it('submit import private key', async () => {
+    const submitBtns = screen.getAllByText('Import');
+    expect(submitBtns).toHaveLength(2);
   });
 });
