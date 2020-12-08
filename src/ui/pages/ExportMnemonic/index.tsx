@@ -86,19 +86,15 @@ export default function (props: AppProps, state: AppState) {
 
   const onSubmit = async (values) => {
     // background.ts check the password
-    chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK });
+    browser.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK });
   };
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener(function listenerProcessing(
-      message,
-      sender,
-      sendResponse,
-    ) {
+    function listenerProcessing(message, sender, sendResponse) {
       if (message.type === MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT) {
         if (message.isValidatePassword && message.isValidateEntropy) {
           history.push('/export-mnemonic-second');
-          chrome.runtime.sendMessage({
+          browser.runtime.sendMessage({
             message,
             type: MESSAGE_TYPE.EXPORT_MNEONIC_SECOND,
           });
@@ -116,7 +112,9 @@ export default function (props: AppProps, state: AppState) {
           setErrorMessage(errorMessagei18n);
         }
       }
-    });
+    }
+    browser.runtime.onMessage.addListener(listenerProcessing);
+    return () => browser.runtime.onMessage.removeListener(listenerProcessing);
   }, []);
 
   let failureNode = null;

@@ -1,7 +1,7 @@
 import Keychain, { privateToPublic } from '../keychain';
 
 // https://en.bitcoin.it/wiki/BIP_0032_TestVectors
-describe('BIP32 Keychain tests', () => {
+describe.skip('BIP32 Keychain tests', () => {
   const shortSeed = Buffer.from('000102030405060708090a0b0c0d0e0f', 'hex');
   const longSeed = Buffer.from(
     'fffcf9f6f3f0edeae7e4e1dedbd8d5d2cfccc9c6c3c0bdbab7b4b1aeaba8a5a29f9c999693908d8a8784817e7b7875726f6c696663605d5a5754514e4b484542',

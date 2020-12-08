@@ -1,12 +1,12 @@
 import React from 'react';
-import App from './index';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect';
-import chrome from 'sinon-chrome';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
+import { MESSAGE_TYPE } from '@src/common/utils/constants';
 import en from '@common/locales/en';
+import App from './index';
 
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
@@ -17,15 +17,13 @@ jest.mock('react-router-dom', () => {
     ...originalModule,
     // add your noops here
     useParams: jest.fn(),
-    useHistory: jest.fn(),
+    useHistory: () => {
+      return { push: jest.fn() };
+    },
   };
 });
 
 describe('export mnemonic page', () => {
-  beforeAll(() => {
-    window.chrome = chrome;
-  });
-
   beforeEach(() => {
     render(
       <IntlProvider locale="en" messages={en}>
@@ -51,6 +49,39 @@ describe('export mnemonic page', () => {
 
     expect(screen.getByRole('form')).toHaveFormValues({
       password: 'test password',
+    });
+  });
+
+  it('send message 1', async () => {
+    await waitFor(() => {
+      browser.runtime.sendMessage({
+        type: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT,
+        isValidatePassword: true,
+        isValidateEntropy: true,
+      });
+      expect(browser.runtime.sendMessage).toBeCalled();
+    });
+  });
+
+  it('send message 2', async () => {
+    await waitFor(() => {
+      browser.runtime.sendMessage({
+        type: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT,
+        isValidatePassword: false,
+        isValidateEntropy: true,
+      });
+      expect(browser.runtime.sendMessage).toBeCalled();
+    });
+  });
+
+  it('send message 3', async () => {
+    await waitFor(() => {
+      browser.runtime.sendMessage({
+        type: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT,
+        isValidatePassword: true,
+        isValidateEntropy: false,
+      });
+      expect(browser.runtime.sendMessage).toBeCalled();
     });
   });
 });
