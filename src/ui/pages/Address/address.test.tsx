@@ -1,5 +1,6 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect';
 import chrome from 'sinon-chrome';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -21,6 +22,8 @@ jest.mock('react-router-dom', () => {
     }),
   };
 });
+
+jest.mock('@ui/Components/TokenList');
 
 describe('Address page', () => {
   let tree;
@@ -61,5 +64,22 @@ describe('Address page', () => {
     const sendBtn = getByTestId('send');
     expect(container).toContainElement(receiveBtn);
     expect(container).toContainElement(sendBtn);
+  });
+
+  it('should render capacity refresh button', () => {
+    const result = screen.getByRole('button', { name: /CKB|\.\.\./i });
+    expect(result).toBeInTheDocument();
+  });
+
+  it('should render tx list', () => {
+    const result = screen.getByText('Latest 20 Transactions');
+    expect(result).toBeInTheDocument();
+  });
+
+  it('should render Show UDT button', async () => {
+    const result = screen.getByText('Show UDT');
+    expect(result).toBeInTheDocument();
+    userEvent.click(result);
+    expect(screen.getByText('Hide UDT')).toBeInTheDocument();
   });
 });
