@@ -4,42 +4,32 @@ import { useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { Button, TextField } from '@material-ui/core';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { MESSAGE_TYPE } from '@src/common/utils/constants';
 import PageNav from '@ui/Components/PageNav';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      margin: 30,
-    },
-  }),
-);
-
-interface AppProps {}
-
-interface AppState {}
+const useStyles = makeStyles({
+  container: {
+    margin: 30,
+  },
+});
 
 export const innerForm = (props) => {
-  const {
-    values,
-    touched,
-    errors,
-    dirty,
-    isSubmitting,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    handleReset,
-  } = props;
+  const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
   const intl = useIntl();
 
   return (
-    <Form className="export-private-key" id="export-private-key" onSubmit={handleSubmit}>
+    <Form
+      className="export-private-key"
+      id="export-private-key"
+      onSubmit={handleSubmit}
+      aria-label="form"
+    >
       <TextField
         label={intl.formatMessage({ id: 'Password' })}
         name="password"
         type="password"
+        id="password"
         fullWidth
         value={values.password}
         onChange={handleChange}
@@ -66,7 +56,7 @@ export const innerForm = (props) => {
   );
 };
 
-export default function (props: AppProps, state: AppState) {
+export default () => {
   const classes = useStyles();
   const history = useHistory();
   const intl = useIntl();
@@ -76,19 +66,19 @@ export default function (props: AppProps, state: AppState) {
 
   const onSubmit = async (values) => {
     // background.ts check the password
-    chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK });
+    browser.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK });
   };
 
   //   setShowMsg(intl.formatMessage({ id: 'It may take 1 minute for the generation of keystore' }));
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+    const listener = (message) => {
       if (
         message.type === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT &&
         message.isValidatePassword
       ) {
         history.push('/export-private-key-second'); // 测试成功的地址
-        chrome.runtime.sendMessage({
+        browser.runtime.sendMessage({
           message,
           type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND,
         });
@@ -99,7 +89,9 @@ export default function (props: AppProps, state: AppState) {
       ) {
         setShowMsg('INVALID_PASSWORD');
       }
-    });
+    };
+    browser.runtime.onMessage.addListener(listener);
+    return () => browser.runtime.onMessage.removeListener(listener);
   }, [history, showMsg]);
 
   return (
@@ -121,4 +113,4 @@ export default function (props: AppProps, state: AppState) {
       </div>
     </div>
   );
-}
+};
