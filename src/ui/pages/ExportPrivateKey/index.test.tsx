@@ -1,11 +1,14 @@
 import React from 'react';
-import App from './index';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { useHistory, BrowserRouter as Router } from 'react-router-dom';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import chrome from 'sinon-chrome';
-import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
+import { MESSAGE_TYPE } from '@src/common/utils/constants';
 import en from '@common/locales/en';
+import userEvent from '@testing-library/user-event';
+import App from './index';
+
+const mockFunc = jest.fn();
 
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
@@ -16,7 +19,9 @@ jest.mock('react-router-dom', () => {
     ...originalModule,
     // add your noops here
     useParams: jest.fn(),
-    useHistory: jest.fn(),
+    useHistory: () => {
+      return { push: mockFunc };
+    },
     Link: 'a',
   };
 });
@@ -25,6 +30,7 @@ describe('export privatekey page', () => {
   let tree;
   let container;
   let getByTestId;
+  const history = useHistory();
 
   beforeAll(() => {
     window.chrome = chrome;
@@ -40,6 +46,11 @@ describe('export privatekey page', () => {
     );
     container = tree.container;
     getByTestId = tree.getByTestId;
+  });
+
+  it('should render title', () => {
+    const result = screen.getByText('Export Private Key / Keystore');
+    expect(result).toBeInTheDocument();
   });
 
   it('should render form fields: Password', () => {
@@ -63,6 +74,55 @@ describe('export privatekey page', () => {
 
     expect(container.querySelector('#export-private-key')).toHaveFormValues({
       password: 'test password',
+    });
+  });
+
+  it('send message password is correct', async () => {
+    await waitFor(() => {
+      browser.runtime.sendMessage({
+        type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
+        isValidatePassword: true,
+      });
+      expect(browser.runtime.sendMessage).toBeCalled();
+      expect(history.push).toBeCalled();
+    });
+  });
+
+  it('send message password is wrong', async () => {
+    await waitFor(() => {
+      browser.runtime.sendMessage({
+        type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
+        isValidatePassword: false,
+      });
+      const result = screen.getByText('Invalid Password');
+      expect(result).toBeInTheDocument();
+    });
+  });
+
+  it('should change form fields: password', async () => {
+    const password = screen.getByLabelText('Password');
+
+    expect(password).toBeInTheDocument();
+    expect(password).toBeEmpty();
+
+    await userEvent.type(password, 'test password');
+
+    expect(screen.getByRole('form')).toHaveFormValues({
+      password: 'test password',
+    });
+  });
+
+  it('submit', async () => {
+    const btn = screen.getByRole('button', { name: 'Confirm' });
+    expect(btn).toBeInTheDocument();
+
+    const password = screen.getByLabelText('Password');
+
+    await userEvent.type(password, 'test password');
+
+    userEvent.click(btn);
+    await waitFor(() => {
+      expect(browser.runtime.sendMessage).toBeCalled();
     });
   });
 });
