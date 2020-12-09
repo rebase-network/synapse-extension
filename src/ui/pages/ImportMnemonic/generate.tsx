@@ -8,41 +8,22 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { MESSAGE_TYPE } from '@src/common/utils/constants';
 import Title from '@ui/Components/Title';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(1),
-  },
+const useStyles = makeStyles({
   container: {
     margin: 30,
   },
-}));
+});
 
-interface AppProps {}
-
-interface AppState {}
-
-export const genForm = (props) => {
-  const classes = useStyles();
+const genForm = (props: any) => {
   const intl = useIntl();
 
-  const {
-    values,
-    touched,
-    errors,
-    dirty,
-    isSubmitting,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    enableReinitialize,
-    handleReset,
-  } = props;
+  const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
 
   return (
-    <Form className="gen-mnemonic" id="gen-mnemonic" onSubmit={handleSubmit}>
+    <Form className="gen-mnemonic" id="gen-mnemonic" onSubmit={handleSubmit} aria-label="form">
       <TextField
         label={intl.formatMessage({ id: 'Mnemonic(Only Support 12 Words)' })}
+        id="mnemonic"
         name="mnemonic"
         multiline
         rows="4"
@@ -59,6 +40,7 @@ export const genForm = (props) => {
 
       <TextField
         label={intl.formatMessage({ id: 'Password (min 6 chars)' })}
+        id="password"
         name="password"
         type="password"
         fullWidth
@@ -74,6 +56,7 @@ export const genForm = (props) => {
 
       <TextField
         label={intl.formatMessage({ id: 'Confirm Password' })}
+        id="confirmPassword"
         name="confirmPassword"
         type="password"
         fullWidth
@@ -103,7 +86,7 @@ export const genForm = (props) => {
   );
 };
 
-export default function GenerateMnemonic(props: AppProps, state: AppState) {
+export default () => {
   const [success, setSuccess] = React.useState(false);
   const [vaildate, setValidate] = React.useState(true);
   const [mnemonic, setMnemonic] = React.useState('');
@@ -114,12 +97,12 @@ export default function GenerateMnemonic(props: AppProps, state: AppState) {
   const onSubmit = async (values) => {
     if (vaildate) {
       setSuccess(true);
-      chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.SAVE_MNEMONIC });
+      browser.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.SAVE_MNEMONIC });
     }
   };
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
+    const listener = (msg) => {
       if (msg.type === MESSAGE_TYPE.RECE_MNEMONIC && msg.mnemonic) {
         setMnemonic(msg.mnemonic);
       } else if (msg === MESSAGE_TYPE.VALIDATE_PASS) {
@@ -127,7 +110,9 @@ export default function GenerateMnemonic(props: AppProps, state: AppState) {
         localStorage.setItem('IS_LOGIN', 'YES');
         history.push('/address');
       }
-    });
+    };
+    browser.runtime.onMessage.addListener(listener);
+    return () => browser.runtime.onMessage.removeListener(listener);
   });
 
   let successNode = null;
@@ -156,4 +141,4 @@ export default function GenerateMnemonic(props: AppProps, state: AppState) {
       </Formik>
     </div>
   );
-}
+};

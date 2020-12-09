@@ -6,7 +6,7 @@ import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
 import userEvent from '@testing-library/user-event';
 import { MESSAGE_TYPE } from '@src/common/utils/constants';
-import App from './index';
+import App from './generate';
 
 const mockFunc = jest.fn();
 
@@ -25,7 +25,7 @@ jest.mock('react-router-dom', () => {
   };
 });
 
-describe('import mnemonic page', () => {
+describe('generate mnemonic page', () => {
   const history = useHistory();
 
   beforeEach(() => {
@@ -39,7 +39,7 @@ describe('import mnemonic page', () => {
   });
 
   it('should render title', () => {
-    const result = screen.getByText('Import Mnemonic');
+    const result = screen.getByText('Generate Mnemonic');
     expect(result).toBeInTheDocument();
   });
 
@@ -96,7 +96,7 @@ describe('import mnemonic page', () => {
       confirmPassword: 'password_2',
     });
 
-    const submitButton = screen.getByRole('button', { name: 'Import' });
+    const submitButton = screen.getByRole('button', { name: 'Create' });
     expect(submitButton).toBeInTheDocument();
 
     userEvent.click(submitButton);
@@ -121,7 +121,7 @@ describe('import mnemonic page', () => {
       confirmPassword: 'password_1',
     });
 
-    const submitButton = screen.getByRole('button', { name: 'Import' });
+    const submitButton = screen.getByRole('button', { name: 'Create' });
     expect(submitButton).toBeInTheDocument();
 
     userEvent.click(submitButton);
@@ -130,10 +130,13 @@ describe('import mnemonic page', () => {
     });
   });
 
-  it('send validate message: IS_INVALID_MNEMONIC', async () => {
+  it('send validate message: RECE_MNEMONIC', async () => {
     await waitFor(() => {
-      browser.runtime.sendMessage(MESSAGE_TYPE.IS_INVALID_MNEMONIC);
+      browser.runtime.sendMessage({ type: MESSAGE_TYPE.RECE_MNEMONIC, mnemonic: 'abc' });
       expect(browser.runtime.sendMessage).toBeCalled();
+      expect(screen.getByRole('form')).toHaveFormValues({
+        mnemonic: 'abc',
+      });
     });
   });
 
