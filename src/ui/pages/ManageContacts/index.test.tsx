@@ -1,11 +1,11 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect';
-import chrome from 'sinon-chrome';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import en from '@src/common/locales/en';
+import { addressToScript } from '@keyper/specs';
 import App from './index';
 
 const mockFunc = jest.fn();
@@ -27,10 +27,6 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('export mnemonic page', () => {
-  beforeAll(() => {
-    window.chrome = chrome;
-  });
-
   beforeEach(() => {
     render(
       <IntlProvider locale="en" messages={en}>
@@ -39,6 +35,11 @@ describe('export mnemonic page', () => {
         </Router>
       </IntlProvider>,
     );
+  });
+
+  it('should render title', () => {
+    const result = screen.getByText('Manage Contacts');
+    expect(result).toBeInTheDocument();
   });
 
   it('should render form fields: submitbutton', async () => {
@@ -52,10 +53,10 @@ describe('export mnemonic page', () => {
     expect(name).toBeInTheDocument();
     expect(name).toBeEmpty();
 
-    await userEvent.type(name, 'syuukawa');
+    await userEvent.type(name, 'Alice');
 
     expect(screen.getByRole('form')).toHaveFormValues({
-      name: 'syuukawa',
+      name: 'Alice',
     });
   });
 
@@ -71,4 +72,44 @@ describe('export mnemonic page', () => {
       address: 'ckt1qyqfhpyg02ew59cfnr8lnz2kwhwd98xjd4xsscxlae',
     });
   });
+
+  it('should submit form', async () => {
+    const name = screen.getByLabelText('Name');
+    const address = screen.getByLabelText('Address');
+    const submitButton = screen.getByRole('button', { name: /Add/i });
+    await userEvent.type(name, 'Alice');
+    await userEvent.type(address, 'ckt1qyqfhpyg02ew59cfnr8lnz2kwhwd98xjd4xsscxlae');
+
+    expect(screen.getByRole('form')).toHaveFormValues({
+      name: 'Alice',
+      address: 'ckt1qyqfhpyg02ew59cfnr8lnz2kwhwd98xjd4xsscxlae',
+    });
+
+    userEvent.click(submitButton);
+    await waitFor(() => {
+      expect(browser.storage.local.set).toBeCalled();
+    });
+
+    await userEvent.type(name, 'Alice');
+    await userEvent.type(address, 'aaa');
+
+    expect(screen.getByRole('form')).toHaveFormValues({
+      name: 'Alice',
+      address: 'aaa',
+    });
+
+    userEvent.click(submitButton);
+    expect(addressToScript).toThrow();
+
+    await waitFor(() => {
+      expect(browser.storage.local.set).toBeCalled();
+    });
+  });
+
+  // it('should render existing contacts', async () => {
+  //   await waitFor(() => {
+  //     const result = screen.getByText('Alice');
+  //     expect(result).toBeInTheDocument();
+  //   });
+  // });
 });

@@ -22,14 +22,10 @@ const useStyles = makeStyles({
   },
 });
 
-interface AppProps {}
-
-interface AppState {}
-
-export const InnerForm = (props) => {
+export const InnerForm = (props: any) => {
   const intl = useIntl();
 
-  const { values, touched, errors, handleChange, handleBlur, handleSubmit, handleReset } = props;
+  const { values, touched, errors, handleChange, handleBlur, handleSubmit } = props;
 
   return (
     <Form
@@ -42,7 +38,6 @@ export const InnerForm = (props) => {
         label={intl.formatMessage({ id: 'Address' })}
         id="address"
         name="address"
-        type="address"
         fullWidth
         value={values.address}
         onChange={handleChange}
@@ -51,13 +46,11 @@ export const InnerForm = (props) => {
         helperText={errors.address && touched.address && errors.address}
         margin="normal"
         variant="outlined"
-        data-testid="field-address"
       />
       <TextField
         label={intl.formatMessage({ id: 'Name' })}
         id="name"
         name="name"
-        type="name"
         fullWidth
         value={values.name}
         onChange={handleChange}
@@ -66,22 +59,15 @@ export const InnerForm = (props) => {
         helperText={errors.name && touched.name && errors.name}
         margin="normal"
         variant="outlined"
-        data-testid="field-name"
       />
-      <Button
-        type="submit"
-        id="submit-button"
-        color="primary"
-        variant="contained"
-        data-testid="submit-button"
-      >
+      <Button type="submit" id="submit-button" color="primary" variant="contained">
         <FormattedMessage id="Add" />
       </Button>
     </Form>
   );
 };
 
-export default function Init(props: AppProps, state: AppState) {
+export default () => {
   const classes = useStyles();
   const intl = useIntl();
   const [contactItems, setContactItems] = React.useState([]);
@@ -144,7 +130,7 @@ export default function Init(props: AppProps, state: AppState) {
     await browser.storage.local.set({ contacts: contactsObj });
   };
 
-  const contactElem = contactItems.map((item, index) => {
+  const contactElem = contactItems.map((item) => {
     return (
       <List component="nav" aria-label="contact List" key={`item-${item.address}`}>
         <ListItem>
@@ -188,4 +174,4 @@ export default function Init(props: AppProps, state: AppState) {
       </div>
     </div>
   );
-}
+};
