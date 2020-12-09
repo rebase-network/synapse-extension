@@ -8,6 +8,8 @@ import chrome from 'sinon-chrome';
 import App from '@ui/pages/Setting/index';
 import en from '@common/locales/en';
 
+const mockFunc = jest.fn();
+
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
   const originalModule = jest.requireActual('react-router-dom');
@@ -17,7 +19,10 @@ jest.mock('react-router-dom', () => {
     ...originalModule,
     // add your noops here
     useParams: jest.fn(),
-    useHistory: jest.fn(),
+    useHistory: () => {
+      return { push: mockFunc };
+    },
+    Link: 'a',
   };
 });
 
