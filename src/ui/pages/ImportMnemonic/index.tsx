@@ -12,29 +12,22 @@ const useStyles = makeStyles({
   container: {
     margin: 30,
   },
-  button: {},
-  textField: {},
 });
 
-interface AppProps {}
-
-interface AppState {}
-
 export const innerForm = (props: any) => {
-  const classes = useStyles();
   const intl = useIntl();
 
   const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
 
   return (
-    <Form className="form-mnemonic" id="form-mnemonic" onSubmit={handleSubmit}>
+    <Form className="form-mnemonic" id="form-mnemonic" onSubmit={handleSubmit} aria-label="form">
       <TextField
         label={intl.formatMessage({ id: 'Mnemonic(Only Support 12 Words)' })}
+        id="mnemonic"
         name="mnemonic"
         multiline
         rows="4"
         fullWidth
-        className={classes.textField}
         value={values.mnemonic}
         onChange={handleChange}
         onBlur={handleBlur}
@@ -46,10 +39,10 @@ export const innerForm = (props: any) => {
       />
       <TextField
         label={intl.formatMessage({ id: 'Password (min 6 chars)' })}
+        id="password"
         name="password"
         type="password"
         fullWidth
-        className={classes.textField}
         value={values.password}
         onChange={handleChange}
         onBlur={handleBlur}
@@ -61,10 +54,10 @@ export const innerForm = (props: any) => {
       />
       <TextField
         label={intl.formatMessage({ id: 'Confirm Password' })}
+        id="confirmPassword"
         name="confirmPassword"
         type="password"
         fullWidth
-        className={classes.textField}
         value={values.confirmPassword}
         onChange={handleChange}
         onBlur={handleBlur}
@@ -81,7 +74,6 @@ export const innerForm = (props: any) => {
         variant="contained"
         disabled={isSubmitting}
         color="primary"
-        className={classes.button}
         data-testid="submit-button"
       >
         <FormattedMessage id="Import" />
@@ -90,14 +82,14 @@ export const innerForm = (props: any) => {
   );
 };
 
-export default function ImportMnemonic(props: AppProps, state: AppState) {
+export default () => {
   const [success, setSuccess] = React.useState(false);
   const [vaildate, setValidate] = React.useState(true);
   const history = useHistory();
   const intl = useIntl();
 
   const onSubmit = async (values) => {
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       ...values,
       type: MESSAGE_TYPE.IMPORT_MNEMONIC,
     });
@@ -109,14 +101,17 @@ export default function ImportMnemonic(props: AppProps, state: AppState) {
   };
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
+    const listener = (msg) => {
       if (msg === MESSAGE_TYPE.IS_INVALID_MNEMONIC) {
         setValidate(false);
       } else if (msg === MESSAGE_TYPE.VALIDATE_PASS) {
         setValidate(true);
         history.push('/address');
       }
-    });
+    };
+    browser.runtime.onMessage.addListener(listener);
+
+    return () => browser.runtime.onMessage.removeListener(listener);
   }, []);
 
   let successNode = null;
@@ -145,4 +140,4 @@ export default function ImportMnemonic(props: AppProps, state: AppState) {
       </Formik>
     </div>
   );
-}
+};

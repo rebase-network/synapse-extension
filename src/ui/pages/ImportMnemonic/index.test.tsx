@@ -1,11 +1,14 @@
 import React from 'react';
-import App from './index';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import chrome from 'sinon-chrome';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, useHistory } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
+import userEvent from '@testing-library/user-event';
+import { MESSAGE_TYPE } from '@src/common/utils/constants';
+import App from './index';
+
+const mockFunc = jest.fn();
 
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
@@ -16,65 +19,128 @@ jest.mock('react-router-dom', () => {
     ...originalModule,
     // add your noops here
     useParams: jest.fn(),
-    useHistory: jest.fn(),
+    useHistory: () => {
+      return { push: mockFunc };
+    },
   };
 });
 
 describe('import mnemonic page', () => {
-  let tree;
-  let container;
-  let getByTestId;
-
-  beforeAll(() => {
-    window.chrome = chrome;
-  });
+  const history = useHistory();
 
   beforeEach(() => {
-    tree = render(
+    render(
       <IntlProvider locale="en" messages={en}>
         <Router>
           <App />
         </Router>
       </IntlProvider>,
     );
-    container = tree.container;
-    getByTestId = tree.getByTestId;
   });
 
-  it('should render form fields: Mnemonic', async () => {
-    const mnemonic = container.querySelector('[name="mnemonic"]');
-    expect(container).toContainElement(mnemonic);
+  it('should render title', () => {
+    const result = screen.getByText('Import Mnemonic');
+    expect(result).toBeInTheDocument();
   });
 
-  it('should render form fields: Password', async () => {
-    const password = container.querySelector('[name="password"]');
-    expect(container).toContainElement(password);
-  });
+  it('should change form fields: mnemonic', async () => {
+    const mnemonic = screen.getByLabelText('Mnemonic(Only Support 12 Words)');
 
-  it('should render form fields: Confirm Password', async () => {
-    const confirmPassword = container.querySelector('[name="confirmPassword"]');
-    expect(container).toContainElement(confirmPassword);
+    expect(mnemonic).toBeInTheDocument();
+    expect(mnemonic).toBeEmpty();
+
+    await userEvent.type(mnemonic, 'aaa');
+
+    expect(screen.getByRole('form')).toHaveFormValues({
+      mnemonic: 'aaa',
+    });
   });
 
   it('should change form fields: password', async () => {
-    const mnemonic = container.querySelector('[name="mnemonic"]');
-    const password = container.querySelector('[name="password"]');
-    const confirmPassword = container.querySelector('[name="confirmPassword"]');
+    const password = screen.getByLabelText('Password (min 6 chars)');
 
-    expect(mnemonic).toBeEmpty();
+    expect(password).toBeInTheDocument();
     expect(password).toBeEmpty();
-    expect(confirmPassword).toBeEmpty();
 
-    await waitFor(() => {
-      fireEvent.change(mnemonic, { target: { value: 'test mnemonic' } });
-      fireEvent.change(password, { target: { value: 'test password' } });
-      fireEvent.change(confirmPassword, { target: { value: 'test password' } });
+    await userEvent.type(password, 'test password');
+
+    expect(screen.getByRole('form')).toHaveFormValues({
+      password: 'test password',
+    });
+  });
+
+  it('should change form fields: confirmPassword', async () => {
+    const password = screen.getByLabelText('Confirm Password');
+
+    expect(password).toBeInTheDocument();
+    expect(password).toBeEmpty();
+
+    await userEvent.type(password, 'test password');
+
+    expect(screen.getByRole('form')).toHaveFormValues({
+      confirmPassword: 'test password',
+    });
+  });
+
+  it('should not submit due to wrong password', async () => {
+    const password = screen.getByLabelText('Password (min 6 chars)');
+    const passwordConfirm = screen.getByLabelText('Confirm Password');
+    const mnemonic = screen.getByLabelText('Mnemonic(Only Support 12 Words)');
+
+    await userEvent.type(mnemonic, 'aaa');
+    await userEvent.type(password, 'password_1');
+    await userEvent.type(passwordConfirm, 'password_2');
+    expect(screen.getByRole('form')).toHaveFormValues({
+      mnemonic: 'aaa',
+      password: 'password_1',
+      confirmPassword: 'password_2',
     });
 
-    expect(container.querySelector('#form-mnemonic')).toHaveFormValues({
-      mnemonic: 'test mnemonic',
-      password: 'test password',
-      confirmPassword: 'test password',
+    const submitButton = screen.getByRole('button', { name: 'Import' });
+    expect(submitButton).toBeInTheDocument();
+
+    userEvent.click(submitButton);
+    await waitFor(() => {
+      expect(browser.runtime.sendMessage).not.toBeCalled();
+    });
+
+    expect(screen.getByText("Passwords don't match!")).toBeInTheDocument();
+  });
+
+  it('should be able to sumit', async () => {
+    const password = screen.getByLabelText('Password (min 6 chars)');
+    const passwordConfirm = screen.getByLabelText('Confirm Password');
+    const mnemonic = screen.getByLabelText('Mnemonic(Only Support 12 Words)');
+
+    await userEvent.type(mnemonic, 'aaa');
+    await userEvent.type(password, 'password_1');
+    await userEvent.type(passwordConfirm, 'password_1');
+    expect(screen.getByRole('form')).toHaveFormValues({
+      mnemonic: 'aaa',
+      password: 'password_1',
+      confirmPassword: 'password_1',
+    });
+
+    const submitButton = screen.getByRole('button', { name: 'Import' });
+    expect(submitButton).toBeInTheDocument();
+
+    userEvent.click(submitButton);
+    await waitFor(() => {
+      expect(browser.runtime.sendMessage).toBeCalled();
+    });
+  });
+
+  it('send validate message: IS_INVALID_MNEMONIC', async () => {
+    await waitFor(() => {
+      browser.runtime.sendMessage(MESSAGE_TYPE.IS_INVALID_MNEMONIC);
+      expect(browser.runtime.sendMessage).toBeCalled();
+    });
+  });
+  it('send validate message: VALIDATE_PASS', async () => {
+    await waitFor(() => {
+      browser.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
+      expect(browser.runtime.sendMessage).toBeCalled();
+      expect(history.push).toBeCalled();
     });
   });
 });
