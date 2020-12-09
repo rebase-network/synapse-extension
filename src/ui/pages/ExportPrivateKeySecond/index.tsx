@@ -30,11 +30,7 @@ const useStyles = makeStyles({
   },
 });
 
-interface AppProps {}
-
-interface AppState {}
-
-export default function (props: AppProps, state: AppState) {
+export default () => {
   const classes = useStyles();
   const [value, setValue] = React.useState('1');
   const intl = useIntl();
@@ -45,15 +41,14 @@ export default function (props: AppProps, state: AppState) {
   const [isJSON, setIsJSON] = React.useState(true);
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    const listener = (request) => {
       if (request.type === MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND_RESULT) {
-        const { privateKey } = request;
-        const { keystore } = request;
-        // keystore.substr(1, keystore.length-2)
-        setPrivateKey(privateKey);
-        setKeystore(keystore);
+        setPrivateKey(request.privateKey);
+        setKeystore(request.keystore);
       }
-    });
+    };
+    browser.runtime.onMessage.addListener(listener);
+    return () => browser.runtime.onMessage.removeListener(listener);
   }, []);
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,4 +112,4 @@ export default function (props: AppProps, state: AppState) {
       </div>
     </div>
   );
-}
+};

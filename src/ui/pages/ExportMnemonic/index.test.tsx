@@ -8,6 +8,8 @@ import { MESSAGE_TYPE } from '@src/common/utils/constants';
 import en from '@common/locales/en';
 import App from './index';
 
+const mockFunc = jest.fn();
+
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
   const originalModule = jest.requireActual('react-router-dom');
@@ -18,7 +20,7 @@ jest.mock('react-router-dom', () => {
     // add your noops here
     useParams: jest.fn(),
     useHistory: () => {
-      return { push: jest.fn() };
+      return { push: mockFunc };
     },
   };
 });
@@ -37,6 +39,13 @@ describe('export mnemonic page', () => {
   it('should render form fields: submitbutton', async () => {
     const submitButton = screen.getByRole('button', { name: /confirm/i });
     expect(submitButton).toBeInTheDocument();
+
+    const password = screen.getByLabelText('Password');
+    await userEvent.type(password, 'test password');
+    userEvent.click(submitButton);
+    await waitFor(() => {
+      expect(browser.runtime.sendMessage).toBeCalled();
+    });
   });
 
   it('should change form fields: password', async () => {
