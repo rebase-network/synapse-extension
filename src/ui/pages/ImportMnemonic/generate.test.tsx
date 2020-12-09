@@ -107,7 +107,7 @@ describe('generate mnemonic page', () => {
     expect(screen.getByText("Passwords don't match!")).toBeInTheDocument();
   });
 
-  it('should be able to sumit', async () => {
+  it('should be able to submit', async () => {
     const password = screen.getByLabelText('Password (min 6 chars)');
     const passwordConfirm = screen.getByLabelText('Confirm Password');
     const mnemonic = screen.getByLabelText('Mnemonic(Only Support 12 Words)');
