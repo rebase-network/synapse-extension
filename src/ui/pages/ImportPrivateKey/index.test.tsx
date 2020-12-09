@@ -2,11 +2,13 @@ import React from 'react';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import '@testing-library/jest-dom/extend-expect';
-import chrome from 'sinon-chrome';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
 import { MESSAGE_TYPE } from '@src/common/utils/constants';
+import userEvent from '@testing-library/user-event';
 import App from './index';
+
+const mockFunc = jest.fn();
 
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
@@ -18,21 +20,14 @@ jest.mock('react-router-dom', () => {
     // add your noops here
     useParams: jest.fn(),
     useHistory: () => {
-      return { push: jest.fn() };
+      return { push: mockFunc };
     },
-    Link: 'a',
   };
 });
 
 describe('import privateKey page', () => {
-  let tree;
-
-  beforeAll(() => {
-    window.chrome = chrome;
-  });
-
   beforeEach(() => {
-    tree = render(
+    render(
       <IntlProvider locale="en" messages={en}>
         <Router>
           <App />
@@ -62,7 +57,7 @@ describe('import privateKey page', () => {
   });
 
   it('should change radio form fields: private key', async () => {
-    const radio = screen.getByLabelText('Private Key');
+    const radio = screen.getByRole('radio', { name: 'Private Key' });
     expect(radio).toBeInTheDocument();
 
     fireEvent.change(radio, { target: { value: '1', checked: true } });
@@ -70,54 +65,46 @@ describe('import privateKey page', () => {
   });
 
   it('should change radio form fields: keystore', async () => {
-    const radio = screen.getByLabelText('Keystore');
+    const radio = screen.getByRole('radio', { name: 'Keystore' });
     expect(radio).toBeInTheDocument();
 
     fireEvent.change(radio, { target: { value: '1', checked: true } });
     expect(radio).toBeChecked();
   });
 
-  it('should change privateKey form fields', async () => {
-    const { getByTestId, container } = tree;
+  it('should change radio form fields: private key', async () => {
+    const radio = screen.getByRole('radio', { name: 'Private Key' });
+    expect(radio).toBeInTheDocument();
 
-    const privateKey = container.querySelector('[name="privateKey"]');
-    const password = container.querySelector('[name="password"]');
+    fireEvent.change(radio, { target: { value: '1', checked: true } });
+    expect(radio).toBeChecked();
 
-    expect(privateKey).toBeEmpty();
-    expect(password).toBeEmpty();
+    const radioKeystore = screen.getByRole('radio', { name: 'Keystore' });
+    expect(radioKeystore).toBeInTheDocument();
 
-    await waitFor(() => {
-      fireEvent.change(privateKey, {
-        target: {
-          value: 'test 0x6e678246998b426db75c83c8be213b4ceeb8ae1ff10fcd2f8169e1dc3ca04df1',
-        },
-      });
-      fireEvent.change(password, { target: { value: 'test 123456' } });
-    });
-
-    expect(container.querySelector('#form-privateKey')).toHaveFormValues({
-      privateKey: 'test 0x6e678246998b426db75c83c8be213b4ceeb8ae1ff10fcd2f8169e1dc3ca04df1',
-      password: 'test 123456',
-    });
+    fireEvent.change(radioKeystore, { target: { value: '1', checked: true } });
+    expect(radioKeystore).toBeChecked();
   });
 
-  it('should change keystore form fields', async () => {
-    const { getByTestId, container } = tree;
+  it('should be able to submit', async () => {
+    const privateKey = screen.getByPlaceholderText('Private Key');
+    const password = screen.getByLabelText('Password');
+    //   const privateKey = container.querySelector('[name="privateKey"]');
+    //   const password = container.querySelector('[name="password"]');
 
-    const keystorePassword = container.querySelector('[name="keystorePassword"]');
-    const userPassword = container.querySelector('[name="userPassword"]');
-
-    expect(keystorePassword).toBeEmpty();
-    expect(userPassword).toBeEmpty();
-
-    await waitFor(() => {
-      fireEvent.change(keystorePassword, { target: { value: 'test keystorePassword 123456' } });
-      fireEvent.change(userPassword, { target: { value: 'test userPassword 123456' } });
+    await userEvent.type(privateKey, 'aaa');
+    await userEvent.type(password, 'password_1');
+    expect(screen.getByRole('form')).toHaveFormValues({
+      privateKey: 'aaa',
+      password: 'password_1',
     });
 
-    expect(container.querySelector('#form-keystore')).toHaveFormValues({
-      keystorePassword: 'test keystorePassword 123456',
-      userPassword: 'test userPassword 123456',
+    const submitButton = screen.getByRole('button', { name: 'Import' });
+    expect(submitButton).toBeInTheDocument();
+
+    userEvent.click(submitButton);
+    await waitFor(() => {
+      expect(browser.runtime.sendMessage).toBeCalled();
     });
   });
 

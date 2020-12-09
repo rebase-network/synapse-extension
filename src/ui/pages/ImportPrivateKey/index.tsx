@@ -73,28 +73,24 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
   const classes = useStyles();
   const intl = useIntl();
 
-  const innerForm = (props) => {
+  const innerForm = (props: any) => {
     const classes = useStyles();
-    const {
-      values,
-      touched,
-      errors,
-      dirty,
-      isSubmitting,
-      handleChange,
-      handleBlur,
-      handleSubmit,
-      handleReset,
-    } = props;
+    const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
 
     const handleKeystore = (content) => {
       setKeystore(content);
     };
 
     const privateKeyForm = (
-      <Form className="form-privateKey" id="form-privateKey" onSubmit={handleSubmit}>
+      <Form
+        className="form-privateKey"
+        id="form-privateKey"
+        onSubmit={handleSubmit}
+        aria-label="form"
+      >
         <TextField
           label={intl.formatMessage({ id: 'Private Key' })}
+          id="privateKey"
           name="privateKey"
           type="password"
           placeholder={intl.formatMessage({ id: 'Private Key' })}
@@ -110,6 +106,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
         />
         <TextField
           label={intl.formatMessage({ id: 'Password' })}
+          id="password"
           name="password"
           type="password"
           placeholder={intl.formatMessage({ id: 'Wallet Password' })}
@@ -143,6 +140,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
         <UploadFile onChange={handleKeystore} />
         <TextField
           label={intl.formatMessage({ id: 'Keystore Password' })}
+          id="keystorePassword"
           name="keystorePassword"
           type="password"
           fullWidth
@@ -160,6 +158,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
         />
         <TextField
           label={intl.formatMessage({ id: 'Wallet Password' })}
+          id="userPassword"
           name="userPassword"
           type="password"
           fullWidth
@@ -236,11 +235,13 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           <FormControlLabel
             value="1"
             labelPlacement="bottom"
+            name="privateKey"
             control={<Radio />}
             label={intl.formatMessage({ id: 'Private Key' })}
           />
           <FormControlLabel
             value="2"
+            name="keystore"
             labelPlacement="bottom"
             control={<Radio />}
             label="Keystore"
