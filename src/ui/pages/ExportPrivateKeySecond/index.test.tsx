@@ -1,11 +1,14 @@
 import React from 'react';
-import App from './index';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect';
-import chrome from 'sinon-chrome';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
+import { MESSAGE_TYPE } from '@src/common/utils/constants';
 import en from '@common/locales/en';
+import App from './index';
+
+const mockFunc = jest.fn();
 
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
@@ -16,43 +19,62 @@ jest.mock('react-router-dom', () => {
     ...originalModule,
     // add your noops here
     useParams: jest.fn(),
-    useHistory: jest.fn(),
-    Link: 'a',
+    useHistory: () => {
+      return { push: mockFunc };
+    },
   };
 });
 
-describe('export privatekey second page', () => {
-  let tree;
-  let container;
-  let getByTestId;
+browser.downloads = {
+  ...browser.downloads,
+  download: mockFunc,
+};
 
-  beforeAll(() => {
-    window.chrome = chrome;
-  });
-
+describe('export mnemonic page', () => {
   beforeEach(() => {
-    tree = render(
+    render(
       <IntlProvider locale="en" messages={en}>
         <Router>
           <App />
         </Router>
       </IntlProvider>,
     );
-    container = tree.container;
-    getByTestId = tree.getByTestId;
   });
 
-  it('should render title', async () => {
-    const { getByTestId, container } = tree;
-
-    const elemContainer = getByTestId('container');
-    expect(container).toContainElement(elemContainer);
+  it('should render title', () => {
+    const result = screen.getByText('Export Private Key / Keystore');
+    expect(result).toBeInTheDocument();
   });
 
-  it('should render title', async () => {
-    const { getByTestId, container } = tree;
+  it('should change radio form fields: private key', async () => {
+    const radio = screen.getByLabelText('Private Key');
+    expect(radio).toBeInTheDocument();
 
-    const elemContainer = getByTestId('container');
-    expect(container).toContainElement(elemContainer);
+    userEvent.click(radio);
+    expect(radio).toBeChecked();
+  });
+
+  it('should change radio form fields: Keystore', async () => {
+    const radio = screen.getByLabelText('Keystore');
+    expect(radio).toBeInTheDocument();
+
+    userEvent.click(radio);
+    expect(radio).toBeChecked();
+
+    await waitFor(() => {
+      browser.runtime.sendMessage({
+        type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND_RESULT,
+        keystore: 'keystore',
+      });
+      expect(browser.runtime.sendMessage).toBeCalled();
+    });
+
+    const submitButton = screen.getByRole('button', { name: /Save Keystore/i });
+    expect(submitButton).toBeInTheDocument();
+
+    userEvent.click(submitButton);
+    await waitFor(() => {
+      expect(browser.downloads.download).toBeCalled();
+    });
   });
 });

@@ -64,7 +64,7 @@ export default () => {
 
   const handleClick = () => {
     const url = `data:application/json;base64,${btoa(keystore)}`;
-    chrome.downloads.download({
+    browser.downloads.download({
       url,
       filename: 'keystore.json',
       saveAs: true,
