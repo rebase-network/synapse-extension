@@ -16,21 +16,18 @@ const useStyles = makeStyles({
   },
 });
 
-interface AppProps {}
-
-interface AppState {}
-
-export default function (props: AppProps, state: AppState) {
+export default () => {
   const classes = useStyles();
   const [mnemonic, setMnemonic] = React.useState([]);
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    const listener = (request) => {
       if (request.type === MESSAGE_TYPE.EXPORT_MNEONIC_SECOND_RESULT) {
-        const { mnemonic } = request;
-        setMnemonic(mnemonic);
+        setMnemonic(request.mnemonic);
       }
-    });
+    };
+    browser.runtime.onMessage.addListener(listener);
+    return () => browser.runtime.onMessage.removeListener(listener);
   }, []);
 
   return (
@@ -44,4 +41,4 @@ export default function (props: AppProps, state: AppState) {
       </div>
     </div>
   );
-}
+};

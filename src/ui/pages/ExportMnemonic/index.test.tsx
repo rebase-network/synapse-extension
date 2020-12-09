@@ -60,6 +60,8 @@ describe('export mnemonic page', () => {
         isValidateEntropy: true,
       });
       expect(browser.runtime.sendMessage).toBeCalled();
+      const result = screen.getByText('Export Mnemonic');
+      expect(result).toBeInTheDocument();
     });
   });
 
@@ -70,7 +72,8 @@ describe('export mnemonic page', () => {
         isValidatePassword: false,
         isValidateEntropy: true,
       });
-      expect(browser.runtime.sendMessage).toBeCalled();
+      const result = screen.getByText(/Invalid password/i);
+      expect(result).toBeInTheDocument();
     });
   });
 
@@ -81,7 +84,8 @@ describe('export mnemonic page', () => {
         isValidatePassword: true,
         isValidateEntropy: false,
       });
-      expect(browser.runtime.sendMessage).toBeCalled();
+      const result = screen.getByText(/Can not export Mnemonic/i);
+      expect(result).toBeInTheDocument();
     });
   });
 });

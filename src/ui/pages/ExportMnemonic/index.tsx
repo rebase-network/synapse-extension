@@ -15,25 +15,10 @@ const useStyles = makeStyles({
   },
 });
 
-interface AppProps {}
-
-interface AppState {}
-
 export const innerForm = (props) => {
-  const classes = useStyles();
   const intl = useIntl();
 
-  const {
-    values,
-    touched,
-    errors,
-    dirty,
-    isSubmitting,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    handleReset,
-  } = props;
+  const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
 
   return (
     <Form
@@ -77,7 +62,7 @@ export const innerForm = (props) => {
   );
 };
 
-export default function (props: AppProps, state: AppState) {
+export default () => {
   const history = useHistory();
   const classes = useStyles();
   const intl = useIntl();
@@ -90,7 +75,7 @@ export default function (props: AppProps, state: AppState) {
   };
 
   React.useEffect(() => {
-    function listenerProcessing(message, sender, sendResponse) {
+    function listenerProcessing(message) {
       if (message.type === MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT) {
         if (message.isValidatePassword && message.isValidateEntropy) {
           history.push('/export-mnemonic-second');
@@ -140,4 +125,4 @@ export default function (props: AppProps, state: AppState) {
       </div>
     </div>
   );
-}
+};
