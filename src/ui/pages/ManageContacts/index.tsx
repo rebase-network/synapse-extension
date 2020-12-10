@@ -14,6 +14,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { truncateAddress } from '@src/common/utils/formatters';
 import * as Yup from 'yup';
 import { addressToScript } from '@keyper/specs';
+import contactManager from '@common/contactManager';
 
 const useStyles = makeStyles({
   container: {
@@ -73,8 +74,17 @@ export default () => {
   const [contactItems, setContactItems] = React.useState([]);
   const [inValidate, setInValidate] = React.useState(false);
 
+  React.useEffect(() => {
+    const updateContactList = async () => {
+      const contactList = await contactManager.getContactList();
+      setContactItems(contactList);
+    };
+    updateContactList();
+    // unmount, clear state
+    return () => setContactItems([]);
+  }, []);
+
   const onSubmit = async (values, { resetForm }) => {
-    let contactsObj = [];
     const { address, name } = values;
 
     // address validate
@@ -85,49 +95,33 @@ export default () => {
       setInValidate(true);
       return;
     }
-    const contactsStorage = await browser.storage.local.get('contacts');
-    if (Array.isArray(contactsStorage.contacts)) {
-      contactsObj = contactsStorage.contacts;
-    }
+    const contactList = await contactManager.getContactList();
 
     const contactObj = { address, name };
-    const modContactIndex = _.findIndex(contactsObj, function findIndex(contactItem) {
+    const modContactIndex = _.findIndex(contactList, function findIndex(contactItem) {
       return contactItem.address === address;
     });
     if (modContactIndex === -1) {
-      contactsObj.push(contactObj);
+      contactList.push(contactObj);
     } else {
-      contactsObj[modContactIndex].name = name;
+      contactList[modContactIndex].name = name;
     }
 
-    setContactItems(contactsObj);
-    await browser.storage.local.set({ contacts: contactsObj });
+    setContactItems(contactList);
+    await browser.storage.local.set({ contacts: contactList });
 
     resetForm();
   };
 
-  React.useEffect(() => {
-    browser.storage.local.get('contacts').then((result) => {
-      if (Array.isArray(result.contacts)) {
-        setContactItems(result.contacts);
-      }
-    });
-  }, [contactItems]);
-
   const handleListItemClick = async (event, address) => {
-    let contactsObj = [];
+    const contactList = await contactManager.getContactList();
 
-    const contactsStorage = await browser.storage.local.get('contacts');
-    if (Array.isArray(contactsStorage.contacts)) {
-      contactsObj = contactsStorage.contacts;
-    }
-
-    _.remove(contactsObj, function remove(contact) {
+    _.remove(contactList, function remove(contact) {
       return contact.address === address;
     });
 
-    setContactItems(contactsObj);
-    await browser.storage.local.set({ contacts: contactsObj });
+    setContactItems(contactList);
+    await browser.storage.local.set({ contacts: contactList });
   };
 
   const contactElem = contactItems.map((item) => {
