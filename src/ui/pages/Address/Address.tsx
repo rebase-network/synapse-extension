@@ -277,8 +277,8 @@ export default (props: AppProps) => {
       if (_.isEmpty(contactStorage)) {
         return;
       }
-
-      _.find(contacts, (ele) => {
+      setName('');
+      _.each(contacts, (ele) => {
         if (ele.address === currentAddress) {
           setName(ele.name);
         }
