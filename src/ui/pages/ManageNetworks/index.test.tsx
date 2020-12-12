@@ -1,10 +1,11 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
+import NetworkManager from '@common/networkManager';
 import App from './index';
 
 const mockFunc = jest.fn();
@@ -36,12 +37,7 @@ describe('Manage networks page', () => {
     );
   });
 
-  it('should render form fields: submitbutton', async () => {
-    const submitButton = screen.getByRole('button', { name: /Add/i });
-    expect(submitButton).toBeInTheDocument();
-  });
-
-  it('should change form fields: title', async () => {
+  it('should get form fields value: title', async () => {
     const title = screen.getByLabelText('Network Name');
     const expectedValue = 'Mainnet';
 
@@ -82,4 +78,51 @@ describe('Manage networks page', () => {
       cacheURL: expectedValue,
     });
   });
+
+  it('should render form fields: submitbutton', async () => {
+    const submitButton = screen.getByRole('button', { name: /Add/i });
+    expect(submitButton).toBeInTheDocument();
+  });
+
+  it('should create new network', async () => {
+    const title = screen.getByLabelText('Network Name');
+    const expectedTitle = 'Mainnet-abc';
+
+    const nodeURL = screen.getByLabelText('CKB Node URL');
+    const expectedNodeUrl = 'https://rpc-abc.mainnet.com';
+
+    const cacheURL = screen.getByLabelText('CKB Cache Layer URL');
+    const expectedCacheURL = 'https://cache-abc.mainnet.com';
+
+    const submitBtn = screen.getByRole('button', { name: 'Add' });
+
+    await userEvent.type(title, expectedTitle);
+    await userEvent.type(nodeURL, expectedNodeUrl);
+    await userEvent.type(cacheURL, expectedCacheURL);
+
+    expect(screen.getByRole('form')).toHaveFormValues({
+      title: expectedTitle,
+      nodeURL: expectedNodeUrl,
+      cacheURL: expectedCacheURL,
+    });
+
+    const networkListBefore = await NetworkManager.getNetworkList();
+
+    userEvent.click(submitBtn);
+    await waitFor(() => {
+      expect(networkListBefore.length).toEqual(0);
+    });
+    const networkListAfter = await NetworkManager.getNetworkList();
+    expect(networkListAfter.length).toEqual(networkListBefore.length + 1);
+  });
+
+  // it('should delete', async () => {
+  //   const aliceElems = screen.getAllByText('Mainnet');
+  //   expect(aliceElems).toHaveLength(1);
+  //   const result = screen.getAllByLabelText('delete');
+  //   expect(result).toHaveLength(1);
+
+  //   userEvent.click(result[0]);
+  //   expect(browser.storage.local.set).toBeCalled();
+  // });
 });

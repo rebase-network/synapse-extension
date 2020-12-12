@@ -117,7 +117,7 @@ describe('export mnemonic page', () => {
     });
   });
 
-  it('should render delete icon', async () => {
+  it('should delete', async () => {
     const result = screen.getAllByLabelText('delete');
     expect(result).toHaveLength(1);
 
