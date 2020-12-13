@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -27,14 +27,16 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('Manage networks page', () => {
-  beforeEach(() => {
-    render(
-      <IntlProvider locale="en" messages={en}>
-        <Router>
-          <App />
-        </Router>
-      </IntlProvider>,
-    );
+  beforeEach(async () => {
+    await act(async () => {
+      render(
+        <IntlProvider locale="en" messages={en}>
+          <Router>
+            <App />
+          </Router>
+        </IntlProvider>,
+      );
+    });
   });
 
   it('should get form fields value: title', async () => {
@@ -116,13 +118,18 @@ describe('Manage networks page', () => {
     expect(networkListAfter.length).toEqual(networkListBefore.length + 1);
   });
 
-  // it('should delete', async () => {
-  //   const aliceElems = screen.getAllByText('Mainnet');
-  //   expect(aliceElems).toHaveLength(1);
-  //   const result = screen.getAllByLabelText('delete');
-  //   expect(result).toHaveLength(1);
+  it('should delete', async () => {
+    await NetworkManager.initNetworks();
+    const networkListBefore = await NetworkManager.getNetworkList();
+    expect(networkListBefore.length).toEqual(3);
+    const aliceElems = screen.getAllByText('Mainnet');
+    expect(aliceElems).toHaveLength(1);
+    const result = screen.getAllByLabelText('delete');
+    expect(result).toHaveLength(1);
 
-  //   userEvent.click(result[0]);
-  //   expect(browser.storage.local.set).toBeCalled();
-  // });
+    userEvent.click(result[0]);
+    await waitFor(() => {
+      expect(browser.storage.local.set).toBeCalled();
+    });
+  });
 });
