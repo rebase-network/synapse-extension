@@ -1,10 +1,10 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import chrome from 'sinon-chrome';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
+import { MESSAGE_TYPE } from '@src/common/utils/constants';
 import App from './index';
 
 const mockFunc = jest.fn();
@@ -26,10 +26,6 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('sign/auth page', () => {
-  beforeAll(() => {
-    window.chrome = chrome;
-  });
-
   beforeEach(() => {
     render(
       <IntlProvider locale="en" messages={en}>
@@ -55,6 +51,25 @@ describe('sign/auth page', () => {
 
     expect(screen.getByRole('form')).toHaveFormValues({
       password: 'test password',
+    });
+  });
+
+  it('should render delete wallet form and submit', async () => {
+    browser.runtime.sendMessage({
+      type: MESSAGE_TYPE.EXTERNAL_SIGN,
+      data: { tx: { version: '0x0' } },
+    });
+
+    const password = screen.getByLabelText('Password');
+    await userEvent.type(password, 'password_1');
+    expect(screen.getByRole('form')).toHaveFormValues({
+      password: 'password_1',
+    });
+    const confirmBtn = screen.getByText('Confirm');
+    expect(confirmBtn).toBeInTheDocument();
+    userEvent.click(confirmBtn);
+    await waitFor(() => {
+      expect(browser.runtime.sendMessage).toBeCalled();
     });
   });
 });
