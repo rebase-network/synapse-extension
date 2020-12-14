@@ -3,6 +3,8 @@ const crypto = require('crypto');
 
 require('jest-webextension-mock');
 
+require('@testing-library/jest-dom/extend-expect');
+
 require('dotenv').config({
   path: './.env',
 });
