@@ -1,12 +1,10 @@
 import React from 'react';
-import App from './index';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import '@testing-library/jest-dom/extend-expect';
-import chrome from 'sinon-chrome';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
+import App from './index';
 
 const mockFunc = jest.fn();
 
@@ -27,18 +25,16 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('Manage UDTs page', () => {
-  beforeAll(() => {
-    window.chrome = chrome;
-  });
-
-  beforeEach(() => {
-    render(
-      <IntlProvider locale="en" messages={en}>
-        <Router>
-          <App />
-        </Router>
-      </IntlProvider>,
-    );
+  beforeEach(async () => {
+    await act(async () => {
+      render(
+        <IntlProvider locale="en" messages={en}>
+          <Router>
+            <App />
+          </Router>
+        </IntlProvider>,
+      );
+    });
   });
 
   it('should render form fields: submitbutton', async () => {
@@ -93,8 +89,52 @@ describe('Manage UDTs page', () => {
 
     expect(decimal).toBeInTheDocument();
 
+    await userEvent.type(decimal, '8');
     expect(screen.getByRole('form')).toHaveFormValues({
-      decimal: '',
+      decimal: '8',
+    });
+  });
+
+  it('should create new udt', async () => {
+    const name = screen.getByLabelText('UDT Name');
+    await userEvent.type(name, 'simpleUDT');
+
+    const typeHash = screen.getByLabelText('UDT Hash');
+    await userEvent.type(
+      typeHash,
+      '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+    );
+
+    const symbol = screen.getByLabelText('Symbol');
+    await userEvent.type(symbol, 'UDT');
+
+    const decimal = screen.getByLabelText('Decimal');
+    await userEvent.type(decimal, '8');
+    expect(screen.getByRole('form')).toHaveFormValues({
+      decimal: '8',
+      name: 'simpleUDT',
+      typeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+      symbol: 'UDT',
+    });
+
+    const submitBtn = screen.getByRole('button', { name: /Add/i });
+    userEvent.click(submitBtn);
+    await waitFor(() => {
+      expect(browser.storage.local.set).toBeCalled();
+      const udtsElem = screen.getAllByText(/simpleUDT/i);
+      expect(udtsElem).toHaveLength(1);
+    });
+  });
+
+  it('should delete', async () => {
+    const udtsElem = screen.getAllByText(/simpleUDT/i);
+    expect(udtsElem).toHaveLength(1);
+    const result = screen.getAllByLabelText('delete');
+    expect(result).toHaveLength(1);
+
+    userEvent.click(result[0]);
+    await waitFor(() => {
+      expect(browser.storage.local.set).toBeCalled();
     });
   });
 });
