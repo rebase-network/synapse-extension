@@ -75,7 +75,7 @@ export default () => {
   };
 
   React.useEffect(() => {
-    browser.runtime.onMessage.addListener((msg) => {
+    const listener = (msg) => {
       if (
         msg.type === MESSAGE_TYPE.EXTERNAL_SEND ||
         msg.type === MESSAGE_TYPE.EXTERNAL_SIGN ||
@@ -83,7 +83,9 @@ export default () => {
       ) {
         setMessage(msg);
       }
-    });
+    };
+    browser.runtime.onMessage.addListener(listener);
+    return browser.runtime.onMessage.removeListener(listener);
   }, []);
 
   return (
