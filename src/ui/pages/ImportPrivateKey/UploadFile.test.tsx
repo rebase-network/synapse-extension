@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import '@testing-library/jest-dom/extend-expect';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
 import App from './UploadFile';

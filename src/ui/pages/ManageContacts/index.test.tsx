@@ -3,7 +3,6 @@ import { act } from 'react-dom/test-utils';
 import { render, screen, waitFor } from '@testing-library/react';
 // import { renderHook, act } from '@testing-library/react-hooks';
 import userEvent from '@testing-library/user-event';
-import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import en from '@src/common/locales/en';

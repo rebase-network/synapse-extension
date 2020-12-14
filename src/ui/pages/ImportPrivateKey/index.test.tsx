@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import '@testing-library/jest-dom/extend-expect';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
 import { MESSAGE_TYPE } from '@src/common/utils/constants';

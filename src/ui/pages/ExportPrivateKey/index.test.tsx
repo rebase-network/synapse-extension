@@ -1,7 +1,6 @@
 import React from 'react';
 import { useHistory, BrowserRouter as Router } from 'react-router-dom';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
 import { IntlProvider } from 'react-intl';
 import { MESSAGE_TYPE } from '@src/common/utils/constants';
 import en from '@common/locales/en';
