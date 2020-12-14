@@ -107,7 +107,7 @@ export const InnerForm = (props) => {
   );
 };
 
-export default function InitFunction(props: AppProps) {
+export default function InitFunction() {
   const classes = useStyles();
   const intl = useIntl();
   const [udtsItems, setUdtsItems] = React.useState([]);
