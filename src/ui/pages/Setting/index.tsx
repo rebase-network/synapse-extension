@@ -42,10 +42,6 @@ const useStyles = makeStyles({
   },
 });
 
-interface AppProps {}
-
-interface AppState {}
-
 const settingItems = [
   {
     link: '/export-mnemonic',
@@ -79,21 +75,10 @@ const settingItems = [
   },
 ];
 
-export const innerForm = (props) => {
-  const classes = useStyles();
+const innerForm = (props: any) => {
   const intl = useIntl();
 
-  const {
-    values,
-    touched,
-    errors,
-    dirty,
-    isSubmitting,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    handleReset,
-  } = props;
+  const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
 
   return (
     <Form
@@ -137,7 +122,7 @@ export const innerForm = (props) => {
   );
 };
 
-export default function (props: AppProps, state: AppState) {
+export default () => {
   const classes = useStyles();
   const intl = useIntl();
 
@@ -146,7 +131,7 @@ export default function (props: AppProps, state: AppState) {
   const [success, setSuccess] = React.useState(true);
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener((msg, sender, sendResp) => {
+    const listener = (msg) => {
       if (msg.type === MESSAGE_TYPE.DELETE_WALLET_ERR) {
         setSuccess(false);
       }
@@ -154,7 +139,9 @@ export default function (props: AppProps, state: AppState) {
       if (msg.type === MESSAGE_TYPE.DELETE_WALLET_OK) {
         history.push('./mnemonic-setting');
       }
-    });
+    };
+    browser.runtime.onMessage.addListener(listener);
+    return browser.runtime.onMessage.removeListener(listener);
   }, []);
 
   const handleOpen = () => {
@@ -166,7 +153,7 @@ export default function (props: AppProps, state: AppState) {
   };
 
   const onSubmit = async (values) => {
-    chrome.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.DELETE_WALLET });
+    browser.runtime.sendMessage({ ...values, type: MESSAGE_TYPE.DELETE_WALLET });
   };
 
   const isLogin = localStorage.getItem('IS_LOGIN') === 'YES';
@@ -209,7 +196,8 @@ export default function (props: AppProps, state: AppState) {
                 {errMsgNode}
 
                 <h2>
-                  <FormattedMessage id="Are your sure Delete Wallet" />?
+                  <FormattedMessage id="Are your sure Delete Wallet" />
+                  <span>?</span>
                 </h2>
                 <span>
                   <FormattedMessage id="Please backup your wallet, or wallet can't recover" />
@@ -226,4 +214,4 @@ export default function (props: AppProps, state: AppState) {
       </div>
     </div>
   );
-}
+};
