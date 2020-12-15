@@ -1,27 +1,23 @@
 import React from 'react';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import AddressListItem from '@ui/Components/AddressListItem';
 import { showAddressHelper } from '@src/common/utils/wallet';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {},
-    loading: {
-      height: 200,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  }),
-);
+const useStyles = makeStyles({
+  loading: {
+    height: 200,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
 interface AppProps {
   onSelectAddress: Function;
 }
 
-interface AppState {}
-
-export default function (props: AppProps, state: AppState) {
+export default (props: AppProps) => {
   const [addressesList, setAddressesList] = React.useState([]);
   const [prefix, setPrefix] = React.useState('');
 
@@ -31,12 +27,12 @@ export default function (props: AppProps, state: AppState) {
   React.useEffect(() => {
     chrome.storage.local.get(
       ['addressesList', 'currentNetwork'],
-      async ({ addressesList, currentNetwork }) => {
+      async ({ addressesList: addressesListArr, currentNetwork }) => {
         setPrefix(currentNetwork.prefix);
 
         setLoading(false);
-        if (!addressesList) return;
-        setAddressesList(addressesList);
+        if (!addressesListArr) return;
+        setAddressesList(addressesListArr);
       },
     );
   }, []);
@@ -59,5 +55,5 @@ export default function (props: AppProps, state: AppState) {
     });
   });
 
-  return <div className={classes.root}>{addressesElem}</div>;
-}
+  return <div>{addressesElem}</div>;
+};
