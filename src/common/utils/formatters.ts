@@ -119,10 +119,10 @@ export const shannonToCKBFormatter = (
   return +unsignedCKB === 0 ? '0' : `${sign}${unsignedCKB}`;
 };
 
-export const truncateAddress = (address: string) =>
+export const truncateAddress = (address: string = '') =>
   `${address.substr(0, 10)}...${address.substr(address.length - 10, address.length)}`;
 
-export const truncateHash = (hashParma: string) =>
+export const truncateHash = (hashParma: string = '') =>
   `${hashParma.substr(0, 10)}...${hashParma.substr(hashParma.length - 10, hashParma.length)}`;
 
 export const ckbToshannon = (number: any, decimal = 8) => {
