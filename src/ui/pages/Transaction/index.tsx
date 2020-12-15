@@ -85,7 +85,7 @@ interface TooltipProps {
   value: number;
 }
 
-export const InnerForm = (props: AppProps) => {
+const InnerForm = (props: AppProps) => {
   const classes = useStyles();
   const intl = useIntl();
   const [contacts, setContacts] = React.useState([]);
@@ -118,7 +118,8 @@ export const InnerForm = (props: AppProps) => {
     });
 
     browser.storage.local.get('currentWallet').then(async (result) => {
-      const lockHash = result.currentWallet.lock;
+      const lockHash = result.currentWallet?.lock;
+      if (!lockHash) return;
       const unspentCapacityResult = await getUnspentCapacity(lockHash);
       setUnspentCapacity(unspentCapacityResult);
     });
@@ -143,7 +144,7 @@ export const InnerForm = (props: AppProps) => {
     setCheckAddressMsg('');
     handleBlur(event);
 
-    const { address, typeHash, udt, decimal } = values;
+    const { address, typeHash, udt = 0, decimal } = values;
     // check address
     try {
       addressToScript(address);
@@ -173,7 +174,7 @@ export const InnerForm = (props: AppProps) => {
       if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.AnyPay) {
         const toLockHash = scriptToHash(toLockScript);
         const liveCapacity = await getUnspentCapacity(toLockHash);
-        if (liveCapacity === null && Number(capacity) < Number(61)) {
+        if (!liveCapacity && Number(capacity) < Number(61)) {
           const checkMsgId = "The transaction's ckb capacity cannot be less than 61 CKB";
           const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
           setCheckMsg(checkMsgI18n);
@@ -197,7 +198,7 @@ export const InnerForm = (props: AppProps) => {
         }
       }
     } else {
-      if (unspentCapacity === null) {
+      if (!unspentCapacity) {
         const checkMsgId =
           'lack of capacity, ckb capacity cannot be less than 142 CKB, available capacity is';
         const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
@@ -219,13 +220,13 @@ export const InnerForm = (props: AppProps) => {
   };
 
   const { name, typeHash } = values;
-  let sudtElem = null;
-  let dataElem = null;
-  if (name === '' && typeHash === '') {
+  let sudtElem;
+  let dataElem;
+  if (!name && !typeHash) {
     dataElem = (
       <TextField
         label={intl.formatMessage({ id: 'Data' })}
-        id="data"
+        id="field-data"
         name="data"
         type="text"
         fullWidth
@@ -302,17 +303,14 @@ export const InnerForm = (props: AppProps) => {
   };
 
   React.useEffect(() => {
-    const c1 = toAddress === '' || toAddress === null;
-    const c2 = txCapacity === '' || txCapacity === null;
-
-    if (c1 || c2) {
+    if (!toAddress || !txCapacity) {
       return;
     }
 
     (async () => {
       const cwStorage = await browser.storage.local.get('currentWallet');
       const currNetworkStorage = await browser.storage.local.get('currentNetwork');
-
+      if (!cwStorage.currentWallet) return;
       const { script, lock, type } = cwStorage.currentWallet;
 
       const fromAddress = showAddressHelper(currNetworkStorage.currentNetwork.prefix, script);
@@ -344,7 +342,7 @@ export const InnerForm = (props: AppProps) => {
   }, [dummyTx, feeRate]);
 
   return (
-    <Form className="form-sendtx" id="form-sendtx" onSubmit={handleSubmit}>
+    <Form className="form-sendtx" id="form-sendtx" onSubmit={handleSubmit} aria-label="form">
       <div>{sudtElem}</div>
 
       <Autocomplete
@@ -394,7 +392,7 @@ export const InnerForm = (props: AppProps) => {
         helperText={errMsg}
         margin="normal"
         variant="outlined"
-        data-testid="field-capacity"
+        id="field-capacity"
       />
       {dataElem}
 
@@ -432,7 +430,7 @@ export const InnerForm = (props: AppProps) => {
 
       <TextField
         label={intl.formatMessage({ id: 'Fee' })}
-        id="fee"
+        id="field-fee"
         name="fee"
         type="text"
         fullWidth
@@ -447,7 +445,6 @@ export const InnerForm = (props: AppProps) => {
         helperText={errors.fee && touched.fee && errors.fee}
         margin="normal"
         variant="outlined"
-        data-testid="field-fee"
       />
       <TextField
         label={intl.formatMessage({ id: 'Password' })}
@@ -462,7 +459,7 @@ export const InnerForm = (props: AppProps) => {
         helperText={errors.password && touched.password && errors.password}
         margin="normal"
         variant="outlined"
-        data-testid="field-amount"
+        id="field-password"
       />
       {isSubmitting && <div id="submitting">Submitting</div>}
       <Button
@@ -519,7 +516,7 @@ export default () => {
   };
 
   React.useEffect(() => {
-    chrome.runtime.onMessage.addListener((message) => {
+    browser.runtime.onMessage.addListener((message) => {
       const messageHandled = _.has(message, 'success');
       if (messageHandled && message.type === MESSAGE_TYPE.SEND_TX_OVER) {
         setSending(false);
@@ -540,14 +537,14 @@ export default () => {
 
   const onSubmit = async (values) => {
     setSending(true);
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       ...values,
       network,
       type: MESSAGE_TYPE.REQUEST_SEND_TX,
     });
   };
 
-  let sendingNode = null;
+  let sendingNode;
   if (sending) {
     sendingNode = (
       <div className={classes.alert}>
@@ -556,14 +553,14 @@ export default () => {
     );
   }
 
-  let errNode = null;
+  let errNode;
 
   if (errMsg) {
-    sendingNode = null;
     errNode = (
       <div className={classes.error}>
         <div>
-          {intl.formatMessage({ id: 'Error code' })} {errCode}
+          {intl.formatMessage({ id: 'Error code' })}
+          {errCode}
         </div>
         <div>{intl.formatMessage({ id: errMsg })}</div>
       </div>
