@@ -2,30 +2,11 @@ import Axios from 'axios';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils';
 import NetworkManager from '@src/common/networkManager';
 
-// Add a response interceptor
-Axios.interceptors.response.use(
-  (response) => {
-    // console.log('response', response);
-    // Do something with response data
-    // const result = response.data;
-    // if (result.errCode !== 0) {
-    //   console.log(/axios result error/, JSON.stringify(result));
-    // }
-    return response.data;
-  },
-  (error) => {
-    // Do something with response error
-    console.log('Axios error: ', error);
-    // return Promise.reject(error);
-    throw error;
-  },
-);
-
 export const getAddressInfo = async (lockHash: string): Promise<{ capacity: string }> => {
   try {
     const currentNetwork = await NetworkManager.getCurrentNetwork();
     const { cacheURL } = currentNetwork;
-    const result = await Axios.get(`${cacheURL}/locks/${lockHash}/capacity`);
+    const { data: result } = await Axios.get(`${cacheURL}/locks/${lockHash}/capacity`);
     if (result.errCode !== 0) {
       return result;
     }
@@ -58,7 +39,7 @@ export const getUnspentCells = async (
   try {
     const currentNetwork = await NetworkManager.getCurrentNetwork();
     const { cacheURL } = currentNetwork;
-    const result = await Axios.get(`${cacheURL}/locks/${lockHash}/cells/unspent`, {
+    const { data: result } = await Axios.get(`${cacheURL}/locks/${lockHash}/cells/unspent`, {
       params,
     });
     if (result.errCode !== 0) {
@@ -74,7 +55,7 @@ export const getTxHistories = async (lockHash): Promise<any> => {
   const currentNetwork = await NetworkManager.getCurrentNetwork();
   const { cacheURL } = currentNetwork;
   const url = `${cacheURL}/locks/${lockHash}/txs`;
-  const result = await Axios.get(url);
+  const { data: result } = await Axios.get(url);
 
   return result.data;
 };
@@ -103,7 +84,7 @@ export const getUDTsByLockHash = async (params: TLockAndTypeScripts): Promise<an
   for (let index = 0; index < typeHashes.length; index++) {
     url += `${typeHashes}`;
   }
-  const result = await Axios.get(url);
+  const { data: result } = await Axios.get(url);
   return result.data;
 };
 
@@ -111,7 +92,7 @@ export const getUnspentCapacity = async (lockHash: string) => {
   try {
     const currentNetwork = await NetworkManager.getCurrentNetwork();
     const { cacheURL } = currentNetwork;
-    const result = await Axios.get(`${cacheURL}/locks/${lockHash}/capacity`);
+    const { data: result } = await Axios.get(`${cacheURL}/locks/${lockHash}/capacity`);
     if (result.errCode !== 0) {
       return result;
     }
