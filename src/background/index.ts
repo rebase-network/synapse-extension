@@ -188,7 +188,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       // content script will receive it and forward to web page
       target: WEB_PAGE,
       success: false,
-      message: 'tx failed to sign',
+      message: 'TX failed to sign',
       data: {
         tx: null,
       },
@@ -198,14 +198,14 @@ chrome.runtime.onMessage.addListener(async (request) => {
       type: 'basic',
       iconUrl: 'logo-32.png',
       title: 'TX failed to sign',
-      message: 'Your TX failed to send',
+      message: 'Your TX failed to sign',
     };
 
     try {
       const signedTx = await signTxFromMsg(request);
 
       responseMsg.data.tx = signedTx;
-      responseMsg.message = 'tx is signed';
+      responseMsg.message = 'TX is signed';
       responseMsg.success = true;
 
       notificationMsg.title = 'TX Signed';
@@ -227,7 +227,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       // content script will receive it and forward to web page
       target: WEB_PAGE,
       success: false,
-      message: 'tx failed to send',
+      message: 'TX failed to send',
       data: {
         hash: null,
       },
@@ -245,13 +245,13 @@ chrome.runtime.onMessage.addListener(async (request) => {
       const sentTxHash = await sendSignedTx(signedTx);
 
       responseMsg.data.hash = sentTxHash;
-      responseMsg.message = 'tx is sent';
+      responseMsg.message = 'TX is sent';
       responseMsg.success = true;
 
       notificationMsg.title = 'TX Sent';
-      notificationMsg.message = 'tx is sent';
+      notificationMsg.message = 'TX is sent';
     } catch (error) {
-      console.error('error happened when sending tx: ', error);
+      console.error('error happened when sending TX: ', error);
     }
 
     sendToWebPage(responseMsg);
@@ -266,7 +266,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       // content script will receive it and forward to web page
       target: WEB_PAGE,
       success: false,
-      message: 'tx failed to send',
+      message: 'TX failed to send',
       data: {
         hash: null,
       },
@@ -283,13 +283,13 @@ chrome.runtime.onMessage.addListener(async (request) => {
       const sentTxHash = await sendSignedTx(request.data?.tx);
 
       responseMsg.data.hash = sentTxHash;
-      responseMsg.message = 'tx is sent';
+      responseMsg.message = 'TX is sent';
       responseMsg.success = true;
 
       notificationMsg.title = 'TX Sent';
-      notificationMsg.message = 'tx is sent';
+      notificationMsg.message = 'TX is sent';
     } catch (error) {
-      console.error('error happened when sending tx: ', error);
+      console.error('error happened when sending TX: ', error);
     }
 
     sendToWebPage(responseMsg);
