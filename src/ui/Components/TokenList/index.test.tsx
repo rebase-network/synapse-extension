@@ -1,11 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, useHistory } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
+import NetworkManager from '@common/NetworkManager';
 import { udtsCapacity, udtsMeta, explorerUrl } from '@src/common/utils/tests/fixtures/token';
-import Component from './component';
+import App from './index';
+import udtsFixture from './fixtures/udts';
+import currentWalletFixture from './fixtures/currentWallet';
 
 const mockFunc = jest.fn();
 
@@ -27,24 +30,25 @@ jest.mock('react-router-dom', () => {
 
 describe('token list', () => {
   const history = useHistory();
-  beforeEach(() => {
-    render(
-      <IntlProvider locale="en" messages={en}>
-        <Router>
-          <Component udtsCapacity={udtsCapacity} udtsMeta={udtsMeta} explorerUrl={explorerUrl} />
-        </Router>
-      </IntlProvider>,
-    );
-  });
-  it('should have correct amount of Love Lina Token', () => {
-    const elems = screen.getAllByLabelText('Token List');
-    expect(elems).toHaveLength(5);
+  beforeEach(async () => {
+    await browser.storage.local.set({ udts: udtsFixture, currentWallet: currentWalletFixture });
+    await NetworkManager.initNetworks();
+    await act(async () => {
+      render(
+        <IntlProvider locale="en" messages={en}>
+          <Router>
+            <App explorerUrl={explorerUrl} />
+          </Router>
+        </IntlProvider>,
+      );
+    });
   });
 
-  it('should able to go to send tx page', () => {
-    const sendBtns = screen.getAllByText('Send');
-    expect(sendBtns).toHaveLength(4);
-    userEvent.click(sendBtns[0]);
-    expect(history.push).toBeCalled();
+  it('should not render any udt', async () => {
+    const loading = screen.getByText(/Loading UDT/i);
+    expect(loading).toBeInTheDocument();
+    // await waitForElementToBeRemoved(screen.getByText(/Loading UDT/i));
+    // const elem = screen.getByText('TLT');
+    // expect(elem).toBeInTheDocument();
   });
 });
