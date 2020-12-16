@@ -59,8 +59,8 @@ export default (props: AppProps) => {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const { capacity } = await getAddressInfo(lock);
-      setCapacity(shannonToCKBFormatter(capacity));
+      const { capacity: capacityAmount } = await getAddressInfo(lock);
+      setCapacity(shannonToCKBFormatter(capacityAmount));
     };
 
     fetchData();
@@ -82,8 +82,8 @@ export default (props: AppProps) => {
     })();
   }, []);
 
-  const handleListItemClick = (event, addressInfo: IAddressInfo) => {
-    const currentWallet = _.clone(addressInfo);
+  const handleListItemClick = (event, addressInfoObj: IAddressInfo) => {
+    const currentWallet = _.clone(addressInfoObj);
     delete currentWallet.amount;
     props.onSelectAddress({ right: false });
 
@@ -92,6 +92,16 @@ export default (props: AppProps) => {
     history.push(`/address/${address}`);
   };
 
+  const textElem = (
+    <>
+      <Typography component="span" variant="body2" className={classes.inline} color="textPrimary">
+        {`${capacity} CKB`}
+      </Typography>
+      <br />
+      {`${type}  ${name}`}
+    </>
+  );
+
   return (
     <ThemeProvider theme={listItemTheme}>
       <ListItem
@@ -99,23 +109,7 @@ export default (props: AppProps) => {
         key={`item-${address}`}
         onClick={(event) => handleListItemClick(event, addressInfo)}
       >
-        <ListItemText
-          primary={truncateAddress(address)}
-          secondary={
-            <>
-              <Typography
-                component="span"
-                variant="body2"
-                className={classes.inline}
-                color="textPrimary"
-              >
-                {`${capacity} CKB`}
-              </Typography>
-              <br />
-              {`${type}  ${name}`}
-            </>
-          }
-        />
+        <ListItemText primary={truncateAddress(address)} secondary={textElem} />
       </ListItem>
     </ThemeProvider>
   );
