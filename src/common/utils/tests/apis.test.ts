@@ -20,56 +20,56 @@ describe('apis', () => {
   });
 
   it('getAddressInfo', async () => {
-    const resp = '123';
+    const resp = { data: { data: { capacity: '0x01' }, errCode: 0 } };
     mockedAxios.get.mockResolvedValue(resp);
-    const result = await getAddressInfo('123');
-    expect(result).toEqual('123');
+    const result = await getAddressInfo('0x01');
+    expect(result).toEqual(resp.data.data);
   });
 
   it('getAddressInfo with error', async () => {
-    const resp = { data: '123', errCode: 0 };
+    const resp = { data: { data: '123', errCode: 1 } };
     mockedAxios.get.mockResolvedValue(resp);
     const result = await getAddressInfo('123');
     expect(result).toEqual(resp.data);
   });
 
   it('getAddressInfo with error returned', async () => {
-    const resp = 'err';
-    mockedAxios.get.mockRejectedValue(resp);
+    const resp = { data: { data: '123', errCode: 1 } };
+    mockedAxios.get.mockResolvedValue(resp);
     const result = await getAddressInfo('123');
-    expect(result).toEqual(resp);
+    expect(result).toEqual(resp.data);
   });
 
   it('getUnspentCells', async () => {
-    const resp = '123';
+    const resp = { data: { data: '123', errCode: 0 } };
     mockedAxios.get.mockResolvedValue(resp);
     const result = await getUnspentCells('123', { limit: '1' });
-    expect(result).toEqual('123');
+    expect(result).toEqual(resp.data.data);
   });
 
   it('getUnspentCells with error', async () => {
-    const resp = { data: '123', errCode: 0 };
+    const resp = { data: { data: '123', errCode: 0 } };
+    mockedAxios.get.mockResolvedValue(resp);
+    const result = await getUnspentCells('123', { limit: '1' });
+    expect(result).toEqual(resp.data.data);
+  });
+
+  it('getUnspentCells with error returned', async () => {
+    const resp = { data: { data: '123', errCode: 1 } };
     mockedAxios.get.mockResolvedValue(resp);
     const result = await getUnspentCells('123', { limit: '1' });
     expect(result).toEqual(resp.data);
   });
 
-  it('getUnspentCells with error returned', async () => {
-    const resp = 'err';
-    mockedAxios.get.mockRejectedValue(resp);
-    const result = await getUnspentCells('123', { limit: '1' });
-    expect(result).toEqual(resp);
-  });
-
   it('getTxHistories', async () => {
-    const resp = { data: '123' };
+    const resp = { data: { data: '123', errCode: 0 } };
     mockedAxios.get.mockResolvedValue(resp);
     const result = await getTxHistories('123');
-    expect(result).toEqual('123');
+    expect(result).toEqual(resp.data.data);
   });
 
   it('getUDTsByLockHash', async () => {
-    const resp = { data: '123' };
+    const resp = { data: { data: '123', errCode: 0 } };
     mockedAxios.get.mockResolvedValue(resp);
     const result = await getUDTsByLockHash({
       lockHash: '123',
@@ -81,27 +81,27 @@ describe('apis', () => {
         },
       ],
     });
-    expect(result).toEqual(resp.data);
+    expect(result).toEqual(resp.data.data);
   });
 
   it('getUnspentCapacity with error', async () => {
-    const resp = { data: '123', errCode: 1 };
+    const resp = { data: { data: '123', errCode: 1 } };
     mockedAxios.get.mockResolvedValue(resp);
     const result = await getUnspentCapacity('123');
-    expect(result).toEqual(resp);
+    expect(result).toEqual(resp.data);
   });
 
   it('getUnspentCapacity with empty capacity', async () => {
     const resp = { data: { emptyCapacity: 100 }, errCode: 0 };
     mockedAxios.get.mockResolvedValue(resp);
     const result = await getUnspentCapacity('123');
-    expect(result).toEqual(resp.data.emptyCapacity);
+    expect(result).toEqual(resp.data);
   });
 
   it('getUnspentCapacity with error returned', async () => {
-    const resp = 'err';
-    mockedAxios.get.mockRejectedValue(resp);
+    const resp = { data: { data: '123', errCode: 1 } };
+    mockedAxios.get.mockResolvedValue(resp);
     const result = await getUnspentCapacity('123');
-    expect(result).toEqual(resp);
+    expect(result).toEqual(resp.data);
   });
 });
