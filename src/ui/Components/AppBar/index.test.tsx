@@ -6,7 +6,7 @@ import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
 import App from './index';
 
-describe('React testing library', () => {
+describe('AppBar component', () => {
   let tree;
   let container;
   let getByTestId;
