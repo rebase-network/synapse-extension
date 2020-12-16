@@ -1,10 +1,10 @@
 import React from 'react';
-import App from './index';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import chrome from 'sinon-chrome';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
+import App from './index';
 
 describe('React testing library', () => {
   let tree;
