@@ -85,7 +85,7 @@ export default () => {
       }
     };
     browser.runtime.onMessage.addListener(listener);
-    return browser.runtime.onMessage.removeListener(listener);
+    return () => browser.runtime.onMessage.removeListener(listener);
   }, []);
 
   return (
