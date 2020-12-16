@@ -1,6 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, useHistory } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
 import { udtsCapacity, udtsMeta, explorerUrl } from '@src/common/utils/tests/fixtures/token';
@@ -25,6 +26,7 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('token list', () => {
+  const history = useHistory();
   beforeEach(() => {
     render(
       <IntlProvider locale="en" messages={en}>
@@ -37,5 +39,12 @@ describe('token list', () => {
   it('should have correct amount of Love Lina Token', () => {
     const elems = screen.getAllByLabelText('Token List');
     expect(elems).toHaveLength(5);
+  });
+
+  it('should able to go to send tx page', () => {
+    const sendBtns = screen.getAllByText('Send');
+    expect(sendBtns).toHaveLength(4);
+    userEvent.click(sendBtns[0]);
+    expect(history.push).toBeCalled();
   });
 });
