@@ -1,48 +1,47 @@
 import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Toolbar } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Drawer from '@material-ui/core/Drawer';
 import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import SettingsIcon from '@material-ui/icons/Settings';
-import AddressList from '../AddressList';
+import AddressList from '@ui/Components/AddressList';
+import AddressListItem from '@ui/Components/AddressListItem';
 import PageNav from '../PageNav';
 import NetworkSelector from '../NetworkSelector';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    drawerInner: {
-      width: 320,
-    },
-    menuButton: {
-      marginLeft: 0,
-    },
-    title: {
-      flexGrow: 1,
-    },
-    logo: {
-      width: 28,
-    },
-    link: {
-      display: 'flex',
-      color: 'inherit',
-      padding: 16,
-      'font-size': 16,
-      'align-items': 'center',
-      'margin-top': 10,
-      'border-top': '1px solid #ccc',
-    },
-    linkText: {
-      marginLeft: 3,
-    },
-    icon: {
-      width: 20,
-      height: 20,
-    },
-  }),
-);
+const useStyles = makeStyles({
+  drawerInner: {
+    width: 320,
+  },
+  menuButton: {
+    marginLeft: 0,
+  },
+  title: {
+    flexGrow: 1,
+  },
+  logo: {
+    width: 28,
+  },
+  link: {
+    display: 'flex',
+    color: 'inherit',
+    padding: 16,
+    'font-size': 16,
+    'align-items': 'center',
+    'margin-top': 10,
+    'border-top': '1px solid #ccc',
+  },
+  linkText: {
+    marginLeft: 3,
+  },
+  icon: {
+    width: 20,
+    height: 20,
+  },
+});
 
 interface AppProps {
   handleNetworkChange: Function;
@@ -95,7 +94,7 @@ export default (props: AppProps) => {
           <div className={classes.drawerInner}>
             <PageNav to="#" position="right" onClickRight={setState} title="My Addresses" />
 
-            <AddressList onSelectAddress={setState} />
+            <AddressList onSelectAddress={setState} AddressListItem={AddressListItem} />
 
             <Link to="/setting" onClick={toggleDrawer('right', false)} className={classes.link}>
               <SettingsIcon className={classes.icon} />
