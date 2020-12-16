@@ -6,7 +6,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { FormattedMessage } from 'react-intl';
-import Component from './Component';
+import TXPreviewer from './TXPreviewer';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,7 +38,7 @@ export default function SimpleAccordion(props: any) {
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Component tx={tx} />
+          <TXPreviewer tx={tx} />
         </AccordionDetails>
       </Accordion>
     </div>

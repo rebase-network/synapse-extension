@@ -5,7 +5,7 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { makeStyles } from '@material-ui/core/styles';
 import PageNav from '@ui/Components/PageNav';
-import RawTxDetail from '@ui/Components/PrettyPrintJson/Accordion';
+import RawTxDetail from '@ui/Components/PrettyPrintJson';
 import { MESSAGE_TYPE } from '@src/common/utils/constants';
 
 const useStyles = makeStyles({
