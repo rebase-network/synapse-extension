@@ -9,8 +9,9 @@ import App from './index';
 import udtsFixture from './fixtures/udts';
 import currentWalletFixture from './fixtures/currentWallet';
 
-const mockFunc = jest.fn();
+jest.mock('@common/utils/apis');
 
+const mockFunc = jest.fn();
 jest.mock('react-router-dom', () => {
   // Require the original module to not be mocked...
   const originalModule = jest.requireActual('react-router-dom');
@@ -43,7 +44,7 @@ describe('token list', () => {
   });
 
   it('should not render any udt', async () => {
-    const loading = screen.getByText(/Loading UDT/i);
+    const loading = screen.getByText(/2923.332 TLT/i);
     expect(loading).toBeInTheDocument();
   });
 });
