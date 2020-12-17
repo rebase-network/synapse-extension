@@ -1,11 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, useHistory } from 'react-router-dom';
-import { act, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { act, render, screen } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
 import NetworkManager from '@common/NetworkManager';
-import { udtsCapacity, udtsMeta, explorerUrl } from '@src/common/utils/tests/fixtures/token';
+import { explorerUrl } from '@src/common/utils/tests/fixtures/token';
 import App from './index';
 import udtsFixture from './fixtures/udts';
 import currentWalletFixture from './fixtures/currentWallet';
@@ -29,7 +28,6 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('token list', () => {
-  const history = useHistory();
   beforeEach(async () => {
     await browser.storage.local.set({ udts: udtsFixture, currentWallet: currentWalletFixture });
     await NetworkManager.initNetworks();
@@ -47,8 +45,5 @@ describe('token list', () => {
   it('should not render any udt', async () => {
     const loading = screen.getByText(/Loading UDT/i);
     expect(loading).toBeInTheDocument();
-    // await waitForElementToBeRemoved(screen.getByText(/Loading UDT/i));
-    // const elem = screen.getByText('TLT');
-    // expect(elem).toBeInTheDocument();
   });
 });
