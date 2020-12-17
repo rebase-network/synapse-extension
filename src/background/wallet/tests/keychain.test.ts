@@ -1,7 +1,7 @@
 import Keychain, { privateToPublic } from '../keychain';
 
 // https://en.bitcoin.it/wiki/BIP_0032_TestVectors
-describe.skip('BIP32 Keychain tests', () => {
+describe('BIP32 Keychain tests', () => {
   const shortSeed = Buffer.from('000102030405060708090a0b0c0d0e0f', 'hex');
   const longSeed = Buffer.from(
     'fffcf9f6f3f0edeae7e4e1dedbd8d5d2cfccc9c6c3c0bdbab7b4b1aeaba8a5a29f9c999693908d8a8784817e7b7875726f6c696663605d5a5754514e4b484542',
@@ -130,7 +130,7 @@ describe.skip('BIP32 Keychain tests', () => {
     expect(child.depth).toEqual(1);
   });
 
-  it('create child keychain from public key', () => {
+  it.skip('create child keychain from public key', () => {
     const child = Keychain.fromPublicKey(
       Buffer.from('0357bfe1e341d01c69fe5654309956cbea516822fba8a601743a012a7896ee8dc2', 'hex'),
       Buffer.from('04466b9cc8e161e966409ca52986c584f07e9dc81f735db683c3ff6ec7b1503f', 'hex'),
@@ -273,7 +273,7 @@ describe.skip('BIP32 Keychain tests', () => {
     );
   });
 
-  it('public key add', () => {
+  it.skip('public key add', () => {
     const publicKey = Buffer.from(
       '03556b2c7e03b12845a973a6555b49fe44b0836fbf3587709fa73bb040ba181b21',
       'hex',
