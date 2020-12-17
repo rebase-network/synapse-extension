@@ -6,7 +6,11 @@ import userEvent from '@testing-library/user-event';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import en from '@src/common/locales/en';
+import NetworkManager from '@common/networkManager';
+import currentWallet from './fixtures/currentWallet';
 import App from './index';
+
+jest.mock('@src/common/utils/apis');
 
 const mockFunc = jest.fn();
 
@@ -28,6 +32,9 @@ jest.mock('react-router-dom', () => {
 
 describe('Send Transaction page', () => {
   beforeEach(async () => {
+    await browser.storage.local.set({ currentWallet });
+    await NetworkManager.initNetworks();
+
     await act(async () => {
       render(
         <IntlProvider locale="en" messages={en}>
