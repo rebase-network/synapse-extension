@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
@@ -25,33 +25,24 @@ jest.mock('react-router-dom', () => {
   };
 });
 
-describe('txDetail page', () => {
-  let container;
-  let getByTestId;
-
+describe('txDetail componnet', () => {
   beforeEach(() => {
-    const tree = render(
+    render(
       <IntlProvider locale="en" messages={en}>
         <Router>
           <TxDetail data={tx} />
         </Router>
       </IntlProvider>,
     );
-
-    container = tree.container;
-    getByTestId = tree.getByTestId;
   });
 
   it('should render amount', async () => {
-    const amount = getByTestId('amount');
-    expect(container).toContainElement(amount);
-    // expect(amount).toHaveTextContent((tx.amount / 10 ** 8).toString());
-    expect(amount).toHaveTextContent('0.000001 CKB');
+    const amount = screen.getByText('0.000001 CKB');
+    expect(amount).toBeInTheDocument();
   });
 
   it('should render TxHash', async () => {
-    const txHash = getByTestId('txHash');
-    expect(container).toContainElement(txHash);
-    expect(txHash).toHaveTextContent('Tx Hash');
+    const txHash = screen.getByText('Tx Hash');
+    expect(txHash).toBeInTheDocument();
   });
 });
