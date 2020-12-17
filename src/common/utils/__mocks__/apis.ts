@@ -1,4 +1,4 @@
-import { udtUnspentCells } from '../fixtures/apis';
+import { udtUnspentCells, getUDTsByLockHashFixture } from '../fixtures/apis';
 
 // const unspentCells = await getUnspentCells(lockHash);
 export const getUnspentCells = async (lockHash, params) => {
@@ -18,7 +18,7 @@ export const getAddressInfo = () => Promise.resolve({ capacity: '0x01' });
 
 export const getTxHistories = () => Promise.resolve([]);
 
-export const getUDTsByLockHash = () => Promise.resolve([]);
+export const getUDTsByLockHash = () => Promise.resolve(getUDTsByLockHashFixture);
 
 export const getUnspentCapacity = () => Promise.resolve([]);
 
