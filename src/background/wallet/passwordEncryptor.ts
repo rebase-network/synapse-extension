@@ -6,10 +6,6 @@ export async function encrypt(privKey: Buffer, password: string) {
 }
 
 export async function decrypt(input: string, password: string) {
-  try {
-    const result = await passworder.decrypt(password, input);
-    return result;
-  } catch (error) {
-    return null;
-  }
+  const result = await passworder.decrypt(password, input);
+  return result;
 }
