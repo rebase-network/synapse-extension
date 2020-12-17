@@ -10,7 +10,7 @@ import { signTx } from '@background/keyper/keyperwallet';
 import NetworkManager from '@common/networkManager';
 import { createRawTx, createAnyPayRawTx } from './txGenerator';
 
-export interface GenerateTxResult {
+interface GenerateTxResult {
   tx: CKBComponents.RawTransaction;
   fee: string;
 }

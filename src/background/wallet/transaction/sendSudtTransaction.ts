@@ -15,7 +15,7 @@ import { getDepFromType } from '@common/utils/constants/typesInfo';
 import { parseSUDT } from '@common/utils';
 import { createSudtRawTx } from './txSudtGenerator';
 
-export interface GenerateTxResult {
+interface GenerateTxResult {
   tx: CKBComponents.RawTransaction;
   fee: string;
 }
