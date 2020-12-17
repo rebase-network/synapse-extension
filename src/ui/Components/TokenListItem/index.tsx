@@ -28,11 +28,11 @@ const useStyles = makeStyles({
 });
 
 export interface ITokenInfo {
-  name: string;
+  name?: string;
   udt: number;
   ckb: number;
-  decimal: string;
-  symbol: string;
+  decimal?: string;
+  symbol?: string;
   typeHash: string;
 }
 
