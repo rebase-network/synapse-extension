@@ -20,7 +20,7 @@ export const getTxHistories = () => Promise.resolve([]);
 
 export const getUDTsByLockHash = () => Promise.resolve(getUDTsByLockHashFixture);
 
-export const getUnspentCapacity = () => Promise.resolve([]);
+export const getUnspentCapacity = () => Promise.resolve(100 * 10 ** 8);
 
 export default {
   getAddressInfo,
