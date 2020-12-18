@@ -1,13 +1,21 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
-import { render, screen, waitFor } from '@testing-library/react';
-// import { renderHook, act } from '@testing-library/react-hooks';
+import {
+  render,
+  screen,
+  waitFor,
+  waitForElement,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import en from '@src/common/locales/en';
 import NetworkManager from '@common/networkManager';
+import { aliceAddresses } from '@src/tests/fixture/address';
+import { MESSAGE_TYPE } from '@src/common/utils/constants';
 import currentWallet from './fixtures/currentWallet';
+import contacts from './fixtures/contacts';
 import App from './index';
 
 jest.mock('@src/common/utils/apis');
@@ -32,9 +40,11 @@ jest.mock('react-router-dom', () => {
 
 describe('Send Transaction page', () => {
   beforeEach(async () => {
-    await browser.storage.local.set({ currentWallet });
+    await browser.storage.local.set({ currentWallet, contacts });
     await NetworkManager.initNetworks();
-
+    delete (window as any).location;
+    (window as any).location = {};
+    window.location.search = `?to=${aliceAddresses.anyPay.address}`;
     await act(async () => {
       render(
         <IntlProvider locale="en" messages={en}>
@@ -62,16 +72,39 @@ describe('Send Transaction page', () => {
     });
   });
 
-  it('should change form fields: Capacity', async () => {
+  it('should change form fields: Capacity is 1', async () => {
+    const capacity = screen.getByLabelText('Capacity');
+
+    expect(capacity).toBeInTheDocument();
+    expect(capacity).toBeEmpty();
+
+    await userEvent.type(capacity, '1');
+    expect(screen.getByRole('form')).toHaveFormValues({
+      capacity: '1',
+    });
+  });
+
+  it('should change form fields: Capacity is 61', async () => {
     const capacity = screen.getByLabelText('Capacity');
 
     expect(capacity).toBeInTheDocument();
     expect(capacity).toBeEmpty();
 
     await userEvent.type(capacity, '61');
-
     expect(screen.getByRole('form')).toHaveFormValues({
       capacity: '61',
+    });
+  });
+
+  it('should change form fields: Capacity is 200', async () => {
+    const capacity = screen.getByLabelText('Capacity');
+
+    expect(capacity).toBeInTheDocument();
+    expect(capacity).toBeEmpty();
+
+    await userEvent.type(capacity, '200');
+    expect(screen.getByRole('form')).toHaveFormValues({
+      capacity: '200',
     });
   });
 
@@ -146,5 +179,47 @@ describe('Send Transaction page', () => {
     await waitFor(() => {
       expect(chrome.runtime.sendMessage).toBeCalled();
     });
+  });
+
+  it('send tx successfully', async () => {
+    act(() => {
+      browser.runtime.sendMessage({
+        type: MESSAGE_TYPE.SEND_TX_OVER,
+        success: true,
+        hash: '0x123',
+        message: 'TX is sent',
+        data: {
+          tx: {
+            hash: '0x123',
+          },
+        },
+      });
+    });
+    // await waitForElementToBeRemoved(() =>
+    //   screen.getByText('The transaction is sending, please wait for seconds...'),
+    // );
+    expect(screen.getByText('0x123')).toBeInTheDocument();
+    // await waitFor(() => {
+    // });
+  });
+
+  it('send tx error', async () => {
+    act(() => {
+      browser.runtime.sendMessage({
+        type: MESSAGE_TYPE.SEND_TX_ERROR,
+        success: false,
+        hash: '',
+        message: 'TX failed to send',
+        data: {
+          tx: {
+            hash: '',
+          },
+        },
+      });
+    });
+
+    expect(screen.getByText('TX failed to send')).toBeInTheDocument();
+    // await waitFor(() => {
+    // });
   });
 });
