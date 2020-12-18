@@ -94,5 +94,7 @@ export default {
   'InvalidToken':'authorization failed',
   'RemoteError':'error from indexer server',
   'UnknownError':'other error',
-  'Error code': 'Error code'
+  'Error code': 'Error code',
+  'TX failed to send': 'TX failed to send',
+  'TX is sent': 'TX is sent',
 };

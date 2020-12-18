@@ -94,5 +94,7 @@ export default {
   'InvalidToken':'认证失败',
   'RemoteError':'来自索引服务器的错误',
   'UnknownError':'其它错误',
-  'Error code': '错误码'
+  'Error code': '错误码',
+  'TX failed to send': '交易发送失败',
+  'TX is sent': '交易已发送',
 };
