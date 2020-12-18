@@ -41,11 +41,6 @@ describe('Address page', () => {
     });
   });
 
-  it('should render address', async () => {
-    const address = screen.getByText(/ck|loading|null|undefined|/);
-    expect(address).toBeInTheDocument();
-  });
-
   it('should render capacity', () => {
     const capacity = screen.getByText('Loading...');
     expect(capacity).toBeInTheDocument();
