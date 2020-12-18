@@ -151,7 +151,6 @@ export default (props: AppProps) => {
         'currentWallet',
         'currentNetwork',
       ]);
-      console.log('currentWallet, currentNetwork: ', currentWallet, currentNetwork);
       if (_.isEmpty(currentWallet)) return;
       const { type: lockType, lock, script } = currentWallet;
 
