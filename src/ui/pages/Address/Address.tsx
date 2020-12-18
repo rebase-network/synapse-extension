@@ -146,38 +146,44 @@ export default (props: AppProps) => {
   React.useEffect(() => {
     setTxs([]); // clean tx data
 
-    chrome.storage.local.get(
-      ['currentWallet', 'currentNetwork'],
+    const initData = async () => {
+      const { currentWallet, currentNetwork } = await browser.storage.local.get([
+        'currentWallet',
+        'currentNetwork',
+      ]);
+      console.log('currentWallet, currentNetwork: ', currentWallet, currentNetwork);
+      if (_.isEmpty(currentWallet)) return;
+      const { type: lockType, lock, script } = currentWallet;
 
-      async ({ currentWallet, currentNetwork }) => {
-        if (_.isEmpty(currentWallet)) return;
-        const { type: lockType, lock, script } = currentWallet;
+      const { prefix } = currentNetwork;
+      const newAddr = showAddressHelper(prefix, script);
+      const isMainnet = prefix === 'ckb';
+      const shouldDisableSendBtn =
+        (isMainnet && lockType === LockType.AnyPay) || lockType === LockType.Keccak256;
 
-        const { prefix } = currentNetwork;
-        const newAddr = showAddressHelper(prefix, script);
-        const isMainnet = prefix === 'ckb';
-        const shouldDisableSendBtn =
-          (isMainnet && lockType === LockType.AnyPay) || lockType === LockType.Keccak256;
+      setExplorerUrl(isMainnet ? MAINNET_EXPLORER_URL : TESTNET_EXPLORER_URL);
+      setAddress(newAddr);
+      setDisableFlg(shouldDisableSendBtn);
+      setType(lockType);
+      setLockHash(lock);
+      updateCapacity(lock);
 
-        setExplorerUrl(isMainnet ? MAINNET_EXPLORER_URL : TESTNET_EXPLORER_URL);
-        setAddress(newAddr);
-        setDisableFlg(shouldDisableSendBtn);
-        setType(lockType);
-        setLockHash(lock);
-        updateCapacity(lock);
+      browser.runtime.sendMessage({
+        type: MESSAGE_TYPE.GET_TX_HISTORY,
+      });
+    };
 
-        chrome.runtime.sendMessage({
-          type: MESSAGE_TYPE.GET_TX_HISTORY,
-        });
-      },
-    );
+    initData();
 
     setLoading(true);
-    chrome.runtime.onMessage.addListener((message) => {
+
+    const listener = (message) => {
       if (message.type === MESSAGE_TYPE.SEND_TX_HISTORY && message.txs) {
         setTxs(message.txs);
       }
-    });
+    };
+    browser.runtime.onMessage.addListener(listener);
+    return () => browser.runtime.onMessage.removeListener(listener);
   }, [address, capacity, type]);
 
   const onSendtx = () => {
