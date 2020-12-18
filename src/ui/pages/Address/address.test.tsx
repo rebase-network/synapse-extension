@@ -1,10 +1,11 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import chrome from 'sinon-chrome';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
+import NetworkManager from '@common/networkManager';
+import currentWallet from './fixtures/currentWallet';
 import App from './Address';
 
 jest.mock('react-router-dom', () => {
@@ -25,44 +26,36 @@ jest.mock('react-router-dom', () => {
 jest.mock('@ui/Components/TokenList');
 
 describe('Address page', () => {
-  let tree;
-  let container;
-  let getByTestId;
-  beforeAll(() => {
-    window.chrome = chrome;
-  });
+  beforeEach(async () => {
+    await browser.storage.local.set({ currentWallet });
+    await NetworkManager.initNetworks();
 
-  beforeEach(() => {
-    tree = render(
-      <IntlProvider locale="en" messages={en}>
-        <Router>
-          <App />
-        </Router>
-      </IntlProvider>,
-    );
-
-    container = tree.container;
-    getByTestId = tree.getByTestId;
-
-    window.chrome = chrome;
+    await act(async () => {
+      render(
+        <IntlProvider locale="en" messages={en}>
+          <Router>
+            <App />
+          </Router>
+        </IntlProvider>,
+      );
+    });
   });
 
   it('should render address', async () => {
-    const address = getByTestId('address-info');
-    expect(container).toContainElement(address);
-    expect(address).toHaveTextContent(/ck|loading|null|undefined|/);
+    const address = screen.getByText(/ck|loading|null|undefined|/);
+    expect(address).toBeInTheDocument();
   });
 
   it('should render capacity', () => {
-    const capacity = getByTestId('capacity');
-    expect(capacity).toHaveTextContent('Loading...');
+    const capacity = screen.getByText('Loading...');
+    expect(capacity).toBeInTheDocument();
   });
 
   it('should render receive / send btn', () => {
-    const receiveBtn = getByTestId('receive');
-    const sendBtn = getByTestId('send');
-    expect(container).toContainElement(receiveBtn);
-    expect(container).toContainElement(sendBtn);
+    const receiveBtn = screen.getByRole('button', { name: 'Receive' });
+    const sendBtn = screen.getByRole('button', { name: 'Send' });
+    expect(receiveBtn).toBeInTheDocument();
+    expect(sendBtn).toBeInTheDocument();
   });
 
   it('should render capacity refresh button', () => {
