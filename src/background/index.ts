@@ -328,7 +328,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
       const { udts } = udtsObj;
       const sudtObj = _.find(udts, { typeHash });
-      showSudtAmount = shannonToSUDT(capacity, decimal) + sudtObj.symbol;
+      showSudtAmount = shannonToSUDT(capacity, decimal) + sudtObj?.symbol || 'SUDT';
     }
 
     const { script, publicKey, lock: lockHash, type: lockType } = cwStorage.currentWallet;
