@@ -256,8 +256,8 @@ export const sendTransaction = async (
     };
   } catch (error) {
     return {
-      errCode: error.message?.code || error.code || ERROR_CODES.unknown,
-      errMsg: error.message?.message || error.message || 'Unknown Error',
+      errCode: error.code || ERROR_CODES.unknown,
+      errMsg: error.message || 'Unknown Error',
     };
   }
 };
