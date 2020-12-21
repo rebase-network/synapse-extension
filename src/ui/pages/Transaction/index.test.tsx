@@ -108,6 +108,11 @@ describe('Send Transaction page', () => {
     });
   });
 
+  it('should change form fields: Fee Rate', async () => {
+    const feeRate = screen.getByText('2000');
+    expect(feeRate).toBeInTheDocument();
+  });
+
   it('should change form fields: Fee', async () => {
     const fee = screen.getByLabelText('Fee');
     const expected = '0.00001';
@@ -171,7 +176,7 @@ describe('Send Transaction page', () => {
       address: 'ckt1qyqfhpyg02ew59cfnr8lnz2kwhwd98xjd4xsscxlae',
       capacity: '61',
       password: '111111',
-      fee: '0.00001',
+      fee: '0.00004096',
       data: '0x01',
     });
 
@@ -195,12 +200,25 @@ describe('Send Transaction page', () => {
         },
       });
     });
-    // await waitForElementToBeRemoved(() =>
-    //   screen.getByText('The transaction is sending, please wait for seconds...'),
-    // );
     expect(screen.getByText('0x123')).toBeInTheDocument();
-    // await waitFor(() => {
-    // });
+  });
+
+  it('send tx over with error', async () => {
+    act(() => {
+      browser.runtime.sendMessage({
+        type: MESSAGE_TYPE.SEND_TX_OVER,
+        success: false,
+        hash: '',
+        data: {
+          tx: {
+            hash: '',
+          },
+        },
+      });
+    });
+    expect(
+      screen.getByText('The transaction failed to send, please try again later'),
+    ).toBeInTheDocument();
   });
 
   it('send tx error', async () => {
@@ -219,7 +237,5 @@ describe('Send Transaction page', () => {
     });
 
     expect(screen.getByText('TX failed to send')).toBeInTheDocument();
-    // await waitFor(() => {
-    // });
   });
 });
