@@ -8,6 +8,7 @@ import { getUnspentCells } from '@src/common/utils/apis';
 import getCKB from '@src/common/utils/ckb';
 import { signTx } from '@background/keyper/keyperwallet';
 import NetworkManager from '@common/networkManager';
+import { ERROR_CODES } from '@common/utils/constants';
 import { createRawTx, createAnyPayRawTx } from './txGenerator';
 
 interface GenerateTxResult {
@@ -246,31 +247,19 @@ export const sendTransaction = async (
     config = { index: 0, length: -1 };
   }
 
-  // Error handling
-  if (rawTxObj.errCode !== undefined && rawTxObj.errCode !== 0) {
-    return rawTxObj;
-  }
-
   const signedTx = await signTx(lockHash, password, rawTxObj.tx, config);
-  const txResultObj = {
-    txHash: null,
-    fee: rawTxObj.fee,
-  };
-
   try {
-    const realTxHash: any = await ckb.rpc.sendTransaction(signedTx);
-    if (realTxHash.code !== undefined && realTxHash.code !== 0) {
-      return {
-        errCode: realTxHash.code,
-        message: realTxHash.message,
-      };
-    }
-    txResultObj.txHash = realTxHash;
+    const txHash: any = await ckb.rpc.sendTransaction(signedTx);
+    return {
+      txHash,
+      fee: rawTxObj.fee,
+    };
   } catch (error) {
-    console.error(`Failed to send tx: ${error}`);
+    return {
+      errCode: error.message?.code || error.code || ERROR_CODES.unknown,
+      errMsg: error.message?.message || error.message || 'Unknown Error',
+    };
   }
-
-  return txResultObj;
 };
 
 export const genDummyTransaction = async (

@@ -97,7 +97,7 @@ const InnerForm = (props: AppProps) => {
   const [txCapacity, setTxCapacity] = React.useState('');
   const [txData, setTxData] = React.useState('');
   const [dummyTx, setDummyTx] = React.useState({});
-  const [feeRate, setFeeRate] = React.useState(0);
+  const [feeRate, setFeeRate] = React.useState(1000);
 
   const {
     values,
@@ -326,20 +326,15 @@ const InnerForm = (props: AppProps) => {
       );
 
       setDummyTx(dummyTxObj);
+      if (!dummyTxObj) return;
+
+      const feeHex = calculateTxFee(dummyTxObj, BigInt(feeRate));
+      const newFee = parseInt(feeHex.toString(), 16);
+      const fee = shannonToCKBFormatter(newFee.toString());
+
+      setFieldValue('fee', fee);
     })();
-  }, [toAddress, txCapacity, txData]);
-
-  React.useEffect(() => {
-    if (feeRate === 0 || _.isEmpty(dummyTx)) {
-      return;
-    }
-
-    const feeHex = calculateTxFee(dummyTx, BigInt(feeRate));
-    const newFee = parseInt(feeHex.toString(), 16);
-    const fee = shannonToCKBFormatter(newFee.toString());
-
-    setFieldValue('fee', fee);
-  }, [dummyTx, feeRate]);
+  }, [feeRate, setFieldValue, toAddress, txCapacity, txData]);
 
   return (
     <Form className="form-sendtx" id="form-sendtx" onSubmit={handleSubmit} aria-label="form">
@@ -499,6 +494,7 @@ export default () => {
   const [sending, setSending] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [errMsg, setErrMsg] = React.useState('');
+  const [errMsgText, setErrMsgText] = React.useState('');
   const [errCode, setErrCode] = React.useState('');
   const [selectedTx, setSelectedTx] = React.useState('');
 
@@ -516,10 +512,9 @@ export default () => {
   };
 
   React.useEffect(() => {
-    browser.runtime.onMessage.addListener((message) => {
+    const listener = (message) => {
       const messageHandled = _.has(message, 'success');
       if (messageHandled && message.type === MESSAGE_TYPE.SEND_TX_OVER) {
-        setSending(false);
         if (message.success) {
           onSelectTx(message?.data?.tx);
         } else {
@@ -528,11 +523,14 @@ export default () => {
       }
 
       if (messageHandled && message.type === MESSAGE_TYPE.SEND_TX_ERROR) {
-        setErrMsg(message.message);
+        setErrMsgText(message.message);
         setErrCode(message.errCode);
       }
-    });
-    // setLoading(true);
+      setSending(false);
+    };
+    browser.runtime.onMessage.addListener(listener);
+
+    return () => browser.runtime.onMessage.removeListener(listener);
   });
 
   const onSubmit = async (values) => {
@@ -555,14 +553,11 @@ export default () => {
 
   let errNode;
 
-  if (errMsg) {
+  if (errMsg || errMsgText) {
     errNode = (
       <div className={classes.error}>
-        <div>
-          {intl.formatMessage({ id: 'Error code' })}
-          {errCode}
-        </div>
-        <div>{intl.formatMessage({ id: errMsg })}</div>
+        <div>{errMsg && intl.formatMessage({ id: errMsg })}</div>
+        <div>{errMsgText}</div>
       </div>
     );
   }
