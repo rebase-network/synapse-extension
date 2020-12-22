@@ -214,7 +214,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
         password: Yup.string()
           .required(intl.formatMessage({ id: 'Required' }))
           .min(6),
-        privateKey: Yup.string().required(intl.formatMessage({ id: 'Required' })), // TODO
+        privateKey: Yup.string().required(intl.formatMessage({ id: 'Required' })),
       }
     : {
         // keystore: Yup.string().required(intl.formatMessage({ id: 'Required' })),
