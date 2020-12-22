@@ -19,11 +19,10 @@ export const TypesInfo = {
   },
   [mainnet]: {
     simpleudt: {
-      codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
-      hashType: 'data' as ScriptHashType,
-      // TODO: not deployed yet
-      txHash: '0x0',
-      depType: 'depGroup',
+      codeHash: '0x5e7a36a77e68eecc013dfa2fe6a23f3b6c344b04005808694ae6dd45eea4cfd5',
+      hashType: 'type' as ScriptHashType,
+      txHash: '0xc7813f6a415144643970c2e88e0bb6ca6a8edc5dd7c1022746f628284a9936d5',
+      depType: 'code',
       index: '0x0',
     },
   },
