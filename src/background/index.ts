@@ -48,7 +48,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     // check mnemonic
     const isValidateMnemonic = validateMnemonic(mnemonic);
     if (!isValidateMnemonic) {
-      chrome.runtime.sendMessage(MESSAGE_TYPE.IS_INVALID_MNEMONIC);
+      browser.runtime.sendMessage(MESSAGE_TYPE.IS_INVALID_MNEMONIC);
       return;
     }
 
@@ -75,7 +75,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
     try {
       await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
-      chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
+      browser.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
       return;
     } catch (error) {
       console.log('Error happen: ', error);
@@ -86,7 +86,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
   if (request.type === MESSAGE_TYPE.GEN_MNEMONIC) {
     const newmnemonic = generateMnemonic();
 
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       mnemonic: newmnemonic,
       type: MESSAGE_TYPE.RECE_MNEMONIC,
     });
@@ -101,7 +101,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const isValidateMnemonic = validateMnemonic(mnemonic);
 
     if (!isValidateMnemonic) {
-      chrome.runtime.sendMessage(MESSAGE_TYPE.IS_INVALID_MNEMONIC);
+      browser.runtime.sendMessage(MESSAGE_TYPE.IS_INVALID_MNEMONIC);
       return;
     }
 
@@ -127,7 +127,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
     try {
       await addKeyperWallet(privateKey, password, entropyKeystore, rootKeystore);
-      chrome.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
+      browser.runtime.sendMessage(MESSAGE_TYPE.VALIDATE_PASS);
       return;
     } catch (error) {
       console.log('Error happen: ', error);
@@ -174,7 +174,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
         txsReturn.push(txReturn);
       });
     }
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       txs: txsReturn,
       type: MESSAGE_TYPE.SEND_TX_HISTORY,
     });
@@ -402,7 +402,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
           errCode: sendTxObj.errCode,
           data: '',
         };
-        chrome.runtime.sendMessage(respErrMsg);
+        browser.runtime.sendMessage(respErrMsg);
         return;
       }
       respMsg.data.hash = sendTxObj.txHash;
@@ -413,7 +413,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       respMsg.message = `${respMsg.message}: ${error}`;
     }
     // sedb back to extension UI
-    chrome.runtime.sendMessage(respMsg);
+    browser.runtime.sendMessage(respMsg);
   }
 
   // transactioin detail
@@ -425,7 +425,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const outputs = request.message.toAddress;
     const status = await getStatusByTxHash(txHash);
     const blockNumber = await getBlockNumberByTxHash(txHash);
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       status,
       capacity,
       fee,
@@ -458,14 +458,14 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
     // check the password
     if (!(privateKey.startsWith('0x') && privateKey.length === 64)) {
-      chrome.runtime.sendMessage({
+      browser.runtime.sendMessage({
         isValidatePassword: false,
         type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_CHECK_RESULT,
       });
     }
 
     const keystore = WalletKeystore.encrypt(privateKeyBuffer.data, password);
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       isValidatePassword: true,
       keystore,
       privateKey,
@@ -478,7 +478,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const { privateKey } = request.message;
     const { keystore } = request.message;
 
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       privateKey,
       keystore: JSON.stringify(keystore),
       type: MESSAGE_TYPE.EXPORT_PRIVATE_KEY_SECOND_RESULT,
@@ -494,7 +494,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     const wallet = findInWalletsByPublicKey(publicKey, walletsStorage.wallets);
     const { entropyKeystore } = wallet;
     if (_.isEmpty(entropyKeystore)) {
-      chrome.runtime.sendMessage({
+      browser.runtime.sendMessage({
         isValidateEntropy: false,
         isValidatePassword: true,
         type: MESSAGE_TYPE.EXPORT_MNEONIC_CHECK_RESULT,
@@ -513,7 +513,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
       return;
     }
 
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       isValidateEntropy: true,
       isValidatePassword: true,
       entropy,
@@ -525,7 +525,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
   if (request.type === MESSAGE_TYPE.EXPORT_MNEONIC_SECOND) {
     const { entropy } = request.message;
     const mnemonic = entropyToMnemonic(entropy);
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       mnemonic,
       type: MESSAGE_TYPE.EXPORT_MNEONIC_SECOND_RESULT,
     });
@@ -570,7 +570,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
     try {
       await addKeyperWallet(privateKey, password, '', '');
-      chrome.runtime.sendMessage({
+      browser.runtime.sendMessage({
         type: MESSAGE_TYPE.IMPORT_PRIVATE_KEY_OK,
       });
       return;
@@ -635,7 +635,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
     try {
       await addKeyperWallet(privateKey, uPassword);
-      chrome.runtime.sendMessage({
+      browser.runtime.sendMessage({
         type: MESSAGE_TYPE.IMPORT_KEYSTORE_OK,
       });
       return;
