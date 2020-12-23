@@ -5,32 +5,7 @@ const { testnet, mainnet, local } = NETWORK_TYPES;
 export const NETWORKS = [mainnet, testnet, local];
 
 // https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0024-ckb-system-script-list/0024-ckb-system-script-list.md
-export default {
-  [local]: {
-    secp256k1: {
-      codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-      hashType: 'type' as ScriptHashType,
-      txHash: '0xace5ea83c478bb866edf122ff862085789158f5cbff155b7bb5f13058555b708',
-      depType: 'depGroup',
-      index: '0x0',
-    },
-    keccak256: {
-      codeHash: '0xa5b896894539829f5e7c5902f0027511f94c70fa2406d509e7c6d1df76b06f08',
-      hashType: 'code' as ScriptHashType,
-      // TODO: not deployed yet, how to handle local net?
-      txHash: '0x',
-      depType: 'depGroup',
-      index: '0x0',
-    },
-    anypay: {
-      codeHash: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
-      hashType: 'type' as ScriptHashType,
-      // TODO: not deployed yet, how to handle local net?
-      txHash: '0x',
-      depType: 'depGroup',
-      index: '0x0',
-    },
-  },
+const locksInfo = {
   [testnet]: {
     secp256k1: {
       codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
@@ -40,11 +15,10 @@ export default {
       index: '0x0',
     },
     keccak256: {
-      codeHash: '0xa5b896894539829f5e7c5902f0027511f94c70fa2406d509e7c6d1df76b06f08',
+      codeHash: '0x58c5f491aba6d61678b7cf7edf4910b1f5e00ec0cde2f42e0abb4fd9aff25a63',
       hashType: 'code' as ScriptHashType,
-      // TODO: not deployed yet
-      txHash: '0x',
-      depType: 'depGroup',
+      txHash: '0x57a62003daeab9d54aa29b944fc3b451213a5ebdf2e232216a3cfed0dde61b38',
+      depType: 'code',
       index: '0x0',
     },
     anypay: {
@@ -64,20 +38,22 @@ export default {
       index: '0x0',
     },
     keccak256: {
-      codeHash: '0xa5b896894539829f5e7c5902f0027511f94c70fa2406d509e7c6d1df76b06f08',
-      hashType: 'code' as ScriptHashType,
-      // TODO: not deployed yet
-      txHash: '0x0',
+      codeHash: '0xbf43c3602455798c1a61a596e0d95278864c552fafe231c063b3fabf97a8febc',
+      hashType: 'type' as ScriptHashType,
+      txHash: '0x1d60cb8f4666e039f418ea94730b1a8c5aa0bf2f7781474406387462924d15d4',
       depType: 'code',
       index: '0x0',
     },
     anypay: {
-      codeHash: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
+      codeHash: '0xd369597ff47f29fbc0d47d2e3775370d1250b85140c670e4718af712983a2354',
       hashType: 'type' as ScriptHashType,
-      // TODO: not deployed yet
-      txHash: '0x0',
+      txHash: '0x4153a2014952d7cac45f285ce9a7c5c0c0e1b21f2d378b82ac1433cb11c25c4d',
       depType: 'depGroup',
       index: '0x0',
     },
   },
 };
+
+locksInfo[local] = locksInfo[testnet];
+
+export default locksInfo;
