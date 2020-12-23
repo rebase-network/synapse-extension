@@ -16,7 +16,7 @@ const locksInfo = {
     },
     keccak256: {
       codeHash: '0x58c5f491aba6d61678b7cf7edf4910b1f5e00ec0cde2f42e0abb4fd9aff25a63',
-      hashType: 'code' as ScriptHashType,
+      hashType: 'type' as ScriptHashType,
       txHash: '0x57a62003daeab9d54aa29b944fc3b451213a5ebdf2e232216a3cfed0dde61b38',
       depType: 'code',
       index: '0x0',
