@@ -212,18 +212,7 @@ export const sendTransaction = async (
 
   let config = { index: 0, length: -1 };
 
-  if (toLockType === 'AnyPay' && unspentWalletCells.length === 0) {
-    rawTxObj = await generateTx(
-      fromAddress,
-      toAddress,
-      toAmount,
-      fee,
-      lockHash,
-      lockType,
-      toDataHex,
-    );
-    config = { index: 0, length: -1 };
-  } else if (toLockType === 'AnyPay' && unspentWalletCells.length > 0) {
+  if (toLockType === 'AnyPay' && unspentWalletCells.length > 0) {
     rawTxObj = await generateAnyPayTx(
       fromAddress,
       toAddress,
@@ -234,7 +223,7 @@ export const sendTransaction = async (
       toLockType,
     );
     config = { index: 1, length: 1 };
-  } else if (toLockType === 'Secp256k1') {
+  } else {
     rawTxObj = await generateTx(
       fromAddress,
       toAddress,
@@ -304,20 +293,7 @@ export const genDummyTransaction = async (
     }
   }
 
-  let config = { index: 0, length: -1 };
-
-  if (toLockType === 'AnyPay' && unspentWalletCells.length === 0) {
-    rawTxObj = await generateTx(
-      fromAddress,
-      toAddress,
-      toAmount,
-      fee,
-      lockHash,
-      lockType,
-      toDataHex,
-    );
-    config = { index: 0, length: -1 };
-  } else if (toLockType === 'AnyPay' && unspentWalletCells.length > 0) {
+  if (toLockType === 'AnyPay' && unspentWalletCells.length > 0) {
     rawTxObj = await generateAnyPayTx(
       fromAddress,
       toAddress,
@@ -327,8 +303,7 @@ export const genDummyTransaction = async (
       lockType,
       toLockType,
     );
-    config = { index: 1, length: 1 };
-  } else if (toLockType === 'Secp256k1') {
+  } else {
     rawTxObj = await generateTx(
       fromAddress,
       toAddress,
@@ -338,8 +313,6 @@ export const genDummyTransaction = async (
       lockType,
       toDataHex,
     );
-
-    config = { index: 0, length: -1 };
   }
 
   return rawTxObj.tx;
