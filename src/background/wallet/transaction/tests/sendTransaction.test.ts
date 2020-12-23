@@ -11,6 +11,7 @@ import {
 
 import {
   generateTxFixture,
+  generateKeccakTxFixture,
   generateAnyPayTxFixture,
   sendTransactionFixture,
   genDummyTransactionFixture,
@@ -34,7 +35,7 @@ describe('send transaction', () => {
     await setupKeyper();
   });
 
-  it('generateTx', async () => {
+  it('generateTx from secp256k1 to secp256k1', async () => {
     const [
       fromAddress,
       toAddress,
@@ -54,6 +55,28 @@ describe('send transaction', () => {
       toDataHex,
     );
     expect(result.tx).toEqual(generateTxFixture.expected);
+  });
+
+  it('generateTx from secp256k1 to keccak', async () => {
+    const [
+      fromAddress,
+      toAddress,
+      toAmount,
+      fee,
+      lockHash,
+      lockType,
+      toDataHex,
+    ] = generateKeccakTxFixture.params;
+    const result = await generateTx(
+      fromAddress,
+      toAddress,
+      toAmount,
+      fee,
+      lockHash,
+      lockType,
+      toDataHex,
+    );
+    expect(result.tx).toEqual(generateKeccakTxFixture.expected);
   });
 
   it('generateAnyPayTx', async () => {

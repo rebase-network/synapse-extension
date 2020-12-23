@@ -18,7 +18,7 @@ export default [
         lockHash: '0x70652bcfcd71c354abb0d2820bb9cc99415bdcc2bf8f32217cc86178a4cfbaca',
         script: {
           args: '0x2a2c9c90709c0a4e10bbc68c36d20a98d375c970',
-          codeHash: '0xa5b896894539829f5e7c5902f0027511f94c70fa2406d509e7c6d1df76b06f08',
+          codeHash: '0x58c5f491aba6d61678b7cf7edf4910b1f5e00ec0cde2f42e0abb4fd9aff25a63',
           hashType: 'type',
         },
         type: 'Keccak256',
@@ -56,7 +56,7 @@ export default [
         lockHash: '0x701c10a847b549b71c211c8705a15ad40fa29c25868de835d197b89ba90218e9',
         script: {
           args: '0xdb33fc786c1a1a9b3b093837baae2ae1bc6d72e3',
-          codeHash: '0xa5b896894539829f5e7c5902f0027511f94c70fa2406d509e7c6d1df76b06f08',
+          codeHash: '0x58c5f491aba6d61678b7cf7edf4910b1f5e00ec0cde2f42e0abb4fd9aff25a63',
           hashType: 'type',
         },
         type: 'Keccak256',
