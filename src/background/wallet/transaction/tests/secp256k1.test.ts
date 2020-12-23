@@ -1,9 +1,7 @@
 import CKB from '@nervosnetwork/ckb-sdk-core';
 import configService from '@src/config';
-import { rawTx, signedWitnesses } from '@common/fixtures/tx';
-import { bobAddresses, aliceAddresses } from '@src/tests/fixture/address';
-import { secp256k1Dep } from '@src/tests/fixture/deps';
-import { signTx } from '@background/keyper/keyperwallet';
+import { rawTx } from '@common/fixtures/tx';
+import { bobAddresses } from '@src/tests/fixture/address';
 import { Secp256k1LockScript as Secp256k1LockScriptOriginal } from '@keyper/container/lib/locks/secp256k1';
 import signProvider from '@background/keyper/signProviders/secp256k1';
 import { LockScript } from '@keyper/specs';
@@ -26,8 +24,6 @@ describe('Transaction test: secp256k1', () => {
     const lockScript: LockScript = new Secp256k1LockScriptOriginal();
     lockScript.setProvider(signProvider);
 
-    // console.log('--- createRawTx tx ---', JSON.stringify(rawTx));
-
     const expectedTx = {
       ...rawTx,
       witnesses: resultWitnesses,
@@ -36,15 +32,5 @@ describe('Transaction test: secp256k1', () => {
     const signedTx = ckb.signTransaction(privateKey)(rawTx, []);
     expect(signedTx.witnesses).toEqual(resultWitnesses);
     expect(signedTx).toEqual(expectedTx);
-    // console.log('signedTx: ', JSON.stringify(signedTx));
-
-    // const privKey = 'xxxxx';
-    // const context = {
-    //   lockHash: 'aaa',
-    // };
-    // const config = { index: 3, length: 2 };
-
-    // const signedTxAgain = lockScript.sign(context, rawTx, config);
-    // expect(signedTxAgain.witnesses[3]).toEqual(signedWitnesses[3]);
   });
 });

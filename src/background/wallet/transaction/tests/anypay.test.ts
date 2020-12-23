@@ -1,12 +1,18 @@
 import { BN } from 'bn.js';
 import { addressToScript } from '@keyper/specs';
 import CKB from '@nervosnetwork/ckb-sdk-core';
-import { getUnspentCells } from '@src/common/utils/apis';
 import configService from '@src/config';
 import { bobAddresses, aliceAddresses } from '@src/tests/fixture/address';
-import { anypayDep } from '@src/tests/fixture/deps';
 import { createRawTx, createAnyPayRawTx } from '../txGenerator';
 import unspentCells from './fixtures/cells';
+
+const anypayDep = {
+  outPoint: {
+    txHash: '0x4f32b3e39bd1b6350d326fdfafdfe05e5221865c3098ae323096f0bfc69e0a8c',
+    index: '0x0',
+  },
+  depType: 'depGroup',
+};
 
 jest.mock('@common/utils/apis');
 
@@ -24,10 +30,6 @@ describe('Transaction test', () => {
     const fee = new BN(100000000);
 
     const deps = [anypayDep];
-    const lockHash = bobAddresses.anyPay.lock;
-    const params = {
-      capacity: toAmount,
-    };
 
     function getTotalCapity(total, cell) {
       return BigInt(total) + BigInt(cell.capacity);
@@ -47,7 +49,6 @@ describe('Transaction test', () => {
   });
 
   it('createAnyPayRawTx test anyonepay', async () => {
-    const { privateKey } = bobAddresses;
     const fromAddress = bobAddresses.anyPay.address;
     const toAddress = aliceAddresses.anyPay.address;
 
@@ -57,10 +58,6 @@ describe('Transaction test', () => {
     const fee = new BN(100000000);
 
     const deps = [anypayDep];
-    const lockHash = bobAddresses.anyPay.lock;
-    const params = {
-      capacity: toAmount,
-    };
 
     function getTotalCapity(total, cell) {
       return BigInt(total) + BigInt(cell.capacity);
