@@ -650,7 +650,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
 
     const password = request.password.trim();
 
-    const currentPublicKey = cwStorage.currentWallet.publicKey;
+    const currentPublicKey = cwStorage.currentWallet?.publicKey;
     const currWallet = findInWalletsByPublicKey(currentPublicKey, walletsStorage.wallets);
     const currKeystore = currWallet.keystore;
     const privKeyObj = await PasswordKeystore.decrypt(currKeystore, password);
@@ -663,6 +663,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     }
 
     browser.storage.local.clear();
+    NetworkManager.reset();
     localStorage.clear();
 
     browser.runtime.sendMessage({
