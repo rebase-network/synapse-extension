@@ -126,7 +126,6 @@ export default (props: AppProps) => {
   const [tip, setTip] = React.useState('');
   const [txs, setTxs] = React.useState([]);
   const [type, setType] = React.useState('');
-  const [disableFlg, setDisableFlg] = React.useState(false);
   const [tooltipMsg, setTooltipMsg] = React.useState('Copy to clipboard');
   const [name, setName] = React.useState('');
   const [lockHash, setLockHash] = React.useState('');
@@ -157,12 +156,9 @@ export default (props: AppProps) => {
       const { prefix } = currentNetwork;
       const newAddr = showAddressHelper(prefix, script);
       const isMainnet = prefix === 'ckb';
-      const shouldDisableSendBtn =
-        (isMainnet && lockType === LockType.AnyPay) || lockType === LockType.Keccak256;
 
       setExplorerUrl(isMainnet ? MAINNET_EXPLORER_URL : TESTNET_EXPLORER_URL);
       setAddress(newAddr);
-      setDisableFlg(shouldDisableSendBtn);
       setType(lockType);
       setLockHash(lock);
       updateCapacity(lock);
@@ -343,7 +339,6 @@ export default (props: AppProps) => {
               onClick={onSendtx}
               variant="contained"
               data-testid="send"
-              disabled={disableFlg}
             >
               <FormattedMessage id="Send" />
             </BootstrapButton>
