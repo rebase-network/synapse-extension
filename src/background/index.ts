@@ -37,9 +37,6 @@ setupKeyper();
 addExternalMessageListener();
 
 chrome.runtime.onMessage.addListener(async (request) => {
-  const currentNetwork = await NetworkManager.getCurrentNetwork();
-  const { prefix } = currentNetwork;
-
   // IMPORT_MNEMONIC
   if (request.type === MESSAGE_TYPE.IMPORT_MNEMONIC) {
     const mnemonic = request.mnemonic.trim();
