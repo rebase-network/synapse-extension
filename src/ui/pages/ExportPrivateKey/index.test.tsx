@@ -31,10 +31,6 @@ describe('export privatekey page', () => {
   let getByTestId;
   const history = useHistory();
 
-  beforeAll(() => {
-    window.chrome = chrome;
-  });
-
   beforeEach(() => {
     tree = render(
       <IntlProvider locale="en" messages={en}>

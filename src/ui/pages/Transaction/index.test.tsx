@@ -182,7 +182,7 @@ describe('Send Transaction page', () => {
 
     userEvent.click(submitButton);
     await waitFor(() => {
-      expect(chrome.runtime.sendMessage).toBeCalled();
+      expect(browser.runtime.sendMessage).toBeCalled();
     });
   });
 
