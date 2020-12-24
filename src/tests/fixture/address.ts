@@ -14,9 +14,9 @@ export const bobAddresses = {
   },
   anyPay: {
     address:
-      'ckt1qjr2r35c0f9vhcdgslx2fjwa9tylevr5qka7mfgmscd33wlhfykyhxuy3pat96shpxvvl7vf2e6ae55u6fk564sc527',
+      'ckt1qnfkjktl73ljn77q637judm4xux3y59c29qvvu8ywx90wy5c8g34fxuy3pat96shpxvvl7vf2e6ae55u6fk5662x6qh',
     amount: 0,
-    lock: '0x6af8c2199802665ea2a8ed85b087b1ac26b47b332dfe7322c6b34e38f1a2f129',
+    lock: '0xe62614824238abd2a0f042598636524801bbcf36acf551b88a657e08d5229ed6',
     type: 'AnyPay',
   },
   publicKey: '0x03d3319a7a7b8b88747664ca9559ab21e746452e8ed5eddc2f4365a1a9157e9ca2',
@@ -30,6 +30,11 @@ export const aliceAddresses = {
     amount: 0,
     lock: '0xaef10fd7479757aeb519eff422ea29092652f579150105d67ea662023730e1f6',
     type: 'Secp256k1',
+    script: {
+      args: '0x5c0eaae525d4fc2e04b162c84f286dfd51af4002',
+      codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+      hashType: 'type',
+    },
   },
   keccak256: {
     address:
@@ -37,17 +42,66 @@ export const aliceAddresses = {
     amount: 0,
     lock: '0x91c4937774ebc45818020f43e5ef196f46dc7e44cab1f7b132c83ff43a4f7d92',
     type: 'Keccak256',
+    script: {
+      args: '0xab540faced4e80e89d52c3cbf9a5d41f5d2046b3',
+      codeHash: '0x58c5f491aba6d61678b7cf7edf4910b1f5e00ec0cde2f42e0abb4fd9aff25a63',
+      hashType: 'type',
+    },
   },
   anyPay: {
     address:
-      'ckt1qjr2r35c0f9vhcdgslx2fjwa9tylevr5qka7mfgmscd33wlhfykykhqw4tjjt48u9cztzckgfu5xml234aqqyy9mqnh',
+      'ckt1qnfkjktl73ljn77q637judm4xux3y59c29qvvu8ywx90wy5c8g34ghqw4tjjt48u9cztzckgfu5xml234aqqytl9we7',
     amount: 0,
-    lock: '0x9290bbee54b3256a634dd41ae8f7a20029864e76de2fce0d9276e472f252cdf9',
+    lock: '0xaee8cbe64f011979fc7543f825abd68f8c1c89a19139983973ccac706af1eb4e',
     type: 'AnyPay',
+    script: {
+      args: '0x5c0eaae525d4fc2e04b162c84f286dfd51af4002',
+      codeHash: '0xd369597ff47f29fbc0d47d2e3775370d1250b85140c670e4718af712983a2354',
+      hashType: 'type',
+    },
   },
   publicKey: '0x0390518e809be027269b464734ed7315959729b3f9dd6bc06572745c6d65182623',
   args: '0x5c0eaae525d4fc2e04b162c84f286dfd51af4002',
   privateKey: '0x14cfae84c716f895952634c240db80ba00b11032e5ac9fd1663e3a7233c7d80e',
+};
+
+export const aliceAddressesListInStorage = {
+  addresses: [
+    {
+      amount: 0,
+      lock: '0xaef10fd7479757aeb519eff422ea29092652f579150105d67ea662023730e1f6',
+      lockHash: '0xaef10fd7479757aeb519eff422ea29092652f579150105d67ea662023730e1f6',
+      script: {
+        args: '0x5c0eaae525d4fc2e04b162c84f286dfd51af4002',
+        codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+        hashType: 'type',
+      },
+      type: 'Secp256k1',
+    },
+    {
+      amount: 0,
+      lock: '0xd558a67bfecc9d770f32396f25252aff099a6dde1d5bd9a242f145dce90f5957',
+      lockHash: '0xd558a67bfecc9d770f32396f25252aff099a6dde1d5bd9a242f145dce90f5957',
+      script: {
+        args: '0xab540faced4e80e89d52c3cbf9a5d41f5d2046b3',
+        codeHash: '0x58c5f491aba6d61678b7cf7edf4910b1f5e00ec0cde2f42e0abb4fd9aff25a63',
+        hashType: 'type',
+      },
+      type: 'Keccak256',
+    },
+    {
+      amount: 0,
+      lock: '0xaee8cbe64f011979fc7543f825abd68f8c1c89a19139983973ccac706af1eb4e',
+      lockHash: '0xaee8cbe64f011979fc7543f825abd68f8c1c89a19139983973ccac706af1eb4e',
+      script: {
+        args: '0x5c0eaae525d4fc2e04b162c84f286dfd51af4002',
+        codeHash: '0xd369597ff47f29fbc0d47d2e3775370d1250b85140c670e4718af712983a2354',
+        hashType: 'type',
+      },
+      type: 'AnyPay',
+    },
+  ],
+  publicKey: '0x0390518e809be027269b464734ed7315959729b3f9dd6bc06572745c6d65182623',
 };
 
 export const aliceWallet = {

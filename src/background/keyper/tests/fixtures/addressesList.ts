@@ -29,7 +29,7 @@ export default [
         lockHash: '0xe260599fa6e9f4d06df0d55a99b98b72195520f6502c60f0894685f6ac2ab7ee',
         script: {
           args: '0x60ed0599d4a5c67fd25277243ac12b9f91517b61',
-          codeHash: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
+          codeHash: '0xd369597ff47f29fbc0d47d2e3775370d1250b85140c670e4718af712983a2354',
           hashType: 'type',
         },
         type: 'AnyPay',
@@ -67,7 +67,7 @@ export default [
         lockHash: '0xc70db0cb4c98c665c49e35ff4d73528e121ece568c5a596bf215555389ffdb23',
         script: {
           args: '0x8eb4d75815e2207bd29a0b3651523e5a48e8fd34',
-          codeHash: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
+          codeHash: '0xd369597ff47f29fbc0d47d2e3775370d1250b85140c670e4718af712983a2354',
           hashType: 'type',
         },
         type: 'AnyPay',

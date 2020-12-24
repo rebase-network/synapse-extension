@@ -113,44 +113,4 @@ const fixture = {
   expectlockHash: '0x9cb0bfa5cc9d53775c677c6e4f35e90bd8a65923fb691f1895455cb48f0241f1',
 };
 
-export const secp256k1 = {
-  privateKey: '0x6e678246998b426db75c83c8be213b4ceeb8ae1ff10fcd2f8169e1dc3ca04df1',
-  address: 'ckt1qyqfhpyg02ew59cfnr8lnz2kwhwd98xjd4xsscxlae',
-  type: 'Secp256k1',
-  lock: '0x5d67b4eeb98698535f76f1b34a77d852112a35072eb6b834cb4cc8868ac02fb2',
-  amount: 0,
-  lockScript: {
-    hashType: 'type',
-    codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-    args: '0x9b84887ab2ea170998cff9895675dcd29cd26d4d',
-  },
-};
-
-export const anyonepay = {
-  privateKey: '0x6e678246998b426db75c83c8be213b4ceeb8ae1ff10fcd2f8169e1dc3ca04df1',
-  address:
-    'ckt1qjr2r35c0f9vhcdgslx2fjwa9tylevr5qka7mfgmscd33wlhfykyhxuy3pat96shpxvvl7vf2e6ae55u6fk564sc527',
-  type: 'AnyPay',
-  lock: '0x6af8c2199802665ea2a8ed85b087b1ac26b47b332dfe7322c6b34e38f1a2f129',
-  amount: 0,
-  lockScript: {
-    hashType: 'type',
-    codeHash: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
-    args: '0x9b84887ab2ea170998cff9895675dcd29cd26d4d',
-  },
-};
-
-export const keccak256 = {
-  address:
-    'ckt1qjjm395fg5uc986703vs9uqzw5gljnrslgjqd4gfulrdrhmkkphs3s7nwu6x3pnl82rz3xmqypfhcway723ngkutufp',
-  type: 'Keccak256',
-  lock: '0x588ab92ffb902db6b79a764eeff08ce100641a5d4bea3cfabca28d714f473f5c',
-  amount: 0,
-  lockScript: {
-    hashType: 'type',
-    codeHash: '0x7783e303a1945ba9df86f0bc2cc1543a0992747954f3d3170cec08e1bcce6d8b',
-    args: '0x9b84887ab2ea170998cff9895675dcd29cd26d4d',
-  },
-};
-
 export default fixture;

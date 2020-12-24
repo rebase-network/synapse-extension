@@ -39,7 +39,7 @@ describe('Transaction test: secp256k1', () => {
         capacity: '0xe8754318',
         lock: {
           hash_type: 'type',
-          code_hash: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
+          code_hash: '0xd369597ff47f29fbc0d47d2e3775370d1250b85140c670e4718af712983a2354',
           args: '0x85e5401c52aece9eb614f997b2f2c20f9fc10a67',
         },
         type: null,

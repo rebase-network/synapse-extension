@@ -107,7 +107,7 @@ describe('Transaction test', () => {
             capacity: '0x5e3ff5d00',
             lock: {
               args: '0x5c0eaae525d4fc2e04b162c84f286dfd51af4002',
-              codeHash: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
+              codeHash: '0xd369597ff47f29fbc0d47d2e3775370d1250b85140c670e4718af712983a2354',
               hashType: 'type',
             },
           },
