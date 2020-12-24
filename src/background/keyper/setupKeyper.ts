@@ -13,37 +13,37 @@ export default async () => {
   const publicKeys = await walletManager.getAllPublicKeys();
 
   // create keyper container for each network
-  NETWORKS.forEach((name) => {
+  NETWORKS.forEach((networkName) => {
     containerManager.addContainer({
-      name,
+      name: networkName,
       container: containerFactory.createContainer(),
     });
   });
   const containers = containerManager.getAllContainers();
 
   // add lock script for all containers
-  Object.keys(containers).forEach((name) => {
-    const container = containers[name];
+  Object.keys(containers).forEach((networkName) => {
+    const container = containers[networkName];
     // add lock script
     const original = new Secp256k1LockScriptOriginal();
     original.setProvider(signProvider);
     const secp256k1LockScript = new Secp256k1LockScript(
-      LOCKS_INFO[name].secp256k1.codeHash,
-      LOCKS_INFO[name].secp256k1.txHash,
-      LOCKS_INFO[name].secp256k1.hashType,
+      LOCKS_INFO[networkName].secp256k1.codeHash,
+      LOCKS_INFO[networkName].secp256k1.txHash,
+      LOCKS_INFO[networkName].secp256k1.hashType,
       original,
     );
 
     const keccak256LockScript = new Keccak256LockScript(
-      LOCKS_INFO[name].keccak256.codeHash,
-      LOCKS_INFO[name].keccak256.txHash,
-      LOCKS_INFO[name].keccak256.hashType,
+      LOCKS_INFO[networkName].keccak256.codeHash,
+      LOCKS_INFO[networkName].keccak256.txHash,
+      LOCKS_INFO[networkName].keccak256.hashType,
     );
 
     const anypayLockScript = new AnypayLockScript(
-      LOCKS_INFO[name].anypay.codeHash,
-      LOCKS_INFO[name].anypay.txHash,
-      LOCKS_INFO[name].anypay.hashType,
+      LOCKS_INFO[networkName].anypay.codeHash,
+      LOCKS_INFO[networkName].anypay.txHash,
+      LOCKS_INFO[networkName].anypay.hashType,
     );
 
     // secp256k1LockScript.setProvider(signProvider);
