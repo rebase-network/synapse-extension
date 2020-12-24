@@ -36,7 +36,7 @@ setupKeyper();
 
 addExternalMessageListener();
 
-chrome.runtime.onMessage.addListener(async (request) => {
+browser.runtime.onMessage.addListener(async (request) => {
   // IMPORT_MNEMONIC
   if (request.type === MESSAGE_TYPE.IMPORT_MNEMONIC) {
     const mnemonic = request.mnemonic.trim();
