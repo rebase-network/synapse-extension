@@ -6,21 +6,30 @@ import {
   SignProvider,
   SignContext,
   LockScript,
+  CellDep,
+  DepType,
+  SignatureAlgorithm,
 } from '@keyper/specs';
-import CommonLockScript from './commonLockScript';
+import LockWithSignInterface from './interfaces/lockWithSign';
 
-class ItsLockScript {
+class Secp256k1LockScript implements LockWithSignInterface {
   public readonly name: string = 'Secp256k1';
 
   protected codeHash: string;
 
   protected txHash: string;
 
-  protected hashType: ScriptHashType;
-
-  protected provider: SignProvider;
-
   private secp256k1LockScriptInstance: LockScript;
+
+  private depType: DepType = 'depGroup';
+
+  private index: string = '0x0';
+
+  private hashType: ScriptHashType = 'type';
+
+  private provider: SignProvider;
+
+  private algo: SignatureAlgorithm = SignatureAlgorithm.secp256k1;
 
   constructor(
     codeHash: string,
@@ -32,6 +41,26 @@ class ItsLockScript {
     this.txHash = txHash;
     this.hashType = hashType;
     this.secp256k1LockScriptInstance = secp256k1LockScriptInstance;
+  }
+
+  public deps(): CellDep[] {
+    return [
+      {
+        outPoint: {
+          txHash: this.txHash,
+          index: this.index,
+        },
+        depType: this.depType,
+      },
+    ];
+  }
+
+  public signatureAlgorithm(): SignatureAlgorithm {
+    return this.algo;
+  }
+
+  public setProvider(provider: SignProvider) {
+    this.provider = provider;
   }
 
   public script(publicKey: string): Script {
@@ -47,7 +76,4 @@ class ItsLockScript {
   }
 }
 
-const withMixin = CommonLockScript(ItsLockScript);
-
-export default withMixin;
-export { withMixin as Secp256k1LockScript };
+export default Secp256k1LockScript;

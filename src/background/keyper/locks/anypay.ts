@@ -8,10 +8,13 @@ import {
   Config,
   SignProvider,
   SignContext,
+  CellDep,
+  DepType,
+  SignatureAlgorithm,
 } from '@keyper/specs';
-import CommonLockScript from './commonLockScript';
+import LockWithSignInterface from './interfaces/lockWithSign';
 
-class ItsLockScript {
+class AnypayLockScript implements LockWithSignInterface {
   public readonly name: string = 'AnyPay';
 
   // codeHash = '0xd369597ff47f29fbc0d47d2e3775370d1250b85140c670e4718af712983a2354';
@@ -19,14 +22,40 @@ class ItsLockScript {
 
   protected txHash: string;
 
-  protected hashType: ScriptHashType;
+  private depType: DepType = 'depGroup';
 
-  protected provider: SignProvider;
+  private index: string = '0x0';
+
+  private hashType: ScriptHashType = 'type';
+
+  private provider: SignProvider;
+
+  private algo: SignatureAlgorithm = SignatureAlgorithm.secp256k1;
 
   constructor(codeHash: string, txHash: string, hashType: ScriptHashType = 'type') {
     this.codeHash = codeHash;
     this.txHash = txHash;
     this.hashType = hashType;
+  }
+
+  public deps(): CellDep[] {
+    return [
+      {
+        outPoint: {
+          txHash: this.txHash,
+          index: this.index,
+        },
+        depType: this.depType,
+      },
+    ];
+  }
+
+  public signatureAlgorithm(): SignatureAlgorithm {
+    return this.algo;
+  }
+
+  public setProvider(provider: SignProvider) {
+    this.provider = provider;
   }
 
   public script(publicKey: string): Script {
@@ -99,7 +128,4 @@ class ItsLockScript {
   }
 }
 
-const withMixin = CommonLockScript(ItsLockScript);
-
-export default withMixin;
-export { withMixin as AnypayLockScript };
+export default AnypayLockScript;

@@ -10,8 +10,11 @@ import {
   Config,
   SignProvider,
   SignContext,
+  DepType,
+  CellDep,
+  SignatureAlgorithm,
 } from '@keyper/specs';
-import CommonLockScript from './commonLockScript';
+import LockWithSignInterface from './interfaces/lockWithSign';
 
 function hashMessage(message) {
   const preamble = `\x19Ethereum Signed Message:\n${message.length}`;
@@ -28,21 +31,47 @@ function mergeTypedArraysUnsafe(a, b) {
   return c;
 }
 
-class ItsLockScript {
+class Keccak256LockScript implements LockWithSignInterface {
   public readonly name: string = 'Keccak256';
+
+  protected depType: DepType = 'code';
 
   protected codeHash: string;
 
   protected txHash: string;
 
+  protected index: string = '0x0';
+
   protected hashType: ScriptHashType;
 
   protected provider: SignProvider;
+
+  protected algo: SignatureAlgorithm = SignatureAlgorithm.secp256k1;
 
   constructor(codeHash: string, txHash: string, hashType: ScriptHashType = 'type') {
     this.codeHash = codeHash;
     this.txHash = txHash;
     this.hashType = hashType;
+  }
+
+  public deps(): CellDep[] {
+    return [
+      {
+        outPoint: {
+          txHash: this.txHash,
+          index: this.index,
+        },
+        depType: this.depType,
+      },
+    ];
+  }
+
+  public signatureAlgorithm(): SignatureAlgorithm {
+    return this.algo;
+  }
+
+  public setProvider(provider: SignProvider) {
+    this.provider = provider;
   }
 
   public script(publicKey: string): Script {
@@ -120,7 +149,4 @@ class ItsLockScript {
   }
 }
 
-const withMixin = CommonLockScript(ItsLockScript);
-
-export default withMixin;
-export { withMixin as Keccak256LockScript };
+export default Keccak256LockScript;
