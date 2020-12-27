@@ -29,12 +29,15 @@ import { sendToWebPage } from '@background/messageHandlers/proxy';
 import NetworkManager from '@common/networkManager';
 import { sendSudtTransaction } from '@src/background/wallet/transaction/sendSudtTransaction';
 import { ckbToshannon, shannonToSUDT, CKBToShannonFormatter } from '@src/common/utils/formatters';
+import addressHandler from '@background/address';
 
 NetworkManager.initNetworks();
 
 setupKeyper();
 
 addExternalMessageListener();
+
+addressHandler.init();
 
 browser.runtime.onMessage.addListener(async (request) => {
   // IMPORT_MNEMONIC
