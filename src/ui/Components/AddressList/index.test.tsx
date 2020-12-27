@@ -54,6 +54,6 @@ describe('address list component', () => {
 
   it('should render address list', async () => {
     const items = screen.getAllByRole('navigation', { name: 'Address List' });
-    expect(items).toHaveLength(6);
+    expect(items).toHaveLength(4);
   });
 });
