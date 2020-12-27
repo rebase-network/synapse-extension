@@ -18,7 +18,7 @@ import {
   setCurrentWallet,
   getCurrentWallet,
   setAddressesList,
-  updateAddressesList,
+  getAddressList,
 } from '@background/keyper/keyperwallet';
 import NetworkManager from '@common/networkManager';
 import { networks } from '@src/common/utils/constants/networks';
@@ -86,9 +86,8 @@ describe('Transaction test: secp256k1', () => {
     expect(list).toEqual(addressesList);
   });
 
-  it('should able to updateAddressesList', async () => {
-    await updateAddressesList();
-    const { addressesList: list } = await browser.storage.local.get('addressesList');
+  it('should able to getAddressList', async () => {
+    const list = await getAddressList();
     expect(list).not.toBeNull();
   });
 
