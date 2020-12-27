@@ -8,14 +8,6 @@ export function findInWalletsByPublicKey(publicKey, wallets) {
   return wallet;
 }
 
-export function findInAddressesListByPublicKey(publicKey, addressesList) {
-  function findAddresses(addresses) {
-    return addresses.publicKey === publicKey;
-  }
-  const addresses = addressesList.find(findAddresses);
-  return addresses;
-}
-
 export function showAddressHelper(networkPrefix: string, script) {
   return scriptToAddress(script, { networkPrefix, short: true });
 }

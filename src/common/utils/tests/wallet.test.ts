@@ -1,10 +1,5 @@
 import { aliceAddresses, aliceWallet } from '@src/tests/fixture/address';
-import {
-  findInWalletsByPublicKey,
-  findInAddressesListByPublicKey,
-  showAddressHelper,
-} from '../wallet';
-import addressesList from './fixtures/addressesList';
+import { findInWalletsByPublicKey, showAddressHelper } from '../wallet';
 
 const { publicKey } = aliceAddresses;
 
@@ -19,10 +14,7 @@ describe('wallet utils', () => {
     const result = findInWalletsByPublicKey(publicKey, [aliceWallet]);
     expect(result).not.toBeNull();
   });
-  it('findInAddressesListByPublicKey', () => {
-    const result = findInAddressesListByPublicKey(publicKey, addressesList);
-    expect(result).toEqual(undefined);
-  });
+
   it('showAddressHelper', () => {
     const script = {
       args: '0x60ed0599d4a5c67fd25277243ac12b9f91517b61',
