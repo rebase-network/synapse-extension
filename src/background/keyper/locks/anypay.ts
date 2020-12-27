@@ -17,7 +17,7 @@ import LockWithSignInterface from './interfaces/lockWithSign';
 class AnypayLockScript implements LockWithSignInterface {
   public readonly name: string = 'AnyPay';
 
-  // codeHash = '0xd369597ff47f29fbc0d47d2e3775370d1250b85140c670e4718af712983a2354';
+  // codeHash = '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b';
   protected codeHash: string;
 
   protected txHash: string;
