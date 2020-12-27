@@ -1,7 +1,7 @@
-import { LockHashWithMeta, PublicKey } from '@keyper/container';
+import { LockHashWithMeta, PublicKey, Container } from '@keyper/container';
 import { SignatureAlgorithm, Script } from '@keyper/specs';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
-import PublicKeyClass from '@background/keyper/publicKey';
+import PublicKeyClass from '@common/publicKey';
 import * as Keystore from '@src/background/wallet/passwordEncryptor';
 import { KEYSTORE_TYPE } from '@src/common/utils/constants';
 import ContainerManager from './containerManager';
@@ -61,8 +61,7 @@ export const signTx = async (lockHash, password, rawTx, config, others = {}) => 
   return tx;
 };
 
-const getWalletInfoByPublicKey = async (publicKey: string) => {
-  const container = await containerManager.getCurrentContainer();
+const getWalletInfoByPublicKey = async (publicKey: string, container: Container) => {
   const lockHashWithMetas: LockHashWithMeta[] = await container.getAllLockHashesAndMeta();
   const publicKeyInstance = new PublicKeyClass(publicKey);
   const publicKeyWrapper: PublicKey = {
@@ -91,20 +90,22 @@ const getWalletInfoByPublicKey = async (publicKey: string) => {
   };
 };
 
-export const updateAddressesList = async () => {
+export const getAddressList = async () => {
+  const container = await containerManager.getCurrentContainer();
+  const aa = ContainerManager.getInstance();
+  console.log(aa.getCurrentContainer());
   const publicKeys = await getPublicKeys();
-  const addressesListPromise = publicKeys.map((publicKey) => {
-    return getWalletInfoByPublicKey(publicKey);
+  const addressListPromise = publicKeys.map((publicKey) => {
+    return getWalletInfoByPublicKey(publicKey, container);
   });
-  const addressesList = await Promise.all(addressesListPromise);
+  const addressList = await Promise.all(addressListPromise);
 
-  await browser.storage.local.set({
-    addressesList,
-  });
+  return addressList;
 };
 
 export const setCurrentWallet = async (publicKey: string) => {
-  const { addresses } = await getWalletInfoByPublicKey(publicKey);
+  const container = await containerManager.getCurrentContainer();
+  const { addresses } = await getWalletInfoByPublicKey(publicKey, container);
   const { type, script, lock, lockHash } = addresses[0];
   const currentWallet = {
     publicKey,
@@ -157,7 +158,6 @@ export async function addKeyperWallet(
 
   await addPublicKey(publicKey);
 
-  await updateAddressesList();
 
   await setCurrentWallet(publicKey);
 }
