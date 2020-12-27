@@ -1,8 +1,10 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 // import AddressListItem from '@ui/Components/AddressListItem';
 import { showAddressHelper } from '@src/common/utils/wallet';
+import { getAddressList } from '@background/keyper/keyperwallet';
+import { MESSAGE_TYPE } from '@src/common/utils/constants';
 
 const useStyles = makeStyles({
   loading: {
@@ -30,16 +32,25 @@ export default (props: AppProps) => {
 
   React.useEffect(() => {
     const getAddressesList = async () => {
-      const { addressesList: addressesListArr, currentNetwork } = await browser.storage.local.get([
-        'addressesList',
+      const { currentNetwork } = await browser.storage.local.get([
+        // 'addressesList',
         'currentNetwork',
       ]);
       setPrefix(currentNetwork.prefix);
-
-      setLoading(false);
-      if (!addressesListArr) return;
-      setAddressesList(addressesListArr);
+      console.log('currentNetwork.prefix: ', currentNetwork.prefix);
+      browser.runtime.sendMessage({
+        type: MESSAGE_TYPE.REQUEST_ADDRESS_LIST,
+      });
+      const listener = (message) => {
+        if (message.type === MESSAGE_TYPE.ADDRESS_LIST && message.data) {
+          setAddressesList(message.data);
+          setLoading(false);
+        }
+      };
+      browser.runtime.onMessage.addListener(listener);
+      return () => browser.runtime.onMessage.removeListener(listener);
     };
+
     getAddressesList();
   }, []);
 
@@ -50,6 +61,7 @@ export default (props: AppProps) => {
       .filter((add) => add.type !== 'Keccak256') // do not show keccak256
       .map((item) => {
         const address = showAddressHelper(prefix, item.script);
+        console.log(address, prefix, item.script);
         const addressInfo = { ...item, publicKey: addressesObj.publicKey, address };
         return (
           <List component="nav" aria-label="Address List" key={`item-${address}`}>
