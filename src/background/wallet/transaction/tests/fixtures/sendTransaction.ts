@@ -1,4 +1,10 @@
-import { aliceAddresses } from '@src/tests/fixture/address';
+import {
+  aliceAddresses,
+  aliceWallet,
+  aliceWalletPwd,
+  aliceWalletInStorage,
+  bobAddresses,
+} from '@src/tests/fixture/address';
 
 export const generateTxFixture = {
   params: [
@@ -108,7 +114,7 @@ export const generateKeccakTxFixture = {
   },
 };
 
-export const rawTxFromKeccakToSecp256k1 = {
+const fromKeccakToSecp256k1 = {
   version: '0x0',
   cellDeps: [
     {
@@ -157,7 +163,6 @@ export const rawTxFromKeccakToSecp256k1 = {
   witnesses: [{ lock: '', inputType: '', outputType: '' }, '0x'],
   outputsData: ['0x', '0x'],
 };
-
 export const generateAnyPayTxFixture = {
   params: [
     aliceAddresses.secp256k1.address,

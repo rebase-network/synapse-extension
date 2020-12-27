@@ -69,7 +69,7 @@ describe('SimpleUDT Test', () => {
           capacity: '0x4a817c800',
           lock: {
             hashType: 'type' as ScriptHashType,
-            codeHash: '0xd369597ff47f29fbc0d47d2e3775370d1250b85140c670e4718af712983a2354',
+            codeHash: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
             args: '0x85e5401c52aece9eb614f997b2f2c20f9fc10a67',
           },
           type: {
@@ -82,7 +82,7 @@ describe('SimpleUDT Test', () => {
           capacity: '0x34e62ce00',
           lock: {
             hashType: 'type' as ScriptHashType,
-            codeHash: '0xd369597ff47f29fbc0d47d2e3775370d1250b85140c670e4718af712983a2354',
+            codeHash: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
             args: '0xda23cb078265f1a6a702da996a45bdbf6ba453bb',
           },
           type: {
@@ -95,7 +95,7 @@ describe('SimpleUDT Test', () => {
           capacity: '0xd63445f00',
           lock: {
             hashType: 'type' as ScriptHashType,
-            codeHash: '0xd369597ff47f29fbc0d47d2e3775370d1250b85140c670e4718af712983a2354',
+            codeHash: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
             args: '0xda23cb078265f1a6a702da996a45bdbf6ba453bb',
           },
           type: null,

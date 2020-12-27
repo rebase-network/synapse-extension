@@ -1,14 +1,20 @@
 import { addressToScript } from '@keyper/specs/lib/address';
-import { aliceAddresses } from '@src/tests/fixture/address';
+import { secp256k1, anyonepay } from './fixture';
 
 describe('addressToScript', () => {
   test('secp256k1 address decode to lockscript ', () => {
-    const script = addressToScript(aliceAddresses.secp256k1.address);
-    expect(script).toEqual(aliceAddresses.secp256k1.script);
+    const script = addressToScript(secp256k1.address);
+    expect(script).toEqual(expect.objectContaining(secp256k1.lockScript));
   });
 
   test('anyonepay decode', () => {
-    const script = addressToScript(aliceAddresses.anyPay.address);
-    expect(script).toEqual(aliceAddresses.anyPay.script);
+    const script = addressToScript(anyonepay.address);
+    expect(script).toEqual(
+      expect.objectContaining({
+        hashType: anyonepay.lockScript.hashType,
+        codeHash: anyonepay.lockScript.codeHash,
+        args: anyonepay.lockScript.args,
+      }),
+    );
   });
 });

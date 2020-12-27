@@ -11,9 +11,6 @@ const useStyles = makeStyles({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  address: {
-    borderBottom: '1px solid #ccc',
-  },
 });
 
 interface AppProps {
@@ -45,31 +42,20 @@ export default (props: AppProps) => {
 
   if (loading) return <div className={classes.loading}>Loading Address List...</div>;
 
-  const addressesElem = addressesList.map((addressesObj, index) => {
-    const addressGroup = addressesObj.addresses
-      .filter((add) => add.type !== 'Keccak256') // do not show keccak256
-      .map((item) => {
-        const address = showAddressHelper(prefix, item.script);
-        const addressInfo = { ...item, publicKey: addressesObj.publicKey, address };
-        return (
-          <List component="nav" aria-label="Address List" key={`item-${address}`}>
-            <AddressListItem
-              key={`item-${address}`}
-              addressInfo={addressInfo}
-              onSelectAddress={onSelectAddress}
-            />
-          </List>
-        );
-      });
-
-    // hide border for last item
-    const notLastItem = index !== addressesList.length - 1;
-    const borderClass = notLastItem ? classes.address : '';
-    return (
-      <div className={borderClass} key={addressesObj.publicKey}>
-        {addressGroup}
-      </div>
-    );
+  const addressesElem = addressesList.map((addressesObj) => {
+    return addressesObj.addresses.map((item) => {
+      const address = showAddressHelper(prefix, item.script);
+      const addressInfo = { ...item, publicKey: addressesObj.publicKey, address };
+      return (
+        <List component="nav" aria-label="Address List" key={`item-${address}`}>
+          <AddressListItem
+            key={`item-${address}`}
+            addressInfo={addressInfo}
+            onSelectAddress={onSelectAddress}
+          />
+        </List>
+      );
+    });
   });
 
   return <div>{addressesElem}</div>;
