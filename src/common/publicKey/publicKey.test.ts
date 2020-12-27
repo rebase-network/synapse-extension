@@ -1,6 +1,6 @@
 import { aliceAddresses } from '@src/tests/fixture/address';
 import LOCKS_INFO from '@common/utils/constants/locksInfo';
-import PublicKey from '../publicKey';
+import PublicKey from '@common/publicKey';
 
 describe('PublicKey', () => {
   it('PublicKey', () => {
