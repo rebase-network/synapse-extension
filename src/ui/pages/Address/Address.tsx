@@ -151,14 +151,13 @@ export default (props: AppProps) => {
         'currentNetwork',
       ]);
       if (_.isEmpty(currentWallet)) return;
-      const { type: lockType, lock, address: currentAddress } = currentWallet;
-      console.log('address page, currentWallet: ', currentWallet);
+      const { type: lockType, lock, script } = currentWallet;
       const { prefix } = currentNetwork;
-      // const newAddr = showAddressHelper(prefix, script);
+      const newAddr = showAddressHelper(prefix, script);
       const isMainnet = prefix === 'ckb';
 
       setExplorerUrl(isMainnet ? MAINNET_EXPLORER_URL : TESTNET_EXPLORER_URL);
-      setAddress(currentAddress);
+      setAddress(newAddr);
       setType(lockType);
       setLockHash(lock);
       updateCapacity(lock);
