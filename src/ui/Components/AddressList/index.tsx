@@ -32,12 +32,8 @@ export default (props: AppProps) => {
 
   React.useEffect(() => {
     const getAddressesList = async () => {
-      const { currentNetwork } = await browser.storage.local.get([
-        // 'addressesList',
-        'currentNetwork',
-      ]);
+      const { currentNetwork } = await browser.storage.local.get('currentNetwork');
       setPrefix(currentNetwork.prefix);
-      console.log('currentNetwork.prefix: ', currentNetwork.prefix);
       browser.runtime.sendMessage({
         type: MESSAGE_TYPE.REQUEST_ADDRESS_LIST,
       });
@@ -61,7 +57,6 @@ export default (props: AppProps) => {
       .filter((add) => add.type !== 'Keccak256') // do not show keccak256
       .map((item) => {
         const address = showAddressHelper(prefix, item.script);
-        console.log(address, prefix, item.script);
         const addressInfo = { ...item, publicKey: addressesObj.publicKey, address };
         return (
           <List component="nav" aria-label="Address List" key={`item-${address}`}>
