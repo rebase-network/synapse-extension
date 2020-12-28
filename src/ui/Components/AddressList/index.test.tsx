@@ -1,6 +1,5 @@
 import React from 'react';
-import { act, render, screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
@@ -8,7 +7,7 @@ import { MESSAGE_TYPE } from '@src/common/utils/constants';
 import fixtures from './fixtures/addressesList';
 import App from './index';
 
-const AddressListItem = (props: any) => {
+const AddressListItem = () => {
   return (
     <>
       <nav>Address List</nav>
@@ -39,7 +38,6 @@ describe('address list component', () => {
     const onSelectAddress = jest.fn();
     await act(async () => {
       await browser.storage.local.set({
-        addressesList: fixtures.addressesList,
         currentNetwork: fixtures.currentNetwork,
       });
       render(
@@ -53,6 +51,12 @@ describe('address list component', () => {
   });
 
   it('should render address list', async () => {
+    await waitFor(() => {
+      browser.runtime.sendMessage({
+        type: MESSAGE_TYPE.ADDRESS_LIST,
+        data: fixtures.addressesList,
+      });
+    });
     const items = screen.getAllByRole('navigation', { name: 'Address List' });
     expect(items).toHaveLength(4);
   });
