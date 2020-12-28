@@ -30,6 +30,17 @@ import NetworkManager from '@common/networkManager';
 import { sendSudtTransaction } from '@src/background/wallet/transaction/sendSudtTransaction';
 import { ckbToshannon, shannonToSUDT, CKBToShannonFormatter } from '@src/common/utils/formatters';
 import addressHandler from '@background/address';
+import { CurrentWalletHandler, CurrentWalletManager } from '@background/currentWallet';
+import { BrowserMessageManager } from '@common/messageManager';
+
+const messageManager = new BrowserMessageManager();
+const currentWalletManager = new CurrentWalletManager();
+const currentWalletHandler = new CurrentWalletHandler(
+  messageManager,
+  browser.storage.local,
+  currentWalletManager,
+);
+currentWalletHandler.init();
 
 NetworkManager.initNetworks();
 

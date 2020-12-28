@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { MenuItem, FormControl, Select } from '@material-ui/core';
 import NetworkManager from '@common/networkManager';
+import { MESSAGE_TYPE } from '@src/common/utils/constants';
 
 const customRPCKey = 'custom';
 
@@ -63,6 +64,7 @@ export default (props: AppProps) => {
     setNetwork(value);
     props.handleNetworkChange(value);
     NetworkManager.setCurrentNetwork(value);
+    browser.runtime.sendMessage({ type: MESSAGE_TYPE.NETWORK_CHANGED, data: value });
   };
 
   const handleOpen = () => {
