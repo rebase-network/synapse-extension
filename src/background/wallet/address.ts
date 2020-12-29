@@ -1,8 +1,6 @@
 import { AddressPrefix, AddressType as Type, pubkeyToAddress } from '@nervosnetwork/ckb-sdk-utils';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
-import { Ckb } from '@src/common/utils/constants';
-// FIXME
-import { AccountExtendedPublicKey } from './key';
+import { ckbAccountPath } from '@common/utils/constants';
 
 export { AddressPrefix };
 
@@ -61,7 +59,7 @@ export default class Address {
   };
 
   public static pathFor = (type: AddressType, index: number) => {
-    return `${AccountExtendedPublicKey.ckbAccountPath}/${type}/${index}`;
+    return `${ckbAccountPath}/${type}/${index}`;
   };
 
   public static pathForReceiving = (index: number) => {

@@ -111,3 +111,5 @@ export const EMPTY_OUTPUT_DATA = '0x00000000000000000000000000000000';
 export const ERROR_CODES = {
   unknown: 1004,
 };
+
+export const ckbAccountPath = "m/44'/309'/0'";

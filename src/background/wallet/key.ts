@@ -1,5 +1,7 @@
+/* eslint-disable max-classes-per-file */
 // import crypto from 'crypto'
 
+import { ckbAccountPath } from '@common/utils/constants';
 import Address, { AddressType, AddressPrefix } from './address';
 import Keychain, { privateToPublic } from './keychain';
 import { entropyToMnemonic } from './mnemonic';
@@ -34,7 +36,7 @@ export class ExtendedPublicKey {
 // which is `m/44'/309'/0'`. This key will be persisted to wallet
 // and used to derive receiving/change addresses.
 export class AccountExtendedPublicKey extends ExtendedPublicKey {
-  public static ckbAccountPath = "m/44'/309'/0'";
+  public static ckbAccountPath = ckbAccountPath;
 
   static parse = (serialized: string) => {
     return new AccountExtendedPublicKey(serialized.slice(0, 66), serialized.slice(66));
