@@ -79,7 +79,7 @@ export default {
   'INVALID_WALLET_PASSWORD':'Invalid Wallet Password',
   'INVALID_KEYSTORE':'Invalid  Keystore',
   'Message to be signed': 'Message to be signed',
-  'Invalid address':'Invalid address,Please input a valid address',
+  'Invalid address':'Invalid address',
   "The transaction's ckb capacity cannot be less than 61 CKB":"The transaction's ckb capacity cannot be less than 61 CKB",
   "The transaction's sudt amount cannot be more than have": "The transaction's sudt amount cannot be more than have",
   'lack of capacity, ckb capacity cannot be less than 142 CKB, available capacity is':'lack of capacity, ckb capacity cannot be less than 142 CKB, available capacity is',

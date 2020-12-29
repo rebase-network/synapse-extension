@@ -79,7 +79,7 @@ export default {
   'INVALID_WALLET_PASSWORD':'无效的Wallet密码',
   'INVALID_KEYSTORE':'无效的Keystore',
   'Message to be signed': '签名消息',
-  'Invalid address':'无效的地址，请输入有效的地址',
+  'Invalid address':'地址无效',
   "The transaction's ckb capacity cannot be less than 61 CKB":'交易的CKB数量不能小于61 CKB',
   "The transaction's sudt amount cannot be more than have": "The transaction's sudt amount cannot be more than have",
   'lack of capacity, ckb capacity cannot be less than 142 CKB, available capacity is':'capacity不足, 可用capacity不能少于142 CKB，可用的capacity是',
