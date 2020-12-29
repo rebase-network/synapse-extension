@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import { BN } from 'bn.js';
 import { addressToScript } from '@keyper/specs';
-import { ADDRESS_TYPE_CODEHASH } from '@src/common/utils/constants';
 import { textToHex } from '@src/common/utils/index';
 import { getDepFromLockType } from '@src/common/utils/deps';
 import { getUnspentCells } from '@src/common/utils/apis';
@@ -10,6 +9,7 @@ import { signTx } from '@background/keyper/keyperwallet';
 import NetworkManager from '@common/networkManager';
 import { ERROR_CODES } from '@common/utils/constants';
 import { createRawTx, createAnyPayRawTx } from './txGenerator';
+import getLockTypeByCodeHash from './getLockTypeByCodeHash';
 
 interface GenerateTxResult {
   tx: CKBComponents.RawTransaction;
@@ -179,23 +179,13 @@ export const sendTransaction = async (
 ) => {
   const ckb = await getCKB();
   const toDataHex = textToHex(toData || '0x');
-  const toAddressScript = addressToScript(toAddress);
-  let toLockType = '';
-
-  if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
-    toLockType = 'Secp256k1';
-  } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Keccak256) {
-    toLockType = 'Keccak256';
-  } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.AnyPay) {
-    toLockType = 'AnyPay';
-  }
+  const toLockScript = addressToScript(toAddress);
+  const toLockType = getLockTypeByCodeHash(toLockScript.codeHash);
+  const toLockHash = ckb.utils.scriptToHash(toLockScript);
 
   let rawTxObj: any;
 
   // wallet cells check
-  const toLockScript = addressToScript(toAddress);
-  const toLockHash = ckb.utils.scriptToHash(toLockScript);
-
   // get anypay wallet
   let unspentWalletCells: any;
   if (toLockType === 'AnyPay') {
@@ -262,22 +252,11 @@ export const genDummyTransaction = async (
 ) => {
   const ckb = await getCKB();
   const toDataHex = textToHex(toData || '0x');
-  const toAddressScript = addressToScript(toAddress);
-  let toLockType = '';
-
-  if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
-    toLockType = 'Secp256k1';
-  } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.Keccak256) {
-    toLockType = 'Keccak256';
-  } else if (toAddressScript.codeHash === ADDRESS_TYPE_CODEHASH.AnyPay) {
-    toLockType = 'AnyPay';
-  }
+  const toLockScript = addressToScript(toAddress);
+  const toLockType = getLockTypeByCodeHash(toLockScript.codeHash);
+  const toLockHash = ckb.utils.scriptToHash(toLockScript);
 
   let rawTxObj: any;
-
-  // wallet cells check
-  const toLockScript = addressToScript(toAddress);
-  const toLockHash = ckb.utils.scriptToHash(toLockScript);
 
   // get anypay wallet
   let unspentWalletCells: any;

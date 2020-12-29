@@ -6,13 +6,10 @@ import getCKB from '@common/utils/ckb';
 import { signTx } from '@background/keyper/keyperwallet';
 import NetworkManager from '@common/networkManager';
 import { getDepFromLockType } from '@common/utils/deps';
-import {
-  ADDRESS_TYPE_CODEHASH,
-  SUDT_MIN_CELL_CAPACITY,
-  CKB_TOKEN_DECIMALS,
-} from '@common/utils/constants';
+import { SUDT_MIN_CELL_CAPACITY, CKB_TOKEN_DECIMALS } from '@common/utils/constants';
 import { getDepFromType } from '@common/utils/constants/typesInfo';
 import { parseSUDT } from '@common/utils';
+import getLockTypeByCodeHash from './getLockTypeByCodeHash';
 import { createSudtRawTx } from './txSudtGenerator';
 
 interface GenerateTxResult {
@@ -101,14 +98,7 @@ export const createSudtTransaction = async (
 
   const toLockScript = addressToScript(toAddress);
 
-  let toLockType = null;
-  if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
-    toLockType = 'Secp256k1';
-  } else if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.Keccak256) {
-    toLockType = 'Keccak256';
-  } else if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.AnyPay) {
-    toLockType = 'AnyPay';
-  }
+  const toLockType = getLockTypeByCodeHash(toLockScript.codeHash);
 
   const deps = [];
   if (fromLockType === toLockType) {

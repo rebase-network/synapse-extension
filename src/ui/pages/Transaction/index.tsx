@@ -21,8 +21,8 @@ import {
   MESSAGE_TYPE,
   CKB_TOKEN_DECIMALS,
   MIN_TRANSFER_CELL_CAPACITY,
-  ADDRESS_TYPE_CODEHASH,
   SUDT_MIN_CELL_CAPACITY,
+  LockType,
 } from '@common/utils/constants';
 import PageNav from '@ui/Components/PageNav';
 import Modal from '@ui/Components/Modal';
@@ -41,6 +41,7 @@ import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils';
 import calculateTxFee from '@common/utils/fee/calculateFee';
 import { genDummyTransaction } from '@background/wallet/transaction/sendTransaction';
 import { showAddressHelper } from '@common/utils/wallet';
+import getLockTypeByCodeHash from '@background/wallet/transaction/getLockTypeByCodeHash';
 
 const useStyles = makeStyles({
   container: {
@@ -160,8 +161,9 @@ const InnerForm = (props: AppProps) => {
     setTxCapacity(capacity);
 
     const toLockScript = addressToScript(address);
-    if (typeHash === '') {
-      if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.Secp256k1) {
+    const toLockType = getLockTypeByCodeHash(toLockScript.codeHash);
+    if (!typeHash) {
+      if (toLockType === LockType.Secp256k1) {
         // every cell's capacity gt 61
         if (Number(capacity) < Number(61)) {
           const checkMsgId = "The transaction's ckb capacity cannot be less than 61 CKB";
@@ -171,7 +173,7 @@ const InnerForm = (props: AppProps) => {
         }
       }
       // check anypay cell's capacity
-      if (toLockScript.codeHash === ADDRESS_TYPE_CODEHASH.AnyPay) {
+      if (toLockType === LockType.AnyPay) {
         const toLockHash = scriptToHash(toLockScript);
         const liveCapacity = await getUnspentCapacity(toLockHash);
         if (!liveCapacity && Number(capacity) < Number(61)) {
