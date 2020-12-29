@@ -97,7 +97,6 @@ const InnerForm = (props: AppProps) => {
   const [toAddress, setToAddress] = React.useState('');
   const [txCapacity, setTxCapacity] = React.useState('');
   const [txData, setTxData] = React.useState('');
-  const [dummyTx, setDummyTx] = React.useState({});
   const [feeRate, setFeeRate] = React.useState(1000);
 
   const {
@@ -327,7 +326,6 @@ const InnerForm = (props: AppProps) => {
         txData,
       );
 
-      setDummyTx(dummyTxObj);
       if (!dummyTxObj) return;
 
       const feeHex = calculateTxFee(dummyTxObj, BigInt(feeRate));

@@ -15,7 +15,6 @@ import {
   MESSAGE_TYPE,
   MAINNET_EXPLORER_URL,
   TESTNET_EXPLORER_URL,
-  LockType,
 } from '@src/common/utils/constants';
 import { truncateAddress, shannonToCKBFormatter } from '@src/common/utils/formatters';
 import { getAddressInfo } from '@src/common/utils/apis';
