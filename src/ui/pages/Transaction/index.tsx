@@ -45,7 +45,7 @@ import getLockTypeByCodeHash from '@background/wallet/transaction/getLockTypeByC
 
 const useStyles = makeStyles({
   container: {
-    margin: 30,
+    margin: '0px 30px 20px',
   },
   button: {
     'margin-right': 10,
