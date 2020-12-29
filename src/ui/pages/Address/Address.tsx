@@ -124,7 +124,6 @@ export default (props: AppProps) => {
   const [open, setOpen] = React.useState(false);
   const [tip, setTip] = React.useState('');
   const [txs, setTxs] = React.useState([]);
-  const [type, setType] = React.useState('');
   const [tooltipMsg, setTooltipMsg] = React.useState('Copy to clipboard');
   const [name, setName] = React.useState('');
   const [lockHash, setLockHash] = React.useState('');
@@ -150,14 +149,13 @@ export default (props: AppProps) => {
         'currentNetwork',
       ]);
       if (_.isEmpty(currentWallet)) return;
-      const { type: lockType, lock, script } = currentWallet;
+      const { lock, script } = currentWallet;
       const { prefix } = currentNetwork;
       const newAddr = showAddressHelper(prefix, script);
       const isMainnet = prefix === 'ckb';
 
       setExplorerUrl(isMainnet ? MAINNET_EXPLORER_URL : TESTNET_EXPLORER_URL);
       setAddress(newAddr);
-      setType(lockType);
       setLockHash(lock);
       updateCapacity(lock);
 
@@ -177,7 +175,7 @@ export default (props: AppProps) => {
     };
     browser.runtime.onMessage.addListener(listener);
     return () => browser.runtime.onMessage.removeListener(listener);
-  }, [address, capacity, type]);
+  }, [address, capacity]);
 
   const onSendtx = () => {
     const pushUrl = `/send-tx?name=${''}&typeHash=${''}&udt=${''}`;
@@ -215,7 +213,7 @@ export default (props: AppProps) => {
           onClick={() => updateCapacity(lockHash)}
         >
           {capacity}
-          <span> CKB</span>
+          <span>&nbsp; CKB</span>
         </Button>
       </Tooltip>
     </div>
@@ -301,9 +299,6 @@ export default (props: AppProps) => {
                   {truncateAddress(address)}
                 </Button>
               </Tooltip>
-            </Box>
-            <Box textAlign="center" fontSize={16}>
-              {type}
             </Box>
           </Grid>
         </Grid>
