@@ -77,33 +77,11 @@ export default class Address {
     return val;
   };
 
-  public static toLockHash = (blake160: string) => {
-    const lockHash = ckbUtils.scriptToHash({
-      hashType: 'type',
-      codeHash: Ckb.MainNetCodeHash,
-      args: blake160,
-    });
-
-    return lockHash;
-  };
-
   public getBlake160 = () => {
     return `0x${ckbUtils.blake160(`0x${this.publicKey}`, 'hex')}`;
   };
 
   public publicKeyHash = () => {
     return this.getBlake160();
-  };
-
-  public getLockHash = () => {
-    const publicKeyHash = this.getBlake160();
-
-    const lockHash = ckbUtils.scriptToHash({
-      hashType: 'type',
-      codeHash: Ckb.MainNetCodeHash,
-      args: publicKeyHash,
-    });
-
-    return lockHash;
   };
 }

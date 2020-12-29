@@ -33,10 +33,6 @@ describe('address', () => {
       '155,132,136,122,178,234,23,9,152,207,249,137,86,117,220,210,156,210,109,77',
     );
   });
-  it('should get correct value from toLockHash', () => {
-    const result = Address.toLockHash(publicKey);
-    expect(result).toEqual('0x1699256ac9b6445a6ac0e6f2e82ad78840b2c16969a31530904355026d0ea8bd');
-  });
   it('should get correct value from getBlake160', () => {
     const result = addressInstance.getBlake160();
     expect(result).toEqual('0x0cfa67e35069ac4923ee86a0a83de9a72e5da33c');
@@ -44,9 +40,5 @@ describe('address', () => {
   it('should get correct value from publicKeyHash', () => {
     const result = addressInstance.publicKeyHash();
     expect(result).toEqual('0x0cfa67e35069ac4923ee86a0a83de9a72e5da33c');
-  });
-  it('should get correct value from getLockHash', () => {
-    const result = addressInstance.getLockHash();
-    expect(result).toEqual('0x86fc028b48d783374d91f6f3d449d65f6a347bd5b7d0bfdee0c64ff8287dc7f0');
   });
 });

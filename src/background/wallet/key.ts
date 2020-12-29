@@ -94,11 +94,6 @@ export enum DefaultAddressNumber {
   Change = 10,
 }
 
-export interface Addresses {
-  receiving: Address[];
-  change: Address[];
-}
-
 // Generate 12 words mnemonic code
 export const generateMnemonic = () => {
   const entropySize = 16;
