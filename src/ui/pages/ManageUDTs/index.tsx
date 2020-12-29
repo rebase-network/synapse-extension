@@ -22,10 +22,10 @@ interface AppProps {
   match?: any;
 }
 
-export const InnerForm = (props) => {
+export const InnerForm = (props: any) => {
   const intl = useIntl();
 
-  const { values, touched, errors, handleChange, handleBlur, handleSubmit, handleReset } = props;
+  const { values, touched, errors, handleChange, handleBlur, handleSubmit } = props;
 
   return (
     <Form
@@ -111,7 +111,8 @@ export default function InitFunction(props: AppProps) {
   const classes = useStyles();
   const intl = useIntl();
   const [udtsItems, setUdtsItems] = React.useState([]);
-  const initialValues = { name: '', typeHash: '', decimal: '', symbol: '' };
+  const typeHashPropsFromUrl = _.get(props, 'match.params.typeHash', '');
+  const initialValues = { name: '', typeHash: typeHashPropsFromUrl, decimal: '8', symbol: '' };
 
   const onSubmit = async (values, { resetForm }) => {
     let udtsList = [];
@@ -158,7 +159,7 @@ export default function InitFunction(props: AppProps) {
     await browser.storage.local.set({ udts: udtsObj });
   };
 
-  const udtsElem = udtsItems.map((item, index) => {
+  const udtsElem = udtsItems.map((item) => {
     const secondaryItem = `${item.name} - ${item.decimal} - ${item.symbol}`;
     return (
       <List component="nav" aria-label="udts List" key={`item-${item.typeHash}`}>
