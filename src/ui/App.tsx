@@ -1,8 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { AppContext } from '@ui/utils/context';
 import Address from '@ui/pages/Address';
-
 import ImportMnemonic from '@ui/pages/ImportMnemonic/index';
 import GenerateMnemonic from '@ui/pages/ImportMnemonic/generate';
 import Transaction from '@ui/pages/Transaction';

@@ -1,6 +1,5 @@
 import React from 'react';
 import _ from 'lodash';
-import { Link } from 'react-router-dom';
 import queryString from 'query-string';
 import {
   Button,
