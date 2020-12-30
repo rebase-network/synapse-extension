@@ -43,11 +43,13 @@ const useStyles = makeStyles({
     margin: '0px 30px 20px',
   },
   button: {
-    'margin-right': 10,
     textTransform: 'none',
+    'margin-top': '0.6rem',
   },
   feeRate: {
     color: '#666',
+    'margin-top': '0.6rem',
+    'font-size': '0.8rem',
   },
   alert: {
     color: '#fff',
@@ -341,7 +343,6 @@ const InnerForm = (props: any) => {
         variant="outlined"
         id="field-password"
       />
-      {isSubmitting && <div id="submitting">Submitting</div>}
       <Button
         type="submit"
         id="submit-button"
@@ -352,19 +353,6 @@ const InnerForm = (props: any) => {
         data-testid="submit-button"
       >
         <FormattedMessage id="Send" />
-      </Button>
-
-      <Button
-        id="submit-button"
-        disabled={isSubmitting}
-        color="primary"
-        variant="contained"
-        className={classes.button}
-        data-testid="cancel-button"
-        component={Link}
-        to="/address"
-      >
-        <FormattedMessage id="Cancel" />
       </Button>
     </Form>
   );
