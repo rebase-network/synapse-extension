@@ -43,7 +43,6 @@ const useStyles = makeStyles({
     margin: '0px 30px 20px',
   },
   button: {
-    textTransform: 'none',
     'margin-top': '0.6rem',
   },
   feeRate: {

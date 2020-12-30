@@ -74,7 +74,6 @@ const BootstrapButton = withStyles({
     width: '88px',
     size: 'medium',
     boxShadow: 'none',
-    textTransform: 'none',
     fontSize: 16,
     padding: '8px 12px',
     border: '1px solid',

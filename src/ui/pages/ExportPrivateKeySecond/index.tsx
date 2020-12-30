@@ -14,7 +14,6 @@ const useStyles = makeStyles({
   },
   button: {
     marginTop: 16,
-    textTransform: 'none',
   },
   textField: {},
   radioGroup: {
