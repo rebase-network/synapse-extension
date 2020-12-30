@@ -89,7 +89,6 @@ describe('Manage UDTs page', () => {
 
     expect(decimal).toBeInTheDocument();
 
-    await userEvent.type(decimal, '8');
     expect(screen.getByRole('form')).toHaveFormValues({
       decimal: '8',
     });
@@ -108,8 +107,6 @@ describe('Manage UDTs page', () => {
     const symbol = screen.getByLabelText('Symbol');
     await userEvent.type(symbol, 'UDT');
 
-    const decimal = screen.getByLabelText('Decimal');
-    await userEvent.type(decimal, '8');
     expect(screen.getByRole('form')).toHaveFormValues({
       decimal: '8',
       name: 'simpleUDT',
