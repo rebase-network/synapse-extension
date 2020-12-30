@@ -1,12 +1,6 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
-import {
-  render,
-  screen,
-  waitFor,
-  waitForElement,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
@@ -72,8 +66,8 @@ describe('Send Transaction page', () => {
     });
   });
 
-  it('should change form fields: Capacity is 1', async () => {
-    const capacity = screen.getByLabelText('Capacity');
+  it('should change form fields: Amount is 1', async () => {
+    const capacity = screen.getByLabelText('Amount');
 
     expect(capacity).toBeInTheDocument();
     expect(capacity).toBeEmpty();
@@ -84,8 +78,8 @@ describe('Send Transaction page', () => {
     });
   });
 
-  it('should change form fields: Capacity is 61', async () => {
-    const capacity = screen.getByLabelText('Capacity');
+  it('should change form fields: Amount is 61', async () => {
+    const capacity = screen.getByLabelText('Amount');
 
     expect(capacity).toBeInTheDocument();
     expect(capacity).toBeEmpty();
@@ -96,8 +90,8 @@ describe('Send Transaction page', () => {
     });
   });
 
-  it('should change form fields: Capacity is 200', async () => {
-    const capacity = screen.getByLabelText('Capacity');
+  it('should change form fields: Amount is 200', async () => {
+    const capacity = screen.getByLabelText('Amount');
 
     expect(capacity).toBeInTheDocument();
     expect(capacity).toBeEmpty();
@@ -105,25 +99,6 @@ describe('Send Transaction page', () => {
     await userEvent.type(capacity, '200');
     expect(screen.getByRole('form')).toHaveFormValues({
       capacity: '200',
-    });
-  });
-
-  it('should change form fields: Fee Rate', async () => {
-    const feeRate = screen.getByText('2000');
-    expect(feeRate).toBeInTheDocument();
-  });
-
-  it('should change form fields: Fee', async () => {
-    const fee = screen.getByLabelText('Fee');
-    const expected = '0.00001';
-
-    expect(fee).toBeInTheDocument();
-    expect(fee).toBeEmpty();
-
-    await userEvent.type(fee, expected);
-
-    expect(screen.getByRole('form')).toHaveFormValues({
-      fee: expected,
     });
   });
 
@@ -160,23 +135,21 @@ describe('Send Transaction page', () => {
 
   it('should submit form', async () => {
     const address = screen.getByLabelText('To');
-    const capacity = screen.getByLabelText('Capacity');
+    const capacity = screen.getByLabelText('Amount');
     const password = screen.getByLabelText('Password');
-    const fee = screen.getByLabelText('Fee');
     const data = screen.getByLabelText('Data');
     const submitButton = screen.getByRole('button', { name: /Send/i });
 
     await userEvent.type(address, 'ckt1qyqfhpyg02ew59cfnr8lnz2kwhwd98xjd4xsscxlae');
     await userEvent.type(capacity, '61');
     await userEvent.type(password, '111111');
-    await userEvent.type(fee, '0.00001');
     await userEvent.type(data, '0x01');
 
     expect(screen.getByRole('form')).toHaveFormValues({
       address: 'ckt1qyqfhpyg02ew59cfnr8lnz2kwhwd98xjd4xsscxlae',
       capacity: '61',
       password: '111111',
-      fee: '0.00004096',
+      feeRate: '1000',
       data: '0x01',
     });
 
