@@ -7,7 +7,10 @@ import {
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 import { generateMnemonic, ExtendedPrivateKey } from '@src/background/wallet/key';
 import Keychain from '@src/background/wallet/keychain';
-import { sendTransaction } from '@src/background/wallet/transaction/sendTransaction';
+import {
+  genDummyTransaction,
+  sendTransaction,
+} from '@src/background/wallet/transaction/sendTransaction';
 import Address from '@src/background/wallet/address';
 import { signTxFromMsg } from '@background/transaction';
 import { getTxHistories } from '@src/common/utils/apis';
@@ -28,10 +31,16 @@ import { WEB_PAGE } from '@src/common/utils/message/constants';
 import { sendToWebPage } from '@background/messageHandlers/proxy';
 import NetworkManager from '@common/networkManager';
 import { sendSudtTransaction } from '@src/background/wallet/transaction/sendSudtTransaction';
-import { ckbToshannon, shannonToSUDT, CKBToShannonFormatter } from '@src/common/utils/formatters';
+import {
+  ckbToshannon,
+  shannonToSUDT,
+  CKBToShannonFormatter,
+  shannonToCKBFormatter,
+} from '@src/common/utils/formatters';
 import addressHandler from '@background/address';
 import { CurrentWalletHandler, CurrentWalletManager } from '@background/currentWallet';
 import { BrowserMessageManager } from '@common/messageManager';
+import calculateTxFee from '@src/common/utils/fee/calculateFee';
 
 const messageManager = new BrowserMessageManager();
 const currentWalletManager = new CurrentWalletManager();
@@ -319,34 +328,40 @@ browser.runtime.onMessage.addListener(async (request) => {
 
     const toAddress = request.address.trim();
     const decimal = request?.decimal;
-    let capacity = null;
-    if (decimal === undefined || decimal === null) {
-      capacity = ckbToshannon(request.capacity, 8);
-    } else {
-      capacity = ckbToshannon(request.capacity, decimal);
-    }
-
-    const fee = CKBToShannonFormatter(request.fee);
     const password = request.password.trim();
     const toData = request.data.trim();
     const { typeHash } = request;
-    let ckbAmount = 0;
+    const capacity = ckbToshannon(request.capacity, decimal || 8);
+
+    if (!cwStorage.currentWallet) return;
+    const { script, publicKey, lock: lockHash, type: lockType } = cwStorage.currentWallet;
+    const fromAddress = showAddressHelper(currNetworkStorage.currentNetwork.prefix, script);
+
+    const wallet = findInWalletsByPublicKey(publicKey, walletsStorage.wallets);
+    const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
+
+    const dummyTxObj = await genDummyTransaction(
+      fromAddress,
+      toAddress,
+      capacity,
+      10,
+      lockHash,
+      lockType,
+      toData,
+    );
+
+    const feeHex = calculateTxFee(dummyTxObj, BigInt(request.feeRate));
+    const fee = parseInt(feeHex.toString(), 16);
+    let ckbAmount = capacity;
     let showSudtAmount = '0 SUDT';
-    if (typeHash === '') {
-      ckbAmount = capacity;
-    } else if (typeHash !== '') {
-      ckbAmount = 142 * 10 ** 8;
+    if (typeHash) {
+      ckbAmount = BigInt(142 * 10 ** 8);
 
       const { udts } = udtsObj;
       const sudtObj = _.find(udts, { typeHash });
       showSudtAmount = shannonToSUDT(capacity, decimal) + sudtObj?.symbol || 'SUDT';
     }
 
-    const { script, publicKey, lock: lockHash, type: lockType } = cwStorage.currentWallet;
-    const fromAddress = showAddressHelper(currNetworkStorage.currentNetwork.prefix, script);
-
-    const wallet = findInWalletsByPublicKey(publicKey, walletsStorage.wallets);
-    const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
     if (privateKeyBuffer === null) {
       const responseEorrorMsg = {
         type: MESSAGE_TYPE.SEND_TX_ERROR,

@@ -8,7 +8,6 @@ import {
   ListItem,
   ListItemText,
   Slider,
-  Tooltip,
   Typography,
   Grid,
 } from '@material-ui/core';
@@ -17,6 +16,10 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { AppContext } from '@ui/utils/context';
+import PageNav from '@ui/Components/PageNav';
+import Modal from '@ui/Components/Modal';
+import TxDetail from '@ui/Components/TxDetail';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import {
   MESSAGE_TYPE,
   CKB_TOKEN_DECIMALS,
@@ -24,10 +27,6 @@ import {
   SUDT_MIN_CELL_CAPACITY,
   LockType,
 } from '@common/utils/constants';
-import PageNav from '@ui/Components/PageNav';
-import Modal from '@ui/Components/Modal';
-import TxDetail from '@ui/Components/TxDetail';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import {
   truncateAddress,
   shannonToCKBFormatter,
@@ -37,10 +36,6 @@ import {
 import { getUnspentCapacity } from '@common/utils/apis';
 import { addressToScript } from '@keyper/specs';
 import { scriptToHash } from '@nervosnetwork/ckb-sdk-utils';
-
-import calculateTxFee from '@common/utils/fee/calculateFee';
-import { genDummyTransaction } from '@background/wallet/transaction/sendTransaction';
-import { showAddressHelper } from '@common/utils/wallet';
 import getLockTypeByCodeHash from '@background/wallet/transaction/getLockTypeByCodeHash';
 
 const useStyles = makeStyles({
@@ -51,7 +46,9 @@ const useStyles = makeStyles({
     'margin-right': 10,
     textTransform: 'none',
   },
-  textField: {},
+  feeRate: {
+    color: '#666',
+  },
   alert: {
     color: '#fff',
     padding: '6px 16px',
@@ -64,41 +61,14 @@ const useStyles = makeStyles({
   },
 });
 
-interface AppProps {
-  values: any;
-  placeholder: any;
-  touched: any;
-  errors: any;
-  dirty: any;
-  isSubmitting: any;
-  handleChange: any;
-  handleBlur: any;
-  handleSubmit: any;
-  handleReset: any;
-  setFieldValue: any;
-}
-
-interface AppState {}
-
-interface TooltipProps {
-  children: React.ReactElement;
-  open: boolean;
-  value: number;
-}
-
-const InnerForm = (props: AppProps) => {
+const InnerForm = (props: any) => {
   const classes = useStyles();
   const intl = useIntl();
   const [contacts, setContacts] = React.useState([]);
   const [checkAddressMsg, setCheckAddressMsg] = React.useState('');
   const [checkMsg, setCheckMsg] = React.useState('');
   const [unspentCapacity, setUnspentCapacity] = React.useState(-1);
-
-  const [toAddress, setToAddress] = React.useState('');
-  const [txCapacity, setTxCapacity] = React.useState('');
-  const [txData, setTxData] = React.useState('');
   const [feeRate, setFeeRate] = React.useState(1000);
-
   const {
     values,
     touched,
@@ -157,7 +127,6 @@ const InnerForm = (props: AppProps) => {
 
     // secp256k1
     const capacity = event.target.value;
-    setTxCapacity(capacity);
 
     const toLockScript = addressToScript(address);
     const toLockType = getLockTypeByCodeHash(toLockScript.codeHash);
@@ -231,12 +200,8 @@ const InnerForm = (props: AppProps) => {
         name="data"
         type="text"
         fullWidth
-        className={classes.textField}
         value={values.data}
         onChange={handleChange}
-        onBlur={(event) => {
-          setTxData(event.target.value);
-        }}
         error={!!errors.data}
         helperText={errors.data && touched.data && errors.data}
         margin="normal"
@@ -270,71 +235,10 @@ const InnerForm = (props: AppProps) => {
     );
   }
 
-  function ValueLabelComponent(props: TooltipProps) {
-    const { children, open, value } = props;
-
-    return (
-      <Tooltip open={open} enterTouchDelay={0} placement="top" title={value}>
-        {children}
-      </Tooltip>
-    );
-  }
-
-  const sliderMarks = [
-    {
-      value: 500,
-      label: '500',
-    },
-    {
-      value: 1000,
-      label: '1000',
-    },
-    {
-      value: 2000,
-      label: '2000',
-    },
-    {
-      value: 3000,
-      label: '3000 shn/kb',
-    },
-  ];
-
-  const handleSliderChangeCommitted = async (event, newValue) => {
-    setFeeRate(newValue);
+  const handleSliderChangeCommitted = async (event, feeRateValue) => {
+    setFeeRate(feeRateValue);
+    setFieldValue('feeRate', feeRateValue);
   };
-
-  React.useEffect(() => {
-    if (!toAddress || !txCapacity) {
-      return;
-    }
-
-    (async () => {
-      const cwStorage = await browser.storage.local.get('currentWallet');
-      const currNetworkStorage = await browser.storage.local.get('currentNetwork');
-      if (!cwStorage.currentWallet) return;
-      const { script, lock, type } = cwStorage.currentWallet;
-
-      const fromAddress = showAddressHelper(currNetworkStorage.currentNetwork.prefix, script);
-
-      const dummyTxObj = await genDummyTransaction(
-        fromAddress,
-        toAddress,
-        txCapacity,
-        10,
-        lock,
-        type,
-        txData,
-      );
-
-      if (!dummyTxObj) return;
-
-      const feeHex = calculateTxFee(dummyTxObj, BigInt(feeRate));
-      const newFee = parseInt(feeHex.toString(), 16);
-      const fee = shannonToCKBFormatter(newFee.toString());
-
-      setFieldValue('fee', fee);
-    })();
-  }, [feeRate, setFieldValue, toAddress, txCapacity, txData]);
 
   return (
     <Form className="form-sendtx" id="form-sendtx" onSubmit={handleSubmit} aria-label="form">
@@ -362,9 +266,6 @@ const InnerForm = (props: AppProps) => {
             value={values.address}
             onChange={handleChange}
             margin="normal"
-            onBlur={(event) => {
-              setToAddress(event.target.value);
-            }}
             InputProps={{ ...params.InputProps, type: 'search' }}
             variant="outlined"
             error={!!errors.address}
@@ -374,12 +275,11 @@ const InnerForm = (props: AppProps) => {
         style={{ width: 300 }}
       />
       <TextField
-        label={intl.formatMessage({ id: 'Capacity' })}
+        label={intl.formatMessage({ id: 'Amount' })}
         name="capacity"
         type="text"
         placeholder={`Should be >= ${MIN_TRANSFER_CELL_CAPACITY}`}
         fullWidth
-        className={classes.textField}
         value={values.capacity}
         onChange={handleChange}
         onBlur={handleBlurCapacity}
@@ -390,10 +290,12 @@ const InnerForm = (props: AppProps) => {
         id="field-capacity"
       />
       {dataElem}
-
-      <div>
+      <div className={classes.feeRate}>
         <Typography gutterBottom>
           <FormattedMessage id="Fee Rate" />
+          <span>:&nbsp;</span>
+          <span>{feeRate}</span>
+          <span>&nbsp;Shn/KB</span>
         </Typography>
 
         <Grid container spacing={2}>
@@ -404,14 +306,13 @@ const InnerForm = (props: AppProps) => {
           </Grid>
           <Grid item xs>
             <Slider
-              ValueLabelComponent={ValueLabelComponent}
+              name="feeRate"
               valueLabelDisplay="auto"
-              step={500}
-              marks={sliderMarks}
+              step={1000}
               aria-label="feeRate"
               defaultValue={1000}
-              min={500}
-              max={3000}
+              min={1000}
+              max={5000}
               onChangeCommitted={handleSliderChangeCommitted}
             />
           </Grid>
@@ -422,31 +323,11 @@ const InnerForm = (props: AppProps) => {
           </Grid>
         </Grid>
       </div>
-
-      <TextField
-        label={intl.formatMessage({ id: 'Fee' })}
-        id="field-fee"
-        name="fee"
-        type="text"
-        fullWidth
-        InputProps={{
-          readOnly: true,
-        }}
-        className={classes.textField}
-        value={values.fee}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        error={!!errors.fee}
-        helperText={errors.fee && touched.fee && errors.fee}
-        margin="normal"
-        variant="outlined"
-      />
       <TextField
         label={intl.formatMessage({ id: 'Password' })}
         name="password"
         type="password"
         fullWidth
-        className={classes.textField}
         value={values.password}
         onChange={handleChange}
         onBlur={handleBlur}
@@ -495,7 +376,6 @@ export default () => {
   const [open, setOpen] = React.useState(false);
   const [errMsg, setErrMsg] = React.useState('');
   const [errMsgText, setErrMsgText] = React.useState('');
-  const [errCode, setErrCode] = React.useState('');
   const [selectedTx, setSelectedTx] = React.useState('');
 
   const openModal = () => {
@@ -524,7 +404,6 @@ export default () => {
 
       if (messageHandled && message.type === MESSAGE_TYPE.SEND_TX_ERROR) {
         setErrMsgText(message.message);
-        setErrCode(message.errCode);
       }
       setSending(false);
     };
@@ -574,7 +453,7 @@ export default () => {
     address: '',
     capacity: '',
     data: '',
-    fee: 0.00001,
+    feeRate: 1000,
     password: '',
     ...searchParams,
   };
@@ -601,7 +480,6 @@ export default () => {
                   id: 'Should be greater than ',
                 })}${MIN_TRANSFER_CELL_CAPACITY}`,
               ),
-            fee: Yup.string().required(intl.formatMessage({ id: 'Required' })),
             password: Yup.string().required(intl.formatMessage({ id: 'Required' })),
           })}
         >

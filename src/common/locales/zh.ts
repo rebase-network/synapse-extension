@@ -39,6 +39,7 @@ export default {
   'Should be greater than ': '应该大于',
   Cancel: '取消',
   Capacity: '数量',
+  Amount: '数量',
   To: '发送给',
   Home: '首页',
   'Copy to clipboard': '复制地址',

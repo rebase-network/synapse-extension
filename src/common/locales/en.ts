@@ -39,6 +39,7 @@ export default {
   'The transaction failed to send, please try again later': 'The transaction failed to send, please try again later',
   Cancel: 'Cancel',
   Capacity: 'Capacity',
+  Amount: 'Amount',
   To: 'To',
   Home: 'Home',
   'Copy to clipboard': 'Copy to clipboard',
