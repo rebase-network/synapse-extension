@@ -22,6 +22,7 @@ const genForm = (props: any) => {
   return (
     <Form className="gen-mnemonic" id="gen-mnemonic" onSubmit={handleSubmit} aria-label="form">
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'Mnemonic(Only Support 12 Words)' })}
         id="mnemonic"
         name="mnemonic"
@@ -39,6 +40,7 @@ const genForm = (props: any) => {
       />
 
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'Password (min 6 chars)' })}
         id="password"
         name="password"
@@ -55,6 +57,7 @@ const genForm = (props: any) => {
       />
 
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'Confirm Password' })}
         id="confirmPassword"
         name="confirmPassword"

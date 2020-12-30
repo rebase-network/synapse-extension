@@ -45,6 +45,7 @@ const innerForm = (props: FormikProps<FormValues>): React.ReactElement => {
       aria-label="form"
     >
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'NetWorkName' })}
         id="title"
         name="title"
@@ -74,6 +75,7 @@ const innerForm = (props: FormikProps<FormValues>): React.ReactElement => {
         </NativeSelect>
       </FormControl>
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'CKB Node URL' })}
         id="nodeURL"
         name="nodeURL"
@@ -89,6 +91,7 @@ const innerForm = (props: FormikProps<FormValues>): React.ReactElement => {
         data-testid="field-nodeURL"
       />
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'CKB Cache Layer URL' })}
         id="cacheURL"
         name="cacheURL"

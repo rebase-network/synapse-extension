@@ -88,6 +88,7 @@ const innerForm = (props: any) => {
       aria-label="form"
     >
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'Password' })}
         name="password"
         type="password"
@@ -187,7 +188,7 @@ export default () => {
 
         {isLogin ? (
           <div className={classes.deleteGroup}>
-            <Button size="large" color="secondary" variant="contained" onClick={handleOpen}>
+            <Button color="secondary" variant="contained" onClick={handleOpen}>
               <FormattedMessage id="Delete Wallet" />
             </Button>
 

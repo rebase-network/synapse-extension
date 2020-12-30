@@ -15,7 +15,7 @@ const useStyles = makeStyles({
   },
 });
 
-export const innerForm = (props) => {
+export const innerForm = (props: any) => {
   const intl = useIntl();
 
   const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
@@ -28,6 +28,7 @@ export const innerForm = (props) => {
       aria-label="form"
     >
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'Password' })}
         name="password"
         type="password"

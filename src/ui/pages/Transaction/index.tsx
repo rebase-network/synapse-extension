@@ -195,6 +195,7 @@ const InnerForm = (props: any) => {
   if (!name && !typeHash) {
     dataElem = (
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'Data' })}
         id="field-data"
         name="data"
@@ -246,6 +247,7 @@ const InnerForm = (props: any) => {
 
       <Autocomplete
         id="address"
+        size="small"
         onChange={(event, newValue) => {
           setFieldValue('address', newValue.address);
         }}
@@ -275,6 +277,7 @@ const InnerForm = (props: any) => {
         style={{ width: 300 }}
       />
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'Amount' })}
         name="capacity"
         type="text"
@@ -324,6 +327,7 @@ const InnerForm = (props: any) => {
         </Grid>
       </div>
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'Password' })}
         name="password"
         type="password"

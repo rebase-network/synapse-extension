@@ -38,6 +38,7 @@ export const innerForm = (props: any) => {
         data-testid="field-mnemonic"
       />
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'Password (min 6 chars)' })}
         id="password"
         name="password"
@@ -53,6 +54,7 @@ export const innerForm = (props: any) => {
         data-testid="field-password"
       />
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'Confirm Password' })}
         id="confirmPassword"
         name="confirmPassword"

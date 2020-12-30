@@ -26,6 +26,7 @@ export const innerForm = (props) => {
       aria-label="form"
     >
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'Password' })}
         name="password"
         type="password"

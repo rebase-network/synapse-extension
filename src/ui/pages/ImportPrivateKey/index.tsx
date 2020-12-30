@@ -89,6 +89,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
         aria-label="form"
       >
         <TextField
+          size="small"
           label={intl.formatMessage({ id: 'Private Key' })}
           id="privateKey"
           name="privateKey"
@@ -105,6 +106,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           data-testid="testid-form-privateKey"
         />
         <TextField
+          size="small"
           label={intl.formatMessage({ id: 'Password' })}
           id="password"
           name="password"
@@ -139,6 +141,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
       <Form className="form-keystore" id="form-keystore" onSubmit={handleSubmit}>
         <UploadFile onChange={handleKeystore} />
         <TextField
+          size="small"
           label={intl.formatMessage({ id: 'Keystore Password' })}
           id="keystorePassword"
           name="keystorePassword"
@@ -157,6 +160,7 @@ export default function ImportPrivateKey(props: AppProps, state: AppState) {
           data-testid="field-keystore-password"
         />
         <TextField
+          size="small"
           label={intl.formatMessage({ id: 'Wallet Password' })}
           id="userPassword"
           name="userPassword"

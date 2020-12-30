@@ -26,6 +26,7 @@ export const innerForm = (props: any) => {
   return (
     <Form className="password" id="password-field" onSubmit={handleSubmit} aria-label="form">
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'Password' })}
         name="password"
         type="password"

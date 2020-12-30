@@ -35,6 +35,7 @@ export const InnerForm = (props: any) => {
       aria-label="form"
     >
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'UDT Name' })}
         id="name"
         name="name"
@@ -50,6 +51,7 @@ export const InnerForm = (props: any) => {
         data-testid="field-name"
       />
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'UDT Hash' })}
         id="typeHash"
         name="typeHash"
@@ -65,6 +67,7 @@ export const InnerForm = (props: any) => {
         data-testid="field-typeHash"
       />
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'Decimal' })}
         id="decimal"
         name="decimal"
@@ -80,6 +83,7 @@ export const InnerForm = (props: any) => {
         data-testid="field-decimal"
       />
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'Symbol' })}
         id="symbol"
         name="symbol"

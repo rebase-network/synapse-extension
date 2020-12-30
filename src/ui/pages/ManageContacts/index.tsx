@@ -36,6 +36,7 @@ export const InnerForm = (props: any) => {
       aria-label="form"
     >
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'Address' })}
         id="address"
         name="address"
@@ -49,6 +50,7 @@ export const InnerForm = (props: any) => {
         variant="outlined"
       />
       <TextField
+        size="small"
         label={intl.formatMessage({ id: 'Name' })}
         id="name"
         name="name"
