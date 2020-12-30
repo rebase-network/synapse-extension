@@ -18,6 +18,8 @@ import ManageContacts from '@ui/pages/ManageContacts';
 import ManageUDTs from '@src/ui/pages/ManageUDTs';
 import ManageNetworks from '@ui/pages/ManageNetworks';
 
+import { ThemeProvider } from '@material-ui/core';
+import theme from './styles/theme';
 import './styles/global.scss';
 
 export default function App() {
@@ -37,7 +39,7 @@ export default function App() {
           network,
         }}
       >
-        <div>
+        <ThemeProvider theme={theme}>
           <AppBar handleNetworkChange={handleNetworkChange} />
           {/* A <Switch> looks through its children <Route>s and
               renders the first one that matches the current URL. */}
@@ -98,7 +100,7 @@ export default function App() {
             {/* 通配放到最后 */}
             <Route path="/">{homeComponent}</Route>
           </Switch>
-        </div>
+        </ThemeProvider>
       </AppContext.Provider>
     </Router>
   );
