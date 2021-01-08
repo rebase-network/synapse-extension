@@ -160,7 +160,7 @@ describe('Send Transaction page', () => {
   });
 
   it('send tx successfully', async () => {
-    act(() => {
+    await waitFor(() => {
       browser.runtime.sendMessage({
         type: MESSAGE_TYPE.SEND_TX_OVER,
         success: true,
