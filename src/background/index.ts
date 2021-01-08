@@ -31,12 +31,7 @@ import { WEB_PAGE } from '@src/common/utils/message/constants';
 import { sendToWebPage } from '@background/messageHandlers/proxy';
 import NetworkManager from '@common/networkManager';
 import { sendSudtTransaction } from '@src/background/wallet/transaction/sendSudtTransaction';
-import {
-  ckbToshannon,
-  shannonToSUDT,
-  CKBToShannonFormatter,
-  shannonToCKBFormatter,
-} from '@src/common/utils/formatters';
+import { ckbToshannon, shannonToSUDT } from '@src/common/utils/formatters';
 import addressHandler from '@background/address';
 import { CurrentWalletHandler, CurrentWalletManager } from '@background/currentWallet';
 import { BrowserMessageManager } from '@common/messageManager';
