@@ -5,7 +5,7 @@ import crypto from 'crypto';
 import { entropyToMnemonic } from '@background/wallet/mnemonic';
 
 // Generate 12 words mnemonic code
-export const generateMnemonic = () => {
+const generateMnemonic = () => {
   const entropySize = 16;
   const entropy = crypto.randomBytes(entropySize).toString('hex');
   return entropyToMnemonic(entropy);
@@ -14,6 +14,6 @@ export const generateMnemonic = () => {
 describe('mnemonic test', () => {
   it('generate mnemonic', () => {
     const mnemonic = generateMnemonic();
-    console.log(mnemonic);
+    expect(mnemonic.split(' ')).toHaveLength(12);
   });
 });

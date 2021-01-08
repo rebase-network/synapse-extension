@@ -1,10 +1,4 @@
-import {
-  aliceAddresses,
-  aliceWallet,
-  aliceWalletPwd,
-  aliceWalletInStorage,
-  bobAddresses,
-} from '@src/tests/fixture/address';
+import { aliceAddresses } from '@src/tests/fixture/address';
 
 export const padToEven = (value) => {
   let a = value;
@@ -17,11 +11,7 @@ export const padToEven = (value) => {
   return a;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const sign = (privateKey, message) => {
-  console.log(
-    'secp256k1WithPrivateKey: mock sign function: privateKey, message: ',
-    privateKey,
-    message,
-  );
   return aliceAddresses.privateKey;
 };
