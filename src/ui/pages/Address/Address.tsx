@@ -110,20 +110,20 @@ interface AppProps {
   match?: any;
   TxList: any;
   TokenList: any;
+  txs: any[];
+  loading: boolean;
 }
 
 const AddressComponent = (props: AppProps) => {
   const classes = useStyles();
   const history = useHistory();
-  const { TxList, TokenList } = props;
+  const { TxList, TokenList, txs, loading } = props;
   const addressFromUrl = _.get(props, 'match.params.address', '');
   const [showMore, setShowMore] = React.useState(false);
-  const [loading, setLoading] = React.useState(true);
   const [address, setAddress] = React.useState(addressFromUrl);
   const [capacity, setCapacity] = React.useState('0');
   const [open, setOpen] = React.useState(false);
   const [tip, setTip] = React.useState('');
-  const [txs, setTxs] = React.useState([]);
   const [tooltipMsg, setTooltipMsg] = React.useState('Copy to clipboard');
   const [name, setName] = React.useState('');
   const [lockHash, setLockHash] = React.useState('');
@@ -132,7 +132,6 @@ const AddressComponent = (props: AppProps) => {
   const updateCapacity = async (lockHashStr: string) => {
     const { capacity: addressCapacity } = await getAddressInfo(lockHashStr);
     setCapacity(shannonToCKBFormatter(addressCapacity));
-    setLoading(false);
   };
 
   // FIXME: should not set state in this way
@@ -141,8 +140,6 @@ const AddressComponent = (props: AppProps) => {
   }
 
   React.useEffect(() => {
-    setTxs([]); // clean tx data
-
     const initData = async () => {
       const { currentWallet, currentNetwork } = await browser.storage.local.get([
         'currentWallet',
@@ -158,24 +155,30 @@ const AddressComponent = (props: AppProps) => {
       setAddress(newAddr);
       setLockHash(lock);
       updateCapacity(lock);
-
-      browser.runtime.sendMessage({
-        type: MESSAGE_TYPE.GET_TX_HISTORY,
-      });
     };
 
     initData();
-
-    setLoading(true);
-
-    const listener = (message) => {
-      if (message.type === MESSAGE_TYPE.SEND_TX_HISTORY && message.txs) {
-        setTxs(message.txs);
-      }
-    };
-    browser.runtime.onMessage.addListener(listener);
-    return () => browser.runtime.onMessage.removeListener(listener);
   }, [address, capacity]);
+
+  // init name of  address
+  React.useEffect(() => {
+    (async () => {
+      const contactStorage = await browser.storage.local.get('contacts');
+      const { contacts } = contactStorage;
+
+      const currentAddress = address;
+
+      if (_.isEmpty(contactStorage)) {
+        return;
+      }
+      setName('');
+      _.each(contacts, (ele) => {
+        if (ele.address === currentAddress) {
+          setName(ele.name);
+        }
+      });
+    })();
+  }, [address]);
 
   const onSendtx = () => {
     const pushUrl = `/send-tx?name=${''}&typeHash=${''}&udt=${''}`;
@@ -262,26 +265,6 @@ const AddressComponent = (props: AppProps) => {
     ) : (
       <TxList txList={txs} explorerUrl={explorerUrl} />
     );
-
-  // init name of  address
-  React.useEffect(() => {
-    (async () => {
-      const contactStorage = await browser.storage.local.get('contacts');
-      const { contacts } = contactStorage;
-
-      const currentAddress = address;
-
-      if (_.isEmpty(contactStorage)) {
-        return;
-      }
-      setName('');
-      _.each(contacts, (ele) => {
-        if (ele.address === currentAddress) {
-          setName(ele.name);
-        }
-      });
-    })();
-  }, [address]);
 
   return (
     <div className={classes.container}>
