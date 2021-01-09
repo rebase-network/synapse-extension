@@ -5,7 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
 import { MESSAGE_TYPE } from '@src/common/utils/constants';
-import App from './index';
+import App from './Component';
 
 const mockFunc = jest.fn();
 
@@ -26,11 +26,16 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('sign/auth page', () => {
+  const RawTxDetail = () => <div>RawTxDetail</div>;
+  const message = {
+    type: MESSAGE_TYPE.EXTERNAL_SIGN,
+    data: { tx: { version: '0x0' } },
+  };
   beforeEach(() => {
     render(
       <IntlProvider locale="en" messages={en}>
         <Router>
-          <App />
+          <App RawTxDetail={RawTxDetail} message={message} />
         </Router>
       </IntlProvider>,
     );
@@ -54,12 +59,7 @@ describe('sign/auth page', () => {
     });
   });
 
-  it('should render delete wallet form and submit', async () => {
-    browser.runtime.sendMessage({
-      type: MESSAGE_TYPE.EXTERNAL_SIGN,
-      data: { tx: { version: '0x0' } },
-    });
-
+  it('should submit', async () => {
     const password = screen.getByLabelText('Password');
     await userEvent.type(password, 'password_1');
     expect(screen.getByRole('form')).toHaveFormValues({
