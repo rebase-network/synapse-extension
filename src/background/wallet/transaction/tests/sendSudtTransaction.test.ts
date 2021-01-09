@@ -94,7 +94,6 @@ describe('SUDT Transaction test', () => {
     const {
       fromAddress,
       fromLockType,
-      lockHash,
       typeHash,
       toAddress,
       sendSudtAmount,
@@ -105,7 +104,6 @@ describe('SUDT Transaction test', () => {
     const signedTx = await createSudtTransaction(
       fromAddress,
       fromLockType,
-      lockHash,
       typeHash,
       toAddress,
       sendSudtAmount,
@@ -118,7 +116,6 @@ describe('SUDT Transaction test', () => {
     const {
       fromAddress,
       fromLockType,
-      lockHash,
       typeHash,
       toAddress,
       sendSudtAmount,
@@ -129,7 +126,6 @@ describe('SUDT Transaction test', () => {
     const signedTx = await createSudtTransaction(
       fromAddress,
       fromLockType,
-      lockHash,
       typeHash,
       toAddress,
       sendSudtAmount,
@@ -142,7 +138,6 @@ describe('SUDT Transaction test', () => {
     const {
       fromAddress,
       fromLockType,
-      lockHash,
       typeHash,
       toAddress,
       sendSudtAmount,
@@ -153,7 +148,6 @@ describe('SUDT Transaction test', () => {
     const signedTx = await createSudtTransaction(
       fromAddress,
       fromLockType,
-      lockHash,
       typeHash,
       toAddress,
       sendSudtAmount,
@@ -166,7 +160,6 @@ describe('SUDT Transaction test', () => {
     const {
       fromAddress,
       fromLockType,
-      lockHash,
       typeHash,
       toAddress,
       sendSudtAmount,
@@ -177,7 +170,6 @@ describe('SUDT Transaction test', () => {
     const signedTx = await createSudtTransaction(
       fromAddress,
       fromLockType,
-      lockHash,
       typeHash,
       toAddress,
       sendSudtAmount,
@@ -190,7 +182,6 @@ describe('SUDT Transaction test', () => {
     const {
       fromAddress,
       fromLockType,
-      lockHash,
       typeHash,
       toAddress,
       sendSudtAmount,
@@ -201,7 +192,6 @@ describe('SUDT Transaction test', () => {
     const signedTx = await createSudtTransaction(
       fromAddress,
       fromLockType,
-      lockHash,
       typeHash,
       toAddress,
       sendSudtAmount,

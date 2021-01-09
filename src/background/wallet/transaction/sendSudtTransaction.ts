@@ -71,7 +71,6 @@ export const getInputSudtCells = async (lockHash, params) => {
 export const createSudtTransaction = async (
   fromAddress,
   fromLockType,
-  lockHash,
   typeHash,
   toAddress,
   sendSudtAmount,
@@ -149,7 +148,6 @@ export const sendSudtTransaction = async (
   const rawTxObj = await createSudtTransaction(
     fromAddress,
     fromLockType,
-    lockHash,
     typeHash,
     toAddress,
     sendSudtAmount,
