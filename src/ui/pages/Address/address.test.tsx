@@ -1,6 +1,5 @@
 import React from 'react';
-import { act, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { act, render, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
@@ -25,6 +24,8 @@ jest.mock('react-router-dom', () => {
 
 const TxList = () => <div>TxList</div>;
 const TokenList = () => <div>TokenList</div>;
+const txs = [];
+const loading = false;
 
 describe('Address page', () => {
   beforeEach(async () => {
@@ -35,12 +36,11 @@ describe('Address page', () => {
       render(
         <IntlProvider locale="en" messages={en}>
           <Router>
-            <App TxList={TxList} TokenList={TokenList} />
+            <App TxList={TxList} TokenList={TokenList} txs={txs} loading={loading} />
           </Router>
         </IntlProvider>,
       );
     });
-    await waitForElementToBeRemoved(() => screen.getByText(/loading/i));
   });
 
   it('should render receive / send btn', async () => {
@@ -63,7 +63,5 @@ describe('Address page', () => {
   it('should render Show UDT button', async () => {
     const result = screen.getByText('Show UDT');
     expect(result).toBeInTheDocument();
-    userEvent.click(result);
-    expect(screen.getByText('Hide UDT')).toBeInTheDocument();
   });
 });
