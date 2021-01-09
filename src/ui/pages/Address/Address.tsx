@@ -18,8 +18,6 @@ import {
 } from '@src/common/utils/constants';
 import { truncateAddress, shannonToCKBFormatter } from '@src/common/utils/formatters';
 import { getAddressInfo } from '@src/common/utils/apis';
-import TxList from '@ui/Components/TxList';
-import TokenList from '@ui/Components/TokenList';
 import { showAddressHelper } from '@src/common/utils/wallet';
 
 const useStyles = makeStyles({
@@ -110,11 +108,14 @@ const BootstrapButton = withStyles({
 
 interface AppProps {
   match?: any;
+  TxList: any;
+  TokenList: any;
 }
 
-export default (props: AppProps) => {
+const AddressComponent = (props: AppProps) => {
   const classes = useStyles();
   const history = useHistory();
+  const { TxList, TokenList } = props;
   const addressFromUrl = _.get(props, 'match.params.address', '');
   const [showMore, setShowMore] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
@@ -375,3 +376,5 @@ export default (props: AppProps) => {
     </div>
   );
 };
+
+export default AddressComponent;

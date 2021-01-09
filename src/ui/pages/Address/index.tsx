@@ -1,5 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import TxList from '@ui/Components/TxList';
+import TokenList from '@ui/Components/TokenList';
 import Address from './Address';
 
 interface AppProps {
@@ -16,5 +18,5 @@ export default (props: AppProps) => {
     return null;
   }
 
-  return <Address match={match} />;
+  return <Address match={match} TxList={TxList} TokenList={TokenList} />;
 };
