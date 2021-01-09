@@ -1,6 +1,6 @@
 {
   "name": "synapse-extension",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Synapse extension is a wallet for Nervos CKB",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
