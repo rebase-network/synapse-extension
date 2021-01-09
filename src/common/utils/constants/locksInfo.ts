@@ -22,9 +22,9 @@ const locksInfo = {
       index: '0x0',
     },
     anypay: {
-      codeHash: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
+      codeHash: '0x3419a1c09eb2567f6552ee7a8ecffd64155cffe0f1796e6e61ec088d740c1356',
       hashType: 'type' as ScriptHashType,
-      txHash: '0x4f32b3e39bd1b6350d326fdfafdfe05e5221865c3098ae323096f0bfc69e0a8c',
+      txHash: '0xec26b0f85ed839ece5f11c4c4e837ec359f5adc4420410f6453b1f6b60fb96a6',
       depType: 'depGroup',
       index: '0x0',
     },
