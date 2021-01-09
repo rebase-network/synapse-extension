@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
@@ -23,7 +23,8 @@ jest.mock('react-router-dom', () => {
   };
 });
 
-jest.mock('@ui/Components/TokenList');
+const TxList = () => <div>TxList</div>;
+const TokenList = () => <div>TokenList</div>;
 
 describe('Address page', () => {
   beforeEach(async () => {
@@ -34,31 +35,27 @@ describe('Address page', () => {
       render(
         <IntlProvider locale="en" messages={en}>
           <Router>
-            <App />
+            <App TxList={TxList} TokenList={TokenList} />
           </Router>
         </IntlProvider>,
       );
     });
+    await waitForElementToBeRemoved(() => screen.getByText(/loading/i));
   });
 
-  it('should render capacity', () => {
-    const capacity = screen.getByText('Loading...');
-    expect(capacity).toBeInTheDocument();
-  });
-
-  it('should render receive / send btn', () => {
+  it('should render receive / send btn', async () => {
     const receiveBtn = screen.getByRole('button', { name: 'Receive' });
     const sendBtn = screen.getByRole('button', { name: 'Send' });
     expect(receiveBtn).toBeInTheDocument();
     expect(sendBtn).toBeInTheDocument();
   });
 
-  it('should render capacity refresh button', () => {
-    const result = screen.getByRole('button', { name: /CKB|\.\.\./i });
+  it('should render capacity refresh button', async () => {
+    const result = screen.getByRole('button', { name: /ckb1qyqgad...l56qp73mg0/i });
     expect(result).toBeInTheDocument();
   });
 
-  it('should render tx list', () => {
+  it('should render tx list', async () => {
     const result = screen.getByText('Latest 20 Transactions');
     expect(result).toBeInTheDocument();
   });
