@@ -5,8 +5,7 @@ import LOCKS_INFO from '@common/utils/constants/locksInfo';
 import AnypayLockScript from '../anypay';
 
 describe('anypay lockscript', () => {
-  const codeHash = '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b';
-  const txHash = '0x4f32b3e39bd1b6350d326fdfafdfe05e5221865c3098ae323096f0bfc69e0a8c';
+  const { codeHash, txHash } = LOCKS_INFO.testnet.anypay;
   const index = '0x0';
   const depType = 'depGroup';
 

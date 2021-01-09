@@ -1,5 +1,8 @@
 import { DepType, ScriptHashType } from '@keyper/specs';
 import CKB from '@nervosnetwork/ckb-sdk-core';
+import LOCKS_INFO from '@common/utils/constants/locksInfo';
+
+const { codeHash: anyPayCodeHash, txHash: anypayTxHash } = LOCKS_INFO.testnet.anypay;
 
 jest.unmock('@nervosnetwork/ckb-sdk-core');
 
@@ -77,7 +80,7 @@ describe('SimpleUDT Test', () => {
         {
           depType: 'depGroup' as DepType,
           outPoint: {
-            txHash: '0x4f32b3e39bd1b6350d326fdfafdfe05e5221865c3098ae323096f0bfc69e0a8c',
+            txHash: anypayTxHash,
             index: '0x0',
           },
         },
@@ -104,7 +107,7 @@ describe('SimpleUDT Test', () => {
           capacity: '0x4a817c800',
           lock: {
             hashType: 'type' as ScriptHashType,
-            codeHash: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
+            codeHash: anyPayCodeHash,
             args: '0x85e5401c52aece9eb614f997b2f2c20f9fc10a67',
           },
           type: {
@@ -131,10 +134,3 @@ describe('SimpleUDT Test', () => {
     // 0x118305db8ce3b1879c6f058e045ab0d91e1eb9c4b5ed5ccc36aeb49aac8f27fa
   });
 });
-
-// 0x8d24922aa4a5df0a9aa6cf855ea917c1cbb9efe5a66f2f744f0ec4543964974a lockhash
-// 0x4a817c800 200 * 10^8
-// 0x34e62ce00 142 * 10^8
-// 4000 * 10^8
-// 0x40420f00000000000000000000000000 = 1000000 1m
-// 0x64000000000000000000000000000000 = 100

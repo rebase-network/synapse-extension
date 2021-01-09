@@ -14,7 +14,7 @@ import {
   sendSudtTransaction,
 } from '../sendSudtTransaction';
 
-const fixtures = require('./sUdtSend.fixtures.json');
+import fixtures from './fixtures/sUdtSend';
 
 jest.mock('@common/utils/apis');
 // jest.unmock('@nervosnetwork/ckb-sdk-core');

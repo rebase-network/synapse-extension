@@ -14,9 +14,9 @@ export const bobAddresses = {
   },
   anyPay: {
     address:
-      'ckt1qjr2r35c0f9vhcdgslx2fjwa9tylevr5qka7mfgmscd33wlhfykyhxuy3pat96shpxvvl7vf2e6ae55u6fk564sc527',
+      'ckt1qs6pngwqn6e9vlm92th84rk0l4jp2h8lurchjmnwv8kq3rt5psf4dxuy3pat96shpxvvl7vf2e6ae55u6fk56qzq2ec',
     amount: 0,
-    lock: '0x6af8c2199802665ea2a8ed85b087b1ac26b47b332dfe7322c6b34e38f1a2f129',
+    lock: '0xd3ba4ee0f4b63a671dd86b696ebe106e6302d4d979934381d5dc8b018a082601',
     type: 'AnyPay',
   },
   publicKey: '0x03d3319a7a7b8b88747664ca9559ab21e746452e8ed5eddc2f4365a1a9157e9ca2',
@@ -40,9 +40,9 @@ export const aliceAddresses = {
   },
   anyPay: {
     address:
-      'ckt1qjr2r35c0f9vhcdgslx2fjwa9tylevr5qka7mfgmscd33wlhfykykhqw4tjjt48u9cztzckgfu5xml234aqqyy9mqnh',
+      'ckt1qs6pngwqn6e9vlm92th84rk0l4jp2h8lurchjmnwv8kq3rt5psf4vhqw4tjjt48u9cztzckgfu5xml234aqqy3hr7q3',
     amount: 0,
-    lock: '0x9290bbee54b3256a634dd41ae8f7a20029864e76de2fce0d9276e472f252cdf9',
+    lock: '0x43636c143ffaa9ae97783539aaa2788e7cda47bf8f3aa853ec0b2368d85826d4',
     type: 'AnyPay',
   },
   publicKey: '0x0390518e809be027269b464734ed7315959729b3f9dd6bc06572745c6d65182623',

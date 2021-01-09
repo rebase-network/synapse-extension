@@ -12,6 +12,9 @@ import {
   SignProvider,
   SignContext,
 } from '@keyper/specs';
+import LOCKS_INFO from '@common/utils/constants/locksInfo';
+
+const { codeHash: anyPayCodeHash, txHash: anypayTxHash } = LOCKS_INFO.testnet.anypay;
 
 const numberToBN = require('number-to-bn');
 
@@ -35,7 +38,7 @@ describe('SimpleUDT Test', () => {
         {
           depType: 'depGroup' as DepType,
           outPoint: {
-            txHash: '0x4f32b3e39bd1b6350d326fdfafdfe05e5221865c3098ae323096f0bfc69e0a8c',
+            txHash: anypayTxHash,
             index: '0x0',
           },
         },
@@ -69,7 +72,7 @@ describe('SimpleUDT Test', () => {
           capacity: '0x4a817c800',
           lock: {
             hashType: 'type' as ScriptHashType,
-            codeHash: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
+            codeHash: anyPayCodeHash,
             args: '0x85e5401c52aece9eb614f997b2f2c20f9fc10a67',
           },
           type: {
@@ -82,7 +85,7 @@ describe('SimpleUDT Test', () => {
           capacity: '0x34e62ce00',
           lock: {
             hashType: 'type' as ScriptHashType,
-            codeHash: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
+            codeHash: anyPayCodeHash,
             args: '0xda23cb078265f1a6a702da996a45bdbf6ba453bb',
           },
           type: {
@@ -95,7 +98,7 @@ describe('SimpleUDT Test', () => {
           capacity: '0xd63445f00',
           lock: {
             hashType: 'type' as ScriptHashType,
-            codeHash: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
+            codeHash: anyPayCodeHash,
             args: '0xda23cb078265f1a6a702da996a45bdbf6ba453bb',
           },
           type: null,

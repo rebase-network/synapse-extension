@@ -3,12 +3,15 @@ import { addressToScript } from '@keyper/specs';
 import CKB from '@nervosnetwork/ckb-sdk-core';
 import configService from '@src/config';
 import { bobAddresses, aliceAddresses } from '@src/tests/fixture/address';
+import LOCKS_INFO from '@common/utils/constants/locksInfo';
 import { createRawTx, createAnyPayRawTx } from '../txGenerator';
 import unspentCells from './fixtures/cells';
 
+const { codeHash: anyPayCodeHash, txHash: anypayTxHash } = LOCKS_INFO.testnet.anypay;
+
 const anypayDep = {
   outPoint: {
-    txHash: '0x4f32b3e39bd1b6350d326fdfafdfe05e5221865c3098ae323096f0bfc69e0a8c',
+    txHash: anypayTxHash,
     index: '0x0',
   },
   depType: 'depGroup',
@@ -88,7 +91,7 @@ describe('Transaction test', () => {
             depType: 'depGroup',
             outPoint: {
               index: '0x0',
-              txHash: '0x4f32b3e39bd1b6350d326fdfafdfe05e5221865c3098ae323096f0bfc69e0a8c',
+              txHash: anypayTxHash,
             },
           },
         ],
@@ -107,7 +110,7 @@ describe('Transaction test', () => {
             capacity: '0x5e3ff5d00',
             lock: {
               args: '0x5c0eaae525d4fc2e04b162c84f286dfd51af4002',
-              codeHash: '0x86a1c6987a4acbe1a887cca4c9dd2ac9fcb07405bbeda51b861b18bbf7492c4b',
+              codeHash: anyPayCodeHash,
               hashType: 'type',
             },
           },
