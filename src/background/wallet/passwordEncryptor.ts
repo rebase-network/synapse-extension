@@ -1,11 +1,21 @@
 import passworder from 'browser-passworder';
 
 export async function encrypt(privKey: Buffer, password: string) {
-  const result = await passworder.encrypt(password, privKey);
+  let result;
+  try {
+    result = await passworder.encrypt(password, privKey);
+  } catch (error) {
+    // do nothing
+  }
   return result;
 }
 
 export async function decrypt(input: string, password: string) {
-  const result = await passworder.decrypt(password, input);
+  let result;
+  try {
+    result = await passworder.decrypt(password, input);
+  } catch (error) {
+    // do nothing
+  }
   return result;
 }
