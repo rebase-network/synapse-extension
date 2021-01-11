@@ -330,6 +330,16 @@ browser.runtime.onMessage.addListener(async (request) => {
 
     const wallet = findInWalletsByPublicKey(publicKey, walletsStorage.wallets);
     const privateKeyBuffer = await PasswordKeystore.decrypt(wallet.keystore, password);
+    if (!privateKeyBuffer) {
+      const responseEorrorMsg = {
+        type: MESSAGE_TYPE.SEND_TX_ERROR,
+        success: true,
+        message: 'Incorrect password',
+        data: '',
+      };
+      browser.runtime.sendMessage(responseEorrorMsg);
+      return;
+    }
 
     const dummyTxObj = await genDummyTransaction(
       fromAddress,
@@ -351,17 +361,6 @@ browser.runtime.onMessage.addListener(async (request) => {
       const { udts } = udtsObj;
       const sudtObj = _.find(udts, { typeHash });
       showSudtAmount = shannonToSUDT(capacity, decimal) + sudtObj?.symbol || 'SUDT';
-    }
-
-    if (privateKeyBuffer === null) {
-      const responseEorrorMsg = {
-        type: MESSAGE_TYPE.SEND_TX_ERROR,
-        success: true,
-        message: 'INVALID_PASSWORD',
-        data: '',
-      };
-      browser.runtime.sendMessage(responseEorrorMsg);
-      return;
     }
 
     const respMsg = {
