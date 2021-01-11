@@ -3,39 +3,35 @@ import {
   validateMnemonic,
   mnemonicToEntropy,
   entropyToMnemonic,
-} from '@src/background/wallet/mnemonic';
+} from '@background/wallet/mnemonic';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
-import { generateMnemonic, ExtendedPrivateKey } from '@src/background/wallet/key';
-import Keychain from '@src/background/wallet/keychain';
+import { generateMnemonic, ExtendedPrivateKey } from '@background/wallet/key';
+import Keychain from '@background/wallet/keychain';
 import {
   genDummyTransaction,
   sendTransaction,
-} from '@src/background/wallet/transaction/sendTransaction';
-import Address from '@src/background/wallet/address';
+} from '@background/wallet/transaction/sendTransaction';
+import Address from '@background/wallet/address';
 import { signTxFromMsg } from '@background/transaction';
-import { getTxHistories } from '@src/common/utils/apis';
+import { getTxHistories } from '@common/utils/apis';
 import { addKeyperWallet } from '@background/keyper/keyperwallet';
 import setupKeyper from '@background/keyper/setupKeyper';
-import * as WalletKeystore from '@src/background/wallet/keystore';
-import * as PasswordKeystore from '@src/background/wallet/passwordEncryptor';
+import * as WalletKeystore from '@background/wallet/keystore';
+import * as PasswordKeystore from '@background/wallet/passwordEncryptor';
 import _ from 'lodash';
-import { findInWalletsByPublicKey, showAddressHelper } from '@src/common/utils/wallet';
-import {
-  getStatusByTxHash,
-  getBlockNumberByTxHash,
-  sendSignedTx,
-} from '@src/common/utils/transaction';
-import { MESSAGE_TYPE } from '@src/common/utils/constants';
+import { findInWalletsByPublicKey, showAddressHelper } from '@common/utils/wallet';
+import { getStatusByTxHash, getBlockNumberByTxHash, sendSignedTx } from '@common/utils/transaction';
+import { MESSAGE_TYPE } from '@common/utils/constants';
 import addExternalMessageListener from '@background/messageHandlers';
-import { WEB_PAGE } from '@src/common/utils/message/constants';
+import { WEB_PAGE } from '@common/utils/message/constants';
 import { sendToWebPage } from '@background/messageHandlers/proxy';
 import NetworkManager from '@common/networkManager';
-import { sendSudtTransaction } from '@src/background/wallet/transaction/sendSudtTransaction';
-import { ckbToshannon, shannonToSUDT } from '@src/common/utils/formatters';
+import { sendSudtTransaction } from '@background/wallet/transaction/sendSudtTransaction';
+import { ckbToshannon, shannonToSUDT } from '@common/utils/formatters';
 import addressHandler from '@background/address';
 import { CurrentWalletHandler, CurrentWalletManager } from '@background/currentWallet';
 import { BrowserMessageManager } from '@common/messageManager';
-import calculateTxFee from '@src/common/utils/fee/calculateFee';
+import calculateTxFee from '@common/utils/fee/calculateFee';
 
 const messageManager = new BrowserMessageManager();
 const currentWalletManager = new CurrentWalletManager();
