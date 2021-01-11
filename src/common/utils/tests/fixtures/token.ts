@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { TypesInfo } from '@common/utils/constants/typesInfo';
 
 const eightDecimals = 10 ** 8;
 const CKBWithOneUDT = 142 * eightDecimals;
@@ -37,8 +38,8 @@ const unknownUDTOneCell = {
   outputdata: eightDecimalsLittleEndian,
   type: {
     args: '0x94bbc8327e16d195de87815c391e7b9131e80419c51a405a0b21227c6ee05129',
-    codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
-    hashType: 'data',
+    hashType: TypesInfo.testnet.simpleudt.hashType,
+    codeHash: TypesInfo.testnet.simpleudt.codeHash,
   },
 };
 
@@ -50,8 +51,8 @@ const unknownUDTTwoCell = {
   outputdata: eightDecimalsLittleEndian,
   type: {
     args: '0x53d22825d8e8e0057b43c6dfb57133e054db159a2497c81e78a9dfbcdba0208f',
-    codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
-    hashType: 'data',
+    hashType: TypesInfo.testnet.simpleudt.hashType,
+    codeHash: TypesInfo.testnet.simpleudt.codeHash,
   },
 };
 
@@ -63,8 +64,8 @@ const SNBCell = {
   outputdata: eightDecimalsLittleEndian,
   type: {
     args: '0x6e842ebb7d7fca88495c5f2edb05070198f6f8c798d7b8f1a48226f8f060c693',
-    codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
-    hashType: 'data',
+    hashType: TypesInfo.testnet.simpleudt.hashType,
+    codeHash: TypesInfo.testnet.simpleudt.codeHash,
   },
 };
 
@@ -76,8 +77,8 @@ const TLTCell = {
   outputdata: eightDecimalsLittleEndian,
   type: {
     args: '0x5f77c1d1a0e384d5c7d7c02788b51e0a296d4ec13cd7b66bb16f1650ebbfd74c',
-    codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
-    hashType: 'data',
+    hashType: TypesInfo.testnet.simpleudt.hashType,
+    codeHash: TypesInfo.testnet.simpleudt.codeHash,
   },
 };
 

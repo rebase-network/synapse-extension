@@ -3,11 +3,11 @@ import _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@material-ui/core/styles';
 import { ListItem, ListItemText, Tooltip } from '@material-ui/core';
-import { getUDTsByLockHash } from '@src/common/utils/apis';
-import { aggregateUDT } from '@src/common/utils/token';
-import { shannonToCKBFormatter } from '@src/common/utils/formatters';
-import { TypesInfo } from '@src/common/utils/constants/typesInfo';
-import NetworkManager from '@src/common/networkManager';
+import { getUDTsByLockHash } from '@common/utils/apis';
+import { aggregateUDT } from '@common/utils/token';
+import { shannonToCKBFormatter } from '@common/utils/formatters';
+import { TypesInfo } from '@common/utils/constants/typesInfo';
+import NetworkManager from '@common/networkManager';
 import { HelpOutline } from '@material-ui/icons';
 import TokenListComponent from './component';
 

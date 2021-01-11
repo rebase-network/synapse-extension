@@ -1,3 +1,5 @@
+import { TypesInfo } from '@common/utils/constants/typesInfo';
+
 // data from https://explorer.nervos.org/aggron/tokens and removed the icon_file field
 export default [
   {
@@ -29,8 +31,8 @@ export default [
       type_hash: '0x663265381e55af0f9789d2b0c9bd38525358b40c29bd6254c0b0c9b2926c6844',
       type_script: {
         args: '0x5f77c1d1a0e384d5c7d7c02788b51e0a296d4ec13cd7b66bb16f1650ebbfd74c',
-        code_hash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
-        hash_type: 'data',
+        hashType: TypesInfo.testnet.simpleudt.hashType,
+        codeHash: TypesInfo.testnet.simpleudt.codeHash,
       },
       issuer_address: 'ckt1qyqfcefd2lta6sgr72qtdq3v3v8ul47pd7cqjlfef5',
       total_amount: '10000',
@@ -69,8 +71,8 @@ export default [
       type_hash: '0xe3be4fb98ec914886c6525abac97e1f8769c59492636a1d35955e9163ef46efa',
       type_script: {
         args: '0x94bbc8327e16d195de87815c391e7b9131e80419c51a405a0b21227c6ee05129',
-        code_hash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
-        hash_type: 'data',
+        hashType: TypesInfo.testnet.simpleudt.hashType,
+        codeHash: TypesInfo.testnet.simpleudt.codeHash,
       },
       issuer_address: 'ckt1qyq0j6m8qr0kpltdsj3wz7jute8kqwj7a3wsfxt67g',
       total_amount: '99999700000000',
@@ -91,8 +93,8 @@ export default [
       type_hash: '0x1c5f32c5efb08ac256bd9413c30eef7420ae54f30ff11075967b89570326c295',
       type_script: {
         args: '0x6e842ebb7d7fca88495c5f2edb05070198f6f8c798d7b8f1a48226f8f060c693',
-        code_hash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
-        hash_type: 'data',
+        hashType: TypesInfo.testnet.simpleudt.hashType,
+        codeHash: TypesInfo.testnet.simpleudt.codeHash,
       },
       issuer_address: 'ckt1qyq93d7ztzk03c7x2gg9vx75knzhav8lmcnshmdmah',
       total_amount: '310020000',
@@ -257,8 +259,8 @@ export default [
       type_hash: '0x1f1bf5dde941e0bc384defcd2c7f139f59082f735cdea7c2625f77c680f4644a',
       type_script: {
         args: '0x53d22825d8e8e0057b43c6dfb57133e054db159a2497c81e78a9dfbcdba0208f',
-        code_hash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
-        hash_type: 'data',
+        hashType: TypesInfo.testnet.simpleudt.hashType,
+        codeHash: TypesInfo.testnet.simpleudt.codeHash,
       },
       issuer_address: 'ckt1qyq28r846gr5xzg8pg2gyplelhtapp40exvqj6ad52',
       total_amount: '50001000000',
@@ -333,8 +335,8 @@ export default [
       type_hash: '0xf0f17a8ab6a76b6024e860f6169839141af8848fe07b2b3eff44a5406b807d0e',
       type_script: {
         args: '0x1f2615a8dde4e28ca736ff763c2078aff990043f4cbf09eb4b3a58a140a0862d',
-        code_hash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
-        hash_type: 'data',
+        hashType: TypesInfo.testnet.simpleudt.hashType,
+        codeHash: TypesInfo.testnet.simpleudt.codeHash,
       },
       issuer_address: 'ckt1qyqrdsefa43s6m882pcj53m4gdnj4k440axqswmu83',
       total_amount: '10000000000',

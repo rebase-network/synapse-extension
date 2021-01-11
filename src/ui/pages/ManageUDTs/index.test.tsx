@@ -61,13 +61,10 @@ describe('Manage UDTs page', () => {
     expect(typeHash).toBeInTheDocument();
     expect(typeHash).toBeEmpty();
 
-    await userEvent.type(
-      typeHash,
-      '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
-    );
+    await userEvent.type(typeHash, '0x123');
 
     expect(screen.getByRole('form')).toHaveFormValues({
-      typeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+      typeHash: '0x123',
     });
   });
 
@@ -99,10 +96,7 @@ describe('Manage UDTs page', () => {
     await userEvent.type(name, 'simpleUDT');
 
     const typeHash = screen.getByLabelText('UDT Hash');
-    await userEvent.type(
-      typeHash,
-      '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
-    );
+    await userEvent.type(typeHash, '0x123');
 
     const symbol = screen.getByLabelText('Symbol');
     await userEvent.type(symbol, 'UDT');
@@ -110,7 +104,7 @@ describe('Manage UDTs page', () => {
     expect(screen.getByRole('form')).toHaveFormValues({
       decimal: '8',
       name: 'simpleUDT',
-      typeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+      typeHash: '0x123',
       symbol: 'UDT',
     });
 

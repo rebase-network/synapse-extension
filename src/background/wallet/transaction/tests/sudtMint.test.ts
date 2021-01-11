@@ -1,6 +1,7 @@
 import { DepType, ScriptHashType } from '@keyper/specs';
 import CKB from '@nervosnetwork/ckb-sdk-core';
 import LOCKS_INFO from '@common/utils/constants/locksInfo';
+import { TypesInfo } from '@common/utils/constants/typesInfo';
 
 const { codeHash: anyPayCodeHash, txHash: anypayTxHash } = LOCKS_INFO.testnet.anypay;
 
@@ -46,8 +47,8 @@ describe('SimpleUDT Test', () => {
           args: '0x85e5401c52aece9eb614f997b2f2c20f9fc10a67',
         },
         type: {
-          hashType: 'data',
-          codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+          hashType: TypesInfo.testnet.simpleudt.hashType,
+          codeHash: TypesInfo.testnet.simpleudt.codeHash,
           args: '0x85e5401c52aece9eb614f997b2f2c20f9fc10a67',
         },
       },
@@ -87,8 +88,8 @@ describe('SimpleUDT Test', () => {
         {
           depType: 'code' as DepType,
           outPoint: {
-            txHash: '0xc1b2ae129fad7465aaa9acc9785f842ba3e6e8b8051d899defa89f5508a77958',
-            index: '0x0',
+            txHash: TypesInfo.testnet.simpleudt.txHash,
+            index: TypesInfo.testnet.simpleudt.index,
           },
         },
       ],
@@ -111,8 +112,8 @@ describe('SimpleUDT Test', () => {
             args: '0x85e5401c52aece9eb614f997b2f2c20f9fc10a67',
           },
           type: {
-            hashType: 'data' as ScriptHashType,
-            codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+            hashType: TypesInfo.testnet.simpleudt.hashType,
+            codeHash: TypesInfo.testnet.simpleudt.codeHash,
             args: '0x8d24922aa4a5df0a9aa6cf855ea917c1cbb9efe5a66f2f744f0ec4543964974a',
           },
         },

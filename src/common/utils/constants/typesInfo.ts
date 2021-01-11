@@ -10,9 +10,9 @@ export const NETWORKS = [testnet, mainnet];
 export const TypesInfo = {
   [testnet]: {
     simpleudt: {
-      codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
-      hashType: 'data' as ScriptHashType,
-      txHash: '0xc1b2ae129fad7465aaa9acc9785f842ba3e6e8b8051d899defa89f5508a77958',
+      codeHash: '0xc5e5dcf215925f7ef4dfaf5f4b4f105bc321c02776d6e7d52a1db3fcd9d011a4',
+      hashType: 'type' as ScriptHashType,
+      txHash: '0xe12877ebd2c3c364dc46c5c992bcfaf4fee33fa13eebdf82c591fc9825aab769',
       depType: 'code',
       index: '0x0',
     },

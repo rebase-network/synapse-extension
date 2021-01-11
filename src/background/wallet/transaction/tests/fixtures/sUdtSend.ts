@@ -1,5 +1,6 @@
 import LOCKS_INFO from '@common/utils/constants/locksInfo';
 import { aliceAddresses } from '@src/tests/fixture/address';
+import { TypesInfo } from '@common/utils/constants/typesInfo';
 
 const { codeHash: anyPayCodeHash, txHash: anypayTxHash } = LOCKS_INFO.testnet.anypay;
 
@@ -32,8 +33,8 @@ export default {
         },
         {
           outPoint: {
-            txHash: '0xc1b2ae129fad7465aaa9acc9785f842ba3e6e8b8051d899defa89f5508a77958',
-            index: '0x0',
+            txHash: TypesInfo.testnet.simpleudt.txHash,
+            index: TypesInfo.testnet.simpleudt.index,
           },
           depType: 'code',
         },
@@ -64,8 +65,8 @@ export default {
             args: '0x5c0eaae525d4fc2e04b162c84f286dfd51af4002',
           },
           type: {
-            hashType: 'data',
-            codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+            hashType: TypesInfo.testnet.simpleudt.hashType,
+            codeHash: TypesInfo.testnet.simpleudt.codeHash,
             args: '0x6e842ebb7d7fca88495c5f2edb05070198f6f8c798d7b8f1a48226f8f060c693',
           },
         },
@@ -77,8 +78,8 @@ export default {
             args: '0x8eb4d75815e2207bd29a0b3651523e5a48e8fd34',
           },
           type: {
-            hashType: 'data',
-            codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+            hashType: TypesInfo.testnet.simpleudt.hashType,
+            codeHash: TypesInfo.testnet.simpleudt.codeHash,
             args: '0x6e842ebb7d7fca88495c5f2edb05070198f6f8c798d7b8f1a48226f8f060c693',
           },
         },
@@ -127,8 +128,8 @@ export default {
         },
         {
           outPoint: {
-            txHash: '0xc1b2ae129fad7465aaa9acc9785f842ba3e6e8b8051d899defa89f5508a77958',
-            index: '0x0',
+            txHash: TypesInfo.testnet.simpleudt.txHash,
+            index: TypesInfo.testnet.simpleudt.index,
           },
           depType: 'code',
         },
@@ -159,8 +160,8 @@ export default {
             args: '0x5c0eaae525d4fc2e04b162c84f286dfd51af4002',
           },
           type: {
-            hashType: 'data',
-            codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+            hashType: TypesInfo.testnet.simpleudt.hashType,
+            codeHash: TypesInfo.testnet.simpleudt.codeHash,
             args: '0x6e842ebb7d7fca88495c5f2edb05070198f6f8c798d7b8f1a48226f8f060c693',
           },
         },
@@ -172,8 +173,8 @@ export default {
             args: '0x8eb4d75815e2207bd29a0b3651523e5a48e8fd34',
           },
           type: {
-            hashType: 'data',
-            codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+            hashType: TypesInfo.testnet.simpleudt.hashType,
+            codeHash: TypesInfo.testnet.simpleudt.codeHash,
             args: '0x6e842ebb7d7fca88495c5f2edb05070198f6f8c798d7b8f1a48226f8f060c693',
           },
         },
@@ -222,8 +223,8 @@ export default {
         },
         {
           outPoint: {
-            txHash: '0xc1b2ae129fad7465aaa9acc9785f842ba3e6e8b8051d899defa89f5508a77958',
-            index: '0x0',
+            txHash: TypesInfo.testnet.simpleudt.txHash,
+            index: TypesInfo.testnet.simpleudt.index,
           },
           depType: 'code',
         },
@@ -254,8 +255,8 @@ export default {
             args: '0x5c0eaae525d4fc2e04b162c84f286dfd51af4002',
           },
           type: {
-            hashType: 'data',
-            codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+            hashType: TypesInfo.testnet.simpleudt.hashType,
+            codeHash: TypesInfo.testnet.simpleudt.codeHash,
             args: '0x6e842ebb7d7fca88495c5f2edb05070198f6f8c798d7b8f1a48226f8f060c693',
           },
         },
@@ -267,8 +268,8 @@ export default {
             args: '0x8eb4d75815e2207bd29a0b3651523e5a48e8fd34',
           },
           type: {
-            hashType: 'data',
-            codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+            hashType: TypesInfo.testnet.simpleudt.hashType,
+            codeHash: TypesInfo.testnet.simpleudt.codeHash,
             args: '0x6e842ebb7d7fca88495c5f2edb05070198f6f8c798d7b8f1a48226f8f060c693',
           },
         },
@@ -317,8 +318,8 @@ export default {
         },
         {
           outPoint: {
-            txHash: '0xc1b2ae129fad7465aaa9acc9785f842ba3e6e8b8051d899defa89f5508a77958',
-            index: '0x0',
+            txHash: TypesInfo.testnet.simpleudt.txHash,
+            index: TypesInfo.testnet.simpleudt.index,
           },
           depType: 'code',
         },
@@ -349,8 +350,8 @@ export default {
             args: '0x5c0eaae525d4fc2e04b162c84f286dfd51af4002',
           },
           type: {
-            hashType: 'data',
-            codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+            hashType: TypesInfo.testnet.simpleudt.hashType,
+            codeHash: TypesInfo.testnet.simpleudt.codeHash,
             args: '0x6e842ebb7d7fca88495c5f2edb05070198f6f8c798d7b8f1a48226f8f060c693',
           },
         },
@@ -362,8 +363,8 @@ export default {
             args: '0x8eb4d75815e2207bd29a0b3651523e5a48e8fd34',
           },
           type: {
-            hashType: 'data',
-            codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+            hashType: TypesInfo.testnet.simpleudt.hashType,
+            codeHash: TypesInfo.testnet.simpleudt.codeHash,
             args: '0x6e842ebb7d7fca88495c5f2edb05070198f6f8c798d7b8f1a48226f8f060c693',
           },
         },
@@ -413,8 +414,8 @@ export default {
         },
         {
           outPoint: {
-            txHash: '0xc1b2ae129fad7465aaa9acc9785f842ba3e6e8b8051d899defa89f5508a77958',
-            index: '0x0',
+            txHash: TypesInfo.testnet.simpleudt.txHash,
+            index: TypesInfo.testnet.simpleudt.index,
           },
           depType: 'code',
         },
@@ -445,8 +446,8 @@ export default {
             args: '0x5c0eaae525d4fc2e04b162c84f286dfd51af4002',
           },
           type: {
-            hashType: 'data',
-            codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+            hashType: TypesInfo.testnet.simpleudt.hashType,
+            codeHash: TypesInfo.testnet.simpleudt.codeHash,
             args: '0x6e842ebb7d7fca88495c5f2edb05070198f6f8c798d7b8f1a48226f8f060c693',
           },
         },
@@ -458,8 +459,8 @@ export default {
             args: '0x8eb4d75815e2207bd29a0b3651523e5a48e8fd34',
           },
           type: {
-            hashType: 'data',
-            codeHash: '0x48dbf59b4c7ee1547238021b4869bceedf4eea6b43772e5d66ef8865b6ae7212',
+            hashType: TypesInfo.testnet.simpleudt.hashType,
+            codeHash: TypesInfo.testnet.simpleudt.codeHash,
             args: '0x6e842ebb7d7fca88495c5f2edb05070198f6f8c798d7b8f1a48226f8f060c693',
           },
         },
