@@ -14,7 +14,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { AppContext } from '@ui/utils/context';
 import PageNav from '@ui/Components/PageNav';
 import Modal from '@ui/Components/Modal';
 import TxDetail from '@ui/Components/TxDetail';
@@ -361,7 +360,6 @@ export default () => {
   const intl = useIntl();
   const searchParams = queryString.parse(window.location.search);
 
-  const { network } = React.useContext(AppContext);
   const [sending, setSending] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [errMsg, setErrMsg] = React.useState('');
@@ -406,7 +404,6 @@ export default () => {
     setSending(true);
     browser.runtime.sendMessage({
       ...values,
-      network,
       type: MESSAGE_TYPE.REQUEST_SEND_TX,
     });
   };
