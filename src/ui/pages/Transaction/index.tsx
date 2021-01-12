@@ -440,7 +440,7 @@ export default () => {
     address: '',
     capacity: '',
     data: '',
-    feeRate: 1000,
+    feeRate: 4096,
     password: '',
     ...searchParams,
   };
