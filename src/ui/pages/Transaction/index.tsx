@@ -155,7 +155,7 @@ const InnerForm = (props: any) => {
         if (unspentCapacity < Number(capacity) * CKB_TOKEN_DECIMALS) {
           const checkMsgId = 'lack of capacity, available capacity is';
           const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
-          setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter(unspentCapacity.toString())} CKB`);
+          setCheckMsg(` ${checkMsgI18n + shannonToCKBFormatter(unspentCapacity.toString())} CKB`);
           return;
         }
         const chargeCapacity = unspentCapacity - Number(capacity) * CKB_TOKEN_DECIMALS;
@@ -163,7 +163,7 @@ const InnerForm = (props: any) => {
           const checkMsgId =
             'the remaining capacity is less than 61, if continue it will be destroyed, remaining capacity is';
           const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
-          setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter(chargeCapacity.toString())} CKB`);
+          setCheckMsg(` ${checkMsgI18n + shannonToCKBFormatter(chargeCapacity.toString())} CKB`);
         }
       }
     } else {
@@ -183,7 +183,7 @@ const InnerForm = (props: any) => {
         const checkMsgId =
           'lack of capacity, ckb capacity cannot be less than 142 CKB, available capacity is';
         const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
-        setCheckMsg(`${checkMsgI18n + shannonToCKBFormatter(unspentCapacity.toString())} CKB`);
+        setCheckMsg(` ${checkMsgI18n + shannonToCKBFormatter(unspentCapacity.toString())} CKB`);
       }
     }
   };
