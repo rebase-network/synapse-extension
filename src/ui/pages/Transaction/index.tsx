@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import _ from 'lodash';
 import queryString from 'query-string';
@@ -68,17 +69,7 @@ const InnerForm = (props: any) => {
   const [checkMsg, setCheckMsg] = React.useState('');
   const [unspentCapacity, setUnspentCapacity] = React.useState(-1);
   const [feeRate, setFeeRate] = React.useState(1000);
-  const {
-    values,
-    touched,
-    errors,
-    isSubmitting,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    setFieldValue,
-  } = props;
-
+  const { values, touched, errors, handleChange, handleBlur, setFieldValue } = props;
   React.useEffect(() => {
     browser.storage.local.get('contacts').then((result) => {
       if (Array.isArray(result.contacts)) {
@@ -239,9 +230,8 @@ const InnerForm = (props: any) => {
     setFeeRate(feeRateValue);
     setFieldValue('feeRate', feeRateValue);
   };
-
   return (
-    <Form className="form-sendtx" id="form-sendtx" onSubmit={handleSubmit} aria-label="form">
+    <>
       <div>{sudtElem}</div>
 
       <Autocomplete
@@ -340,18 +330,7 @@ const InnerForm = (props: any) => {
         variant="outlined"
         id="field-password"
       />
-      <Button
-        type="submit"
-        id="submit-button"
-        disabled={isSubmitting}
-        color="primary"
-        variant="contained"
-        className={classes.button}
-        data-testid="submit-button"
-      >
-        <FormattedMessage id="Send" />
-      </Button>
-    </Form>
+    </>
   );
 };
 
@@ -447,7 +426,28 @@ export default () => {
   if (searchParams.to) {
     initialValues.address = searchParams.to as string;
   }
+  const btnTextId = sending ? 'Submitting' : 'Send';
 
+  const outsideForm = (props: any) => {
+    const { handleSubmit } = props;
+    return (
+      <Form className="form-sendtx" id="form-sendtx" onSubmit={handleSubmit} aria-label="form">
+        <InnerForm {...props} />
+
+        <Button
+          type="submit"
+          id="submit-button"
+          disabled={sending}
+          color="primary"
+          variant="contained"
+          className={classes.button}
+          data-testid="submit-button"
+        >
+          {intl.formatMessage({ id: btnTextId })}
+        </Button>
+      </Form>
+    );
+  };
   return (
     <div>
       <PageNav to="/address" title={intl.formatMessage({ id: 'Send Transaction' })} />
@@ -470,7 +470,7 @@ export default () => {
             password: Yup.string().required(intl.formatMessage({ id: 'Required' })),
           })}
         >
-          {InnerForm}
+          {outsideForm}
         </Formik>
       </div>
       {txModal}
