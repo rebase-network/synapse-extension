@@ -334,7 +334,7 @@ browser.runtime.onMessage.addListener(async (request) => {
       const responseEorrorMsg = {
         type: MESSAGE_TYPE.SEND_TX_ERROR,
         success: true,
-        message: 'Incorrect password',
+        message: 'Wrong password',
         data: '',
       };
       browser.runtime.sendMessage(responseEorrorMsg);
