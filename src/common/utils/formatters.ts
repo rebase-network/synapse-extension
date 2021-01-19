@@ -134,11 +134,4 @@ export const ckbToshannon = (number: any, decimal = 8) => {
   return BigInt(result);
 };
 
-export const shannonToSUDT = (number: any, decimal = 8) => {
-  let result = Number(number);
-  const count = decimal / 2;
-  for (let i = 0; i < count; i++) {
-    result /= 100;
-  }
-  return result;
-};
+export const shannonToSUDT = (number: any, decimal = 8) => Number(number) / 10 ** decimal;
