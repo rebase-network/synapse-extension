@@ -81,9 +81,6 @@ export default function App() {
             <Route path="/manage-contacts">
               <ManageContacts />
             </Route>
-            {/* <Route path="/manage-udts">
-              <ManageUDTs />
-            </Route> */}
             <Route
               path="/manage-udts/:typeHash"
               render={(routeProps) => <ManageUDTs match={routeProps.match} />}

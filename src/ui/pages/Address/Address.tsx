@@ -11,11 +11,7 @@ import {
 } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import {
-  MESSAGE_TYPE,
-  MAINNET_EXPLORER_URL,
-  TESTNET_EXPLORER_URL,
-} from '@src/common/utils/constants';
+import { MAINNET_EXPLORER_URL, TESTNET_EXPLORER_URL } from '@src/common/utils/constants';
 import { truncateAddress, shannonToCKBFormatter } from '@src/common/utils/formatters';
 import { getAddressInfo } from '@src/common/utils/apis';
 import { showAddressHelper } from '@src/common/utils/wallet';
