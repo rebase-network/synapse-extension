@@ -85,7 +85,7 @@ export default function App() {
             </Route>
             <Route
               path="/udts/create"
-              render={(routeProps) => <UDTCreate match={routeProps.match} />}
+              render={(routeProps) => <UDTCreate routeProps={routeProps} />}
             />
             <Route
               path="/udts/edit/:typeHash"

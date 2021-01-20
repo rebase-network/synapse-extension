@@ -6,6 +6,7 @@ import { Formik } from 'formik';
 import PageNav from '@src/ui/Components/PageNav';
 import { makeStyles } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
+import queryString from 'query-string';
 import UDTForm from './Form';
 
 const useStyles = makeStyles({
@@ -13,19 +14,14 @@ const useStyles = makeStyles({
     margin: 20,
     fontSize: 12,
   },
-  link: {},
 });
 
-interface AppProps {
-  match?: any;
-}
-
-export default function UDTCreate(props: AppProps) {
+export default function UDTCreate(props: any) {
   const classes = useStyles();
   const intl = useIntl();
   const history = useHistory();
-  const typeHashPropsFromUrl = _.get(props, 'match.params.typeHash', '');
-  const initialValues = { name: '', typeHash: typeHashPropsFromUrl, decimal: '8', symbol: '' };
+  const { routeProps } = props;
+  const searchParams = queryString.parse(routeProps?.location?.search);
 
   const onSubmit = async (values, { resetForm }) => {
     const { name, typeHash, decimal, symbol } = values;
@@ -47,6 +43,12 @@ export default function UDTCreate(props: AppProps) {
     history.push('/udts');
   };
 
+  const initialValues = {
+    name: '',
+    typeHash: searchParams.typeHash,
+    decimal: '8',
+    symbol: '',
+  };
   const formElem = (
     <Formik
       initialValues={initialValues}

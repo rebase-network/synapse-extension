@@ -25,11 +25,17 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('Create UDT', () => {
+  const routeProps = {
+    location: {
+      search: '?typeHash=0x123',
+    },
+  };
+
   beforeEach(() => {
     render(
       <IntlProvider locale="en" messages={en}>
         <Router>
-          <App />
+          <App routeProps={routeProps} />
         </Router>
       </IntlProvider>,
     );
@@ -40,61 +46,9 @@ describe('Create UDT', () => {
     expect(submitButton).toBeInTheDocument();
   });
 
-  it('should change form fields: name', async () => {
-    const name = screen.getByLabelText('UDT Name');
-
-    expect(name).toBeInTheDocument();
-    expect(name).toBeEmpty();
-
-    await userEvent.type(name, 'simpleUDT');
-
-    expect(screen.getByRole('form')).toHaveFormValues({
-      name: 'simpleUDT',
-    });
-  });
-
-  it('should change form fields: typeHash', async () => {
-    const typeHash = screen.getByLabelText('UDT Hash');
-
-    expect(typeHash).toBeInTheDocument();
-    expect(typeHash).toBeEmpty();
-
-    await userEvent.type(typeHash, '0x123');
-
-    expect(screen.getByRole('form')).toHaveFormValues({
-      typeHash: '0x123',
-    });
-  });
-
-  it('should change form fields: symbol', async () => {
-    const symbol = screen.getByLabelText('Symbol');
-
-    expect(symbol).toBeInTheDocument();
-    expect(symbol).toBeEmpty();
-
-    await userEvent.type(symbol, 'UDT');
-
-    expect(screen.getByRole('form')).toHaveFormValues({
-      symbol: 'UDT',
-    });
-  });
-
-  it('should change form fields: decimals', async () => {
-    const decimal = screen.getByLabelText('Decimal');
-
-    expect(decimal).toBeInTheDocument();
-
-    expect(screen.getByRole('form')).toHaveFormValues({
-      decimal: '8',
-    });
-  });
-
   it('should create new udt', async () => {
     const name = screen.getByLabelText('UDT Name');
     await userEvent.type(name, 'simpleUDT');
-
-    const typeHash = screen.getByLabelText('UDT Hash');
-    await userEvent.type(typeHash, '0x123');
 
     const symbol = screen.getByLabelText('Symbol');
     await userEvent.type(symbol, 'UDT');
