@@ -16,6 +16,8 @@ import ExportMnemonicSecond from '@ui/pages/ExportMnemonicSecond';
 import AppBar from '@ui/Components/AppBar';
 import ManageContacts from '@ui/pages/ManageContacts';
 import ManageUDTs from '@src/ui/pages/ManageUDTs';
+import UDTCreate from '@src/ui/pages/ManageUDTs/Create';
+import UDTEdit from '@src/ui/pages/ManageUDTs/Edit';
 import ManageNetworks from '@ui/pages/ManageNetworks';
 
 import { ThemeProvider } from '@material-ui/core';
@@ -82,10 +84,14 @@ export default function App() {
               <ManageContacts />
             </Route>
             <Route
-              path="/manage-udts/:typeHash"
-              render={(routeProps) => <ManageUDTs match={routeProps.match} />}
+              path="/udts/create"
+              render={(routeProps) => <UDTCreate match={routeProps.match} />}
             />
-            <Route path="/manage-udts">
+            <Route
+              path="/udts/edit/:typeHash"
+              render={(routeProps) => <UDTEdit match={routeProps.match} />}
+            />
+            <Route path="/udts">
               <ManageUDTs />
             </Route>
             <Route path="/manage-networks">

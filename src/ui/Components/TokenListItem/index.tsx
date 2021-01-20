@@ -68,7 +68,7 @@ export default (props: AppProps) => {
       );
     } else {
       displayName = (
-        <RouterLink className={classes.displayName} to={`/manage-udts/${typeHash}`}>
+        <RouterLink className={classes.displayName} to={`/udts/create?typeHash=${typeHash}`}>
           {typeHash.substr(0, 10)}
         </RouterLink>
       );
@@ -89,7 +89,7 @@ export default (props: AppProps) => {
       </Link>
     );
     displayName = (
-      <RouterLink className={classes.displayName} to={`/manage-udts/${typeHash}`}>
+      <RouterLink className={classes.displayName} to={`/udts/edit/${typeHash}`}>
         {displayName}
       </RouterLink>
     );
