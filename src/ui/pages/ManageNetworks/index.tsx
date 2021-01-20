@@ -17,7 +17,7 @@ import NetworkManager from '@common/networkManager';
 
 const useStyles = makeStyles({
   container: {
-    margin: 30,
+    margin: 20,
     fontSize: 12,
   },
   item: {

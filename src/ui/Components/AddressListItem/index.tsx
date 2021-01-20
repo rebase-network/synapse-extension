@@ -8,7 +8,7 @@ import { getAddressInfo } from '@src/common/utils/apis';
 
 const useStylesTheme = makeStyles({
   container: {
-    margin: 30,
+    margin: 20,
   },
   inline: {
     display: 'inline',

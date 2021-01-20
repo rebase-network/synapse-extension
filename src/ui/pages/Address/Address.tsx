@@ -18,7 +18,7 @@ import { showAddressHelper } from '@src/common/utils/wallet';
 
 const useStyles = makeStyles({
   container: {
-    margin: 30,
+    margin: 20,
   },
   button: {
     textAlign: 'center',

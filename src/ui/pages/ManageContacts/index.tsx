@@ -18,7 +18,7 @@ import contactManager from '@common/contactManager';
 
 const useStyles = makeStyles({
   container: {
-    margin: 30,
+    margin: 20,
     fontSize: 12,
   },
 });

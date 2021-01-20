@@ -13,7 +13,7 @@ import { truncateHash } from '@src/common/utils/formatters';
 
 const useStyles = makeStyles({
   container: {
-    margin: 30,
+    margin: 20,
     fontSize: 12,
   },
 });

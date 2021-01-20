@@ -10,7 +10,7 @@ import Title from '@ui/Components/Title';
 
 const useStyles = makeStyles({
   container: {
-    margin: 30,
+    margin: 20,
   },
 });
 

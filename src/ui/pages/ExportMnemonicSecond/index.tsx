@@ -6,7 +6,7 @@ import PageNav from '@ui/Components/PageNav';
 
 const useStyles = makeStyles({
   container: {
-    margin: 30,
+    margin: 20,
   },
   mnemonic: {
     border: '1px solid #eee',

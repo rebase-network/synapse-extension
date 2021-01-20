@@ -16,7 +16,7 @@ import UploadFile from './UploadFile';
 
 const useStyles = makeStyles({
   container: {
-    margin: 30,
+    margin: 20,
   },
   button: {},
   textField: {},

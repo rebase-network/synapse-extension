@@ -10,7 +10,7 @@ import { MESSAGE_TYPE } from '@src/common/utils/constants';
 
 const useStyles = makeStyles({
   container: {
-    margin: 30,
+    margin: 20,
   },
 });
 
