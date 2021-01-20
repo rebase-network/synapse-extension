@@ -1,10 +1,10 @@
 import React from 'react';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import en from '@common/locales/en';
-import App from './index';
+import App from '../Create';
 
 const mockFunc = jest.fn();
 
@@ -24,21 +24,19 @@ jest.mock('react-router-dom', () => {
   };
 });
 
-describe('Manage UDTs page', () => {
-  beforeEach(async () => {
-    await act(async () => {
-      render(
-        <IntlProvider locale="en" messages={en}>
-          <Router>
-            <App />
-          </Router>
-        </IntlProvider>,
-      );
-    });
+describe('Create UDT', () => {
+  beforeEach(() => {
+    render(
+      <IntlProvider locale="en" messages={en}>
+        <Router>
+          <App />
+        </Router>
+      </IntlProvider>,
+    );
   });
 
   it('should render form fields: submitbutton', async () => {
-    const submitButton = screen.getByRole('button', { name: /Add/i });
+    const submitButton = screen.getByRole('button', { name: /Confirm/i });
     expect(submitButton).toBeInTheDocument();
   });
 
@@ -108,22 +106,8 @@ describe('Manage UDTs page', () => {
       symbol: 'UDT',
     });
 
-    const submitBtn = screen.getByRole('button', { name: /Add/i });
+    const submitBtn = screen.getByRole('button', { name: /Confirm/i });
     userEvent.click(submitBtn);
-    await waitFor(() => {
-      expect(browser.storage.local.set).toBeCalled();
-      const udtsElem = screen.getAllByText(/simpleUDT/i);
-      expect(udtsElem).toHaveLength(1);
-    });
-  });
-
-  it('should delete', async () => {
-    const udtsElem = screen.getAllByText(/simpleUDT/i);
-    expect(udtsElem).toHaveLength(1);
-    const result = screen.getAllByLabelText('delete');
-    expect(result).toHaveLength(1);
-
-    userEvent.click(result[0]);
     await waitFor(() => {
       expect(browser.storage.local.set).toBeCalled();
     });

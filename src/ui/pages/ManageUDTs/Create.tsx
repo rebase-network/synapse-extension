@@ -29,7 +29,7 @@ export default function UDTCreate(props: AppProps) {
 
   const onSubmit = async (values, { resetForm }) => {
     const { name, typeHash, decimal, symbol } = values;
-    const { udts } = await browser.storage.local.get('udts');
+    const { udts = [] } = await browser.storage.local.get('udts');
     const udtObj = { name, typeHash, decimal, symbol };
 
     const udtInx = _.findIndex(udts, (udtItem) => {
