@@ -8,6 +8,7 @@ import getCKB from '@src/common/utils/ckb';
 import { signTx } from '@background/keyper/keyperwallet';
 import NetworkManager from '@common/networkManager';
 import { ERROR_CODES } from '@common/utils/constants';
+import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 import { createRawTx, createAnyPayRawTx } from './txGenerator';
 import getLockTypeByCodeHash from './getLockTypeByCodeHash';
 
@@ -226,9 +227,11 @@ export const sendTransaction = async (
     config = { index: 0, length: -1 };
   }
 
+  const txHash = ckbUtils.rawTransactionToHash(rawTxObj.tx);
+
   const signedTx = await signTx(lockHash, password, rawTxObj.tx, config);
   try {
-    const txHash: any = await ckb.rpc.sendTransaction(signedTx);
+    await ckb.rpc.sendTransaction(signedTx);
     return {
       txHash,
       fee: rawTxObj.fee,

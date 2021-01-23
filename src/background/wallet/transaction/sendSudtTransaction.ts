@@ -1,12 +1,13 @@
 import BN from 'bn.js';
 import _ from 'lodash';
+import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 import { addressToScript } from '@keyper/specs';
 import { getUnspentCells } from '@common/utils/apis';
 import getCKB from '@common/utils/ckb';
 import { signTx } from '@background/keyper/keyperwallet';
 import NetworkManager from '@common/networkManager';
 import { getDepFromLockType } from '@common/utils/deps';
-import { SUDT_MIN_CELL_CAPACITY, CKB_TOKEN_DECIMALS } from '@common/utils/constants';
+import { SUDT_MIN_CELL_CAPACITY, CKB_TOKEN_DECIMALS, ERROR_CODES } from '@common/utils/constants';
 import { getDepFromType } from '@common/utils/constants/typesInfo';
 import { parseSUDT } from '@common/utils';
 import getLockTypeByCodeHash from './getLockTypeByCodeHash';
@@ -153,24 +154,22 @@ export const sendSudtTransaction = async (
     sendSudtAmount,
     fee,
   );
+  const ckb = await getCKB();
 
   const signedTx = await signSudtTransaction(lockHash, password, rawTxObj);
-  const txResultObj = {
-    txHash: null,
-  };
-  try {
-    const ckb = await getCKB();
-    const realTxHash: any = await ckb.rpc.sendTransaction(signedTx);
-    if (realTxHash.code !== undefined && realTxHash.code !== 0) {
-      return {
-        errCode: realTxHash.code,
-        message: realTxHash.message,
-      };
-    }
-    txResultObj.txHash = realTxHash;
-  } catch (error) {
-    console.error(`Failed to send tx: ${error}`);
-  }
 
-  return txResultObj;
+  const txHash = ckbUtils.rawTransactionToHash(rawTxObj.tx);
+
+  try {
+    await ckb.rpc.sendTransaction(signedTx);
+    return {
+      txHash,
+      fee: rawTxObj.fee,
+    };
+  } catch (error) {
+    return {
+      errCode: error.code || ERROR_CODES.unknown,
+      errMsg: error.message || 'Unknown Error',
+    };
+  }
 };
