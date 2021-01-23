@@ -82,7 +82,7 @@ export default {
   'Message to be signed': 'Message to be signed',
   'Invalid address':'Invalid address',
   "The transaction's ckb capacity cannot be less than 61 CKB":"The transaction's ckb capacity cannot be less than 61 CKB",
-  "The transaction's sudt amount cannot be more than have": "The transaction's sudt amount cannot be more than have",
+  "The transaction's SUDT amount cannot be more than have": "The transaction's SUDT amount cannot be more than have",
   'lack of capacity, ckb capacity cannot be less than 142 CKB, available capacity is':'lack of capacity, ckb capacity cannot be less than 142 CKB, available capacity is',
   'Fee Rate':'Fee Rate',
   'Slower': 'Slower',

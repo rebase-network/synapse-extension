@@ -88,7 +88,7 @@ export default (props: AppProps) => {
         <Grid container>
           <Grid item xs={3}>
             <Typography noWrap>CKB</Typography>
-            {typeHash !== '' ? <Typography noWrap>sUDT</Typography> : null}
+            {typeHash !== '' ? <Typography noWrap>SUDT</Typography> : null}
           </Grid>
           <Grid item xs={9} data-testid="amount">
             <Typography> {transferAmount / CKB_TOKEN_DECIMALS} CKB</Typography>
