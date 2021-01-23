@@ -290,6 +290,6 @@ export const sendTransactionFixture = {
   ],
   expected: {
     fee: '0a',
-    txHash: '0x123',
+    txHash: '0xe13e9a5c7f48d84227dda7b5483b7372254a0f7154c8fa5d63c578ba9913365f',
   },
 };
