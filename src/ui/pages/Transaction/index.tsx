@@ -65,11 +65,10 @@ const InnerForm = (props: any) => {
   const classes = useStyles();
   const intl = useIntl();
   const [contacts, setContacts] = React.useState([]);
-  const [checkAddressMsg, setCheckAddressMsg] = React.useState('');
   const [checkMsg, setCheckMsg] = React.useState('');
   const [unspentCapacity, setUnspentCapacity] = React.useState(-1);
   const [feeRate, setFeeRate] = React.useState(1000);
-  const { values, touched, errors, handleChange, handleBlur, setFieldValue } = props;
+  const { values, touched, errors, handleChange, handleBlur, setFieldValue, setFieldError } = props;
   React.useEffect(() => {
     browser.storage.local.get('contacts').then((result) => {
       if (Array.isArray(result.contacts)) {
@@ -92,33 +91,24 @@ const InnerForm = (props: any) => {
     }
   }
 
-  let errAddressMsg = errors.address && touched.address && errors.address;
-  if (errAddressMsg === undefined) {
-    if (checkAddressMsg !== '') {
-      errAddressMsg = checkAddressMsg;
-    }
-  }
-
   const handleBlurCapacity = async (event) => {
+    if (errors.address) return;
     setCheckMsg('');
-    setCheckAddressMsg('');
     handleBlur(event);
 
     const { address, typeHash, udt = 0, decimal } = values;
-    // check address
-    try {
-      addressToScript(address);
-    } catch (error) {
-      const checkMsgId = 'Invalid address';
-      const checkMsgI18n = intl.formatMessage({ id: checkMsgId });
-      setCheckAddressMsg(checkMsgI18n);
-      return;
-    }
 
     // secp256k1
     const capacity = event.target.value;
 
-    const toLockScript = addressToScript(address);
+    let toLockScript;
+
+    try {
+      toLockScript = addressToScript(address);
+    } catch (error) {
+      setFieldError('address', intl.formatMessage({ id: 'Invalid address' }));
+      return;
+    }
     const toLockType = getLockTypeByCodeHash(toLockScript.codeHash);
     if (!typeHash) {
       if (toLockType === LockType.Secp256k1) {
@@ -230,6 +220,7 @@ const InnerForm = (props: any) => {
     setFeeRate(feeRateValue);
     setFieldValue('feeRate', feeRateValue);
   };
+
   return (
     <>
       <div>{sudtElem}</div>
@@ -260,7 +251,7 @@ const InnerForm = (props: any) => {
             InputProps={{ ...params.InputProps, type: 'search' }}
             variant="outlined"
             error={!!errors.address}
-            helperText={checkAddressMsg}
+            helperText={errors.address && touched.address && errors.address}
           />
         )}
         style={{ width: 300 }}
@@ -448,6 +439,17 @@ export default () => {
       </Form>
     );
   };
+
+  const validate = (values) => {
+    const { address } = values;
+    const errors = {} as any;
+    try {
+      addressToScript(address);
+    } catch (error) {
+      errors.address = intl.formatMessage({ id: 'Invalid address' });
+    }
+    return errors;
+  };
   return (
     <div>
       <PageNav to="/address" title={intl.formatMessage({ id: 'Send Transaction' })} />
@@ -457,6 +459,7 @@ export default () => {
         <Formik
           initialValues={initialValues}
           onSubmit={onSubmit}
+          validate={validate}
           validationSchema={Yup.object().shape({
             address: Yup.string().required(intl.formatMessage({ id: 'Required' })),
             capacity: Yup.number()
