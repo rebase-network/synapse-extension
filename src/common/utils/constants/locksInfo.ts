@@ -1,5 +1,5 @@
 import { ScriptHashType } from '@keyper/specs';
-import { NETWORK_TYPES } from '@src/common/utils/constants/networks';
+import { NETWORK_TYPES } from '@common/utils/constants/networks';
 
 const { testnet, mainnet, local } = NETWORK_TYPES;
 export const NETWORKS = [mainnet, testnet, local];
@@ -55,5 +55,7 @@ const locksInfo = {
 };
 
 locksInfo[local] = locksInfo[testnet];
+
+export const AnyPayCodeHashIndex: string = '0x02';
 
 export default locksInfo;
